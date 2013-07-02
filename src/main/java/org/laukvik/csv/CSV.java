@@ -38,6 +38,13 @@ public class CSV implements CSVListener {
         reader.addCSVListener(this);
     }
 
+    public CSV(char delimiter) {
+        headers = null;
+        rows = new ArrayList<String[]>();
+        reader = new CSVReader(delimiter);
+        reader.addCSVListener(this);
+    }
+
     public void parse(InputStream is) throws IOException {
         reader.read(is);
     }
@@ -47,11 +54,9 @@ public class CSV implements CSVListener {
     }
 
     public void write(File file) throws IOException {
-
         FileOutputStream fos = new FileOutputStream(file);
         write(fos);
         fos.close();
-
     }
 
     public void write(OutputStream out) throws IOException {
@@ -102,12 +107,6 @@ public class CSV implements CSVListener {
 
     public void foundRow(int rowIndex, String[] values) {
         rows.add(values);
-    }
-
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
     }
 
     public int getColumnCount() {
