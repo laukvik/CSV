@@ -15,29 +15,14 @@
  */
 package org.laukvik.csv;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 /**
  *
  * @author morten
  */
 public class Example {
-
-    public static String getCarsCSV() {
-        return "Year,Make,Model,Description,Price\n"
-                + "1997,Ford,E350,\"ac, abs, moon\",3000.00\n"
-                + "1999,Chevy,\"Venture \"\"Extended Edition\"\"\",\"\",4900.00\n"
-                + "1999,Chevy,\"Venture \"\"Extended Edition, Very Large\"\"\",,5000.00\n"
-                + "1996,Jeep,Grand Cherokee,\"MUST SELL!\n"
-                + "air, moon roof, loaded\",4799.00";
-    }
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
         CSVReader csv = new CSVReader();
