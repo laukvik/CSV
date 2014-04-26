@@ -75,11 +75,11 @@ public class CSVReader {
         this.fieldDelimiter = fieldDelimiter;
     }
 
-    public void addCSVListener(CSVListener listener) {
+    public void addListener(CSVListener listener) {
         listeners.add(listener);
     }
 
-    public void removeCSVListener(CSVListener listener) {
+    public void removeListener(CSVListener listener) {
         listeners.remove(listener);
     }
 

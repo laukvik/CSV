@@ -15,8 +15,6 @@
  */
 package org.laukvik.csv;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -27,8 +25,11 @@ import java.io.IOException;
 public class Example {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
+        /* Create reader */
         CSVReader csv = new CSVReader();
-        csv.addCSVListener(new CSVListener() {
+        /* Add listener when header and rows are found */
+        csv.addListener(new CSVListener() {
+            @Override
             public void foundRow(int rowIndex, String[] values) {
                 System.out.print("#" + rowIndex + "\t");
                 for (String s : values) {
@@ -37,6 +38,7 @@ public class Example {
                 System.out.println();
             }
 
+            @Override
             public void foundHeaders(String[] values) {
                 System.out.print("Headers:");
                 for (String s : values) {
@@ -46,7 +48,7 @@ public class Example {
             }
         });
 
-
+        /* Start reading example file */
         csv.read(Example.class.getResourceAsStream("cars.csv"));
 
     }

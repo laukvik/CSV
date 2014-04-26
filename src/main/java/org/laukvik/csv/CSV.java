@@ -35,14 +35,14 @@ public class CSV implements CSVListener {
         headers = null;
         rows = new ArrayList<String[]>();
         reader = new CSVReader();
-        reader.addCSVListener(this);
+        reader.addListener(this);
     }
 
     public CSV(char delimiter) {
         headers = null;
         rows = new ArrayList<String[]>();
         reader = new CSVReader(delimiter);
-        reader.addCSVListener(this);
+        reader.addListener(this);
     }
 
     public void parse(InputStream is) throws IOException {
