@@ -15,6 +15,7 @@
  */
 package org.laukvik.csv;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -25,34 +26,34 @@ import java.io.IOException;
 public class Example {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        /* Create reader */
-        CSVReader csv = new CSVReader();
-
-        /* Add listener when header and rows are found */
-        csv.addListener(new CSVListener() {
-            @Override
-            public void foundRow(int rowIndex, String[] values) {
-                System.out.print("#" + rowIndex + "\t");
-                for (String s : values) {
-                    System.out.print(s + "__");
-                }
-                System.out.println();
-            }
-
-            @Override
-            public void foundHeaders(String[] values) {
-                System.out.print("Headers:");
-                for (String s : values) {
-                    System.out.print(s + ",");
-                }
-                System.out.println();
-            }
-        });
+//        /* Create reader */
+//        CSVReader csv = new CSVReader();
+//
+//        /* Add listener when header and rows are found */
+//        csv.addListener(new CSVListener() {
+//            @Override
+//            public void foundRow(int rowIndex, String[] values) {
+//                System.out.print("#" + rowIndex + "\t");
+//                for (String s : values) {
+//                    System.out.print(s + "__");
+//                }
+//                System.out.println();
+//            }
+//
+//            @Override
+//            public void foundHeaders(String[] values) {
+//                System.out.print("Headers:");
+//                for (String s : values) {
+//                    System.out.print(s + ",");
+//                }
+//                System.out.println();
+//            }
+//        });
 
         /* Start reading example file */
 //        csv.read(Example.class.getResourceAsStream("cars.csv"));
-//        CSV csv = new CSV();
-//        csv.parse(new File("/Users/morten/Desktop/cars.csv"));
-//        System.out.println(csv.getCell(10, 0));
+        CSV c = new CSV();
+        c.parse(new File("/Users/morten/Desktop/cars.csv"));
+        System.out.println(c.getCell(2, 3));
     }
 }
