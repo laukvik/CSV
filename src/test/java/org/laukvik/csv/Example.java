@@ -27,6 +27,7 @@ public class Example {
     public static void main(String[] args) throws FileNotFoundException, IOException {
         /* Create reader */
         CSVReader csv = new CSVReader();
+
         /* Add listener when header and rows are found */
         csv.addListener(new CSVListener() {
             @Override
@@ -49,7 +50,9 @@ public class Example {
         });
 
         /* Start reading example file */
-        csv.read(Example.class.getResourceAsStream("cars.csv"));
-
+//        csv.read(Example.class.getResourceAsStream("cars.csv"));
+//        CSV csv = new CSV();
+//        csv.parse(new File("/Users/morten/Desktop/cars.csv"));
+//        System.out.println(csv.getCell(10, 0));
     }
 }

@@ -1,7 +1,22 @@
 LaukvikCSV
 ==========
 
-Java library to parse CSV files with ease.
+A Java library to parse CSV files. It can read very large files by using
+an event based reader (CSVReader). This requires minimum memory. For smaller
+files you can read the whole CSV file into memory (CSV).
+
+
+Reading files directly to memory
+--------------------------------------------------------------------------------
+
+    CSV csv = new CSV();
+    csv.parse(new File("cars.csv"));
+    System.out.println(csv.getCell(2, 2));
+
+
+
+Reading very large files
+--------------------------------------------------------------------------------
 
     /* Create reader */
     CSVReader csv = new CSVReader();

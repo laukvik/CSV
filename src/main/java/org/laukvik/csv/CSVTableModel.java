@@ -23,7 +23,7 @@ import javax.swing.table.TableModel;
 public class CSVTableModel implements TableModel {
 
     private CSV csv;
-    private List<TableModelListener> listeners;
+    private final List<TableModelListener> listeners;
 
     public CSVTableModel(CSV csv) {
         this.csv = csv;
@@ -65,8 +65,7 @@ public class CSVTableModel implements TableModel {
     public Object getValueAt(int row, int column) {
         try {
             return csv.getCell(column, row);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }

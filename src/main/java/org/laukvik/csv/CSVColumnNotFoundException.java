@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv;
 
-public class CSVColumnNotFoundException extends Exception {
+public class CSVColumnNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 

@@ -26,7 +26,7 @@ import javax.swing.UIManager;
  *
  * @author morten
  */
-public class Main extends javax.swing.JFrame {
+public class Viewer extends javax.swing.JFrame {
 
     CSV csv;
     CSVTableModel model;
@@ -34,7 +34,7 @@ public class Main extends javax.swing.JFrame {
     /**
      * Creates new form Viewer
      */
-    public Main() {
+    public Viewer() {
         super("Viewer");
         initComponents();
     }
@@ -169,7 +169,9 @@ public class Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Main v = new Main();
+                Viewer v = new Viewer();
+                v.setSize(700, 400);
+                v.setLocationRelativeTo(null);
                 v.setVisible(true);
             }
         });

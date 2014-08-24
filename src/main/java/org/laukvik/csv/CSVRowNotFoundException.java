@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv;
 
-public class CSVRowNotFoundException extends Exception {
+public class CSVRowNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 

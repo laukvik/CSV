@@ -125,7 +125,7 @@ public class CSV implements CSVListener {
         return headers[ columnIndex];
     }
 
-    public String getCell(int column, int row) throws CSVRowNotFoundException, CSVColumnNotFoundException {
+    public String getCell(int column, int row) {
         if (row > rows.size()) {
             throw new CSVRowNotFoundException(row);
         } else {
