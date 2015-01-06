@@ -56,7 +56,7 @@ public class CSVReader {
     List<CSVListener> listeners;
 
     public CSVReader(char fieldDelimiter) {
-        this.listeners = new ArrayList<CSVListener>();
+        this.listeners = new ArrayList<>();
         this.lineSeperator = System.getProperty("line.separator").getBytes();
         this.textQualifier = QUOTE;
         this.fieldDelimiter = fieldDelimiter;
