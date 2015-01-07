@@ -18,6 +18,8 @@ package org.laukvik.csv;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -35,13 +37,18 @@ public class Viewer extends javax.swing.JFrame {
      * Creates new form Viewer
      */
     public Viewer() {
-        super("Viewer");
+        super("CSV");
         initComponents();
     }
 
+    public void openCSV(CSV csv) {
+        model = new CSVTableModel(csv);
+        jTable1.setModel(model);
+        setTitle("Untitled");
+    }
+
     public void openFile(File file) throws FileNotFoundException, IOException {
-        csv = new CSV(CSVReader.COMMA);
-        csv.parse(file);
+        csv = new CSV(file);
         model = new CSVTableModel(csv);
         jTable1.setModel(model);
         setTitle(file.getAbsolutePath());
@@ -173,6 +180,12 @@ public class Viewer extends javax.swing.JFrame {
                 v.setSize(700, 400);
                 v.setLocationRelativeTo(null);
                 v.setVisible(true);
+                try {
+                    v.openFile(new File("/Users/morten/Desktop/cars.csv"));
+                } catch (IOException ex) {
+                    Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             }
         });
     }

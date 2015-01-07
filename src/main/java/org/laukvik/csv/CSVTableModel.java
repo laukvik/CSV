@@ -27,13 +27,15 @@ public class CSVTableModel implements TableModel {
 
     public CSVTableModel(CSV csv) {
         this.csv = csv;
-        this.listeners = new ArrayList<TableModelListener>();
+        this.listeners = new ArrayList<>();
     }
 
+    @Override
     public void addTableModelListener(TableModelListener l) {
         this.listeners.add(l);
     }
 
+    @Override
     public void removeTableModelListener(TableModelListener l) {
         this.listeners.remove(l);
     }
@@ -42,39 +44,41 @@ public class CSVTableModel implements TableModel {
         return csv;
     }
 
+    @Override
     public Class<?> getColumnClass(int column) {
         return String.class;
     }
 
+    @Override
     public int getColumnCount() {
         return csv.getColumnCount();
     }
 
+    @Override
     public String getColumnName(int column) {
-        if (csv.isHeadersAvailable()) {
-            return csv.getHeader(column);
-        } else {
-            return null;
-        }
+        return csv.getColumnName(column);
     }
 
+    @Override
     public int getRowCount() {
         return csv.getRowCount();
     }
 
+    @Override
     public Object getValueAt(int row, int column) {
         try {
-            return csv.getCell(column, row);
+            return csv.getValue(column, row);
         } catch (Exception e) {
             return null;
         }
     }
 
+    @Override
     public boolean isCellEditable(int row, int column) {
         return true;
     }
 
     public void setValueAt(Object value, int row, int column) {
-        csv.setCell((String) value, column, row);
+        csv.setValue((String) value, column, row);
     }
 }

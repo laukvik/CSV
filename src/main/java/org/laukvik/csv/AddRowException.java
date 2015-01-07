@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Laukviks Bedrifter.
+ * Copyright 2015 Laukviks Bedrifter.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,15 @@
  */
 package org.laukvik.csv;
 
-public interface CSVListener {
+/**
+ *
+ * @author Morten Laukvik <morten@laukvik.no>
+ */
+public class AddRowException extends IllegalArgumentException {
 
-    public void foundHeaders(String[] values);
+    public AddRowException(int provided, int columnCount) {
+        super("Cannot add row with " + provided + " columns. Required " + columnCount);
+    }
 
-    public void foundRow(int rowIndex, String[] values);
+
 }

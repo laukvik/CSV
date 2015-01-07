@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Laukviks Bedrifter.
+ * Copyright 2015 Laukviks Bedrifter.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,14 @@
  */
 package org.laukvik.csv;
 
-public class CSVColumnNotFoundException extends RuntimeException {
+/**
+ *
+ * @author Morten Laukvik <morten@laukvik.no>
+ */
+public class RowNotFoundException extends IllegalArgumentException {
 
-    private static final long serialVersionUID = 1L;
-
-    public CSVColumnNotFoundException(int columnIndex, int rowIndex) {
-        super("Could not find column " + columnIndex + " in row " + rowIndex);
+    public RowNotFoundException(int index, int required) {
+        super("Row with index " + index + " was not found. Required: " + required);
     }
+
 }

@@ -15,30 +15,10 @@
  */
 package org.laukvik.csv;
 
-import static org.junit.Assert.fail;
-import org.junit.Test;
-
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class CSVTest  {
-
-    public CSVTest() {
-    }
-
-    @Test
-    public void shouldRead() {
-//        CSV c = new CSV();
-//        c.parse(new File("/Users/morten/Desktop/cars.csv"));
-//        System.out.println(c.getCell(2, 3));
-        fail("Not implemented yet");
-    }
-
-    @Test
-    public void shouldWrite() {
-        CSV csv = new CSV();
-        fail("Not implemented yet");
-    }
+public class SwingTest {
 
 }
