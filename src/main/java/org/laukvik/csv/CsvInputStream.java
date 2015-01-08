@@ -15,8 +15,10 @@
  */
 package org.laukvik.csv;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,145 +28,128 @@ import java.util.List;
  */
 public class CsvInputStream implements AutoCloseable {
 
-    private final InputStream is;
-    private final char quote = '"';
-    private final char comma = ',';
-    private final char lineFeed = '\n';
-    private final char carriageReturn = '\r';
-
-
+    private final BufferedInputStream is;
+    private Charset charset;
     private char currentChar;
-    private char nextChar;
-    private StringBuilder currentWord;
+    private StringBuilder currentValue;
     private List<String> columns;
-    boolean useBufferedChar;
+
+    private StringBuilder rawLine;
+    private int lineCounter;
 
     public CsvInputStream(InputStream is) {
-        this.is = is;
+        this(is, Charset.forName("utf-8"));
+    }
+
+    public CsvInputStream(InputStream is, Charset charset) {
+        this.is = new BufferedInputStream(is);
+        this.charset = charset;
+        lineCounter = 1;
     }
 
     public boolean hasMoreLines() throws IOException {
         return is.available() > 0;
     }
 
-    /**
-     *
-     * @throws IOException
-     */
-    private void readChar() throws IOException {
-        if (useBufferedChar) {
-            currentChar = nextChar;
-            nextChar = (char) is.read();
-        } else {
-            currentChar = (char) is.read();
-            if (is.available() > 0) {
-                nextChar = (char) is.read();
-            } else {
-                nextChar = 0;
-            }
-        }
-        useBufferedChar = true;
+    public String getRaw() {
+        return rawLine.toString();
     }
-
 
     /**
      * Read
-     *
-     * CR LF LF
+
+ CR LINEFEED LINEFEED
      *
      * @return
      * @throws IOException
      */
     public List<String> readLine() throws IOException {
-        boolean isInsideQuotes = false;
+//        System.out.println("--- " + lineCounter + " -----------------------------------------");
+
         boolean isNextLine = false;
 
-        useBufferedChar = true;
-        /*  */
-        currentWord = new StringBuilder();
-
+        /* Current value */
+        currentValue = new StringBuilder();
+        /* the current line */
         columns = new ArrayList<>();
+        /* The raw chars being read */
+        rawLine = new StringBuilder();
 
         /* Read until */
         while (is.available() > 0 && !isNextLine) {
+
             /* Read next char */
-            readChar();
+            currentChar = (char) is.read();
+
+            /* Determines whether or not to add char */
+            boolean addChar;
+
+            /* Adds the currentValue */
+            boolean addValue = false;
 
             /* Check char */
             switch (currentChar) {
-                case carriageReturn: /* Found carriage return. Do nothing. */
-
+                case CSV.RETURN: /* Found carriage return. Do nothing. */
+                    addChar = false;
                     break;
 
-                case lineFeed: /* Found new line symbol */
+                case CSV.LINEFEED: /* Found new line symbol */
 
-                    if (isInsideQuotes) {
-                        if (nextChar == carriageReturn) {
-                            useBufferedChar = false;
-                        }
-                        appendChar();
-                    } else {
-                        if (currentWord.length() > 0) {
-                            closeWord();
-                        }
-                        isNextLine = true;
-                    }
+                    addChar = false;
+                    addValue = true;
+                    isNextLine = true;
                     break;
 
-                case quote:
+                case CSV.QUOTE:
 
-                    if (isInsideQuotes) {
-                        if (nextChar == quote) {
-                            /* Found escaped quote */
-                            appendChar();
-                            useBufferedChar = false;
+                    addChar = true;
+
+                    while (is.available() > 0) {
+                        currentChar = (char) is.read();
+                        rawLine.append(currentChar);
+                        if (currentChar == CSV.QUOTE) {
+                            break;
                         } else {
-                            /* Found end quote */
-                            isInsideQuotes = false;
-                            appendChar();
-                            closeWord();
-                            currentWord = new StringBuilder();
+                            currentValue.append(currentChar);
                         }
-                    } else {
-                        /* Found start quote */
-                        isInsideQuotes = true;
                     }
+//                    currentValue.append(CSV.QUOTE);
                     break;
 
-                case comma:
-                    if (isInsideQuotes) {
-                        /* Found separator inside quotes */
-                        appendChar();
-                    } else {
-                        /* Found separator. Add current currentCell */
-                        if (currentWord.length() > 0) {
-                            closeWord();
-                        }
-                        currentWord = new StringBuilder();
-                    }
+                case CSV.COMMA:
+
+                    addChar = false;
+                    addValue = true;
                     break;
 
                 default:
                     /* Everything else... */
-                    appendChar();
+                    addChar = true;
                     break;
             }
+            if (addChar) {
+                currentValue.append(currentChar);
+            }
+            if (!isNextLine) {
+                rawLine.append(currentChar);
+            }
+            if (addValue || is.available() == 0) {
+                columns.add(currentValue.toString());
+//                System.out.println(currentValue);
+                currentValue = new StringBuilder();
+
+            }
         }
+
+//        System.out.println("* " + lineCounter + ":" + rawLine);
+//        System.out.println("(RAW:" + rawLine + ")");
+        lineCounter++;
         return columns;
-    }
-
-    private void appendChar() {
-        currentWord.append(currentChar);
-    }
-
-    private void closeWord() {
-        columns.add(currentWord.toString());
     }
 
     @Override
     public void close() throws IOException {
         is.close();
     }
-
 
 }

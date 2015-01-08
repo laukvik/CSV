@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.laukvik</groupId>
-    <artifactId>LaukvikCSV</artifactId>
+    <artifactId>csv</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
@@ -16,6 +16,7 @@
             <email>morten@laukvik.no</email>
             <roles>
                 <role>Developer</role>
+                <role>Architect</role>
             </roles>
         </developer>
     </developers>
@@ -67,8 +68,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>

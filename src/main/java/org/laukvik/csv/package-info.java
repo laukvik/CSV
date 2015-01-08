@@ -16,9 +16,12 @@
 package org.laukvik.csv;
 
 /**
+ * An API for reading and writing comma delimited values to input/output
+ * streams
+ * and to files
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
+ *
+ *
+ *
  */
-public class SwingTest {
-
-}

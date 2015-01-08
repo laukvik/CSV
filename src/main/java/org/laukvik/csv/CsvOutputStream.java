@@ -17,6 +17,8 @@ package org.laukvik.csv;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.regex.Pattern;
 
 /**
  * OutputStream for writing CSV data
@@ -26,11 +28,14 @@ import java.io.OutputStream;
  */
 public class CsvOutputStream implements AutoCloseable {
 
-    private final OutputStream out;
+    private final OutputStreamWriter out;
     private char separator = CSV.COMMA;
+    private final Pattern pattern;
 
     public CsvOutputStream(OutputStream out) {
-        this.out = out;
+        this.out = new OutputStreamWriter(out);
+        pattern = Pattern.compile("[0-9]+");
+
     }
 
     public void setSeparator(char separator) {
@@ -50,12 +55,25 @@ public class CsvOutputStream implements AutoCloseable {
             if (x > 0) {
                 out.write(separator);
             }
-            String c = columns[x];
-            out.write(CSV.QUOTE);
-            out.write(c.getBytes());
-            out.write(CSV.QUOTE);
+            String column = columns[x];
+            if (pattern.matcher(column).find()) {
+                /* Digits only */
+                out.write(column);
+            } else {
+                /* Text */
+                out.write(CSV.QUOTE);
+                for (int n = 0; n < column.length(); n++) {
+                    char ch = column.charAt(n);
+                    if (ch == CSV.QUOTE) {
+                        out.write(CSV.QUOTE);
+                    }
+                    out.write(ch);
+                }
+                out.write(column);
+                out.write(CSV.QUOTE);
+            }
         }
-        out.write(CSV.CRLF.getBytes());
+        out.write(CSV.CRLF);
     }
 
     @Override

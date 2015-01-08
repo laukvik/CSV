@@ -15,51 +15,42 @@
  */
 package org.laukvik.csv;
 
-import java.io.File;
-import java.io.IOException;
-import org.junit.Before;
-import org.junit.Test;
-import org.uispec4j.Table;
-import org.uispec4j.UISpec4J;
-import org.uispec4j.UISpecTestCase;
-import org.uispec4j.Window;
-import org.uispec4j.interception.MainClassAdapter;
-
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class ViewerTest extends UISpecTestCase {
+public class ViewerTest //extends UISpecTestCase
+{
 
-    static {
-        UISpec4J.init();
-    }
+//    static {
+//        UISpec4J.init();
+//    }
 
-    @Before
-    protected void setUp() throws Exception {
-        setAdapter(new MainClassAdapter(Viewer.class, new String[0]));
-    }
+//    @Before
+//    protected void setUp() throws Exception {
+//        setAdapter(new MainClassAdapter(Viewer.class, new String[0]));
+//    }
 
-    @Test
-    public void shouldViewSwing() {
-        try {
-            CSV csv = new CSV(new File("/Users/morten/Desktop/executives.csv"));
-            Viewer view = new Viewer();
-            view.openCSV(csv);
-
-            /* 1. Retrieve the components */
-            Window window = getMainWindow();
-            Table table = window.getTable();
-
-            /**/
-            assertTrue(table.getHeader().contentEquals(new String[]{
-                "First", "Last name", "E-mail", "Phone", "Mobile"
-            }));
-
-
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
-    }
+//    @Test
+//    public void shouldViewSwing() {
+//        try {
+//            CSV csv = new CSV(new File("/Users/morten/Desktop/executives.csv"));
+//            Viewer view = new Viewer();
+//            view.openCSV(csv);
+//
+//            /* 1. Retrieve the components */
+//            Window window = getMainWindow();
+//            Table table = window.getTable();
+//
+//            /**/
+//            assertTrue(table.getHeader().contentEquals(new String[]{
+//                "First", "Last name", "E-mail", "Phone", "Mobile"
+//            }));
+//
+//
+//        } catch (IOException e) {
+//            fail(e.getMessage());
+//        }
+//    }
 
 }

@@ -22,10 +22,14 @@ public class CSVFileFilter implements FileFilter {
 
     @Override
     public boolean accept(File f) {
-        return (f.isFile() && f.getName().toLowerCase().endsWith(".csv"));
+        String filename = f.getName().toLowerCase();
+        if (f.isHidden()) {
+            return false;
+        }
+        return (filename.endsWith(".csv"));
     }
 
     public String getDescription() {
-        return "Shows CSV files";
+        return "Comma Separated Files (*.csv)";
     }
 }
