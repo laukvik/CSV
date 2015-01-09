@@ -99,7 +99,8 @@ public class Row implements Serializable {
         if (column > metaData.getColumnCount()) {
             throw new ColumnNotFoundException(column, metaData.getColumnCount());
         }
-        return values.get(column);
+        String v = values.get(column);
+        return new String(v.getBytes(metaData.getCharset()));
     }
 
     public String getString(String column) {
