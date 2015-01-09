@@ -18,6 +18,9 @@ package org.laukvik.csv;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -26,37 +29,43 @@ import java.util.regex.Pattern;
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class CsvOutputStream implements AutoCloseable {
+public class CsvWriter implements AutoCloseable {
 
     private final OutputStreamWriter out;
-    private char separator = CSV.COMMA;
     private final Pattern pattern;
 
-    public CsvOutputStream(OutputStream out) {
-        this.out = new OutputStreamWriter(out);
+    public CsvWriter(OutputStream out) {
+        this(out, CSV.CHARSET_DEFAULT);
+    }
+
+    public CsvWriter(OutputStream out, Charset charset) {
+        this.out = new OutputStreamWriter(out, charset);
         pattern = Pattern.compile("[0-9]+");
-
     }
 
-    public void setSeparator(char separator) {
-        this.separator = separator;
+    private boolean isDigitsOnly(String value) {
+        return pattern.matcher(value).find();
     }
 
-    public char getSeparator() {
-        return separator;
+    public void writeMetaData(MetaData metaData) throws IOException {
+        writeValues(metaData.getValues());
     }
 
-    public void writeHeader(String... headers) throws IOException {
-        writeLine(headers);
+    public void writeRow(Row row) throws IOException {
+        writeValues(row.getValues());
     }
 
-    public void writeLine(String... columns) throws IOException {
-        for (int x = 0; x < columns.length; x++) {
+    public void writeRow(String... values) throws IOException {
+        writeValues(Arrays.asList(values));
+    }
+
+    private void writeValues(List<String> values) throws IOException {
+        for (int x = 0; x < values.size(); x++) {
             if (x > 0) {
-                out.write(separator);
+                out.write(CSV.COMMA);
             }
-            String column = columns[x];
-            if (pattern.matcher(column).find()) {
+            String column = values.get(x);
+            if (isDigitsOnly(column)) {
                 /* Digits only */
                 out.write(column);
             } else {
@@ -65,11 +74,11 @@ public class CsvOutputStream implements AutoCloseable {
                 for (int n = 0; n < column.length(); n++) {
                     char ch = column.charAt(n);
                     if (ch == CSV.QUOTE) {
+                        /* Encode quotes - write an extra quote */
                         out.write(CSV.QUOTE);
                     }
                     out.write(ch);
                 }
-                out.write(column);
                 out.write(CSV.QUOTE);
             }
         }

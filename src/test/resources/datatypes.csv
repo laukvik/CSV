@@ -1,0 +1,2 @@
+Integer,Long,Float,Double,BigDecimal,Boolean,String,URL,Date1,Date2
+123,123456789,123.456,123456.789,1234567890123456789.12345,true,"Hello world!",http://www.google.com/home.html,1322018752992,2011-11-23 08:55:52,123.4,

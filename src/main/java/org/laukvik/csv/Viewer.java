@@ -18,8 +18,6 @@ package org.laukvik.csv;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -180,11 +178,11 @@ public class Viewer extends javax.swing.JFrame {
                 v.setSize(700, 400);
                 v.setLocationRelativeTo(null);
                 v.setVisible(true);
-                try {
-                    v.openFile(new File("/Users/morten/Desktop/cars.csv"));
-                } catch (IOException ex) {
-                    Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                try {
+//                    v.openFile(new File("/Users/morten/Desktop/cars.csv"));
+//                } catch (IOException ex) {
+//                    Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
+//                }
 
             }
         });

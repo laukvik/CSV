@@ -20,60 +20,93 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  *
+ *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class CsvInputStream implements AutoCloseable {
+public class CsvReader implements AutoCloseable, Iterator<Row> {
 
     private final BufferedInputStream is;
     private Charset charset;
     private char currentChar;
     private StringBuilder currentValue;
-    private List<String> columns;
 
     private StringBuilder rawLine;
     private int lineCounter;
 
-    public CsvInputStream(InputStream is) {
-        this(is, Charset.forName("utf-8"));
+    private MetaData metaData;
+    private Row row;
+    private List<String> values;
+
+    public CsvReader(InputStream is) throws IOException {
+        this(is, CSV.CHARSET_DEFAULT);
     }
 
-    public CsvInputStream(InputStream is, Charset charset) {
+    public CsvReader(InputStream is, Charset charset) throws IOException {
         this.is = new BufferedInputStream(is);
         this.charset = charset;
-        lineCounter = 1;
+        this.lineCounter = 0;
+        this.metaData = null;
+        this.values = new ArrayList<>();
+        parseRow();
     }
 
-    public boolean hasMoreLines() throws IOException {
-        return is.available() > 0;
+    public Charset getCharset() {
+        return charset;
     }
 
-    public String getRaw() {
+    public String getUnprocessedRow() {
         return rawLine.toString();
     }
 
+    private boolean readRow() throws IOException {
+        row = null;
+        values = new ArrayList<>();
+        if (is.available() == 0) {
+            return false;
+        }
+        parseRow();
+        if (values.isEmpty()) {
+            return false;
+        }
+        row = new Row(values);
+        row.setMetaData(metaData);
+        return true;
+    }
+
+    public Row getRow() {
+        return row;
+    }
+
+    public MetaData getMetaData() {
+        return metaData;
+    }
+
     /**
-     * Read
-
- CR LINEFEED LINEFEED
      *
-     * @return
-     * @throws IOException
+     * @return @throws IOException
      */
-    public List<String> readLine() throws IOException {
-//        System.out.println("--- " + lineCounter + " -----------------------------------------");
-
+    private void parseRow() throws IOException {
         boolean isNextLine = false;
 
         /* Current value */
         currentValue = new StringBuilder();
+
         /* the current line */
-        columns = new ArrayList<>();
+        row = new Row();
+        if (lineCounter > 0) {
+            row.setMetaData(metaData);
+        }
+
         /* The raw chars being read */
         rawLine = new StringBuilder();
+
+        boolean isWithinQuote = false;
+        int quoteCount = 0;
 
         /* Read until */
         while (is.available() > 0 && !isNextLine) {
@@ -98,28 +131,46 @@ public class CsvInputStream implements AutoCloseable {
                     addChar = false;
                     addValue = true;
                     isNextLine = true;
+                    if (isWithinQuote) {
+                        currentValue.deleteCharAt(currentValue.length() - 1);
+                        isWithinQuote = false;
+                    }
                     break;
 
                 case CSV.QUOTE:
 
+                    /*    "Venture ""Extended Edition"""  */
                     addChar = true;
 
+                    isWithinQuote = true;
+
+
+                    int read = -1;
                     while (is.available() > 0) {
                         currentChar = (char) is.read();
                         rawLine.append(currentChar);
                         if (currentChar == CSV.QUOTE) {
+                            quoteCount++;
                             break;
                         } else {
                             currentValue.append(currentChar);
                         }
                     }
-//                    currentValue.append(CSV.QUOTE);
+
+                    quoteCount--;
+
                     break;
 
                 case CSV.COMMA:
 
                     addChar = false;
                     addValue = true;
+
+                    if (isWithinQuote) {
+                        currentValue.deleteCharAt(currentValue.length() - 1);
+                        isWithinQuote = false;
+                    }
+
                     break;
 
                 default:
@@ -134,22 +185,38 @@ public class CsvInputStream implements AutoCloseable {
                 rawLine.append(currentChar);
             }
             if (addValue || is.available() == 0) {
-                columns.add(currentValue.toString());
-//                System.out.println(currentValue);
+                values.add(currentValue.toString());
+//                addItem(currentValue.toString());
                 currentValue = new StringBuilder();
-
             }
         }
-
-//        System.out.println("* " + lineCounter + ":" + rawLine);
-//        System.out.println("(RAW:" + rawLine + ")");
+        if (lineCounter == 0) {
+            this.metaData = new MetaData(values);
+        }
         lineCounter++;
-        return columns;
     }
+
+//    private void addItem(String item) {
+//        values.add(new String(item.getBytes(), charset));
+//    }
 
     @Override
     public void close() throws IOException {
         is.close();
+    }
+
+    @Override
+    public boolean hasNext() {
+        try {
+            return readRow();
+        } catch (IOException ex) {
+            return false;
+        }
+    }
+
+    @Override
+    public Row next() {
+        return row;
     }
 
 }

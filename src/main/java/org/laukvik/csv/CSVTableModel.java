@@ -51,12 +51,12 @@ public class CSVTableModel implements TableModel {
 
     @Override
     public int getColumnCount() {
-        return csv.getColumnCount();
+        return csv.getMetaData().getColumnCount();
     }
 
     @Override
     public String getColumnName(int column) {
-        return csv.getColumnName(column);
+        return csv.getMetaData().getColumnName(column);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CSVTableModel implements TableModel {
     @Override
     public Object getValueAt(int row, int column) {
         try {
-            return csv.getValue(column, row);
+            return csv.getRow(row).getString(column);
         } catch (Exception e) {
             return null;
         }
@@ -78,7 +78,8 @@ public class CSVTableModel implements TableModel {
         return true;
     }
 
+    @Override
     public void setValueAt(Object value, int row, int column) {
-        csv.setValue((String) value, column, row);
+        csv.getRow(row).setString(value.toString(), column);
     }
 }

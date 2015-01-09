@@ -49,13 +49,18 @@ import java.util.List;
  * c.write( new File("nerds.csv") );
  * </code>
  *
+ * <code>
+ * CSV c = new CSV();
+ *
+ * </code>
+ *
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
 public class CSV implements Serializable {
 
     public final static String MIME_TYPE = "text/csv";
-
+    public final static Charset CHARSET_DEFAULT = Charset.forName("utf-8");
 
     public final static char LINEFEED = 10;
     public final static char RETURN = 13;
@@ -66,22 +71,22 @@ public class CSV implements Serializable {
     public final static char QUOTE = '"';
     public final static String CRLF = "\r\n";
 
+    private MetaData metaData;
+    private List<Row> rows;
+    private Charset charset;
 
-    private String[] columns;
-    private List<String[]> rows;
-
-    public CSV(String[] headers, List<String[]> rows) {
-        this.columns = headers;
-        this.rows = rows;
+    public CSV(MetaData metaData) {
+        this.metaData = metaData;
+        this.rows = new ArrayList<>();
+        this.charset = CHARSET_DEFAULT;
     }
 
     public CSV(String... headers) {
-        this.columns = headers;
-        this.rows = new ArrayList<>();
+        this(new MetaData(headers));
     }
 
     public CSV(File file) throws IOException {
-        this(new FileInputStream(file), Charset.forName("utf-8"));
+        this(new FileInputStream(file), CHARSET_DEFAULT);
     }
 
     public CSV(File file, Charset charset) throws IOException {
@@ -90,82 +95,57 @@ public class CSV implements Serializable {
 
     public CSV(InputStream inputStream, Charset charset) throws IOException {
         rows = new ArrayList<>();
-        columns = null;
-        try (CsvInputStream is = new CsvInputStream(inputStream, charset)) {
-            int x = 0;
-            while (is.hasMoreLines()) {
-                List<String> items = is.readLine();
-                String[] arr = new String[items.size()];
-                arr = items.toArray(arr);
-                if (x == 0) {
-                    /* Found columns */
-                    columns = arr;
-                } else {
-                    /* Found row */
-                    rows.add(arr);
-                }
-                x++;
+        this.charset = charset;
+        try (CsvReader reader = new CsvReader(inputStream, charset)) {
+            this.metaData = reader.getMetaData();
+            while (reader.hasNext()) {
+                Row row = reader.getRow();
+                row.setMetaData(metaData);
+                rows.add(row);
             }
         } catch (IOException e) {
             throw e;
         }
     }
 
-    public int getColumnCount() {
-        return columns.length;
+    public MetaData getMetaData() {
+        return metaData;
     }
 
-    public String getColumnName(int column) {
-        return columns[column];
-    }
-
-    /**
-     * Returns the index of the column. If it isnt found it returns -1
-     *
-     * @param name
-     * @return
-     */
-    public int getColumnIndex(String name) {
-        int index = -1;
-        for (int x = 0; x < columns.length; x++) {
-            String h = columns[x];
-            if (h.equalsIgnoreCase(name)) {
-                return x;
-            }
-        }
-        return index;
+    public void setMetaData(MetaData metaData) {
+        this.metaData = metaData;
     }
 
     public int getRowCount() {
         return rows.size();
     }
 
-    public void setValue(String value, int column, int row) {
-        if (column > columns.length) {
-            throw new ColumnNotFoundException(column, columns.length);
+    public Row getRow(int rowIndex) {
+        if (rowIndex > rows.size()) {
+            throw new RowNotFoundException(rowIndex, rows.size());
         }
-        if (row > rows.size()) {
-            throw new RowNotFoundException(row, rows.size());
-        }
-        String[] values = this.rows.get(row);
-        values[column] = value;
+        return rows.get(rowIndex);
     }
 
-    public String getValue(int column, int row) {
-        if (column > columns.length) {
-            throw new ColumnNotFoundException(column, columns.length);
-        }
-        if (row > rows.size()) {
-            throw new RowNotFoundException(row, rows.size());
-        }
-        return rows.get(row)[column];
+    public void addRow(Row row) {
+        row.setMetaData(metaData);
+        rows.add(row);
     }
 
     public void addRow(String... values) {
-        if (values.length != columns.length) {
-            throw new AddRowException(values.length, columns.length);
+        Row row = new Row();
+        for (String v : values) {
+            row.add(v);
         }
-        rows.add(values);
+        addRow(row);
+    }
+
+    public void removeRow(int rowIndex) {
+        rows.remove(rowIndex);
+    }
+
+    public void removeAllRows() {
+        rows.clear();
     }
 
     /**
@@ -175,14 +155,16 @@ public class CSV implements Serializable {
      * @throws IOException
      */
     public void write(File file) throws IOException {
-        try (CsvOutputStream out = new CsvOutputStream(new FileOutputStream(file))) {
-            out.writeHeader(columns);
-            for (String[] row : rows) {
-                out.writeLine(row);
+        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file), charset)) {
+            writer.writeMetaData(metaData);
+            for (Row row : rows) {
+                writer.writeRow(row);
             }
         } catch (IOException e) {
             throw e;
         }
     }
+
+
 
 }
