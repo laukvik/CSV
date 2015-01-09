@@ -51,14 +51,6 @@
             <artifactId>swing-layout</artifactId>
             <version>1.0.3</version>
         </dependency>
-        <dependency>
-            <groupId>org.uispec4j</groupId>
-            <artifactId>uispec4j</artifactId>
-            <version>2.4</version>
-            <classifier>jdk16</classifier>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
     <description>A Java API for parsing comma separated files with ease</description>
     <build>
@@ -80,7 +72,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.laukvik.Viewer</mainClass>
+                            <mainClass>org.laukvik.swing.Viewer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -92,6 +84,7 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.csv</include>
+                    <include>**/*.properties</include>
                 </includes>
             </resource>
         </resources>

@@ -129,13 +129,13 @@ public class CsvReaderTest {
     @Test
     public void readCharset() {
         String filename = "charset.csv";
-        String charset = "utf-8";
+        String charset = "ISO-8859-1";
         String norwegian = "Norwegian æøå and ÆØÅ";
         try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
             while (r.hasNext()) {
                 Row row = r.next();
                 System.out.println("Norw: " + row.getString("text") + "=" + norwegian);
-                System.out.println("UTF: " + new String(row.getString("text").getBytes(), "utf-8"));
+//                System.out.println("UTF: " + new String(row.getString("text").getBytes(), "utf-8"));
                 assertEquals("Norwegian chars", norwegian, row.getString("text"));
             }
         } catch (IOException e) {

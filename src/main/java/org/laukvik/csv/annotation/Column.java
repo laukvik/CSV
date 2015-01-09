@@ -13,31 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.annotation;
 
-import java.io.File;
-import org.junit.Test;
-import org.laukvik.csv.db.EntityManager;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class EntityManagerTest {
+@Target(ElementType.FIELD)
+public @interface Column {
 
-    public EntityManagerTest() {
-    }
+    String name() default "";
 
-    @Test
-    public void testSomeMethod() {
-        EntityManager em = new EntityManager(getResource("person.csv"));
-//        List<Person> items = em.findAll(Person.class);
-
-    }
-
-    public static File getResource(String filename) {
-        ClassLoader classLoader = EntityManagerTest.class.getClassLoader();
-        return new File(classLoader.getResource(filename).getFile());
-    }
+    Class type() default Object.class;
 
 }

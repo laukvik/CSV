@@ -53,6 +53,7 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
         this.metaData = null;
         this.values = new ArrayList<>();
         parseRow();
+        this.metaData.setCharset(charset);
     }
 
     public Charset getCharset() {
@@ -184,21 +185,25 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
             if (!isNextLine) {
                 rawLine.append(currentChar);
             }
+
+
             if (addValue || is.available() == 0) {
+                if (is.available() == 0) {
+                    if (isWithinQuote) {
+                        currentValue.deleteCharAt(currentValue.length() - 1);
+                        isWithinQuote = false;
+                    }
+                }
                 values.add(currentValue.toString());
-//                addItem(currentValue.toString());
                 currentValue = new StringBuilder();
             }
         }
+
         if (lineCounter == 0) {
             this.metaData = new MetaData(values);
         }
         lineCounter++;
     }
-
-//    private void addItem(String item) {
-//        values.add(new String(item.getBytes(), charset));
-//    }
 
     @Override
     public void close() throws IOException {

@@ -16,6 +16,7 @@
 package org.laukvik.csv;
 
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.List;
 public class MetaData implements Serializable {
 
     private List<String> columnNames;
+    private Charset charset;
 
     public MetaData() {
         columnNames = new ArrayList<>();
@@ -40,6 +42,15 @@ public class MetaData implements Serializable {
         this.columnNames = new ArrayList<>();
         columnNames.addAll(Arrays.asList(columns));
     }
+
+    public Charset getCharset() {
+        return charset;
+    }
+
+    public void setCharset(Charset charset) {
+        this.charset = charset;
+    }
+
 
     public int getColumnCount() {
         return columnNames.size();
