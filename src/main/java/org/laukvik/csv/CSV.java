@@ -60,6 +60,7 @@ import java.util.List;
 public class CSV implements Serializable {
 
     public final static String MIME_TYPE = "text/csv";
+    public final static String FILE_EXTENSION = "csv";
     public final static Charset CHARSET_DEFAULT = Charset.forName("utf-8");
 
     public final static char LINEFEED = 10;
