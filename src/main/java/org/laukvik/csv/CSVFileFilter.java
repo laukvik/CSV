@@ -18,7 +18,10 @@ package org.laukvik.csv;
 import java.io.File;
 import java.io.FileFilter;
 
-public class CSVFileFilter implements FileFilter {
+public class CSVFileFilter extends javax.swing.filechooser.FileFilter implements FileFilter {
+
+    public CSVFileFilter() {
+    }
 
     @Override
     public boolean accept(File f) {
@@ -26,7 +29,7 @@ public class CSVFileFilter implements FileFilter {
         if (f.isHidden()) {
             return false;
         }
-        return (filename.endsWith(".csv"));
+        return (filename.endsWith("." + CSV.FILE_EXTENSION));
     }
 
     public String getDescription() {
