@@ -15,11 +15,14 @@
  */
 package org.laukvik.csv.swing;
 
+import java.awt.FileDialog;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
@@ -60,6 +63,9 @@ public class Viewer extends javax.swing.JFrame {
 
         helpMenu.setText(bundle.getString("help"));
         aboutMenuItem.setText(bundle.getString("about"));
+        jTable1.setColumnSelectionAllowed(true);
+
+
     }
 
     public CSVTableModel getModel() {
@@ -78,6 +84,8 @@ public class Viewer extends javax.swing.JFrame {
         model = new CSVTableModel(csv);
         jTable1.setModel(model);
         setTitle(file.getAbsolutePath());
+        statusLabel.setText(csv.getRowCount() + " rows");
+        getRootPane().putClientProperty("Window.documentFile", file);
     }
 
     /**
@@ -89,8 +97,7 @@ public class Viewer extends javax.swing.JFrame {
      * @return a cross-platfrom compatible keystroke
      */
     public static KeyStroke getKeystroke(int keyevent) {
-        return KeyStroke.getKeyStroke(keyevent, Toolkit.getDefaultToolkit()
-                .getMenuShortcutKeyMask());
+        return KeyStroke.getKeyStroke(keyevent, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
     }
 
     /**
@@ -104,6 +111,8 @@ public class Viewer extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jToolBar2 = new javax.swing.JToolBar();
+        statusLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
@@ -113,6 +122,12 @@ public class Viewer extends javax.swing.JFrame {
         printMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
@@ -130,9 +145,18 @@ public class Viewer extends javax.swing.JFrame {
             }
         ));
         jTable1.setCellSelectionEnabled(true);
+        jTable1.setShowGrid(true);
         jScrollPane1.setViewportView(jTable1);
 
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jToolBar2.setFloatable(false);
+        jToolBar2.setRollover(true);
+
+        statusLabel.setText("...");
+        jToolBar2.add(statusLabel);
+
+        getContentPane().add(jToolBar2, java.awt.BorderLayout.PAGE_END);
 
         fileMenu.setText("File");
 
@@ -174,6 +198,26 @@ public class Viewer extends javax.swing.JFrame {
 
         jMenuBar1.add(fileMenu);
 
+        jMenu1.setText(bundle.getString("edit")); // NOI18N
+
+        jMenuItem1.setText("Insert row");
+        jMenuItem1.setToolTipText("");
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setText("Delete row");
+        jMenu1.add(jMenuItem2);
+
+        jMenuItem3.setText("Insert column");
+        jMenu1.add(jMenuItem3);
+
+        jMenuItem4.setText("Delete column");
+        jMenu1.add(jMenuItem4);
+
+        jMenuItem5.setText("Goto...");
+        jMenu1.add(jMenuItem5);
+
+        jMenuBar1.add(jMenu1);
+
         helpMenu.setText("Help");
 
         aboutMenuItem.setText("About");
@@ -193,23 +237,36 @@ public class Viewer extends javax.swing.JFrame {
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
 
-        final JFileChooser fc = new JFileChooser();
-        fc.setFileFilter(new CSVFileFilter());
+//        final JFileChooser fc = new JFileChooser();
+//        fc.setFileFilter(new CSVFileFilter());
 
-        int returnVal = fc.showOpenDialog(this);
+//        int returnVal = fc.showOpenDialog(this);
 
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            try {
-                //This is where a real application would open the file.
-                openFile(file);
-            } catch (FileNotFoundException ex) {
-                JOptionPane.showMessageDialog(this, "File not found: " + file);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "Could not read file: " + file);
-            }
+        java.awt.FileDialog fd = new FileDialog(this,"Velg fil", FileDialog.LOAD);
+        fd.setFilenameFilter(new CSVFileFilter());
+        fd.setVisible(true);
+        String filename = fd.getFile();
+        if (filename == null) {
         } else {
+            try {
+                openFile(new File(fd.getDirectory(), filename));
+            } catch (IOException ex) {
+                Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
+//        if (returnVal == JFileChooser.APPROVE_OPTION) {
+//            File file = fc.getSelectedFile();
+//            try {
+//                //This is where a real application would open the file.
+//                openFile(file);
+//            } catch (FileNotFoundException ex) {
+//                JOptionPane.showMessageDialog(this, "File not found: " + file);
+//            } catch (IOException ex) {
+//                JOptionPane.showMessageDialog(this, "Could not read file: " + file);
+//            }
+//        } else {
+//        }
 
     }//GEN-LAST:event_openMenuItemActionPerformed
 
@@ -269,14 +326,22 @@ public class Viewer extends javax.swing.JFrame {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JToolBar jToolBar2;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem printMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JLabel statusLabel;
     // End of variables declaration//GEN-END:variables
 }
