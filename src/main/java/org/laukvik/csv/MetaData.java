@@ -83,4 +83,12 @@ public class MetaData implements Serializable {
         return columnNames;
     }
 
+    public void addColumn(String name, int columnIndex) {
+        columnNames.add(columnIndex, name);
+    }
+
+    public void removeColumn(int columnIndex) {
+        columnNames.remove(columnIndex);
+    }
+
 }

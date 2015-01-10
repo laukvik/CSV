@@ -52,8 +52,9 @@ import java.util.logging.Logger;
  * </code>
  *
  * <code>
- * CSV c = new CSV();
- * c.write( new Person() );
+ * CSV c = new CSV( Person.class );
+ * c.add( new Person("Bill","Gates") );
+ * c.write( new File("persons.csv") );
  * </code>
  *
  *
@@ -168,9 +169,6 @@ public class CSV implements Serializable {
         }
     }
 
-    public <T> List<T> magicalListGetter(Class<T> clazz) {
-        return null;
-    }
 
     public <T> List<T> readEntities(Class<T> aClass) {
         List<T> items = new ArrayList<>();
@@ -209,9 +207,42 @@ public class CSV implements Serializable {
         return items;
     }
 
-//    List<? extends Entity> readEntities2(Class<? extends Entity> aClass) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
+    /**
+     * Removes all rows
+     *
+     * @param fromRowIndex
+     * @param endRowIndex
+     */
+    public void removeRows(int fromRowIndex, int endRowIndex) {
+        rows.subList(fromRowIndex, endRowIndex + 1).clear();
+    }
 
+    public void insertRow(Row row, int rowIndex) {
+        row.setMetaData(metaData);
+        rows.add(rowIndex, row);
+    }
+
+    public void addColumn(String name) {
+        metaData.addColumn(name);
+        for (Row r : rows) {
+            r.add("");
+        }
+    }
+
+    public void insertColumn(String name, int columnIndex) {
+        metaData.addColumn(name, columnIndex);
+        for (Row r : rows) {
+            r.add("");
+            r.insert("", columnIndex);
+            r.setMetaData(metaData);
+        }
+    }
+
+    public void removeColumn(int columnIndex) {
+        metaData.removeColumn(columnIndex);
+        for (Row r : rows) {
+            r.remove(columnIndex);
+        }
+    }
 
 }

@@ -236,5 +236,13 @@ public class Row implements Serializable {
         }
     }
 
+    protected void insert(String value, int columnIndex) {
+        values.add(columnIndex, value);
+    }
+
+    protected void remove(int columnIndex) {
+        values.remove(columnIndex);
+    }
+
 
 }
