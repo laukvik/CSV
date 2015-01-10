@@ -21,14 +21,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *
- *
- * http://tools.ietf.org/rfc/rfc4180.txt
+ * An API for reading and writing to CSV. The implementation is based on the
+ * specficiations from http://tools.ietf.org/rfc/rfc4180.txt
  *
  * Read whole file into memory<br>
  *
@@ -41,17 +44,16 @@ import java.util.List;
  * <code>
  * CSV c = new CSV("First","Last");
  * c.addRow( "Bill","Gates" );
- * c.addRow( "Steve","Jobs" );
+ * c.addRow( new Row("Steve","Jobs") );
  * c.removeColumn("First");
- * c.removeColumn(2);
  * c.addColumn("Email);
- * c.addColumn(0);
+ * c.addColumn("Address",0);
  * c.write( new File("nerds.csv") );
  * </code>
  *
  * <code>
  * CSV c = new CSV();
- *
+ * c.write( new Person() );
  * </code>
  *
  *
@@ -166,6 +168,50 @@ public class CSV implements Serializable {
         }
     }
 
+    public <T> List<T> magicalListGetter(Class<T> clazz) {
+        return null;
+    }
+
+    public <T> List<T> readEntities(Class<T> aClass) {
+        List<T> items = new ArrayList<>();
+        try {
+            /* Iterate all rows */
+            for (Row r : rows) {
+                /* Create new Entity */
+                Object instance = aClass.newInstance();
+                items.add((T) instance);
+                /* Iterate all fields in object*/
+                for (Field f : instance.getClass().getDeclaredFields()) {
+                    /* Set accessible to allow injecting private fields - otherwise an exception will occur*/
+                    f.setAccessible(true);
+                    /* Get field value */
+                    Object value = f.get(instance);
+                    /* Find the name of the field - in code */
+                    String nameAttribute = f.getName();
+
+                    if (f.getType() == String.class) {
+                        f.set(instance, r.getString(nameAttribute));
+                    } else if (f.getType() == Integer.class) {
+                        f.set(instance, r.getInteger(nameAttribute));
+                    } else if (f.getType() == URL.class) {
+                        f.set(instance, r.getURL(nameAttribute));
+                    }
+
+                    f.setAccessible(false);
+                }
+            }
+        } catch (InstantiationException ex) {
+            Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return items;
+    }
+
+//    List<? extends Entity> readEntities2(Class<? extends Entity> aClass) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 
 
 }

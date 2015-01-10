@@ -32,10 +32,16 @@ public class Person {
     @Column(name = "last")
     private String lastName;
 
-    @Column(name = "age", type = Integer.class)
+    @Column(name = "age")
     private int age;
 
-    @Column(name = "homepage", type = URL.class)
+    @Column(name = "homepage")
     private URL homepage;
+
+    @Override
+    public String toString() {
+        return "Person{" + "firstName=" + firstName + ", lastName=" + lastName + ", age=" + age + ", homepage=" + homepage + '}';
+    }
+
 
 }

@@ -18,6 +18,7 @@ package org.laukvik.csv;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
@@ -175,5 +176,20 @@ public class CSVTest {
         }
     }
 
+    @Test
+    public void readEntities() {
+        try {
+            CSV csv = new CSV(getResource("person.csv"));
+            List<Person> items = csv.readEntities(Person.class);
+            int x = 1;
+            for (Object o : items) {
+                System.out.println(x + ":" + o);
+                x++;
+            }
+//            List<Person> items = csv.readEntities(Person.class);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+    }
 
 }

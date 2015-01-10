@@ -1,2 +1,3 @@
-first,last,age,homepage
-Morten,Laukvik,42,"http://www.laukvik.no"
+firstName,lastName,age,homepage
+Steve,Jobs,42,"http://www.apple.com"
+Bill,Gates,43,"http://www.microsoft.com"
