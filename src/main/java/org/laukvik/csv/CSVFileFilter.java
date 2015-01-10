@@ -17,8 +17,9 @@ package org.laukvik.csv;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FilenameFilter;
 
-public class CSVFileFilter extends javax.swing.filechooser.FileFilter implements FileFilter {
+public class CSVFileFilter extends javax.swing.filechooser.FileFilter implements FileFilter, FilenameFilter {
 
     public CSVFileFilter() {
     }
@@ -34,5 +35,10 @@ public class CSVFileFilter extends javax.swing.filechooser.FileFilter implements
 
     public String getDescription() {
         return "Comma Separated Files (*.csv)";
+    }
+
+    @Override
+    public boolean accept(File dir, String name) {
+        return (name.endsWith("." + CSV.FILE_EXTENSION));
     }
 }
