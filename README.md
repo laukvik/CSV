@@ -1,61 +1,45 @@
 LaukvikCSV
 ==========
 
-A Java library to parse CSV files. It can read very large files by using
-an event based reader (CSVReader). This requires minimum memory. For smaller
-files you can read the whole CSV file into memory (CSV).
+An easy to use API for reading and writing to CSV files.
 
-
-Reading files directly to memory
+Create an empty CSV
 --------------------------------------------------------------------------------
 
     CSV csv = new CSV();
-    csv.parse(new File("cars.csv"));
-    System.out.println(csv.getCell(2,3)); // Grand Cherokeee
-
-
-
-Reading very large files
+    
+Add two columns
 --------------------------------------------------------------------------------
 
-    /* Create reader */
-    CSVReader csv = new CSVReader();
-
-    /* Add listener when header and rows are found */
-    csv.addListener(new CSVListener() {
-        @Override
-        public void foundRow(int rowIndex, String[] values) {
-            System.out.print("#" + rowIndex + "\t");
-            for (String s : values) {
-                System.out.print(s + "__");
-            }
-            System.out.println();
-        }
-
-        @Override
-        public void foundHeaders(String[] values) {
-            System.out.print("Headers:");
-            for (String s : values) {
-                System.out.print(s + ",");
-            }
-            System.out.println();
-        }
-    });
-
-    /* Start reading cars.csv file */
-    csv.read(Example.class.getResourceAsStream("cars.csv"));
-
-CSV
+    csv.addColumn("First");
+    csv.addColumn("Last");
+    
+Add a new row
 --------------------------------------------------------------------------------
 
-Year,Make,Model,Description,Price
+    csv.addRow("Bill","Gates");
 
-1997,Ford,E350,"ac, abs, moon",3000.00
+Write to file
+--------------------------------------------------------------------------------
 
-1999,Chevy,"Venture ""Extended Edition""","",4900.00
+    csv.write( new File("contacts.csv") );
+    
+Reading an existing file
+--------------------------------------------------------------------------------
 
-1999,Chevy,"Venture ""Extended Edition, Very Large""",,5000.00
+    CSV csv = new CSV( new File("contacts.csv") );
 
-1996,Jeep,Grand Cherokee,"MUST SELL!
+Getting a specific row/column
+--------------------------------------------------------------------------------
 
-air, moon roof, loaded",4799.00
+    System.out.println( csv.getRow(2).getString(3) );
+
+Iterating all rows
+--------------------------------------------------------------------------------
+
+    for (int y=0; y<csv.getRowCount(); y++){
+        Row row = csv.getRow(y);
+    }
+
+
+
