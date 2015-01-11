@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 
@@ -81,9 +82,8 @@ public class CSVTest {
 
             assertEquals("Blue Dog The Magician", "\"Blue Dog\", \"The Magician\"", r.getString(2));
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
-
         }
     }
 
@@ -105,7 +105,7 @@ public class CSVTest {
             Row r = csv.getRow(1);
 
             assertEquals("Venture", "Venture \"Extended Edition\"", r.getString(2));
-        } catch (IOException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
@@ -127,7 +127,7 @@ public class CSVTest {
 
             Row r = csv.getRow(0);
             assertEquals("ac, abs, moon", "ac, abs, moon", r.getString(3));
-        } catch (IOException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
@@ -148,7 +148,7 @@ public class CSVTest {
             Row r = csv.getRow(0);
 
             assertEquals("Spoke Tuesday, he's interested", r.getString(3));
-        } catch (IOException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
@@ -171,8 +171,21 @@ public class CSVTest {
             Row r = csv.getRow(3);
 
             assertEquals("GPA", "3.48", r.getString("GPA"));
-        } catch (IOException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void readInvalid() {
+        try {
+            CSV csv = new CSV(getResource("invalid.csv"), Charset.forName("utf-8"));
+            MetaData md = csv.getMetaData();
+            assertEquals("First", "First", md.getColumnName(0));
+            assertEquals("Last", "Last", md.getColumnName(1));
+            assertSame("ColumnCount", 2, md.getColumnCount());
+        } catch (Exception e) {
+            assertTrue("Found invalid data", (e instanceof InvalidRowDataException));
         }
     }
 
@@ -182,12 +195,11 @@ public class CSVTest {
             CSV csv = new CSV(getResource("person.csv"));
             List<Person> items = csv.readEntities(Person.class);
             int x = 1;
-            for (Object o : items) {
-                System.out.println(x + ":" + o);
+            for (Person p : items) {
+                System.out.println(x + ":" + p);
                 x++;
             }
-//            List<Person> items = csv.readEntities(Person.class);
-        } catch (IOException e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
