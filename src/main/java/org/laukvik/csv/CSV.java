@@ -89,15 +89,15 @@ public class CSV implements Serializable {
         this(new MetaData(headers));
     }
 
-    public CSV(File file) throws IOException {
+    public CSV(File file) throws IOException, ParseException, ParseException {
         this(new FileInputStream(file), CHARSET_DEFAULT);
     }
 
-    public CSV(File file, Charset charset) throws IOException {
+    public CSV(File file, Charset charset) throws IOException, ParseException {
         this(new FileInputStream(file), charset);
     }
 
-    public CSV(InputStream inputStream, Charset charset) throws IOException {
+    public CSV(InputStream inputStream, Charset charset) throws IOException, InvalidRowDataException {
         rows = new ArrayList<>();
         this.charset = charset;
         try (CsvReader reader = new CsvReader(inputStream, charset)) {
@@ -105,6 +105,9 @@ public class CSV implements Serializable {
             while (reader.hasNext()) {
                 Row row = reader.getRow();
                 row.setMetaData(metaData);
+                if (row.getValues().size() != metaData.getColumnCount()) {
+                     throw new InvalidRowDataException(row.getValues().size(), metaData.getColumnCount(), rows.size());
+                }
                 rows.add(row);
             }
         } catch (IOException e) {
@@ -132,8 +135,13 @@ public class CSV implements Serializable {
     }
 
     public void addRow(Row row) {
+        if (row.getValues().size() != metaData.getColumnCount()) {
+//            throw new IllegalArgumentException(row.getValues().size(), metaData.getColumnCount(), rows.size());
+            throw new IllegalArgumentException("Incorrect columns in row");
+        }
         row.setMetaData(metaData);
         rows.add(row);
+
     }
 
     public void addRow(String... values) {
@@ -232,7 +240,6 @@ public class CSV implements Serializable {
     public void insertColumn(String name, int columnIndex) {
         metaData.addColumn(name, columnIndex);
         for (Row r : rows) {
-            r.add("");
             r.insert("", columnIndex);
             r.setMetaData(metaData);
         }

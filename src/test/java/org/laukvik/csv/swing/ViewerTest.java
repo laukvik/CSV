@@ -16,8 +16,8 @@
 package org.laukvik.csv.swing;
 
 import java.io.File;
-import java.io.IOException;
 import org.junit.Assert;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
@@ -69,8 +69,8 @@ public class ViewerTest {
             Assert.assertEquals("ColumnCount", 4, model.getColumnCount());
 
 
-        } catch (IOException e) {
-            Assert.fail(e.getMessage());
+        } catch (Exception e) {
+            fail(e.getMessage());
         }
     }
 

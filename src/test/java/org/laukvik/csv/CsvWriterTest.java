@@ -58,6 +58,8 @@ public class CsvWriterTest {
             assertEquals("Find by row index and column name", "Gates", csv.getRow(0).getString("Last"));
         } catch (IOException ex) {
             fail("Failed to read CSV file!");
+        } catch (ParseException ex) {
+            fail("Failed to parse CSV file!");
         }
 
     }

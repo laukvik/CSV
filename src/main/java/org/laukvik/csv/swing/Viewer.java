@@ -24,8 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
@@ -36,6 +34,7 @@ import javax.swing.event.TableModelEvent;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.CSVFileFilter;
 import org.laukvik.csv.CSVTableModel;
+import org.laukvik.csv.ParseException;
 import org.laukvik.csv.Row;
 
 /**
@@ -76,7 +75,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         aboutMenuItem.setText(bundle.getString("about"));
 
         table.setColumnSelectionAllowed(false);
-        table.setRowSelectionAllowed(false);
+        table.setRowSelectionAllowed(true);
+        table.setCellSelectionEnabled(true);
 
         table.getSelectionModel().addListSelectionListener(this);
 
@@ -84,7 +84,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         csv = new CSV();
         model = new CSVTableModel(csv);
         table.setModel(model);
-        jScrollPane1.setVisible(false);
+
 
     }
 
@@ -113,7 +113,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         setTitle("Untitled");
     }
 
-    public void openFile(File file) throws FileNotFoundException, IOException {
+    public void openFile(File file) throws FileNotFoundException, IOException, ParseException {
         this.file = file;
         csv = new CSV(file);
         model = new CSVTableModel(csv);
@@ -122,7 +122,6 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         statusLabel.setText(csv.getRowCount() + " rows");
         getRootPane().putClientProperty("Window.documentFile", file);
 
-        jScrollPane1.setVisible(true);
 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
@@ -280,7 +279,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
 
         jMenuBar1.add(editMenu);
 
-        insertMenu.setText("jMenu2");
+        insertMenu.setText(bundle.getString("insert")); // NOI18N
 
         insertRowMenuItem.setText("Insert row");
         insertRowMenuItem.setToolTipText("");
@@ -344,8 +343,12 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         } else {
             try {
                 openFile(new File(fd.getDirectory(), filename));
+            } catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(this, "Fant ikke fil", "", JOptionPane.ERROR_MESSAGE);
             } catch (IOException ex) {
-                Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Kunne ikke åpne", "", JOptionPane.ERROR_MESSAGE);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "Feil i CSV fil", "", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_openMenuItemActionPerformed
@@ -402,7 +405,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         csv = new CSV();
         model = new CSVTableModel(csv);
         table.setModel(model);
-        jScrollPane1.setVisible(false);
+
         getRootPane().putClientProperty("Window.documentFile", null);
         setTitle("");
     }//GEN-LAST:event_newMenuItemActionPerformed
@@ -412,9 +415,10 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         String answer = JOptionPane.showInputDialog(this,"Navn", "", JOptionPane.QUESTION_MESSAGE);
         if (answer!=null){
             int min = table.getSelectionModel().getMinSelectionIndex();
+            min = 0;
             csv.insertColumn(answer, min);
             table.tableChanged(new TableModelEvent(model, TableModelEvent.HEADER_ROW));
-            jScrollPane1.setVisible(true);
+            ;
         }
 
     }//GEN-LAST:event_insertColumnMenuItemActionPerformed
@@ -427,6 +431,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
             values.add("");
         }
 
+        min = 0;
         csv.insertRow(new Row(values), min);
 
         table.tableChanged( new TableModelEvent(model));
@@ -450,7 +455,9 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
     private void deleteColumnMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteColumnMenuItemActionPerformed
 
         int min = table.getSelectedRow();
-        csv.removeColumn(0);
+        if (min > -1){
+        }
+        csv.removeColumn(min);
         table.tableChanged( new TableModelEvent(model,TableModelEvent.HEADER_ROW));
     }//GEN-LAST:event_deleteColumnMenuItemActionPerformed
 
