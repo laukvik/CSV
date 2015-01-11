@@ -1,6 +1,3 @@
-LaukvikCSV
-==========
-
 An easy to use API for reading and writing to CSV files.
 
 Create an empty CSV
