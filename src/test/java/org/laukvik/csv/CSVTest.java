@@ -35,8 +35,21 @@ import org.junit.Test;
  */
 public class CSVTest {
 
-//    @Test
+    @Test
+    public void createNew() {
+        CSV csv = new CSV();
+        csv.addColumn("First");
+        csv.addColumn("Last");
+        Row r1 = csv.addRow("Bill", "Gates");
+        assertEquals("Row1", 2, r1.getValues().size());
+        Row r2 = csv.addRow("Steve", "Jobs");
+        assertEquals("Row1", 2, r2.getValues().size());
+        assertSame("RowCount", csv.getRowCount(), 2);
+    }
+
+    @Test
     public void shouldWrite() {
+
         CSV csv = new CSV("First", "Last");
         MetaData md = csv.getMetaData();
 
