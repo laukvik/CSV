@@ -106,7 +106,7 @@ public class CSV implements Serializable {
                 Row row = reader.getRow();
                 row.setMetaData(metaData);
                 if (row.getValues().size() != metaData.getColumnCount()) {
-                     throw new InvalidRowDataException(row.getValues().size(), metaData.getColumnCount(), rows.size());
+                    throw new InvalidRowDataException(row.getValues().size(), metaData.getColumnCount(), rows.size(), row);
                 }
                 rows.add(row);
             }
@@ -134,22 +134,17 @@ public class CSV implements Serializable {
         return rows.get(rowIndex);
     }
 
-    public void addRow(Row row) {
+    public Row addRow(Row row) {
         if (row.getValues().size() != metaData.getColumnCount()) {
-//            throw new IllegalArgumentException(row.getValues().size(), metaData.getColumnCount(), rows.size());
             throw new IllegalArgumentException("Incorrect columns in row");
         }
         row.setMetaData(metaData);
         rows.add(row);
-
+        return row;
     }
 
-    public void addRow(String... values) {
-        Row row = new Row();
-        for (String v : values) {
-            row.add(v);
-        }
-        addRow(row);
+    public Row addRow(String... values) {
+        return addRow(new Row(values));
     }
 
     public void removeRow(int rowIndex) {
@@ -225,30 +220,37 @@ public class CSV implements Serializable {
         rows.subList(fromRowIndex, endRowIndex + 1).clear();
     }
 
-    public void insertRow(Row row, int rowIndex) {
+    public Row insertRow(Row row, int rowIndex) {
         row.setMetaData(metaData);
         rows.add(rowIndex, row);
+        return row;
     }
 
-    public void addColumn(String name) {
+    public String addColumn(String name) {
         metaData.addColumn(name);
         for (Row r : rows) {
             r.add("");
         }
+        return name;
     }
 
-    public void insertColumn(String name, int columnIndex) {
+    public String insertColumn(String name, int columnIndex) {
         metaData.addColumn(name, columnIndex);
         for (Row r : rows) {
             r.insert("", columnIndex);
-            r.setMetaData(metaData);
         }
+        return name;
     }
 
-    public void removeColumn(int columnIndex) {
-        metaData.removeColumn(columnIndex);
+    /**
+     * Removes the column with the specified index
+     *
+     * @param index
+     */
+    public void removeColumn(int index) {
+        metaData.removeColumn(index);
         for (Row r : rows) {
-            r.remove(columnIndex);
+            r.remove(index);
         }
     }
 
