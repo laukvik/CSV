@@ -64,8 +64,9 @@ public class MetaData implements Serializable {
         columnNames.set(column, name);
     }
 
-    protected void addColumn(String columnName) {
+    protected String addColumn(String columnName) {
         columnNames.add(columnName);
+        return columnName;
     }
 
     public int getColumnIndex(String column) {
@@ -89,6 +90,14 @@ public class MetaData implements Serializable {
 
     public void removeColumn(int columnIndex) {
         columnNames.remove(columnIndex);
+    }
+
+    public Row createEmptyRow() {
+        Row r = new Row();
+        for (String columnName : columnNames) {
+            r.add("");
+        }
+        return r;
     }
 
 }
