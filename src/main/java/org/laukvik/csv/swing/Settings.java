@@ -13,24 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.swing;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class ColumnNotFoundException extends IllegalArgumentException {
-
-    public ColumnNotFoundException(int index, int required) {
-        super("Column with index " + index + " was not found. Required: " + required);
-    }
-
-    public ColumnNotFoundException(int index) {
-        super("Column with index " + index + " was not found");
-    }
-
-    public ColumnNotFoundException(String name) {
-        super("Column with name " + name + " was not found");
-    }
+public class Settings {
 
 }

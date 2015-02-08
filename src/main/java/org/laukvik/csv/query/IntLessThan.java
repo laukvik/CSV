@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.query;
+
+import org.laukvik.csv.Row;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class ColumnNotFoundException extends IllegalArgumentException {
+public class IntLessThan extends RowMatcher {
 
-    public ColumnNotFoundException(int index, int required) {
-        super("Column with index " + index + " was not found. Required: " + required);
+    int value;
+
+    public IntLessThan(int columnIndex, int value) {
+        super(columnIndex);
+        this.value = value;
     }
 
-    public ColumnNotFoundException(int index) {
-        super("Column with index " + index + " was not found");
-    }
-
-    public ColumnNotFoundException(String name) {
-        super("Column with name " + name + " was not found");
+    @Override
+    public boolean mathes(Row row) {
+        return row.getInteger(columnIndex) < value;
     }
 
 }

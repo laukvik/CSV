@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.columns;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class ColumnNotFoundException extends IllegalArgumentException {
+public interface Column<T> {
 
-    public ColumnNotFoundException(int index, int required) {
-        super("Column with index " + index + " was not found. Required: " + required);
-    }
+    public String asString(T value);
 
-    public ColumnNotFoundException(int index) {
-        super("Column with index " + index + " was not found");
-    }
+    public T parse(String value);
 
-    public ColumnNotFoundException(String name) {
-        super("Column with name " + name + " was not found");
-    }
+    public int compare(T one, T another);
+
+    public String getName();
+
+    public void setName(String name);
 
 }

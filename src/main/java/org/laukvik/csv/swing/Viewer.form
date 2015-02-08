@@ -150,6 +150,13 @@
                 <Property name="text" type="java.lang.String" value="Find"/>
               </Properties>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem6">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/laukvik/csv/messages.properties" key="replace" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="toolsMenu">
@@ -161,7 +168,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="insertColumnMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Insert column"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/laukvik/csv/messages.properties" key="column_new" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="insertColumnMenuItemActionPerformed"/>
@@ -169,13 +178,15 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="deleteColumnMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Delete column"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/laukvik/csv/messages.properties" key="column_delete" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteColumnMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <Menu class="javax.swing.JMenu" name="jMenu1">
+            <Menu class="javax.swing.JMenu" name="charsetMenu">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Encoding"/>
               </Properties>

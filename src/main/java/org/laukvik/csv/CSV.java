@@ -17,6 +17,7 @@ package org.laukvik.csv;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.query.Query;
+
 
 /**
  * An API for reading and writing to CSV. The implementation is based on the
@@ -75,9 +80,9 @@ public class CSV implements Serializable {
     public final static char QUOTE = '"';
     public final static String CRLF = "\r\n";
 
-    private MetaData metaData;
-    private List<Row> rows;
-    private Charset charset;
+    protected MetaData metaData;
+    protected List<Row> rows;
+    protected Charset charset;
 
     public CSV(MetaData metaData) {
         this.metaData = metaData;
@@ -85,23 +90,46 @@ public class CSV implements Serializable {
         this.charset = CHARSET_DEFAULT;
     }
 
-    public CSV(String... headers) {
-        this(new MetaData(headers));
+    public CSV() {
+        this.metaData = new MetaData();
+        this.rows = new ArrayList<>();
+        this.charset = CHARSET_DEFAULT;
+    }
+
+    public CSV(Column... columns) {
+        this.metaData = new MetaData(columns);
+        this.rows = new ArrayList<>();
+        this.charset = CHARSET_DEFAULT;
+    }
+
+    public CSV(File file, MetaData metadata) throws IOException, ParseException, InvalidRowDataException {
+        this(new FileInputStream(file), CHARSET_DEFAULT, metadata);
     }
 
     public CSV(File file) throws IOException, ParseException, ParseException {
-        this(new FileInputStream(file), CHARSET_DEFAULT);
+        this(new FileInputStream(file), CHARSET_DEFAULT, null);
     }
 
     public CSV(File file, Charset charset) throws IOException, ParseException {
-        this(new FileInputStream(file), charset);
+        this(new FileInputStream(file), charset, null);
     }
 
     public CSV(InputStream inputStream, Charset charset) throws IOException, InvalidRowDataException {
+        this(inputStream, charset, null);
+    }
+
+    public CSV(InputStream inputStream, Charset charset, MetaData metadata) throws IOException, InvalidRowDataException {
         rows = new ArrayList<>();
         this.charset = charset;
-        try (CsvReader reader = new CsvReader(inputStream, charset)) {
-            this.metaData = reader.getMetaData();
+
+
+        try (CsvReader reader = new CsvReader(inputStream, charset, metadata)) {
+            if (metadata == null) {
+                this.metaData = reader.getMetaData();
+            } else {
+                this.metaData = metadata;
+
+            }
             while (reader.hasNext()) {
                 Row row = reader.getRow();
                 row.setMetaData(metaData);
@@ -114,6 +142,7 @@ public class CSV implements Serializable {
             throw e;
         }
     }
+
 
     public MetaData getMetaData() {
         return metaData;
@@ -155,6 +184,44 @@ public class CSV implements Serializable {
         rows.clear();
     }
 
+//    public Query createQuery() {
+//        Query q = new Query(metaData, this);
+//        return q;
+//    }
+
+//    /**
+//     * Find all rows matching the specified filters
+//     *
+//     * @param query
+//     * @return
+//     */
+//    public List<Row> findWithQuery(Query query) {
+//        List<Row> filteredRows = new ArrayList<>();
+//        int matchesRequired = query.getFilters().size();
+//        for (Row r : rows) {
+//            if (matchesRequired == 0) {
+//                /* Dont use filters - add all */
+//                filteredRows.add(r);
+//            } else {
+//                /* Use filtering */
+//                int matchCount = 0;
+//                for (Filter f : query.getFilters()) {
+//                    if (f.accepts(r)) {
+//                        matchCount++;
+//                    }
+//                }
+//                if (matchCount == matchesRequired) {
+//                    filteredRows.add(r);
+//                }
+//            }
+//        }
+//        if (!query.getSortOrders().isEmpty()) {
+//            MultipleRowSorter multipleSorter = new MultipleRowSorter(query.getSortOrders());
+//            Collections.sort(filteredRows, multipleSorter);
+//        }
+//        return filteredRows;
+//    }
+
     /**
      * Writes the contents to file
      *
@@ -170,44 +237,6 @@ public class CSV implements Serializable {
         } catch (IOException e) {
             throw e;
         }
-    }
-
-
-    public <T> List<T> readEntities(Class<T> aClass) {
-        List<T> items = new ArrayList<>();
-        try {
-            /* Iterate all rows */
-            for (Row r : rows) {
-                /* Create new Entity */
-                Object instance = aClass.newInstance();
-                items.add((T) instance);
-                /* Iterate all fields in object*/
-                for (Field f : instance.getClass().getDeclaredFields()) {
-                    /* Set accessible to allow injecting private fields - otherwise an exception will occur*/
-                    f.setAccessible(true);
-                    /* Get field value */
-                    Object value = f.get(instance);
-                    /* Find the name of the field - in code */
-                    String nameAttribute = f.getName();
-
-                    if (f.getType() == String.class) {
-                        f.set(instance, r.getString(nameAttribute));
-                    } else if (f.getType() == Integer.class) {
-                        f.set(instance, r.getInteger(nameAttribute));
-                    } else if (f.getType() == URL.class) {
-                        f.set(instance, r.getURL(nameAttribute));
-                    }
-
-                    f.setAccessible(false);
-                }
-            }
-        } catch (InstantiationException ex) {
-            Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return items;
     }
 
     /**
@@ -227,7 +256,7 @@ public class CSV implements Serializable {
     }
 
     public String addColumn(String name) {
-        metaData.addColumn(name);
+        metaData.addColumn(new StringColumn(name));
         for (Row r : rows) {
             r.add("");
         }
@@ -252,6 +281,108 @@ public class CSV implements Serializable {
         for (Row r : rows) {
             r.remove(index);
         }
+    }
+
+    private static File getLibrary() {
+        return new File(System.getProperty("user.home"), "Library");
+    }
+
+    private static File getHome() {
+        File file = new File(getLibrary(), "org.laukvik.csv");
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        return file;
+    }
+
+    public static File getFile(Class aClass) {
+        File file = new File(getHome(), aClass.getCanonicalName() + ".csv");
+        return file;
+    }
+
+    /**
+     * Find an object directly
+     *
+     * @param <T>
+     * @param aClass
+     * @return
+     */
+    public static <T> T find(Class<T> aClass) {
+        return null;
+    }
+
+    private static <T> T createInstance(Row row, Class<T> aClass) throws InstantiationException, IllegalAccessException {
+        Object instance = aClass.newInstance();
+
+        /* Iterate all fields in object*/
+        for (Field f : instance.getClass().getDeclaredFields()) {
+            /* Set accessible to allow injecting private fields - otherwise an exception will occur*/
+            f.setAccessible(true);
+            /* Get field value */
+            Object value = f.get(instance);
+            /* Find the name of the field - in code */
+            String nameAttribute = f.getName();
+
+            if (f.getType() == String.class) {
+                f.set(instance, row.getString(nameAttribute));
+            } else if (f.getType() == Integer.class) {
+                f.set(instance, row.getInteger(nameAttribute));
+            } else if (f.getType() == URL.class) {
+                f.set(instance, row.getURL(nameAttribute));
+            }
+
+            f.setAccessible(false);
+        }
+        return (T) instance;
+    }
+
+    public static <T> List<T> findAll(Class<T> aClass) {
+        File file = getFile(aClass);
+        try {
+            return findAll(new FileInputStream(file), CSV.CHARSET_DEFAULT, aClass);
+        } catch (FileNotFoundException ex) {
+            List<T> items = new ArrayList<>();
+            return items;
+        }
+    }
+
+    public static <T> List<T> findAll(InputStream inputStream, Charset charset, Class<T> aClass) {
+        List<T> items = new ArrayList<>();
+        try (CsvReader reader = new CsvReader(inputStream, charset, null)) {
+            int x = 0;
+            while (reader.hasNext()) {
+                Row row = reader.getRow();
+                row.setMetaData(reader.getMetaData());
+                if (row.getValues().size() != reader.getMetaData().getColumnCount()) {
+//                    throw new InvalidRowDataException(row.getValues().size(), reader.getMetaData().getColumnCount(), x, row);
+                }
+                items.add(createInstance(row, aClass));
+            }
+        } catch (IOException e) {
+
+        } catch (InstantiationException ex) {
+            Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return items;
+    }
+
+    public static <T> void saveAll(List<? extends Object> objects, Class<T> aClass) throws IllegalArgumentException, IllegalAccessException {
+        File file = CSV.getFile(aClass);
+        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file), CSV.CHARSET_DEFAULT)) {
+            writer.writeMetaData(aClass);
+            for (Object o : objects) {
+                writer.writeEntityRow(o);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Query findByQuery() {
+        return new Query(metaData, this);
     }
 
 }

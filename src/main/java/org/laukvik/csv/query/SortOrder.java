@@ -13,24 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.query;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class ColumnNotFoundException extends IllegalArgumentException {
+public class SortOrder {
 
-    public ColumnNotFoundException(int index, int required) {
-        super("Column with index " + index + " was not found. Required: " + required);
+    private final int columnIndex;
+    private final Type type;
+
+    public enum Type {
+
+        ASC, DESC, NONE
     }
 
-    public ColumnNotFoundException(int index) {
-        super("Column with index " + index + " was not found");
+    public final static Type ASC = Type.ASC;
+    public final static Type DESC = Type.DESC;
+    public final static Type NONE = Type.NONE;
+
+    public SortOrder(int columnIndex, Type type) {
+        this.columnIndex = columnIndex;
+        this.type = type;
     }
 
-    public ColumnNotFoundException(String name) {
-        super("Column with name " + name + " was not found");
+    public int getColumnIndex() {
+        return columnIndex;
+    }
+
+    public Type getType() {
+        return type;
     }
 
 }

@@ -18,12 +18,13 @@ package org.laukvik.csv;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import org.laukvik.csv.columns.Column;
 
 /**
  * Date created = is.readDate("created");<br>
@@ -47,8 +48,6 @@ import java.util.List;
  * @author Morten Laukvik <morten@laukvik.no>
  */
 public class Row implements Serializable {
-
-    public final DateFormat dateFormat = new SimpleDateFormat("");
 
     private final List<String> values;
     private MetaData metaData;
@@ -78,6 +77,17 @@ public class Row implements Serializable {
 
     public void setMetaData(MetaData metaData) {
         this.metaData = metaData;
+    }
+
+    public Object getValue(String column) {
+        int columnIndex = metaData.getColumnIndex(column);
+        Column c = metaData.getColumn(columnIndex);
+        return c.parse(values.get(columnIndex));
+    }
+
+    public Object getValue(int columnIndex) {
+        Column c = metaData.getColumn(columnIndex);
+        return c.parse(values.get(columnIndex));
     }
 
     public String getRaw() {
@@ -189,6 +199,16 @@ public class Row implements Serializable {
         }
     }
 
+    public Date getDate(int column) {
+        String value = getString(column);
+        try {
+            Long millis = Long.parseLong(value);
+            return new Date(millis);
+        } catch (Exception e) {
+            throw new ConversionException(value, "Date(in milliseconds since 1970)");
+        }
+    }
+
     public Date getDate(int columnIndex, String pattern) {
         return getDate(columnIndex, new SimpleDateFormat(pattern));
     }
@@ -244,5 +264,41 @@ public class Row implements Serializable {
         values.remove(columnIndex);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder b = new StringBuilder();
+        b.append(values);
+        return b.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 41 * hash + Objects.hashCode(this.values);
+        hash = 41 * hash + Objects.hashCode(this.raw);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Row other = (Row) obj;
+        if (!Objects.equals(this.values, other.values)) {
+            return false;
+        }
+        if (!Objects.equals(this.raw, other.raw)) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isEmpty(int columnIndex) {
+        return values.get(columnIndex).isEmpty();
+    }
 
 }

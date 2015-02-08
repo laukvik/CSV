@@ -18,10 +18,13 @@ package org.laukvik.csv;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.laukvik.csv.columns.StringColumn;
 
 /**
  *
@@ -42,15 +45,15 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
     private Row row;
     private List<String> values;
 
-    public CsvReader(InputStream is) throws IOException {
-        this(is, CSV.CHARSET_DEFAULT);
+    public CsvReader(InputStream is, MetaData metaData) throws IOException {
+        this(is, CSV.CHARSET_DEFAULT, metaData);
     }
 
-    public CsvReader(InputStream is, Charset charset) throws IOException {
+    public CsvReader(InputStream is, Charset charset, MetaData metaData) throws IOException {
         this.is = new BufferedInputStream(is);
         this.charset = charset;
         this.lineCounter = 0;
-        this.metaData = null;
+        this.metaData = metaData;
         this.values = new ArrayList<>();
         parseRow();
         this.metaData.setCharset(charset);
@@ -200,7 +203,21 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
         }
 
         if (lineCounter == 0) {
-            this.metaData = new MetaData(values);
+            if (metaData == null) {
+                /* Metadata not provided. Use strings only */
+                this.metaData = new MetaData();
+                for (String s : values) {
+//                    System.out.println("StringOnly: " + s);
+                    metaData.addColumn(new StringColumn(s));
+                }
+            } else {
+                /* User specified columns */
+                for (int x = 0; x < values.size(); x++) {
+                    String s = values.get(x);
+                    metaData.getColumn(x).setName(s);
+//                    System.out.println("Custom: " + s + " " + metaData.getColumn(x));
+                }
+            }
         }
         lineCounter++;
     }
@@ -223,5 +240,32 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
     public Row next() {
         return row;
     }
+
+    public static <T> T createInstance(Row row, Class<T> aClass) throws InstantiationException, IllegalAccessException {
+        Object instance = aClass.newInstance();
+
+        /* Iterate all fields in object*/
+        for (Field f : instance.getClass().getDeclaredFields()) {
+            /* Set accessible to allow injecting private fields - otherwise an exception will occur*/
+            f.setAccessible(true);
+            /* Get field value */
+            Object value = f.get(instance);
+            /* Find the name of the field - in code */
+            String nameAttribute = f.getName();
+
+            if (f.getType() == String.class) {
+                f.set(instance, row.getString(nameAttribute));
+            } else if (f.getType() == Integer.class) {
+                f.set(instance, row.getInteger(nameAttribute));
+            } else if (f.getType() == URL.class) {
+                f.set(instance, row.getURL(nameAttribute));
+            }
+
+            f.setAccessible(false);
+        }
+        return (T) instance;
+    }
+
+
 
 }

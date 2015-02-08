@@ -20,6 +20,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.laukvik.csv.columns.Column;
 
 /**
  *
@@ -27,20 +28,19 @@ import java.util.List;
  */
 public class MetaData implements Serializable {
 
-    private List<String> columnNames;
+    private final List<Column> columns;
     private Charset charset;
 
     public MetaData() {
-        columnNames = new ArrayList<>();
+        columns = new ArrayList<>();
     }
 
-    public MetaData(List<String> columnNames) {
-        this.columnNames = columnNames;
+    public MetaData(Column... columns) {
+        this.columns = new ArrayList<>(Arrays.asList(columns));
     }
 
-    public MetaData(String... columns) {
-        this.columnNames = new ArrayList<>();
-        columnNames.addAll(Arrays.asList(columns));
+    public Column getColumn(int columnIndex) {
+        return columns.get(columnIndex);
     }
 
     public Charset getCharset() {
@@ -53,51 +53,56 @@ public class MetaData implements Serializable {
 
 
     public int getColumnCount() {
-        return columnNames.size();
+        return columns.size();
+    }
+
+    public void addColumn(Column column) {
+        columns.add(column);
+    }
+
+    public void removeColumn(Column column) {
+        columns.remove(column);
+    }
+
+    public int indexOf(Column column) {
+        return columns.indexOf(column);
     }
 
     public String getColumnName(int column) {
-        return columnNames.get(column);
+        return columns.get(column).getName();
     }
 
     public void setColumnName(String name, int column) {
-        columnNames.set(column, name);
-    }
-
-    protected String addColumn(String columnName) {
-        columnNames.add(columnName);
-        return columnName;
+        columns.get(column).setName(name);
     }
 
     public int getColumnIndex(String column) {
         int x = 0;
-        for (String c : columnNames) {
-            if (c.equalsIgnoreCase(column)) {
+        for (Column c : columns) {
+            if (c.getName().equalsIgnoreCase(column)) {
                 return x;
             }
             x++;
         }
-        return x;
-    }
-
-    public List<String> getValues() {
-        return columnNames;
+        throw new ColumnNotFoundException(x);
     }
 
     public void addColumn(String name, int columnIndex) {
-        columnNames.add(columnIndex, name);
+//        columns.add(new StringColumn(name), name);
+        throw new IllegalArgumentException("Not implemented yet");
     }
 
     public void removeColumn(int columnIndex) {
-        columnNames.remove(columnIndex);
+        columns.remove(columnIndex);
     }
 
     public Row createEmptyRow() {
         Row r = new Row();
-        for (String columnName : columnNames) {
-            r.add("");
-        }
-        return r;
+        throw new IllegalArgumentException("Not implemented yet");
+//        for (String columnName : columns) {
+//            r.add("");
+//        }
+//        return r;
     }
 
 }

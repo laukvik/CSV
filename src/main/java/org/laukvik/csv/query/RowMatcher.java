@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.query;
+
+import org.laukvik.csv.Row;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class ColumnNotFoundException extends IllegalArgumentException {
+public abstract class RowMatcher {
 
-    public ColumnNotFoundException(int index, int required) {
-        super("Column with index " + index + " was not found. Required: " + required);
+    int columnIndex;
+
+    public RowMatcher(int columnIndex) {
+        this.columnIndex = columnIndex;
     }
 
-    public ColumnNotFoundException(int index) {
-        super("Column with index " + index + " was not found");
-    }
-
-    public ColumnNotFoundException(String name) {
-        super("Column with name " + name + " was not found");
-    }
+    public abstract boolean mathes(Row row);
 
 }

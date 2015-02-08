@@ -44,7 +44,7 @@ public class CsvReaderTest {
         long millis = 1322018752992L;
         Date date = new Date(millis);
 
-        try (CsvReader reader = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
+        try (CsvReader reader = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset), null)) {
             int rows = 0;
             while (reader.hasNext()) {
                 Row r = reader.getRow();
@@ -68,7 +68,7 @@ public class CsvReaderTest {
     }
 
     public void readFile(String filename, int requiredColumns, int requiredRows, String charset) {
-        try (CsvReader reader = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
+        try (CsvReader reader = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset), null)) {
             int rows = 0;
             while (reader.hasNext()) {
                 Row r = reader.getRow();
@@ -116,7 +116,7 @@ public class CsvReaderTest {
     public void readWithIterator() {
         String filename = "acid.csv";
         String charset = "utf-8";
-        try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
+        try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset), null)) {
             if (r.hasNext()) {
                 Row row = r.next();
                 assertEquals("Year", "1996", row.getString("year"));
@@ -131,7 +131,7 @@ public class CsvReaderTest {
         String filename = "charset.csv";
         String charset = "ISO-8859-1";
         String norwegian = "Norwegian æøå and ÆØÅ";
-        try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
+        try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset), null)) {
             while (r.hasNext()) {
                 Row row = r.next();
                 System.out.println("Norw: " + row.getString("text") + "=" + norwegian);

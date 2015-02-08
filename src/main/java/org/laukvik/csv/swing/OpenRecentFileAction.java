@@ -13,24 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.swing;
+
+import java.awt.event.ActionEvent;
+import java.io.File;
+import javax.swing.AbstractAction;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class ColumnNotFoundException extends IllegalArgumentException {
+public class OpenRecentFileAction extends AbstractAction {
 
-    public ColumnNotFoundException(int index, int required) {
-        super("Column with index " + index + " was not found. Required: " + required);
+    RecentFile file;
+    RecentFileListener listener;
+
+    public OpenRecentFileAction(RecentFile file, RecentFileListener listener) {
+        super();
+        this.file = file;
+        this.listener = listener;
     }
 
-    public ColumnNotFoundException(int index) {
-        super("Column with index " + index + " was not found");
-    }
-
-    public ColumnNotFoundException(String name) {
-        super("Column with name " + name + " was not found");
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        listener.openFile(new File(file.getPath()));
     }
 
 }

@@ -15,22 +15,33 @@
  */
 package org.laukvik.csv;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class ColumnNotFoundException extends IllegalArgumentException {
+public class Manager<T> {
 
-    public ColumnNotFoundException(int index, int required) {
-        super("Column with index " + index + " was not found. Required: " + required);
+    final Class<T> typeParameterClass = null;
+
+    public Manager() {
     }
 
-    public ColumnNotFoundException(int index) {
-        super("Column with index " + index + " was not found");
-    }
+    public void saveAll(List<T> objects) throws IllegalArgumentException, IllegalAccessException {
+        File file = CSV.getFile(typeParameterClass.getClass());
+        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file), CSV.CHARSET_DEFAULT)) {
+            writer.writeMetaData(objects.getClass());
+            for (Object o : objects) {
+                writer.writeEntityRow(o);
+            }
 
-    public ColumnNotFoundException(String name) {
-        super("Column with name " + name + " was not found");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

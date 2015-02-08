@@ -18,7 +18,9 @@ package org.laukvik.csv;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -48,7 +50,11 @@ public class CsvWriter implements AutoCloseable {
     }
 
     public void writeMetaData(MetaData metaData) throws IOException {
-        writeValues(metaData.getValues());
+        List<String> items = new ArrayList<>();
+        for (int x = 0; x < metaData.getColumnCount(); x++) {
+            items.add(metaData.getColumnName(x));
+        }
+        writeValues(items);
     }
 
     public void writeRow(Row row) throws IOException {
@@ -89,6 +95,33 @@ public class CsvWriter implements AutoCloseable {
     public void close() throws IOException {
         out.flush();
         out.close();
+    }
+
+    public void writeEntityRow(Object instance) throws IllegalArgumentException, IllegalAccessException, IOException {
+        /* Iterate all annotated fields */
+        for (Field f : instance.getClass().getDeclaredFields()) {
+            List<String> values = new ArrayList<>();
+            /* Set accessible to allow injecting private fields - otherwise an exception will occur*/
+            f.setAccessible(true);
+            /* Get field value */
+            Object value = f.get(instance);
+            if (value == null) {
+                values.add("");
+            } else {
+                values.add(value.toString());
+            }
+            writeValues(values);
+        }
+    }
+
+    public void writeMetaData(Class aClass) throws IOException {
+        List<String> values = new ArrayList<>();
+        for (Field f : aClass.getDeclaredFields()) {
+            /* Find the name of the field - in code */
+            String nameAttribute = f.getName();
+            values.add(nameAttribute);
+        }
+        writeValues(values);
     }
 
 }

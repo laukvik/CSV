@@ -24,6 +24,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Test;
+import org.laukvik.csv.columns.StringColumn;
 
 /**
  * <li>charset encoding
@@ -50,7 +51,7 @@ public class CSVTest {
     @Test
     public void shouldWrite() {
 
-        CSV csv = new CSV("First", "Last");
+        CSV csv = new CSV(new StringColumn("First"), new StringColumn("Last"));
         MetaData md = csv.getMetaData();
 
         assertSame(md.getColumnCount(), 2);
@@ -59,7 +60,7 @@ public class CSVTest {
         csv.addRow("Steve", "Jobs");
         assertSame("RowCount", csv.getRowCount(), 2);
         try {
-            csv.write(new File("/Users/morten/Desktop/ShouldWrite.csv"));
+            csv.write(File.createTempFile("ShouldWrite", ".csv"));
         } catch (IOException e) {
             fail(e.getMessage());
         }
@@ -206,7 +207,7 @@ public class CSVTest {
     public void readEntities() {
         try {
             CSV csv = new CSV(getResource("person.csv"));
-            List<Person> items = csv.readEntities(Person.class);
+            List<Person> items = csv.findAll(Person.class);
             int x = 1;
             for (Person p : items) {
                 System.out.println(x + ":" + p);

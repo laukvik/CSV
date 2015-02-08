@@ -13,24 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.query;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.laukvik.csv.Row;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class ColumnNotFoundException extends IllegalArgumentException {
+public class DateLessThan extends RowMatcher {
 
-    public ColumnNotFoundException(int index, int required) {
-        super("Column with index " + index + " was not found. Required: " + required);
+    Date value;
+    SimpleDateFormat format;
+
+    public DateLessThan(int columnIndex, Date value, SimpleDateFormat format) {
+        super(columnIndex);
+        this.value = value;
+        this.format = format;
     }
 
-    public ColumnNotFoundException(int index) {
-        super("Column with index " + index + " was not found");
-    }
-
-    public ColumnNotFoundException(String name) {
-        super("Column with name " + name + " was not found");
+    @Override
+    public boolean mathes(Row row) {
+        Date d = row.getDate(columnIndex, format);
+        return d.compareTo(value) < 0;
     }
 
 }

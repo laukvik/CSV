@@ -18,11 +18,15 @@ package org.laukvik.csv.swing;
 import java.awt.FileDialog;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
@@ -41,7 +45,7 @@ import org.laukvik.csv.Row;
  *
  * @author morten
  */
-public class Viewer extends javax.swing.JFrame implements ListSelectionListener {
+public class Viewer extends javax.swing.JFrame implements ListSelectionListener, ActionListener, RecentFileListener {
 
     private CSV csv = null;
     private File file = null;
@@ -49,6 +53,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
     private ResourceBundle bundle;
     private static final Logger LOG = Logger.getLogger(Viewer.class.getName());
 
+    private RecentFileModel recentFileModel;
 
     /**
      * Creates new form Viewer
@@ -87,7 +92,13 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         model = new CSVTableModel(csv);
         table.setModel(model);
 
+        for (Charset c : Charset.availableCharsets().values()) {
+            JMenuItem item = new JMenuItem(c.name());
+            charsetMenu.add(item);
+        }
 
+        /* Recent stuff */
+        recentFileModel = new RecentFileModel(recentMenu, this);
     }
 
     public void updateStatus() {
@@ -115,19 +126,32 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         setTitle("Untitled");
     }
 
-    public void openFile(File file) throws FileNotFoundException, IOException, ParseException {
-        this.file = file;
-        csv = new CSV(file);
-        model = new CSVTableModel(csv);
-        table.setModel(model);
-        setTitle(file.getAbsolutePath());
-        statusLabel.setText(csv.getRowCount() + " rows");
-        getRootPane().putClientProperty("Window.documentFile", file);
+    public void openFile(File file)  {
 
+        try {
+            csv = new CSV(file);
+            this.file = file;
+            model = new CSVTableModel(csv);
+            table.setModel(model);
+            setTitle(file.getAbsolutePath());
+            statusLabel.setText(csv.getRowCount() + " rows");
+            getRootPane().putClientProperty("Window.documentFile", file);
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
+                table.getColumnModel().getColumn(x).setWidth(150);
+            }
 
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
-            table.getColumnModel().getColumn(x).setWidth(150);
+            /* */
+            recentFileModel.add(new RecentFile(file.getAbsolutePath()));
+
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(this, "Fant ikke fil", "", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Kunne ikke åpne", "", JOptionPane.ERROR_MESSAGE);
+        } catch (InvalidRowDataException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage() + "\n" + ex.getRow().getRaw(), "Feil i CSV fil", JOptionPane.ERROR_MESSAGE);
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage() + "\n", "Feil i CSV fil", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -182,10 +206,11 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
         insertColumnMenuItem = new javax.swing.JMenuItem();
         deleteColumnMenuItem = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
+        charsetMenu = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
@@ -321,11 +346,14 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         jMenuItem3.setText("Find");
         editMenu.add(jMenuItem3);
 
+        jMenuItem6.setText(bundle.getString("replace")); // NOI18N
+        editMenu.add(jMenuItem6);
+
         jMenuBar1.add(editMenu);
 
         toolsMenu.setText(bundle.getString("tools")); // NOI18N
 
-        insertColumnMenuItem.setText("Insert column");
+        insertColumnMenuItem.setText(bundle.getString("column_new")); // NOI18N
         insertColumnMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 insertColumnMenuItemActionPerformed(evt);
@@ -333,7 +361,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         });
         toolsMenu.add(insertColumnMenuItem);
 
-        deleteColumnMenuItem.setText("Delete column");
+        deleteColumnMenuItem.setText(bundle.getString("column_delete")); // NOI18N
         deleteColumnMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteColumnMenuItemActionPerformed(evt);
@@ -341,15 +369,15 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         });
         toolsMenu.add(deleteColumnMenuItem);
 
-        jMenu1.setText("Encoding");
+        charsetMenu.setText("Encoding");
 
         jMenuItem4.setText("UTF-8");
-        jMenu1.add(jMenuItem4);
+        charsetMenu.add(jMenuItem4);
 
         jMenuItem5.setText("ISO-8859-1");
-        jMenu1.add(jMenuItem5);
+        charsetMenu.add(jMenuItem5);
 
-        toolsMenu.add(jMenu1);
+        toolsMenu.add(charsetMenu);
 
         jMenuBar1.add(toolsMenu);
 
@@ -378,17 +406,19 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
         String filename = fd.getFile();
         if (filename == null) {
         } else {
-            try {
-                openFile(new File(fd.getDirectory(), filename));
-            } catch (FileNotFoundException ex) {
-                JOptionPane.showMessageDialog(this, "Fant ikke fil", "", JOptionPane.ERROR_MESSAGE);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "Kunne ikke åpne", "", JOptionPane.ERROR_MESSAGE);
-            } catch (InvalidRowDataException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage() + "\n" + ex.getRow().getRaw() , "Feil i CSV fil", JOptionPane.ERROR_MESSAGE);
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage() + "\n", "Feil i CSV fil", JOptionPane.ERROR_MESSAGE);
-            }
+            openFile(new File(fd.getDirectory(), filename));
+
+//            try {
+//                openFile(new File(fd.getDirectory(), filename));
+//            } catch (FileNotFoundException ex) {
+//                JOptionPane.showMessageDialog(this, "Fant ikke fil", "", JOptionPane.ERROR_MESSAGE);
+//            } catch (IOException ex) {
+//                JOptionPane.showMessageDialog(this, "Kunne ikke åpne", "", JOptionPane.ERROR_MESSAGE);
+//            } catch (InvalidRowDataException ex) {
+//                JOptionPane.showMessageDialog(this, ex.getMessage() + "\n" + ex.getRow().getRaw() , "Feil i CSV fil", JOptionPane.ERROR_MESSAGE);
+//            } catch (ParseException ex) {
+//                JOptionPane.showMessageDialog(this, ex.getMessage() + "\n", "Feil i CSV fil", JOptionPane.ERROR_MESSAGE);
+//            }
         }
     }//GEN-LAST:event_openMenuItemActionPerformed
 
@@ -528,17 +558,13 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
                 v.setSize(700, 400);
                 v.setLocationRelativeTo(null);
                 v.setVisible(true);
-//                try {
-//                    v.openFile(new File("/Users/morten/Desktop/cars.csv"));
-//                } catch (IOException ex) {
-//                    Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
-//                }
 
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JMenu charsetMenu;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
     private javax.swing.JMenuItem deleteColumnMenuItem;
@@ -550,13 +576,13 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem insertColumnMenuItem;
     private javax.swing.JMenuItem insertRowMenuItem;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
@@ -576,6 +602,11 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener 
     private javax.swing.JTable table;
     private javax.swing.JMenu toolsMenu;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 
 }

@@ -15,22 +15,33 @@
  */
 package org.laukvik.csv;
 
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.Assert.fail;
+import org.junit.Test;
+import org.laukvik.csv.swing.RecentFile;
+
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class ColumnNotFoundException extends IllegalArgumentException {
+public class EntityTest {
 
-    public ColumnNotFoundException(int index, int required) {
-        super("Column with index " + index + " was not found. Required: " + required);
+    @Test
+    public void read() {
+        List<RecentFile> recentFiles = CSV.findAll(RecentFile.class);
     }
 
-    public ColumnNotFoundException(int index) {
-        super("Column with index " + index + " was not found");
-    }
-
-    public ColumnNotFoundException(String name) {
-        super("Column with name " + name + " was not found");
+//    @Test
+    public void write() {
+        List<RecentFile> recentFiles = new ArrayList<>();
+        recentFiles.add(new RecentFile("Hello.csv"));
+        recentFiles.add(new RecentFile("World.csv"));
+        try {
+            CSV.saveAll(recentFiles, RecentFile.class);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 
 }

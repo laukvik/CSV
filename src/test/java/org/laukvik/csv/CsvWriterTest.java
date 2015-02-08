@@ -21,6 +21,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;
+import org.laukvik.csv.columns.StringColumn;
 
 /**
  *
@@ -34,12 +35,12 @@ public class CsvWriterTest {
     }
 
     @Test
-    public void writeAndRead() {
-        File f = new File("/Users/morten/Desktop/test.csv");
-//        File f = File.createTempFile("CsvWriter", ".csv");
+    public void writeAndRead() throws IOException {
+
+        File f = File.createTempFile("CsvWriter", ".csv");
 
         try (CsvWriter w = new CsvWriter(new FileOutputStream(f))) {
-            w.writeMetaData(new MetaData("First", "Last"));
+            w.writeMetaData(new MetaData(new StringColumn("First"), new StringColumn("Last")));
             w.writeRow(new Row("Bill", "Gates"));
             w.writeRow(new Row("Steve", "Jobs"));
 
