@@ -23,6 +23,7 @@ import java.util.List;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.DateColumn;
 
 /**
  * <code>
@@ -115,13 +116,13 @@ public class Query {
         }
 
         public Where isYear(int value) {
-            Column c = where.columns.get(where.columns.size() - 1);
-
-//            Column c = where.query.metaData.getColumn(value)
-
-//            if (c instanceof DateColumn) {
-//            }
-            matcher = new YearIs(getColumnIndex(), value, null);
+            org.laukvik.csv.columns.Column c = where.query.metaData.getColumn(name);
+            if (c instanceof DateColumn) {
+                DateColumn dc = (DateColumn) c;
+                matcher = new YearIs(getColumnIndex(), value, dc.getFormat());
+            } else {
+                throw new IllegalArgumentException("Column " + name + " is not dateformat!");
+            }
             return where;
         }
 

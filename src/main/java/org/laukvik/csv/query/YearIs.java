@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv.query;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -28,9 +28,9 @@ import org.laukvik.csv.Row;
 public class YearIs extends RowMatcher {
 
     int value;
-    SimpleDateFormat format;
+    DateFormat format;
 
-    public YearIs(int columnIndex, int value, SimpleDateFormat format) {
+    public YearIs(int columnIndex, int value, DateFormat format) {
         super(columnIndex);
         this.value = value;
         this.format = format;
@@ -40,6 +40,7 @@ public class YearIs extends RowMatcher {
     public boolean mathes(Row row) {
         Date d = row.getDate(columnIndex, format);
         Calendar c = new GregorianCalendar();
+        c.setTime(d);
         return c.get(GregorianCalendar.YEAR) == value;
     }
 

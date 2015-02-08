@@ -17,8 +17,9 @@ package org.laukvik.csv.columns;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  *
@@ -29,13 +30,29 @@ public class DateColumn implements Column<Date> {
     String name;
     DateFormat format;
 
-    public DateColumn(String name, SimpleDateFormat format) {
+    public DateColumn(String name, DateFormat format) {
         this.name = name;
         this.format = format;
     }
 
-    public DateColumn(SimpleDateFormat format) {
+    public DateColumn(DateFormat format) {
         this.format = format;
+    }
+
+    public DateFormat getFormat() {
+        return format;
+    }
+
+    public boolean isYear(Date d, int year) {
+        GregorianCalendar c = new GregorianCalendar();
+        c.setTime(d);
+        return c.get(Calendar.YEAR) == year;
+    }
+
+    public boolean isMonth(Date d, int month) {
+        GregorianCalendar c = new GregorianCalendar();
+        c.setTime(d);
+        return c.get(Calendar.MONTH) == month;
     }
 
     @Override

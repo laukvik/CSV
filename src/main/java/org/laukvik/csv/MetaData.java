@@ -39,6 +39,10 @@ public class MetaData implements Serializable {
         this.columns = new ArrayList<>(Arrays.asList(columns));
     }
 
+    public Column getColumn(String name) {
+        return columns.get(getColumnIndex(name));
+    }
+
     public Column getColumn(int columnIndex) {
         return columns.get(columnIndex);
     }

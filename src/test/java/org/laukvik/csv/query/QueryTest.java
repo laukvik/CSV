@@ -180,7 +180,7 @@ public class QueryTest {
         for (Row r : rows) {
 //            System.out.println(r.getValue("Took office") + " " + r.getString("President"));
         }
-        Assert.assertEquals("Should be Abraham Lincoln", "Abraham Lincoln", rows.get(0).getString("President"));
+        Assert.assertEquals("Should be Barack Obama", "Barack Obama", rows.get(0).getString("President"));
     }
 
     @Test
@@ -196,14 +196,14 @@ public class QueryTest {
     public void isEmpty() throws ParseException {
         List<Row> rows = csv.findByQuery().where().column("Left office").isEmpty().getResultList();
         for (Row r : rows) {
-            System.out.println(r.getString("President") + " " + r.getString("Home State"));
+//            System.out.println(r.getString("President") + " " + r.getString("Home State"));
         }
         Assert.assertEquals("Should find 1 empty", 1, rows.size());
     }
 
     @Test
     public void usingWhereYear() throws ParseException {
-        List<Row> rows = csv.findByQuery().where().column("Took office").isYear(1829).getResultList();
+        List<Row> rows = csv.findByQuery().where().column("Took office").isYear(1901).getResultList();
         for (Row r : rows) {
 //            System.out.println(r.getString("President") + " " + r.getString("Home State"));
         }

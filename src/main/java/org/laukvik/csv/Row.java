@@ -18,6 +18,7 @@ package org.laukvik.csv;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -221,7 +222,7 @@ public class Row implements Serializable {
         return getDate(metaData.getColumnIndex(column), format);
     }
 
-    public Date getDate(int columnIndex, SimpleDateFormat format) {
+    public Date getDate(int columnIndex, DateFormat format) {
         String value = getString(columnIndex);
         try {
             return format.parse(value);

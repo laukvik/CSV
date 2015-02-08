@@ -30,9 +30,7 @@ public class EmptyMatcher extends RowMatcher {
     @Override
     public boolean mathes(Row row) {
         String v = row.getString(columnIndex);
-        System.out.println("v: " + v);
         return v == null || v.trim().isEmpty();
-//        return row.isEmpty(columnIndex);
     }
 
 }
