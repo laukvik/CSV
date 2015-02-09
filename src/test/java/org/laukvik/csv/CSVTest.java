@@ -207,7 +207,7 @@ public class CSVTest {
     public void readEntities() {
         try {
             CSV csv = new CSV(getResource("person.csv"));
-            List<Person> items = csv.findAll(Person.class);
+            List<Person> items = csv.findByClass(Person.class);
             int x = 1;
             for (Person p : items) {
                 System.out.println(x + ":" + p);

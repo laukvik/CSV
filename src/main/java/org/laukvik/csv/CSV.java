@@ -31,38 +31,39 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.UIManager;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.query.Query;
 
 
 /**
- * An API for reading and writing to CSV. The implementation is based on the
+ * An API for reading and writing to Viewer. The implementation is based on the
  * specficiations from http://tools.ietf.org/rfc/rfc4180.txt
  *
  * Read whole file into memory<br>
  *
  * <code>
- * CSV c = new CSV( new File("nerds.csv") );
- * </code>
- *
- * Write CSV to file
+ Viewer c = new Viewer( new File("nerds.csv") );
+ </code>
+
+ Write Viewer to file
+
+ <code>
+ Viewer c = new Viewer("First","Last");
+ c.addRow( "Bill","Gates" );
+ c.addRow( new Row("Steve","Jobs") );
+ c.removeColumn("First");
+ c.addColumn("Email);
+ c.addColumn("Address",0);
+ c.write( new File("nerds.csv") );
+ </code>
  *
  * <code>
- * CSV c = new CSV("First","Last");
- * c.addRow( "Bill","Gates" );
- * c.addRow( new Row("Steve","Jobs") );
- * c.removeColumn("First");
- * c.addColumn("Email);
- * c.addColumn("Address",0);
- * c.write( new File("nerds.csv") );
- * </code>
- *
- * <code>
- * CSV c = new CSV( Person.class );
- * c.add( new Person("Bill","Gates") );
- * c.write( new File("persons.csv") );
- * </code>
+ Viewer c = new Viewer( Person.class );
+ c.add( new Person("Bill","Gates") );
+ c.write( new File("persons.csv") );
+ </code>
  *
  *
  * @author Morten Laukvik <morten@laukvik.no>
@@ -306,17 +307,17 @@ public class CSV implements Serializable {
         return (T) instance;
     }
 
-    public static <T> List<T> findAll(Class<T> aClass) {
+    public static <T> List<T> findByClass(Class<T> aClass) {
         File file = getFile(aClass);
         try {
-            return findAll(new FileInputStream(file), CSV.CHARSET_DEFAULT, aClass);
+            return findByClass(new FileInputStream(file), CSV.CHARSET_DEFAULT, aClass);
         } catch (FileNotFoundException ex) {
             List<T> items = new ArrayList<>();
             return items;
         }
     }
 
-    public static <T> List<T> findAll(InputStream inputStream, Charset charset, Class<T> aClass) {
+    public static <T> List<T> findByClass(InputStream inputStream, Charset charset, Class<T> aClass) {
         List<T> items = new ArrayList<>();
         try (CsvReader reader = new CsvReader(inputStream, charset, null)) {
             int x = 0;
@@ -371,6 +372,25 @@ public class CSV implements Serializable {
 
     public Set<String> listDistinct(String column) {
         return listDistinct(getMetaData().getColumnIndex(column));
+    }
+
+    public static void main(String args[]) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+        }
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                org.laukvik.csv.swing.Viewer v = new org.laukvik.csv.swing.Viewer();
+                v.setSize(700, 400);
+                v.setLocationRelativeTo(null);
+                v.setVisible(true);
+
+            }
+        });
     }
 
 

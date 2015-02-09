@@ -29,7 +29,7 @@ public class EntityTest {
 
     @Test
     public void read() {
-        List<RecentFile> recentFiles = CSV.findAll(RecentFile.class);
+        List<RecentFile> recentFiles = CSV.findByClass(RecentFile.class);
     }
 
 //    @Test

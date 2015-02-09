@@ -19,8 +19,6 @@ import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -39,7 +37,6 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
-import org.laukvik.csv.CSV;
 import org.laukvik.csv.CSVFileFilter;
 import org.laukvik.csv.CSVTableModel;
 import org.laukvik.csv.InvalidRowDataException;
@@ -58,9 +55,9 @@ import org.laukvik.csv.query.Query;
  *
  * @author morten
  */
-public class Viewer extends javax.swing.JFrame implements ListSelectionListener, ActionListener, RecentFileListener {
+public class Viewer extends javax.swing.JFrame implements ListSelectionListener, RecentFileListener {
 
-    private CSV csv = null;
+    private org.laukvik.csv.CSV csv = null;
     private File file = null;
     private CSVTableModel model;
     private ResourceBundle bundle;
@@ -105,7 +102,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         table.getSelectionModel().addListSelectionListener(this);
 
         file = null;
-        csv = new CSV();
+        csv = new org.laukvik.csv.CSV();
         model = new CSVTableModel(csv);
         table.setModel(model);
 
@@ -332,7 +329,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         jTabbedPane1.invalidate();
     }
 
-//    public void openCSV(CSV csv) {
+//    public void openCSV(Viewer csv) {
 //        model = new CSVTableModel(csv);
 //        table.setModel(model);
 //        setTitle("Untitled");
@@ -341,7 +338,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     public void openFile(File file)  {
 
         try {
-            csv = new CSV(file);
+            csv = new org.laukvik.csv.CSV(file);
             this.file = file;
             model = new CSVTableModel(csv);
             table.setModel(model);
@@ -637,9 +634,9 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 //            } catch (IOException ex) {
 //                JOptionPane.showMessageDialog(this, "Kunne ikke åpne", "", JOptionPane.ERROR_MESSAGE);
 //            } catch (InvalidRowDataException ex) {
-//                JOptionPane.showMessageDialog(this, ex.getMessage() + "\n" + ex.getRow().getRaw() , "Feil i CSV fil", JOptionPane.ERROR_MESSAGE);
+//                JOptionPane.showMessageDialog(this, ex.getMessage() + "\n" + ex.getRow().getRaw() , "Feil i Viewer fil", JOptionPane.ERROR_MESSAGE);
 //            } catch (ParseException ex) {
-//                JOptionPane.showMessageDialog(this, ex.getMessage() + "\n", "Feil i CSV fil", JOptionPane.ERROR_MESSAGE);
+//                JOptionPane.showMessageDialog(this, ex.getMessage() + "\n", "Feil i Viewer fil", JOptionPane.ERROR_MESSAGE);
 //            }
         }
     }//GEN-LAST:event_openMenuItemActionPerformed
@@ -693,7 +690,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
     private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
         file = null;
-        csv = new CSV();
+        csv = new org.laukvik.csv.CSV();
         model = new CSVTableModel(csv);
         table.setModel(model);
         jTabbedPane1.removeAll();
@@ -829,10 +826,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private javax.swing.JMenu toolsMenu;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
 
 
 }

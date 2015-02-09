@@ -35,7 +35,7 @@ public class RecentFileModel {
 
 
     public RecentFileModel(JMenu recentMenu, RecentFileListener listener) {
-        this.files = CSV.findAll(RecentFile.class);
+        this.files = CSV.findByClass(RecentFile.class);
         this.recentMenu = recentMenu;
         this.listener = listener;
         for (RecentFile rf : files) {
