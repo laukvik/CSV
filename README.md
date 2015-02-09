@@ -38,5 +38,33 @@ Iterating all rows
         Row row = csv.getRow(y);
     }
 
+Using queries
+--------------------------------------------------------------------------------
+The API supports fluent queries similar to SQL. The first example finds all rows where President is Barack Obama
+
+    List<Row> rows = csv.findByQuery().where().column("President").is("Barack Obama").getResultList();
+    
+The second example uses sorting for the results
+    
+    List<Row> rows = csv.findByQuery().orderBy().asc("President").getResultList();
+
+
+
+Using annotations
+--------------------------------------------------------------------------------
+You can add CSV annotations to easily persist instances of the entities to
+a CSV file. The CSV file will act similar to a single table in a SQL database.
+
+
+    @Entity
+    public class RecentFile {
+        @Column
+        private String path;
+    }
+
+    /* Read all entries */
+    List<RecentFile> recentFiles = CSV.findByClass(RecentFile.class);
+
+
 
 
