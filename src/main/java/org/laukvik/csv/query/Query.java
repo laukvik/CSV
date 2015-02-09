@@ -74,6 +74,11 @@ public class Query {
             return where;
         }
 
+        public Where isIn(String[] value) {
+            matcher = new StringIsMatcher(getColumnIndex(), value);
+            return where;
+        }
+
         /* int */
         public Where is(int value) {
             matcher = new IntIsMatcher(getColumnIndex(), value);
@@ -85,8 +90,18 @@ public class Query {
             return where;
         }
 
-        public Where isIn(int... values) {
+        public Where isIn(Integer... values) {
             matcher = new IntIsInMatcher(getColumnIndex(), values);
+            return where;
+        }
+
+        public Where isIn(Float[] values) {
+            matcher = new IsInMatcher<Float>(getColumnIndex(), values);
+            return where;
+        }
+
+        public Where isIn(Double[] values) {
+            matcher = new IsInMatcher<Double>(getColumnIndex(), values);
             return where;
         }
 
@@ -126,6 +141,22 @@ public class Query {
             return where;
         }
 
+        public Where in(String... selection) {
+            matcher = new StringIsMatcher(getColumnIndex(), selection);
+            return where;
+        }
+
+        public Where isIn(Date[] arr) {
+            org.laukvik.csv.columns.Column c = where.query.metaData.getColumn(name);
+            if (c instanceof DateColumn) {
+                DateColumn dc = (DateColumn) c;
+                matcher = new DateIsInMatcher(getColumnIndex(), arr, dc.getFormat());
+            } else {
+                throw new IllegalArgumentException("Column " + name + " is not dateformat!");
+            }
+
+            return where;
+        }
 
     }
 
@@ -193,7 +224,7 @@ public class Query {
 
     }
 
-    class Select {
+    public class Select {
 
         private Where where;
         private final String[] columns;

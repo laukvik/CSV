@@ -17,10 +17,17 @@ package org.laukvik.csv;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.DateColumn;
+import org.laukvik.csv.columns.DoubleColumn;
+import org.laukvik.csv.columns.FloatColumn;
+import org.laukvik.csv.columns.IntegerColumn;
+import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.columns.UrlColumn;
 
 /**
  *
@@ -55,9 +62,30 @@ public class MetaData implements Serializable {
         this.charset = charset;
     }
 
-
     public int getColumnCount() {
         return columns.size();
+    }
+
+    private String getParantheses() {
+        return "";
+    }
+
+    public void addColumn(String s) {
+        if (s.toUpperCase().endsWith("(INT)")) {
+            addColumn(new IntegerColumn(s));
+        } else if (s.toUpperCase().endsWith("(FLOAT)")) {
+            addColumn(new FloatColumn(s));
+        } else if (s.toUpperCase().endsWith("(DOUBLE)")) {
+            addColumn(new DoubleColumn(s));
+        } else if (s.toUpperCase().endsWith("(URL)")) {
+            addColumn(new UrlColumn(s));
+//        } else if (s.toUpperCase().endsWith("(BOOLEAN)")) {
+//            addColumn(new BooleanColumn(s));
+        } else if (s.toUpperCase().endsWith("(DATE:MM/DD/YYYY)")) {
+            addColumn(new DateColumn(s, new SimpleDateFormat("MM/dd/yyyy")));
+        } else {
+            addColumn(new StringColumn(s));
+        }
     }
 
     public void addColumn(Column column) {
@@ -102,11 +130,10 @@ public class MetaData implements Serializable {
 
     public Row createEmptyRow() {
         Row r = new Row();
-        throw new IllegalArgumentException("Not implemented yet");
-//        for (String columnName : columns) {
-//            r.add("");
-//        }
-//        return r;
+        for (Column c : columns) {
+            r.add("");
+        }
+        return r;
     }
 
 }

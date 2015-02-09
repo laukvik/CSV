@@ -24,7 +24,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.laukvik.csv.columns.StringColumn;
 
 /**
  *
@@ -208,7 +207,8 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
                 this.metaData = new MetaData();
                 for (String s : values) {
 //                    System.out.println("StringOnly: " + s);
-                    metaData.addColumn(new StringColumn(s));
+
+                    metaData.addColumn(s);
                 }
             } else {
                 /* User specified columns */

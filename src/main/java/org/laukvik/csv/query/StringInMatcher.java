@@ -21,31 +21,18 @@ import org.laukvik.csv.Row;
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class IntIsInMatcher extends RowMatcher {
+public class StringInMatcher extends RowMatcher {
 
-    Integer[] values;
+    private final String value;
 
-    public IntIsInMatcher(int columnIndex, Integer[] values) {
+    public StringInMatcher(int columnIndex, String value) {
         super(columnIndex);
-        this.values = values;
-        if (values == null) {
-            throw new IllegalArgumentException("isIn() value cant be null " + values);
-        }
+        this.value = value;
     }
 
     @Override
     public boolean mathes(Row row) {
-        Object o = row.getValue(columnIndex);
-        if (o instanceof Integer) {
-            Integer rv = (Integer) o;
-            for (Integer v : values) {
-                if (v == null) {
-                } else if (rv == v.intValue()) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return row.getString(columnIndex).equalsIgnoreCase(value);
     }
 
 }

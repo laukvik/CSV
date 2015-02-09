@@ -20,7 +20,6 @@ import org.junit.Assert;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
-import org.laukvik.csv.CSV;
 import org.laukvik.csv.CSVTableModel;
 import org.laukvik.csv.CsvReaderTest;
 
@@ -46,14 +45,13 @@ public class ViewerTest {
     }
 
     @Test
-    public void readTableData() {
+    public void readTableData(){
         try {
-            CSV csv = new CSV(getResource("quoted.csv"));
             view = new Viewer();
             view.setSize(700, 400);
             view.setLocationRelativeTo(null);
             view.setVisible(true);
-            view.openCSV(csv);
+            view.openFile(getResource("quoted.csv"));
             CSVTableModel model = view.getModel();
             Assert.assertEquals("Header1", "Lead", model.getColumnName(0));
             Assert.assertEquals("Header2", "Title", model.getColumnName(1));
@@ -67,8 +65,6 @@ public class ViewerTest {
 
             Assert.assertEquals("RowCount", 3, model.getRowCount());
             Assert.assertEquals("ColumnCount", 4, model.getColumnCount());
-
-
         } catch (Exception e) {
             fail(e.getMessage());
         }

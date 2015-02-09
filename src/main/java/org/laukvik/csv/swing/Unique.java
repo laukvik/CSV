@@ -13,31 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv.query;
-
-import org.laukvik.csv.Row;
+package org.laukvik.csv.swing;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
+ *
  */
-public class StringIsMatcher extends RowMatcher {
+public class Unique<T> {
 
-    private final String[] value;
+    private T value;
+    private int count;
+    private boolean selected;
 
-    public StringIsMatcher(int columnIndex, String... value) {
-        super(columnIndex);
+    public Unique(T value, int count) {
         this.value = value;
+        this.count = count;
+        this.selected = false;
     }
 
-    @Override
-    public boolean mathes(Row row) {
-        for (String v : value) {
-            if (row.getString(columnIndex).equalsIgnoreCase(v)) {
-                return true;
-            }
-        }
-        return false;
+    public int getCount() {
+        return count;
     }
+
+    public T getValue() {
+        return value;
+    }
+
+    public T getPresentationValue() {
+        return value;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
 
 }

@@ -23,10 +23,25 @@ import javax.swing.table.TableModel;
 public class CSVTableModel implements TableModel {
 
     private CSV csv;
+    private List<Row> rows;
     private final List<TableModelListener> listeners;
+    private MetaData metaData;
 
     public CSVTableModel(CSV csv) {
         this.csv = csv;
+        this.listeners = new ArrayList<>();
+        this.rows = csv.getRows();
+        this.metaData = csv.getMetaData();
+    }
+
+    public CSVTableModel(List<Row> rows, MetaData md) {
+        this.rows = rows;
+        this.metaData = md;
+        this.listeners = new ArrayList<>();
+    }
+
+    public CSVTableModel() {
+        this.rows = rows = new ArrayList<>();
         this.listeners = new ArrayList<>();
     }
 
@@ -51,23 +66,25 @@ public class CSVTableModel implements TableModel {
 
     @Override
     public int getColumnCount() {
-        return csv.getMetaData().getColumnCount();
+        return metaData.getColumnCount();
     }
 
     @Override
     public String getColumnName(int column) {
-        return csv.getMetaData().getColumnName(column);
+        return metaData.getColumn(column).getName();
     }
 
     @Override
     public int getRowCount() {
-        return csv.getRowCount();
+        return rows.size();
     }
 
     @Override
     public Object getValueAt(int row, int column) {
         try {
-            return csv.getRow(row).getString(column);
+            Row r = rows.get(row);
+//            return csv.getRow(row).getString(column);
+            return r.getString(column);
         } catch (Exception e) {
             return null;
         }
@@ -80,6 +97,8 @@ public class CSVTableModel implements TableModel {
 
     @Override
     public void setValueAt(Object value, int row, int column) {
-        csv.getRow(row).setString(value.toString(), column);
+//        csv.getRow(row).setString(value.toString(), column);
+        Row r = rows.get(row);
+        r.setString((String) value, column);
     }
 }

@@ -80,6 +80,11 @@ public class Row implements Serializable {
         this.metaData = metaData;
     }
 
+    public void setValue(int columnIndex, Object value) {
+        Column c = metaData.getColumn(columnIndex);
+        values.set(columnIndex, c.asString(value));
+    }
+
     public Object getValue(String column) {
         int columnIndex = metaData.getColumnIndex(column);
         Column c = metaData.getColumn(columnIndex);

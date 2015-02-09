@@ -15,36 +15,35 @@
  */
 package org.laukvik.csv.query;
 
+import java.text.DateFormat;
+import java.util.Date;
 import org.laukvik.csv.Row;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class IntIsInMatcher extends RowMatcher {
+public class DateIsInMatcher extends RowMatcher {
 
-    Integer[] values;
+    Date[] values;
+    DateFormat format;
 
-    public IntIsInMatcher(int columnIndex, Integer[] values) {
+    public DateIsInMatcher(int columnIndex, Date[] values, DateFormat format) {
         super(columnIndex);
         this.values = values;
-        if (values == null) {
-            throw new IllegalArgumentException("isIn() value cant be null " + values);
-        }
+        this.format = format;
     }
 
     @Override
     public boolean mathes(Row row) {
-        Object o = row.getValue(columnIndex);
-        if (o instanceof Integer) {
-            Integer rv = (Integer) o;
-            for (Integer v : values) {
-                if (v == null) {
-                } else if (rv == v.intValue()) {
-                    return true;
-                }
+        Date value = (Date) row.getValue(columnIndex);
+
+        for (Date d : values) {
+            if (value.equals(d)) {
+                return true;
             }
         }
+
         return false;
     }
 

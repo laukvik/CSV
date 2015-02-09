@@ -20,12 +20,13 @@ import org.laukvik.csv.Row;
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
+ * @param <T>
  */
-public class IntIsInMatcher extends RowMatcher {
+public class IsInMatcher<T> extends RowMatcher {
 
-    Integer[] values;
+    T[] values;
 
-    public IntIsInMatcher(int columnIndex, Integer[] values) {
+    public IsInMatcher(int columnIndex, T[] values) {
         super(columnIndex);
         this.values = values;
         if (values == null) {
@@ -36,13 +37,13 @@ public class IntIsInMatcher extends RowMatcher {
     @Override
     public boolean mathes(Row row) {
         Object o = row.getValue(columnIndex);
-        if (o instanceof Integer) {
-            Integer rv = (Integer) o;
-            for (Integer v : values) {
-                if (v == null) {
-                } else if (rv == v.intValue()) {
-                    return true;
-                }
+        if (o == null) {
+            return false;
+        }
+        for (T value : values) {
+            if (value == null) {
+            } else if (o.equals(value)) {
+                return true;
             }
         }
         return false;

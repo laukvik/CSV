@@ -15,6 +15,7 @@
  */
 package org.laukvik.csv.swing;
 
+import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -24,10 +25,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
@@ -40,6 +45,14 @@ import org.laukvik.csv.CSVTableModel;
 import org.laukvik.csv.InvalidRowDataException;
 import org.laukvik.csv.ParseException;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.DateColumn;
+import org.laukvik.csv.columns.DoubleColumn;
+import org.laukvik.csv.columns.FloatColumn;
+import org.laukvik.csv.columns.IntegerColumn;
+import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.columns.UrlColumn;
+import org.laukvik.csv.query.Query;
 
 /**
  *
@@ -52,6 +65,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private CSVTableModel model;
     private ResourceBundle bundle;
     private static final Logger LOG = Logger.getLogger(Viewer.class.getName());
+    private List<UniqueTableModel> tableModels;
 
     private RecentFileModel recentFileModel;
 
@@ -60,6 +74,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
      */
     public Viewer() {
         super("CSV");
+        tableModels = new ArrayList<>();
         bundle = ResourceBundle.getBundle("org.laukvik.csv.messages");
         setTitle(bundle.getString("app"));
         setTitle("");
@@ -84,6 +99,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(true);
         table.setCellSelectionEnabled(true);
+        table.setRowHeight(20);
+
 
         table.getSelectionModel().addListSelectionListener(this);
 
@@ -92,6 +109,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         model = new CSVTableModel(csv);
         table.setModel(model);
 
+
         for (Charset c : Charset.availableCharsets().values()) {
             JMenuItem item = new JMenuItem(c.name());
             charsetMenu.add(item);
@@ -99,13 +117,20 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
         /* Recent stuff */
         recentFileModel = new RecentFileModel(recentMenu, this);
+
+        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+
+        Float width = size.width * 0.8f;
+        Float height = size.height * 0.7f;
+        Float split = size.width * 0.2f;
+        jSplitPane1.setDividerLocation(split.intValue());
+
+        setSize(width.intValue(), height.intValue());
     }
 
     public void updateStatus() {
         int min = table.getSelectionModel().getMinSelectionIndex();
         int max = table.getSelectionModel().getMaxSelectionIndex();
-//        String text = csv.getRowCount() + "x" + csv.getMetaData().getColumnCount() + " " + min + " - " + max;
-//        statusLabel.setText(text);
         statusLabel.setText(csv.getRowCount() + " rows");
     }
 
@@ -119,12 +144,199 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         return model;
     }
 
+    public void buildQuery() {
+        LOG.info("buildQuery ");
+        Query.Where where = csv.findByQuery().where();
+        int selectionCount = 0;
+        for (UniqueTableModel utm : tableModels) {
+            Column c = utm.getColumn();
 
-    public void openCSV(CSV csv) {
-        model = new CSVTableModel(csv);
+            if (c instanceof IntegerColumn) {
+
+                IntegerColumn ic = (IntegerColumn) c;
+                UniqueTableModel<Integer> mod = (UniqueTableModel<Integer>) utm;
+
+                Integer[] arr = new Integer[utm.getSelection().size()];
+                int x = 0;
+                for (Integer v : mod.getSelection()) {
+                    arr[x] = v;
+                    x++;
+                }
+
+                if (arr.length > 0) {
+                    where.column(c.getName()).isIn(arr);
+                }
+                selectionCount += arr.length;
+
+            } else if (c instanceof FloatColumn) {
+
+                FloatColumn ic = (FloatColumn) c;
+                UniqueTableModel<Float> mod = (UniqueTableModel<Float>) utm;
+
+                Float[] arr = new Float[utm.getSelection().size()];
+                int x = 0;
+                for (Float v : mod.getSelection()) {
+                    arr[x] = v;
+                    x++;
+                }
+
+                if (arr.length > 0) {
+                    where.column(c.getName()).isIn(arr);
+                }
+                selectionCount += arr.length;
+
+            } else if (c instanceof DoubleColumn) {
+                DoubleColumn ic = (DoubleColumn) c;
+                UniqueTableModel<Double> mod = (UniqueTableModel<Double>) utm;
+
+                Double[] arr = new Double[utm.getSelection().size()];
+                int x = 0;
+                for (Double v : mod.getSelection()) {
+                    arr[x] = v;
+                    x++;
+                }
+
+                if (arr.length > 0) {
+                    where.column(c.getName()).isIn(arr);
+                }
+                selectionCount += arr.length;
+
+            } else if (c instanceof DateColumn) {
+                DateColumn ic = (DateColumn) c;
+                UniqueTableModel<Date> mod = (UniqueTableModel<Date>) utm;
+
+                Date[] arr = new Date[utm.getSelection().size()];
+                int x = 0;
+                for (Date v : mod.getSelection()) {
+                    arr[x] = v;
+                    x++;
+                }
+
+                if (arr.length > 0) {
+                    where.column(c.getName()).isIn(arr);
+                }
+                selectionCount += arr.length;
+            } else {
+                StringColumn ic = (StringColumn) c;
+                UniqueTableModel<String> mod = (UniqueTableModel<String>) utm;
+                String[] arr = new String[utm.getSelection().size()];
+                int x = 0;
+                for (String v : mod.getSelection()) {
+                    arr[x] = v;
+                    x++;
+                }
+
+                if (arr.length > 0) {
+                    where.column(c.getName()).isIn(arr);
+
+                }
+                selectionCount += arr.length;
+            }
+
+        }
+        if (selectionCount == 0) {
+            model = new CSVTableModel(csv);
+        } else {
+            model = new CSVTableModel(where.getResultList(), csv.getMetaData());
+        }
+
+
         table.setModel(model);
-        setTitle("Untitled");
+        table.tableChanged(new TableModelEvent(model));
     }
+
+    public void createUniqueModels() {
+        LOG.info("Adding unique models: " + csv.getMetaData().getColumnCount());
+        jTabbedPane1.removeAll();
+        tableModels = new ArrayList<>();
+
+        for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
+            Column c = csv.getMetaData().getColumn(x);
+
+            /**/
+            UniqueTableModel model = null;
+            if (c instanceof IntegerColumn) {
+                model = new UniqueTableModel<Integer>(c);
+                for (int y = 0; y < csv.getRowCount(); y++) {
+                    Row r = csv.getRow(y);
+                    model.addValue(r.getInteger(x));
+                }
+            } else if (c instanceof FloatColumn) {
+                model = new UniqueTableModel<Float>(c);
+                for (int y = 0; y < csv.getRowCount(); y++) {
+                    Row r = csv.getRow(y);
+                    model.addValue(r.getFloat(x));
+                }
+            } else if (c instanceof IntegerColumn) {
+                model = new UniqueTableModel<Integer>(c);
+                for (int y = 0; y < csv.getRowCount(); y++) {
+                    Row r = csv.getRow(y);
+                    model.addValue(r.getInteger(x));
+                }
+            } else if (c instanceof DateColumn) {
+                model = new UniqueTableModel<Date>(c);
+                for (int y = 0; y < csv.getRowCount(); y++) {
+                    Row r = csv.getRow(y);
+                    model.addValue(r.getValue(x));
+                }
+            } else if (c instanceof UrlColumn) {
+                model = new UniqueTableModel(c);
+                for (int y = 0; y < csv.getRowCount(); y++) {
+                    Row r = csv.getRow(y);
+                    model.addValue(r.getValue(x));
+                }
+            } else {
+                model = new UniqueTableModel<String>(c);
+                for (int y = 0; y < csv.getRowCount(); y++) {
+                    Row r = csv.getRow(y);
+                    model.addValue(r.getString(x));
+                }
+            }
+
+
+            /* Build the current values */
+            model.buildValues();
+
+            LOG.info("Adding unique for column " + c.getName());
+
+            tableModels.add(model);
+
+            model.addChangeListener(new UniqueListener() {
+                @Override
+                public void uniqueSelectionChanged(UniqueTableModel model) {
+                    LOG.info("Selection: " + model);
+                    buildQuery();
+                }
+            });
+
+            JTable table = new JTable(model);
+            table.setRowHeight(20);
+            table.setCellSelectionEnabled(false);
+            table.setRowSelectionAllowed(false);
+
+            table.getColumnModel().getColumn(0).setMinWidth(32);
+            table.getColumnModel().getColumn(0).setMaxWidth(32);
+            table.getColumnModel().getColumn(0).setPreferredWidth(32);
+            table.getColumnModel().getColumn(0).setWidth(32);
+
+            table.getColumnModel().getColumn(2).setMinWidth(32);
+            table.getColumnModel().getColumn(2).setMaxWidth(100);
+            table.getColumnModel().getColumn(2).setPreferredWidth(64);
+
+
+            table.setVisible(true);
+            JScrollPane scroll = new JScrollPane(table);
+            scroll.setVisible(true);
+            jTabbedPane1.add(c.getName(), scroll);
+        }
+        jTabbedPane1.invalidate();
+    }
+
+//    public void openCSV(CSV csv) {
+//        model = new CSVTableModel(csv);
+//        table.setModel(model);
+//        setTitle("Untitled");
+//    }
 
     public void openFile(File file)  {
 
@@ -140,10 +352,9 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
             for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
                 table.getColumnModel().getColumn(x).setWidth(150);
             }
-
             /* */
             recentFileModel.add(new RecentFile(file.getAbsolutePath()));
-
+            createUniqueModels();
         } catch (FileNotFoundException ex) {
             JOptionPane.showMessageDialog(this, "Fant ikke fil", "", JOptionPane.ERROR_MESSAGE);
         } catch (IOException ex) {
@@ -177,6 +388,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
         jToolBar2 = new javax.swing.JToolBar();
@@ -218,6 +431,13 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jSplitPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jSplitPane1.setDividerLocation(250);
+        jSplitPane1.setOneTouchExpandable(true);
+        jSplitPane1.setLeftComponent(jTabbedPane1);
+
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -233,7 +453,9 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         table.setShowGrid(true);
         jScrollPane1.setViewportView(table);
 
-        getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        jSplitPane1.setRightComponent(jScrollPane1);
+
+        getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
         jToolBar2.setFloatable(false);
         jToolBar2.setRollover(true);
@@ -474,6 +696,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         csv = new CSV();
         model = new CSVTableModel(csv);
         table.setModel(model);
+        jTabbedPane1.removeAll();
+        tableModels.clear();
 
         getRootPane().putClientProperty("Window.documentFile", null);
         setTitle("");
@@ -590,6 +814,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;

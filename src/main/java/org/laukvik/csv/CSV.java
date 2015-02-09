@@ -27,6 +27,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.laukvik.csv.columns.Column;
@@ -143,6 +145,11 @@ public class CSV implements Serializable {
         }
     }
 
+    protected List<Row> getRows() {
+        return rows;
+    }
+
+    ;
 
     public MetaData getMetaData() {
         return metaData;
@@ -184,43 +191,6 @@ public class CSV implements Serializable {
         rows.clear();
     }
 
-//    public Query createQuery() {
-//        Query q = new Query(metaData, this);
-//        return q;
-//    }
-
-//    /**
-//     * Find all rows matching the specified filters
-//     *
-//     * @param query
-//     * @return
-//     */
-//    public List<Row> findWithQuery(Query query) {
-//        List<Row> filteredRows = new ArrayList<>();
-//        int matchesRequired = query.getFilters().size();
-//        for (Row r : rows) {
-//            if (matchesRequired == 0) {
-//                /* Dont use filters - add all */
-//                filteredRows.add(r);
-//            } else {
-//                /* Use filtering */
-//                int matchCount = 0;
-//                for (Filter f : query.getFilters()) {
-//                    if (f.accepts(r)) {
-//                        matchCount++;
-//                    }
-//                }
-//                if (matchCount == matchesRequired) {
-//                    filteredRows.add(r);
-//                }
-//            }
-//        }
-//        if (!query.getSortOrders().isEmpty()) {
-//            MultipleRowSorter multipleSorter = new MultipleRowSorter(query.getSortOrders());
-//            Collections.sort(filteredRows, multipleSorter);
-//        }
-//        return filteredRows;
-//    }
 
     /**
      * Writes the contents to file
@@ -384,5 +354,24 @@ public class CSV implements Serializable {
     public Query findByQuery() {
         return new Query(metaData, this);
     }
+
+    /**
+     * Returns a set of unique values for the specified column
+     *
+     * @param columnIndex
+     * @return
+     */
+    public Set<String> listDistinct(int columnIndex) {
+        Set<String> values = new TreeSet<>();
+        for (Row r : rows) {
+            values.add(r.getString(columnIndex));
+        }
+        return values;
+    }
+
+    public Set<String> listDistinct(String column) {
+        return listDistinct(getMetaData().getColumnIndex(column));
+    }
+
 
 }
