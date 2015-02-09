@@ -206,8 +206,6 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
                 /* Metadata not provided. Use strings only */
                 this.metaData = new MetaData();
                 for (String s : values) {
-//                    System.out.println("StringOnly: " + s);
-
                     metaData.addColumn(s);
                 }
             } else {
@@ -215,7 +213,6 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
                 for (int x = 0; x < values.size(); x++) {
                     String s = values.get(x);
                     metaData.getColumn(x).setName(s);
-//                    System.out.println("Custom: " + s + " " + metaData.getColumn(x));
                 }
             }
         }

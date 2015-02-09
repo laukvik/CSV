@@ -134,8 +134,6 @@ public class CsvReaderTest {
         try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset), null)) {
             while (r.hasNext()) {
                 Row row = r.next();
-                System.out.println("Norw: " + row.getString("text") + "=" + norwegian);
-//                System.out.println("UTF: " + new String(row.getString("text").getBytes(), "utf-8"));
                 assertEquals("Norwegian chars", norwegian, row.getString("text"));
             }
         } catch (IOException e) {

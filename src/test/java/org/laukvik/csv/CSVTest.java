@@ -210,7 +210,6 @@ public class CSVTest {
             List<Person> items = csv.findByClass(Person.class);
             int x = 1;
             for (Person p : items) {
-                System.out.println(x + ":" + p);
                 x++;
             }
         } catch (Exception e) {
