@@ -72,7 +72,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     public Viewer() {
         super("CSV");
         tableModels = new ArrayList<>();
-        bundle = ResourceBundle.getBundle("org.laukvik.csv.messages");
+        bundle = ResourceBundle.getBundle("messages");
         setTitle(bundle.getString("app"));
         setTitle("");
         initComponents();
@@ -98,14 +98,12 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         table.setCellSelectionEnabled(true);
         table.setRowHeight(20);
 
-
         table.getSelectionModel().addListSelectionListener(this);
 
         file = null;
         csv = new org.laukvik.csv.CSV();
         model = new CSVTableModel(csv);
         table.setModel(model);
-
 
         for (Charset c : Charset.availableCharsets().values()) {
             JMenuItem item = new JMenuItem(c.name());
@@ -237,7 +235,6 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
             model = new CSVTableModel(where.getResultList(), csv.getMetaData());
         }
 
-
         table.setModel(model);
         table.tableChanged(new TableModelEvent(model));
     }
@@ -320,7 +317,6 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
             table.getColumnModel().getColumn(2).setMaxWidth(100);
             table.getColumnModel().getColumn(2).setPreferredWidth(64);
 
-
             table.setVisible(true);
             JScrollPane scroll = new JScrollPane(table);
             scroll.setVisible(true);
@@ -334,8 +330,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 //        table.setModel(model);
 //        setTitle("Untitled");
 //    }
-
-    public void openFile(File file)  {
+    public void openFile(File file) {
 
         try {
             csv = new org.laukvik.csv.CSV(file);
@@ -352,13 +347,17 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
             /* */
             recentFileModel.add(new RecentFile(file.getAbsolutePath()));
             createUniqueModels();
-        } catch (FileNotFoundException ex) {
+        }
+        catch (FileNotFoundException ex) {
             JOptionPane.showMessageDialog(this, "Fant ikke fil", "", JOptionPane.ERROR_MESSAGE);
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Kunne ikke åpne", "", JOptionPane.ERROR_MESSAGE);
-        } catch (InvalidRowDataException ex) {
+        }
+        catch (InvalidRowDataException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage() + "\n" + ex.getRow().getRaw(), "Feil i CSV fil", JOptionPane.ERROR_MESSAGE);
-        } catch (ParseException ex) {
+        }
+        catch (ParseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage() + "\n", "Feil i CSV fil", JOptionPane.ERROR_MESSAGE);
         }
 
@@ -619,7 +618,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
 
-        java.awt.FileDialog fd = new FileDialog(this,"Velg fil", FileDialog.LOAD);
+        java.awt.FileDialog fd = new FileDialog(this, "Velg fil", FileDialog.LOAD);
         fd.setFilenameFilter(new CSVFileFilter());
         fd.setVisible(true);
         String filename = fd.getFile();
@@ -648,8 +647,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
     private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
 
-
-        java.awt.FileDialog fd = new FileDialog(this,"Velg fil", FileDialog.SAVE);
+        java.awt.FileDialog fd = new FileDialog(this, "Velg fil", FileDialog.SAVE);
         fd.setFilenameFilter(new CSVFileFilter());
         fd.setVisible(true);
 
@@ -659,7 +657,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
             try {
                 File file = new File(fd.getDirectory(), filename);
                 csv.write(file);
-            } catch (IOException ex) {
+            }
+            catch (IOException ex) {
                 JOptionPane.showMessageDialog(this,
                         "Could not save file!", "", JOptionPane.WARNING_MESSAGE);
             }
@@ -673,18 +672,19 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
-            try {
-                csv.write(file);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this,
-                        "Could not save file!", "", JOptionPane.WARNING_MESSAGE);
-            }
+        try {
+            csv.write(file);
+        }
+        catch (IOException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Could not save file!", "", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
     private void deleteRowMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRowMenuItemActionPerformed
         int min = table.getSelectedRow();
         int max = min + table.getSelectedRowCount();
-        csv.removeRows(min,max);
+        csv.removeRows(min, max);
         table.tableChanged(new TableModelEvent(model));
     }//GEN-LAST:event_deleteRowMenuItemActionPerformed
 
@@ -702,8 +702,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
     private void insertColumnMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertColumnMenuItemActionPerformed
 
-        String answer = JOptionPane.showInputDialog(this,"", "", JOptionPane.QUESTION_MESSAGE);
-        if (answer!=null){
+        String answer = JOptionPane.showInputDialog(this, "", "", JOptionPane.QUESTION_MESSAGE);
+        if (answer != null) {
             int rowIndex = table.getSelectedColumn();
             if (rowIndex == -1) {
                 LOG.info("Inserting column after last");
@@ -735,17 +735,17 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
         LOG.info("Rows after insert: " + csv.getRowCount());
 
-        table.tableChanged( new TableModelEvent(model));
+        table.tableChanged(new TableModelEvent(model));
 
     }//GEN-LAST:event_insertRowMenuItemActionPerformed
 
     private void gotoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gotoMenuItemActionPerformed
-        String answer = JOptionPane.showInputDialog(this,"Linje", "", JOptionPane.QUESTION_MESSAGE);
-        if (csv.getRowCount() == 0){
+        String answer = JOptionPane.showInputDialog(this, "Linje", "", JOptionPane.QUESTION_MESSAGE);
+        if (csv.getRowCount() == 0) {
             return;
         }
-        if (answer!=null){
-            Integer row = Integer.parseInt( answer) -1;
+        if (answer != null) {
+            Integer row = Integer.parseInt(answer) - 1;
             table.setRowSelectionInterval(row, row);
             Rectangle rect = table.getCellRect(row, 0, true);
             rect.height = (int) jScrollPane1.getVisibleRect().getHeight();
@@ -756,10 +756,10 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private void deleteColumnMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteColumnMenuItemActionPerformed
 
         int min = table.getSelectedRow();
-        if (min > -1){
+        if (min > -1) {
         }
         csv.removeColumn(min);
-        table.tableChanged( new TableModelEvent(model,TableModelEvent.HEADER_ROW));
+        table.tableChanged(new TableModelEvent(model, TableModelEvent.HEADER_ROW));
     }//GEN-LAST:event_deleteColumnMenuItemActionPerformed
 
     /**
@@ -768,7 +768,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
         }
         System.setProperty("apple.laf.useScreenMenuBar", "true");
 
@@ -825,8 +826,5 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private javax.swing.JTable table;
     private javax.swing.JMenu toolsMenu;
     // End of variables declaration//GEN-END:variables
-
-
-
 
 }

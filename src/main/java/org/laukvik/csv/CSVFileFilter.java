@@ -22,6 +22,7 @@ import java.io.FilenameFilter;
 public class CSVFileFilter extends javax.swing.filechooser.FileFilter implements FileFilter, FilenameFilter {
 
     public CSVFileFilter() {
+        super();
     }
 
     @Override
