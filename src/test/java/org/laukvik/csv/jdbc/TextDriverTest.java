@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv.jdbc.syntax;
+package org.laukvik.csv.jdbc;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import org.junit.Test;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class ListItemReaderTest {
-
-    public ListItemReaderTest() {
-    }
+public class TextDriverTest {
 
     @Test
-    public void testSomeMethod() {
-//        try {
-//            ListItemReader r = new ListItemReader();
-//            r.consume("\"Morten \"\"the cool\"\" Laukvik\", \"morten\"");
-//        }
-//        catch (SyntaxException e) {
-//            e.printStackTrace();
-//        }
+    public void shouldConnect() throws SQLException {
+        DriverManager.registerDriver(new TextDriver());
+        try (
+                Connection connection = DriverManager.getConnection("jdbc:TextDriver:/");
+                Statement st = connection.createStatement();) {
+
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

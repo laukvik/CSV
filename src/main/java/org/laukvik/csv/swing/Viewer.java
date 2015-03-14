@@ -72,7 +72,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     public Viewer() {
         super("CSV");
         tableModels = new ArrayList<>();
-        bundle = ResourceBundle.getBundle("messages");
+        bundle = ResourceBundle.getBundle("messages"); // NOI18N
         setTitle(bundle.getString("app"));
         setTitle("");
         initComponents();
@@ -127,6 +127,10 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         int min = table.getSelectionModel().getMinSelectionIndex();
         int max = table.getSelectionModel().getMaxSelectionIndex();
         statusLabel.setText(csv.getRowCount() + " rows");
+    }
+
+    public ResourceBundle getBundle() {
+        return bundle;
     }
 
     @Override
@@ -461,9 +465,9 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
         getContentPane().add(jToolBar2, java.awt.BorderLayout.PAGE_END);
 
-        fileMenu.setText("File");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("messages"); // NOI18N
+        fileMenu.setText(bundle.getString("file")); // NOI18N
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/laukvik/csv/messages"); // NOI18N
         newMenuItem.setText(bundle.getString("new")); // NOI18N
         newMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -530,7 +534,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         copyMenuItem.setText(bundle.getString("copy")); // NOI18N
         editMenu.add(copyMenuItem);
 
-        pasteMenuItem.setText(bundle.getString("paste")); // NOI18N
+        pasteMenuItem.setText("Paste");
         editMenu.add(pasteMenuItem);
 
         deleteRowMenuItem.setText(bundle.getString("row_delete")); // NOI18N
