@@ -71,7 +71,7 @@ public class MetaData implements Serializable {
     }
 
     public void addColumn(String s) {
-        if (s.toUpperCase().endsWith("(INT)")) {
+        if (s.toUpperCase().endsWith("(INT)") || s.toUpperCase().endsWith("ID")) {
             addColumn(new IntegerColumn(s));
         } else if (s.toUpperCase().endsWith("(FLOAT)")) {
             addColumn(new FloatColumn(s));

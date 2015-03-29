@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
@@ -76,7 +77,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         setTitle(bundle.getString("app"));
         setTitle("");
         initComponents();
-
+        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         newMenuItem.setAccelerator(getKeystroke(java.awt.event.KeyEvent.VK_N));
         fileMenu.setText(bundle.getString("file"));
         openMenuItem.setText(bundle.getString("open"));
@@ -245,7 +246,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
     public void createUniqueModels() {
         LOG.info("Adding unique models: " + csv.getMetaData().getColumnCount());
-        jTabbedPane1.removeAll();
+        tabbedPane.removeAll();
         tableModels = new ArrayList<>();
 
         for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
@@ -324,9 +325,9 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
             table.setVisible(true);
             JScrollPane scroll = new JScrollPane(table);
             scroll.setVisible(true);
-            jTabbedPane1.add(c.getName(), scroll);
+            tabbedPane.add(c.getName(), scroll);
         }
-        jTabbedPane1.invalidate();
+        tabbedPane.invalidate();
     }
 
 //    public void openCSV(Viewer csv) {
@@ -344,10 +345,13 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
             setTitle(file.getAbsolutePath());
             statusLabel.setText(csv.getRowCount() + " rows");
             getRootPane().putClientProperty("Window.documentFile", file);
+
             table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
                 table.getColumnModel().getColumn(x).setWidth(150);
+                columnMenu.add(new JMenuItem(new ColumnEditAction(this, csv.getMetaData(), x)));
             }
+
             /* */
             recentFileModel.add(new RecentFile(file.getAbsolutePath()));
             createUniqueModels();
@@ -389,7 +393,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabbedPane = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
         jToolBar2 = new javax.swing.JToolBar();
@@ -400,6 +404,11 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         openMenuItem = new javax.swing.JMenuItem();
         recentMenu = new javax.swing.JMenu();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
+        jSeparator8 = new javax.swing.JPopupMenu.Separator();
+        importMenuItem = new javax.swing.JMenuItem();
+        exportMenuItem = new javax.swing.JMenuItem();
+        jSeparator9 = new javax.swing.JPopupMenu.Separator();
         saveMenuItem = new javax.swing.JMenuItem();
         saveAsMenuItem = new javax.swing.JMenuItem();
         printMenuItem = new javax.swing.JMenuItem();
@@ -420,9 +429,11 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
-        toolsMenu = new javax.swing.JMenu();
+        columnMenu = new javax.swing.JMenu();
         insertColumnMenuItem = new javax.swing.JMenuItem();
         deleteColumnMenuItem = new javax.swing.JMenuItem();
+        jSeparator10 = new javax.swing.JPopupMenu.Separator();
+        toolsMenu = new javax.swing.JMenu();
         charsetMenu = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
@@ -434,7 +445,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         jSplitPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jSplitPane1.setDividerLocation(250);
         jSplitPane1.setOneTouchExpandable(true);
-        jSplitPane1.setLeftComponent(jTabbedPane1);
+        jSplitPane1.setLeftComponent(tabbedPane);
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
@@ -487,7 +498,17 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         fileMenu.add(openMenuItem);
 
         recentMenu.setText("Open recent");
+        recentMenu.add(jSeparator7);
+
         fileMenu.add(recentMenu);
+        fileMenu.add(jSeparator8);
+
+        importMenuItem.setText(bundle.getString("import")); // NOI18N
+        fileMenu.add(importMenuItem);
+
+        exportMenuItem.setText(bundle.getString("export")); // NOI18N
+        fileMenu.add(exportMenuItem);
+        fileMenu.add(jSeparator9);
 
         saveMenuItem.setText("Save");
         saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -573,7 +594,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
         jMenuBar1.add(editMenu);
 
-        toolsMenu.setText(bundle.getString("tools")); // NOI18N
+        columnMenu.setText("Kolonner");
 
         insertColumnMenuItem.setText(bundle.getString("column_new")); // NOI18N
         insertColumnMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -581,7 +602,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 insertColumnMenuItemActionPerformed(evt);
             }
         });
-        toolsMenu.add(insertColumnMenuItem);
+        columnMenu.add(insertColumnMenuItem);
 
         deleteColumnMenuItem.setText(bundle.getString("column_delete")); // NOI18N
         deleteColumnMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -589,7 +610,12 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 deleteColumnMenuItemActionPerformed(evt);
             }
         });
-        toolsMenu.add(deleteColumnMenuItem);
+        columnMenu.add(deleteColumnMenuItem);
+        columnMenu.add(jSeparator10);
+
+        jMenuBar1.add(columnMenu);
+
+        toolsMenu.setText(bundle.getString("tools")); // NOI18N
 
         charsetMenu.setText("Encoding");
 
@@ -697,7 +723,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         csv = new org.laukvik.csv.CSV();
         model = new CSVTableModel(csv);
         table.setModel(model);
-        jTabbedPane1.removeAll();
+        tabbedPane.removeAll();
         tableModels.clear();
 
         getRootPane().putClientProperty("Window.documentFile", null);
@@ -767,6 +793,15 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     }//GEN-LAST:event_deleteColumnMenuItemActionPerformed
 
     /**
+     *
+     * @param columnIndex
+     */
+    public void openColumnEditor(int columnIndex) {
+        columnDialog = new ColumnEditorDialog(this, csv.getMetaData().getColumn(columnIndex));
+    }
+    ColumnEditorDialog columnDialog;
+
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -791,15 +826,18 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenu charsetMenu;
+    private javax.swing.JMenu columnMenu;
     private javax.swing.JMenuItem copyMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
     private javax.swing.JMenuItem deleteColumnMenuItem;
     private javax.swing.JMenuItem deleteRowMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JMenuItem exportMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem gotoMenuItem;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuItem importMenuItem;
     private javax.swing.JMenuItem insertColumnMenuItem;
     private javax.swing.JMenuItem insertRowMenuItem;
     private javax.swing.JMenuBar jMenuBar1;
@@ -811,13 +849,16 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator10;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
+    private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JPopupMenu.Separator jSeparator8;
+    private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
@@ -827,6 +868,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JLabel statusLabel;
+    private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JTable table;
     private javax.swing.JMenu toolsMenu;
     // End of variables declaration//GEN-END:variables
