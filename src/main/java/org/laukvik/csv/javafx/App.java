@@ -17,18 +17,23 @@ package org.laukvik.csv.javafx;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -40,36 +45,57 @@ import org.laukvik.csv.columns.Column;
 
 public class App extends Application {
 
-    private TableView<ObservableRow> tableView;
     private CSV csv;
-    private ObservableList<ObservableRow> data = FXCollections.observableArrayList();
-    private MenuBar menu;
-    private final Menu fileMenu = new Menu("File");
-    private final Menu editMenu = new Menu("Edit");
-    private final Menu helpMenu = new Menu("Help");
 
-    BorderPane root = new BorderPane();
-    VBox topContainer = new VBox();  //Creates a container to hold all Menu Objects.
-    ToolBar toolBar = new ToolBar();  //Creates our tool-bar to hold the buttons.
+    private MenuBar menu;
+    private Menu fileMenu;
+    private Menu editMenu;
+    private Menu helpMenu;
+
+    //
+    private VBox topContainer;  //Creates a container to hold all Menu Objects.
+    private BorderPane root;
+    private SplitPane split;
+    private ScrollPane scrollAccordion, scrollTable;
+    private Accordion accordion;
+    private TableView<ObservableRow> tableView;
+    private ObservableList<ObservableRow> data = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage primaryStage) {
-        tableView = new TableView<>();
-        //
-        fileMenu.getItems().add(new MenuItem("Edit"));
+        // Menu
         menu = new MenuBar();
         menu.setUseSystemMenuBar(true);
+        fileMenu = new Menu("File");
+        editMenu = new Menu("Edit");
+        helpMenu = new Menu("Help");
+        fileMenu.getItems().add(new MenuItem("Open"));
+        editMenu.getItems().add(new MenuItem("Cut"));
+        helpMenu.getItems().add(new MenuItem("About"));
         menu.getMenus().addAll(fileMenu, editMenu, helpMenu);
+        //
+        accordion = new Accordion();
+        scrollAccordion = new ScrollPane(accordion);
+        scrollAccordion.setFitToHeight(true);
+        scrollAccordion.setFitToWidth(true);
+        //
+        tableView = new TableView<>();
+        scrollTable = new ScrollPane(tableView);
+        scrollTable.setFitToHeight(true);
+        scrollTable.setFitToWidth(true);
+        //
+        split = new SplitPane();
+        split.getItems().addAll(scrollAccordion, scrollTable);
+        split.setDividerPositions(0.2);
 
-//        StackPane root = new StackPane();
+        //
+        topContainer = new VBox();
         topContainer.getChildren().add(menu);
-//        topContainer.getChildren().add(toolBar);
-
+        //
+        root = new BorderPane();
         root.setTop(topContainer);
-        root.setBottom(tableView);
-
-//        root.getChildren().add(menu);
-//        root.getChildren().add(tableView);
+        root.setCenter(split);
+        //
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         openFile(new File("/Users/morten/Downloads/Presidents.csv"));
@@ -114,13 +140,31 @@ public class App extends Application {
 
             tc.setMinWidth(100);
             tableView.getColumns().add(tc);
-        }
 
+            // Accordion stuff
+            TitledPane pane = new TitledPane();
+            pane.setText(c.getName());
+
+            // Find all unique
+            Set<String> set = csv.listDistinct(x);
+            CheckBox[] arr = new CheckBox[set.size()];
+            int n = 0;
+            for (String s : set) {
+                CheckBox cb = new CheckBox(s);
+
+                arr[n] = cb;
+                n++;
+            }
+            VBox vbox = new VBox(arr);
+            vbox.setSpacing(8);
+            ScrollPane scroll = new ScrollPane(vbox);
+            pane.setContent(scroll);
+            accordion.getPanes().add(pane);
+        }
         for (int y = 0; y < csv.getRowCount(); y++) {
             Row r = csv.getRow(y);
             data.add(new ObservableRow(r));
         }
-
         tableView.setItems(data);
     }
 
