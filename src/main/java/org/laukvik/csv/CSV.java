@@ -36,7 +36,6 @@ import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.query.Query;
 
-
 /**
  * An API for reading and writing to Viewer. The implementation is based on the
  * specficiations from http://tools.ietf.org/rfc/rfc4180.txt
@@ -44,26 +43,26 @@ import org.laukvik.csv.query.Query;
  * Read whole file into memory<br>
  *
  * <code>
- Viewer c = new Viewer( new File("nerds.csv") );
- </code>
-
- Write Viewer to file
-
- <code>
- Viewer c = new Viewer("First","Last");
- c.addRow( "Bill","Gates" );
- c.addRow( new Row("Steve","Jobs") );
- c.removeColumn("First");
- c.addColumn("Email);
- c.addColumn("Address",0);
- c.write( new File("nerds.csv") );
- </code>
+ * Viewer c = new Viewer( new File("nerds.csv") );
+ * </code>
+ *
+ * Write Viewer to file
  *
  * <code>
- Viewer c = new Viewer( Person.class );
- c.add( new Person("Bill","Gates") );
- c.write( new File("persons.csv") );
- </code>
+ * Viewer c = new Viewer("First","Last");
+ * c.addRow( "Bill","Gates" );
+ * c.addRow( new Row("Steve","Jobs") );
+ * c.removeColumn("First");
+ * c.addColumn("Email);
+ * c.addColumn("Address",0);
+ * c.write( new File("nerds.csv") );
+ * </code>
+ *
+ * <code>
+ * Viewer c = new Viewer( Person.class );
+ * c.addValue( new Person("Bill","Gates") );
+ * c.write( new File("persons.csv") );
+ * </code>
  *
  *
  * @author Morten Laukvik <morten@laukvik.no>
@@ -125,7 +124,6 @@ public class CSV implements Serializable {
         rows = new ArrayList<>();
         this.charset = charset;
 
-
         try (CsvReader reader = new CsvReader(inputStream, charset, metadata)) {
             if (metadata == null) {
                 this.metaData = reader.getMetaData();
@@ -141,7 +139,8 @@ public class CSV implements Serializable {
                 }
                 rows.add(row);
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw e;
         }
     }
@@ -192,7 +191,6 @@ public class CSV implements Serializable {
         rows.clear();
     }
 
-
     /**
      * Writes the contents to file
      *
@@ -205,7 +203,8 @@ public class CSV implements Serializable {
             for (Row row : rows) {
                 writer.writeRow(row);
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw e;
         }
     }
@@ -311,7 +310,8 @@ public class CSV implements Serializable {
         File file = getFile(aClass);
         try {
             return findByClass(new FileInputStream(file), CSV.CHARSET_DEFAULT, aClass);
-        } catch (FileNotFoundException ex) {
+        }
+        catch (FileNotFoundException ex) {
             List<T> items = new ArrayList<>();
             return items;
         }
@@ -329,11 +329,14 @@ public class CSV implements Serializable {
                 }
                 items.add(createInstance(row, aClass));
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
 
-        } catch (InstantiationException ex) {
+        }
+        catch (InstantiationException ex) {
             Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
+        }
+        catch (IllegalAccessException ex) {
             Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, ex);
         }
         return items;
@@ -347,13 +350,23 @@ public class CSV implements Serializable {
                 writer.writeEntityRow(o);
             }
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public Query findByQuery() {
         return new Query(metaData, this);
+    }
+
+    public DistinctColumnValues getDistinctColumnValues(int columnIndex) {
+        Column c = metaData.getColumn(columnIndex);
+        DistinctColumnValues cv = new DistinctColumnValues(c);
+        for (Row r : rows) {
+            cv.addValue(r.getString(columnIndex));
+        }
+        return cv;
     }
 
     /**
@@ -377,7 +390,8 @@ public class CSV implements Serializable {
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
         }
         System.setProperty("apple.laf.useScreenMenuBar", "true");
 
@@ -392,6 +406,5 @@ public class CSV implements Serializable {
             }
         });
     }
-
 
 }
