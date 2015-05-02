@@ -18,8 +18,6 @@ package org.laukvik.csv.swing;
 import java.io.File;
 import org.junit.Assert;
 import static org.junit.Assert.fail;
-import org.junit.Before;
-import org.junit.Test;
 import org.laukvik.csv.CSVTableModel;
 import org.laukvik.csv.CsvReaderTest;
 
@@ -34,7 +32,7 @@ public class ViewerTest {
     public ViewerTest() {
     }
 
-    @Before
+//    @Before
     public void setUp() throws Exception {
         view = new Viewer();
     }
@@ -44,8 +42,8 @@ public class ViewerTest {
         return new File(classLoader.getResource(filename).getFile());
     }
 
-    @Test
-    public void readTableData(){
+//    @Test
+    public void readTableData() {
         try {
             view = new Viewer();
             view.setSize(700, 400);
@@ -65,7 +63,8 @@ public class ViewerTest {
 
             Assert.assertEquals("RowCount", 3, model.getRowCount());
             Assert.assertEquals("ColumnCount", 4, model.getColumnCount());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             fail(e.getMessage());
         }
     }
