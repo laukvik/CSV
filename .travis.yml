@@ -1,2 +1,4 @@
 language: java
-mvn test
+notifications:
+  email: true
+script: mvn test
