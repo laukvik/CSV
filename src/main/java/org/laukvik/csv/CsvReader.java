@@ -45,7 +45,7 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
     private List<String> values;
 
     public CsvReader(InputStream is, MetaData metaData) throws IOException {
-        this(is, CSV.CHARSET_DEFAULT, metaData);
+        this(is, Charset.defaultCharset(), metaData);
     }
 
     public CsvReader(InputStream is, Charset charset, MetaData metaData) throws IOException {
@@ -126,6 +126,7 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
             /* Check char */
             switch (currentChar) {
                 case CSV.RETURN: /* Found carriage return. Do nothing. */
+
                     addChar = false;
                     break;
 
@@ -146,7 +147,6 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
                     addChar = true;
 
                     isWithinQuote = true;
-
 
                     int read = -1;
                     while (is.available() > 0) {
@@ -188,7 +188,6 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
                 rawLine.append(currentChar);
             }
 
-
             if (addValue || is.available() == 0) {
                 if (is.available() == 0) {
                     if (isWithinQuote) {
@@ -228,7 +227,8 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
     public boolean hasNext() {
         try {
             return readRow();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             return false;
         }
     }
@@ -262,7 +262,5 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
         }
         return (T) instance;
     }
-
-
 
 }

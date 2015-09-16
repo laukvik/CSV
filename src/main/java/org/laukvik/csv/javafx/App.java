@@ -72,9 +72,11 @@ public class App extends Application {
     private Accordion accordion;
     private TableView<ObservableRow> tableView;
     private ObservableList<ObservableRow> data = FXCollections.observableArrayList();
+    Stage primaryStage;
 
     @Override
     public void start(final Stage primaryStage) {
+        this.primaryStage = primaryStage;
         // Menu
         menu = new MenuBar();
         menu.setUseSystemMenuBar(true);
@@ -146,7 +148,6 @@ public class App extends Application {
 
         Scene scene = new Scene(root, width.intValue(), height.intValue());
         primaryStage.setScene(scene);
-        openFile(new File("/Users/morten/Downloads/Presidents.csv"));
         primaryStage.show();
     }
 
@@ -156,6 +157,7 @@ public class App extends Application {
             try {
                 csv = new CSV(file);
                 openCSV(csv);
+                primaryStage.setTitle(file.getName());
             }
             catch (IOException ex) {
                 ex.printStackTrace();

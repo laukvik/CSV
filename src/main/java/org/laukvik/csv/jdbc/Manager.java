@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.CSVFileFilter;
+import org.laukvik.csv.swing.CSVFileFilter;
 import org.laukvik.csv.ParseException;
 import org.laukvik.csv.jdbc.data.ColumnData;
 import org.laukvik.csv.jdbc.data.Data;

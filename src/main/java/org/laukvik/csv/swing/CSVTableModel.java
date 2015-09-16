@@ -13,36 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.swing;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import org.laukvik.csv.CSV;
+import org.laukvik.csv.Row;
+import org.laukvik.csv.query.Query;
 
 public class CSVTableModel implements TableModel {
 
-    private CSV csv;
-    private List<Row> rows;
+    private final CSV csv;
     private final List<TableModelListener> listeners;
-    private MetaData metaData;
+    private final Query query;
 
     public CSVTableModel(CSV csv) {
         this.csv = csv;
         this.listeners = new ArrayList<>();
-        this.rows = csv.getRows();
-        this.metaData = csv.getMetaData();
+        this.query = null;
     }
 
-    public CSVTableModel(List<Row> rows, MetaData md) {
-        this.rows = rows;
-        this.metaData = md;
+    public CSVTableModel(CSV csv, Query query) {
+        this.csv = csv;
         this.listeners = new ArrayList<>();
-    }
-
-    public CSVTableModel() {
-        this.rows = rows = new ArrayList<>();
-        this.listeners = new ArrayList<>();
+        this.query = query;
     }
 
     @Override
@@ -66,26 +62,25 @@ public class CSVTableModel implements TableModel {
 
     @Override
     public int getColumnCount() {
-        return metaData.getColumnCount();
+        return csv.getMetaData().getColumnCount();
     }
 
     @Override
     public String getColumnName(int column) {
-        return metaData.getColumn(column).getName();
+        return csv.getMetaData().getColumn(column).getName();
     }
 
     @Override
     public int getRowCount() {
-        return rows.size();
+        return csv.getQuery() == null ? csv.getRowCount() : csv.getQuery().getResultList().size();
     }
 
     @Override
     public Object getValueAt(int row, int column) {
         try {
-            Row r = rows.get(row);
-//            return csv.getRow(row).getString(column);
-            return r.getString(column);
-        } catch (Exception e) {
+            return csv.getQuery() == null ? csv.getRow(row) : csv.getQuery().getResultList().get(row).getValue(column);
+        }
+        catch (Exception e) {
             return null;
         }
     }
@@ -97,8 +92,7 @@ public class CSVTableModel implements TableModel {
 
     @Override
     public void setValueAt(Object value, int row, int column) {
-//        csv.getRow(row).setString(value.toString(), column);
-        Row r = rows.get(row);
+        Row r = csv.getRow(row);
         r.setString((String) value, column);
     }
 }

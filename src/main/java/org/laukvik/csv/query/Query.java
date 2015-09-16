@@ -160,7 +160,6 @@ public class Query {
 
     }
 
-
     public class Where {
 
         private final List<Column> columns;
@@ -296,6 +295,5 @@ public class Query {
         }
         return filteredRows;
     }
-
 
 }

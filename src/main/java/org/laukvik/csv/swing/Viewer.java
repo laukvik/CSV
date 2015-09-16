@@ -38,8 +38,6 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
-import org.laukvik.csv.CSVFileFilter;
-import org.laukvik.csv.CSVTableModel;
 import org.laukvik.csv.InvalidRowDataException;
 import org.laukvik.csv.ParseException;
 import org.laukvik.csv.Row;
@@ -146,7 +144,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
     public void buildQuery() {
         LOG.info("buildQuery ");
-        Query.Where where = csv.findByQuery().where();
+        Query query = csv.findByQuery();
+        Query.Where where = query.where();
         int selectionCount = 0;
         for (UniqueTableModel utm : tableModels) {
             Column c = utm.getColumn();
@@ -237,7 +236,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         if (selectionCount == 0) {
             model = new CSVTableModel(csv);
         } else {
-            model = new CSVTableModel(where.getResultList(), csv.getMetaData());
+
+            model = new CSVTableModel(csv, query);
         }
 
         table.setModel(model);
@@ -507,6 +507,11 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         fileMenu.add(importMenuItem);
 
         exportMenuItem.setText(bundle.getString("export")); // NOI18N
+        exportMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(exportMenuItem);
         fileMenu.add(jSeparator9);
 
@@ -791,6 +796,26 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         csv.removeColumn(min);
         table.tableChanged(new TableModelEvent(model, TableModelEvent.HEADER_ROW));
     }//GEN-LAST:event_deleteColumnMenuItemActionPerformed
+
+    private void exportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportMenuItemActionPerformed
+
+        java.awt.FileDialog fd = new FileDialog(this, "Velg fil", FileDialog.SAVE);
+        //fd.setFilenameFilter(new CSVFileFilter());
+        fd.setVisible(true);
+
+        String filename = fd.getFile();
+        if (filename == null) {
+        } else {
+            try {
+                File file = new File(fd.getDirectory(), filename);
+                csv.writeJson(file);
+            }
+            catch (IOException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Could not save file!", "", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_exportMenuItemActionPerformed
 
     /**
      *

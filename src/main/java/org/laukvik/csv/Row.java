@@ -116,6 +116,9 @@ public class Row implements Serializable {
             throw new ColumnNotFoundException(column, metaData.getColumnCount());
         }
         String v = values.get(column);
+        if (v == null) {
+            return "";
+        }
         return new String(v.getBytes(metaData.getCharset()));
     }
 
@@ -138,7 +141,8 @@ public class Row implements Serializable {
         String value = getString(columnIndex);
         try {
             return new URL(value);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ConversionException(value, "URL");
         }
     }
@@ -151,7 +155,8 @@ public class Row implements Serializable {
         String value = getString(columnIndex);
         try {
             return new Long(value);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ConversionException(value, "Long");
         }
     }
@@ -164,7 +169,8 @@ public class Row implements Serializable {
         String value = getString(columnIndex);
         try {
             return new Integer(value);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ConversionException(value, "Integer");
         }
     }
@@ -177,7 +183,8 @@ public class Row implements Serializable {
         String value = getString(columnIndex);
         try {
             return new Float(value);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ConversionException(value, "Float");
         }
     }
@@ -190,7 +197,8 @@ public class Row implements Serializable {
         String value = getString(columnIndex);
         try {
             return new Double(value);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ConversionException(value, "Double");
         }
     }
@@ -200,7 +208,8 @@ public class Row implements Serializable {
         try {
             Long millis = Long.parseLong(value);
             return new Date(millis);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ConversionException(value, "Date(in milliseconds since 1970)");
         }
     }
@@ -210,7 +219,8 @@ public class Row implements Serializable {
         try {
             Long millis = Long.parseLong(value);
             return new Date(millis);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ConversionException(value, "Date(in milliseconds since 1970)");
         }
     }
@@ -231,7 +241,8 @@ public class Row implements Serializable {
         String value = getString(columnIndex);
         try {
             return format.parse(value);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ConversionException(value, "Date");
         }
     }
@@ -244,7 +255,8 @@ public class Row implements Serializable {
         String value = getString(columnIndex);
         try {
             return new Boolean(value);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ConversionException(value, "Boolean");
         }
     }
@@ -257,7 +269,8 @@ public class Row implements Serializable {
         String value = getString(columnIndex);
         try {
             return new BigDecimal(value);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new ConversionException(value, "BigDecimal");
         }
     }

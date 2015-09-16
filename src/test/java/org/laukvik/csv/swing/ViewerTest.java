@@ -18,7 +18,6 @@ package org.laukvik.csv.swing;
 import java.io.File;
 import org.junit.Assert;
 import static org.junit.Assert.fail;
-import org.laukvik.csv.CSVTableModel;
 import org.laukvik.csv.CsvReaderTest;
 
 /**

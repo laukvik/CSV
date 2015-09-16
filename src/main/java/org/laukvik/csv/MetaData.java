@@ -39,10 +39,12 @@ public class MetaData implements Serializable {
     private Charset charset;
 
     public MetaData() {
+        charset = Charset.defaultCharset();
         columns = new ArrayList<>();
     }
 
     public MetaData(Column... columns) {
+        charset = Charset.defaultCharset();
         this.columns = new ArrayList<>(Arrays.asList(columns));
     }
 

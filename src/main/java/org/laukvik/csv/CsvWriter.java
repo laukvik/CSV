@@ -37,7 +37,7 @@ public class CsvWriter implements AutoCloseable {
     private final Pattern pattern;
 
     public CsvWriter(OutputStream out) {
-        this(out, CSV.CHARSET_DEFAULT);
+        this(out, Charset.defaultCharset());
     }
 
     public CsvWriter(OutputStream out, Charset charset) {

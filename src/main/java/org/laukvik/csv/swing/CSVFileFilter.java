@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.swing;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
+import org.laukvik.csv.CSV;
 
 public class CSVFileFilter extends javax.swing.filechooser.FileFilter implements FileFilter, FilenameFilter {
 

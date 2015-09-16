@@ -71,7 +71,7 @@ public class CSV implements Serializable {
 
     public final static String MIME_TYPE = "text/csv";
     public final static String FILE_EXTENSION = "csv";
-    public final static Charset CHARSET_DEFAULT = Charset.forName("utf-8");
+    //public final static Charset CHARSET_DEFAULT = Charset.defaultCharset();
 
     public final static char LINEFEED = 10;
     public final static char RETURN = 13;
@@ -85,31 +85,35 @@ public class CSV implements Serializable {
     protected MetaData metaData;
     protected List<Row> rows;
     protected Charset charset;
+    private Query query;
 
     public CSV(MetaData metaData) {
         this.metaData = metaData;
         this.rows = new ArrayList<>();
-        this.charset = CHARSET_DEFAULT;
+        this.charset = Charset.defaultCharset();
+        this.query = null;
     }
 
     public CSV() {
         this.metaData = new MetaData();
         this.rows = new ArrayList<>();
-        this.charset = CHARSET_DEFAULT;
+        this.charset = Charset.defaultCharset();
+        this.query = null;
     }
 
     public CSV(Column... columns) {
         this.metaData = new MetaData(columns);
         this.rows = new ArrayList<>();
-        this.charset = CHARSET_DEFAULT;
+        this.charset = Charset.defaultCharset();
+        this.query = null;
     }
 
     public CSV(File file, MetaData metadata) throws IOException, ParseException, InvalidRowDataException {
-        this(new FileInputStream(file), CHARSET_DEFAULT, metadata);
+        this(new FileInputStream(file), Charset.defaultCharset(), metadata);
     }
 
     public CSV(File file) throws IOException, ParseException, ParseException {
-        this(new FileInputStream(file), CHARSET_DEFAULT, null);
+        this(new FileInputStream(file), Charset.defaultCharset(), null);
     }
 
     public CSV(File file, Charset charset) throws IOException, ParseException {
@@ -121,6 +125,7 @@ public class CSV implements Serializable {
     }
 
     public CSV(InputStream inputStream, Charset charset, MetaData metadata) throws IOException, InvalidRowDataException {
+        this.query = null;
         rows = new ArrayList<>();
         this.charset = charset;
 
@@ -149,8 +154,6 @@ public class CSV implements Serializable {
         return rows;
     }
 
-    ;
-
     public MetaData getMetaData() {
         return metaData;
     }
@@ -159,13 +162,21 @@ public class CSV implements Serializable {
         this.metaData = metaData;
     }
 
+    public Query getQuery() {
+        return query;
+    }
+
+    public void setQuery(Query query) {
+        this.query = query;
+    }
+
     public int getRowCount() {
         return rows.size();
     }
 
     public Row getRow(int rowIndex) {
-        if (rowIndex > rows.size()) {
-            throw new RowNotFoundException(rowIndex, rows.size());
+        if (rowIndex > getRowCount()) {
+            throw new RowNotFoundException(rowIndex, getRowCount());
         }
         return rows.get(rowIndex);
     }
@@ -225,6 +236,12 @@ public class CSV implements Serializable {
         return row;
     }
 
+    /**
+     * Adds a new text column with the specified name
+     *
+     * @param name
+     * @return
+     */
     public String addColumn(String name) {
         metaData.addColumn(new StringColumn(name));
         for (Row r : rows) {
@@ -309,7 +326,7 @@ public class CSV implements Serializable {
     public static <T> List<T> findByClass(Class<T> aClass) {
         File file = getFile(aClass);
         try {
-            return findByClass(new FileInputStream(file), CSV.CHARSET_DEFAULT, aClass);
+            return findByClass(new FileInputStream(file), Charset.defaultCharset(), aClass);
         }
         catch (FileNotFoundException ex) {
             List<T> items = new ArrayList<>();
@@ -344,7 +361,7 @@ public class CSV implements Serializable {
 
     public static <T> void saveAll(List<? extends Object> objects, Class<T> aClass) throws IllegalArgumentException, IllegalAccessException {
         File file = CSV.getFile(aClass);
-        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file), CSV.CHARSET_DEFAULT)) {
+        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file), Charset.defaultCharset())) {
             writer.writeMetaData(aClass);
             for (Object o : objects) {
                 writer.writeEntityRow(o);
@@ -357,7 +374,8 @@ public class CSV implements Serializable {
     }
 
     public Query findByQuery() {
-        return new Query(metaData, this);
+        this.query = new Query(metaData, this);
+        return this.query;
     }
 
     public DistinctColumnValues getDistinctColumnValues(int columnIndex) {
@@ -387,14 +405,28 @@ public class CSV implements Serializable {
         return listDistinct(getMetaData().getColumnIndex(column));
     }
 
+    /**
+     * Exports the file as JSON
+     *
+     * @param file
+     * @throws IOException
+     */
+    public void writeJson(File file) throws IOException {
+        try (JsonWriter writer = new JsonWriter(new FileOutputStream(file), charset)) {
+            writer.write(this);
+        }
+        catch (IOException e) {
+            throw e;
+        }
+    }
+
     public static void main(String args[]) {
         try {
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
         catch (Exception e) {
         }
-        System.setProperty("apple.laf.useScreenMenuBar", "true");
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -402,7 +434,6 @@ public class CSV implements Serializable {
                 v.setSize(700, 400);
                 v.setLocationRelativeTo(null);
                 v.setVisible(true);
-
             }
         });
     }
