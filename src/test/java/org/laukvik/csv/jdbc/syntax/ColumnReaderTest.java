@@ -27,20 +27,17 @@ public class ColumnReaderTest {
     }
 
     @Test
-    public void testSomeMethod() {
+    public void testSomeMethod() throws SyntaxException {
         String sql = "firstName, empl.firstname as name";
-        try {
-            ColumnReader cr = new ColumnReader();
-            sql = cr.consume(sql);
+
+        ColumnReader cr = new ColumnReader();
+        sql = cr.consume(sql);
 
 //			System.out.println( "Remainder: " + sql + " (" + sql.length() + " bytes)" );
-            System.out.println("Table: " + cr.getColumn().getTable());
-            System.out.println("Column: " + cr.getColumn().getName());
-            System.out.println("AS: " + cr.getColumn().getAlias());
-        }
-        catch (SyntaxException e) {
-            e.printStackTrace();
-        }
+        System.out.println("Table: " + cr.getColumn().getTable());
+        System.out.println("Column: " + cr.getColumn().getName());
+        System.out.println("AS: " + cr.getColumn().getAlias());
+
     }
 
 }

@@ -27,7 +27,7 @@ public class ListItemReaderTest {
     }
 
     @Test
-    public void testSomeMethod() {
+    public void testSomeMethod() throws SyntaxException {
 //        try {
 //            ListItemReader r = new ListItemReader();
 //            r.consume("\"Morten \"\"the cool\"\" Laukvik\", \"morten\"");

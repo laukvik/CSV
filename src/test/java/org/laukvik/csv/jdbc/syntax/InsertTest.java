@@ -27,16 +27,12 @@ public class InsertTest {
     }
 
     @Test
-    public void testSomeMethod() {
-        try {
-            String sql = "INSERT INTO Employee (first,last,email) VALUES (\"Morten \"\"cool\"\"\",Laukvik,laukvik@morgans.no)";
-            Insert i = new Insert();
-            i.consume(sql);
-        }
-        catch (SyntaxException e) {
-            e.printStackTrace();
-        }
-        // "Hello "world" "
+    public void testSomeMethod() throws SyntaxException {
+
+        String sql = "INSERT INTO Employee (first,last,email) VALUES (\"Morten \"\"cool\"\"\",Laukvik,laukvik@morgans.no)";
+        Insert i = new Insert();
+        i.consume(sql);
+
     }
 
 }

@@ -27,35 +27,31 @@ public class GroupReaderTest {
     }
 
     @Test
-    public void testSomeMethod() {
-        try {
-            GroupReader group = new GroupReader();
-            group.add(new TextReader("SELECT"));
-            group.addEmpty();
-            group.add(new ListReader(new ColumnReader()));
-            group.addEmpty();
-            group.add(new TextReader("FROM"));
-            group.addEmpty();
-            group.add(new TableReader());
+    public void testSomeMethod() throws SyntaxException {
 
-            GroupReader joins = new GroupReader();
-            joins.addEmpty();
-            joins.add(new MultipleJoinReader());
-            group.addOptional(joins);
+        GroupReader group = new GroupReader();
+        group.add(new TextReader("SELECT"));
+        group.addEmpty();
+        group.add(new ListReader(new ColumnReader()));
+        group.addEmpty();
+        group.add(new TextReader("FROM"));
+        group.addEmpty();
+        group.add(new TableReader());
 
-            GroupReader where = new GroupReader();
-            where.addEmpty();
-            where.add(new TextReader("WHERE"));
-            where.addEmpty();
-            where.add(new ListReader(new ConditionReader(), new ArrayReader("AND")));
-            group.addOptional(where);
+        GroupReader joins = new GroupReader();
+        joins.addEmpty();
+        joins.add(new MultipleJoinReader());
+        group.addOptional(joins);
 
-            System.out.println(group.consume("SELECT	 email, first,last     FROM Employee INNER JOIN Employee ON Employee.customerID=Customer.customerID WHERE customerID>5 OR email=morten AND employeeID=12 AND first=Janne OR lastName=Laukvik"));
+        GroupReader where = new GroupReader();
+        where.addEmpty();
+        where.add(new TextReader("WHERE"));
+        where.addEmpty();
+        where.add(new ListReader(new ConditionReader(), new ArrayReader("AND")));
+        group.addOptional(where);
 
-        }
-        catch (SyntaxException e) {
-            e.printStackTrace();
-        }
+        System.out.println(group.consume("SELECT email,first,last    FROM Employee INNER JOIN Employee ON Employee.customerID=Customer.customerID WHERE customerID>5 OR email=morten AND employeeID=12 AND first=Janne OR lastName=Laukvik"));
+
     }
 
 }

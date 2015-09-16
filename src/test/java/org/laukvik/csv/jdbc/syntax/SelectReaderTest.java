@@ -28,7 +28,7 @@ public class SelectReaderTest {
     }
 
     @Test
-    public void testSomeMethod() {
+    public void testSomeMethod() throws SyntaxException {
         String sql = "SELECT calllist.calllistid, calllist.name AS listName, callproduct.name, 	newsletter.subject, newsletterhistory.scheduled,newsletterhistory.started,newsletterhistory.finished,	newsletterverification.firstname,	newsletterverification.lastname, 	newsletterverification.cancelled,	newsletterverification.newsletterverificationid, 	calllist.customerid, 	newsletter.newsletterid, 	callproduct.callproductid,	newsletterhistory.newsletterhistoryid,	newsletterverification.accepted,	newsletterverification.denied "
                 + "FROM CallProduct "
                 + "INNER JOIN newsletter ON newsletter.newsletterid=callproduct.newsletterid "
@@ -40,18 +40,12 @@ public class SelectReaderTest {
                 + "OFFSET 5";
 
 //		sql = "SELECT Employee.*,Customer.name FROM Employee INNER JOIN Customer ON Employee.customerID=Customer.customerID";
-        try {
-            SelectReader select = new SelectReader();
-            SelectQuery q = select.parse(sql);
+        SelectReader select = new SelectReader();
+        SelectQuery q = select.parse(sql);
 
-            System.out.println(q);
+        System.out.println(q.toSQL());
 
 //			new ResultSetViewer( new ColumnDataModel( q.createData() ), q.toSQL() );
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
 }

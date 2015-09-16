@@ -27,14 +27,11 @@ public class TextReaderTest {
     }
 
     @Test
-    public void testSomeMethod() {
-        try {
-            TextReader r = new TextReader("*");
-            System.out.println(r.consume("* FROM Employee"));
-        }
-        catch (SyntaxException e) {
-            e.printStackTrace();
-        }
+    public void testSomeMethod() throws SyntaxException {
+
+        TextReader r = new TextReader("*");
+        System.out.println(r.consume("* FROM Employee"));
+
     }
 
 }

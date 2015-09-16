@@ -27,11 +27,11 @@ public class UpdateTest {
     }
 
     @Test
-    public void testSomeMethod() {
-        try {
-            String sql = "UPDATE Employee SET email='laukvik@morgans.no',last='Laukvik' WHERE employeeID=1 AND last=laukvik";
-            Update u = new Update();
-            u.consume(sql);
+    public void testSomeMethod() throws SyntaxException {
+
+        String sql = "UPDATE Employee SET email='laukvik@morgans.no',last='Laukvik' WHERE employeeID=1 AND last=laukvik";
+        Update u = new Update();
+        u.consume(sql);
 
 //			System.out.println( "Table: " + u.getTable() );
 //
@@ -42,12 +42,8 @@ public class UpdateTest {
 //			for (Object o :u.getWhereReader().getResults()){
 //				System.out.println( o );
 //			}
-            System.out.println(u.toSQL());
+        System.out.println(u.toSQL());
 
-        }
-        catch (SyntaxException e) {
-            e.printStackTrace();
-        }
     }
 
 }

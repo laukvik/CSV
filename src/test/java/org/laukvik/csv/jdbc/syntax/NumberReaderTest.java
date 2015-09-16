@@ -27,15 +27,12 @@ public class NumberReaderTest {
     }
 
     @Test
-    public void testSomeMethod() {
-        try {
-            NumberReader r = new NumberReader();
-            r.debug = true;
-            System.out.println(r.consume("250.79 Morten"));
-        }
-        catch (SyntaxException e) {
-            e.printStackTrace();
-        }
+    public void testSomeMethod() throws SyntaxException {
+
+        NumberReader r = new NumberReader();
+        r.debug = true;
+        System.out.println(r.consume("250.79 Morten"));
+
     }
 
 }

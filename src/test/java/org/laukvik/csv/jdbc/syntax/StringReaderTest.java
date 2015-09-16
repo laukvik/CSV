@@ -27,20 +27,15 @@ public class StringReaderTest {
     }
 
     @Test
-    public void testSomeMethod() {
-        try {
-            StringReader r = new StringReader();
-            r.debug = true;
-            r.addReaderListener(new ReaderListener() {
-                public void found(String values) {
-                    System.err.println("Found: " + values);
-                }
-            });
-            r.consume("\"Morten \"\"the cool\"\" Laukvik\", \"Mor\"");
-        }
-        catch (SyntaxException e) {
-            e.printStackTrace();
-        }
+    public void testSomeMethod() throws SyntaxException {
+        StringReader r = new StringReader();
+        r.debug = true;
+        r.addReaderListener(new ReaderListener() {
+            public void found(String values) {
+                System.err.println("Found: " + values);
+            }
+        });
+        r.consume("\"Morten \"\"the cool\"\" Laukvik\", \"Mor\"");
     }
 
 }

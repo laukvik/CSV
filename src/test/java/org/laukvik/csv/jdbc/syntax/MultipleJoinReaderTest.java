@@ -28,20 +28,17 @@ public class MultipleJoinReaderTest {
     }
 
     @Test
-    public void testSomeMethod() {
+    public void testSomeMethod() throws SyntaxException {
         MultipleJoinReader r = new MultipleJoinReader();
-        try {
-            r.addJoinListener(new JoinReaderListener() {
 
-                public void found(Join join) {
-                    System.out.println("Found join: " + join);
-                }
-            });
-            r.consume("NATURAL JOIN Department RIGHT OUTER JOIN Department ON Employee.departmendID=Department.departmentID");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        r.addJoinListener(new JoinReaderListener() {
+
+            public void found(Join join) {
+                System.out.println("Found join: " + join);
+            }
+        });
+        r.consume("NATURAL JOIN Department RIGHT OUTER JOIN Department ON Employee.departmendID=Department.departmentID");
+
     }
 
 }

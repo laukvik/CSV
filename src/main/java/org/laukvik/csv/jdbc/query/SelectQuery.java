@@ -95,7 +95,7 @@ public class SelectQuery {
      *
      */
     public String toSQL() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         buffer.append("SELECT ");
 

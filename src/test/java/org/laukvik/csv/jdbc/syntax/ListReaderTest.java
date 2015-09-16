@@ -28,25 +28,22 @@ public class ListReaderTest {
     }
 
     @Test
-    public void testSomeMethod() {
-        try {
-            ColumnReader cr = new ColumnReader();
-            ListReader list = new ListReader(cr, new CommaReader());
+    public void testSomeMethod() throws SyntaxException {
+
+        ColumnReader cr = new ColumnReader();
+        ListReader list = new ListReader(cr, new CommaReader());
 //			ListReader list = new ListReader( );
 //			System.out.println( list.consume( "1997,Ford,E350,\"Super, \"\"luxurious\"\" truck\"" ) );
 //			System.out.println( list.consume( "1997,Ford,E350,\"Super, luxurious truck\"   Morten" ) );
 
-            cr.addColumnListener(new ColumnListener() {
-                public void found(Column column) {
-                    System.err.println("Column: " + column);
-                }
-            });
+        cr.addColumnListener(new ColumnListener() {
+            public void found(Column column) {
+                System.err.println("Column: " + column);
+            }
+        });
 
-            list.consume("Employee.firstName , Employee.lastName, Employee.email ");
-        }
-        catch (SyntaxException e) {
-            e.printStackTrace();
-        }
+        list.consume("Employee.firstName , Employee.lastName, Employee.email ");
+
     }
 
 }

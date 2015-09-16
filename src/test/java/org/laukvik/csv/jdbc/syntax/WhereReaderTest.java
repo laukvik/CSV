@@ -27,15 +27,12 @@ public class WhereReaderTest {
     }
 
     @Test
-    public void testSomeMethod() {
-        try {
-            String sql = "employeeID<>1 AND firstName>5";
-            WhereReader r = new WhereReader();
-            System.out.println(r.consume(sql));
-        }
-        catch (SyntaxException e) {
-            e.printStackTrace();
-        }
+    public void testSomeMethod() throws SyntaxException {
+
+        String sql = "where employeeID<>1 AND firstName>5";
+        WhereReader r = new WhereReader();
+        System.out.println(r.consume(sql));
+
     }
 
 }
