@@ -6,13 +6,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.laukvik.csv.CSV;
+import org.laukvik.csv.sql.*;
 import org.laukvik.csv.swing.CSVFileFilter;
 import org.laukvik.csv.ParseException;
 import org.laukvik.csv.jdbc.data.ColumnData;
 import org.laukvik.csv.jdbc.data.Data;
-import org.laukvik.csv.jdbc.query.SelectQuery;
-import org.laukvik.csv.jdbc.syntax.SelectReader;
-import org.laukvik.csv.jdbc.syntax.SyntaxException;
+import org.laukvik.csv.sql.Select;
+import org.laukvik.csv.sql.parser.SelectReader;
+import org.laukvik.csv.sql.parser.SyntaxException;
 
 public class Manager {
 
@@ -46,7 +47,7 @@ public class Manager {
 
     public TextResultSet executeQuery(String sql) throws SQLException {
         SelectReader p = new SelectReader();
-        SelectQuery q;
+        Select q;
         try {
             q = p.parse(sql);
         }
@@ -56,7 +57,7 @@ public class Manager {
         return new TextResultSet(executeQuery(q));
     }
 
-    public TextResultSet createResultSet(SelectQuery q) throws SQLException {
+    public TextResultSet createResultSet(Select q) throws SQLException {
         return new TextResultSet(executeQuery(q));
     }
 
@@ -64,7 +65,7 @@ public class Manager {
         return 0;
     }
 
-    public ColumnData executeQuery(SelectQuery q) throws SQLException {
+    public ColumnData executeQuery(Select q) throws SQLException {
 
         ColumnData main = getColumnData(q.table);
 
@@ -116,7 +117,7 @@ public class Manager {
                 try {
                     String sql = getString(view);
                     SelectReader p = new SelectReader();
-                    SelectQuery q;
+                    Select q;
                     q = p.parse(sql);
                     return executeQuery(q);
                 }
@@ -128,13 +129,13 @@ public class Manager {
                     throw new SQLException("Could not parse SQL");
                 }
 
-//				SelectQuery q = new SelectQuery();
+//				Select q = new Select();
 //				q.addColumn( Column.ALL );
 //				q.setTable( new Table("Employee") );
             }
 
             if (view.exists()) {
-                SelectQuery q = new SelectQuery();
+                Select q = new Select();
                 q.addColumn(Column.ALL);
                 q.setTable(new Table("Employee"));
                 return executeQuery(q);

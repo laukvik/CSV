@@ -16,7 +16,8 @@
 package org.laukvik.csv.jdbc.syntax;
 
 import org.junit.Test;
-import org.laukvik.csv.jdbc.Column;
+import org.laukvik.csv.sql.Column;
+import org.laukvik.csv.sql.parser.*;
 
 /**
  *

@@ -21,6 +21,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
 import org.laukvik.csv.jdbc.data.ColumnData;
+import org.laukvik.csv.sql.Column;
 
 public class TextResultSet implements java.sql.ResultSet {
 

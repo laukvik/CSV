@@ -16,7 +16,10 @@
 package org.laukvik.csv.jdbc.syntax;
 
 import org.junit.Test;
-import org.laukvik.csv.jdbc.Join;
+import org.laukvik.csv.sql.Join;
+import org.laukvik.csv.sql.parser.JoinReaderListener;
+import org.laukvik.csv.sql.parser.MultipleJoinReader;
+import org.laukvik.csv.sql.parser.SyntaxException;
 
 /**
  *

@@ -1,6 +1,6 @@
 package org.laukvik.csv.jdbc.data;
 
-import org.laukvik.csv.jdbc.Column;
+import org.laukvik.csv.sql.Column;
 
 public interface ColumnData {
 

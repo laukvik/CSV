@@ -1,6 +1,6 @@
 package org.laukvik.csv.jdbc.type;
 
-import org.laukvik.csv.jdbc.Value;
+import org.laukvik.csv.sql.Value;
 
 public class SmallInt extends Value {
 

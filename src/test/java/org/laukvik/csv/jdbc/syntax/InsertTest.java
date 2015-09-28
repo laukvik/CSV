@@ -16,6 +16,8 @@
 package org.laukvik.csv.jdbc.syntax;
 
 import org.junit.Test;
+import org.laukvik.csv.sql.parser.Insert;
+import org.laukvik.csv.sql.parser.SyntaxException;
 
 /**
  *
@@ -29,7 +31,7 @@ public class InsertTest {
     @Test
     public void testSomeMethod() throws SyntaxException {
 
-        String sql = "INSERT INTO Employee (first,last,email) VALUES (\"Morten \"\"cool\"\"\",Laukvik,laukvik@morgans.no)";
+        String sql = "INSERT INTO Employee (first,last,email) VALUES (\"Morten \"\"cool\"\"\",Laukvik,morten@laukvik.no)";
         Insert i = new Insert();
         i.consume(sql);
 

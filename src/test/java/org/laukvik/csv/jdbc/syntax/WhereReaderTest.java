@@ -16,6 +16,8 @@
 package org.laukvik.csv.jdbc.syntax;
 
 import org.junit.Test;
+import org.laukvik.csv.sql.parser.SyntaxException;
+import org.laukvik.csv.sql.parser.WhereReader;
 
 /**
  *

@@ -16,6 +16,8 @@
 package org.laukvik.csv.jdbc.syntax;
 
 import org.junit.Test;
+import org.laukvik.csv.sql.parser.NumberReader;
+import org.laukvik.csv.sql.parser.SyntaxException;
 
 /**
  *
@@ -30,7 +32,6 @@ public class NumberReaderTest {
     public void testSomeMethod() throws SyntaxException {
 
         NumberReader r = new NumberReader();
-        r.debug = true;
         System.out.println(r.consume("250.79 Morten"));
 
     }

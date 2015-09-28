@@ -31,8 +31,8 @@ public class JsonWriter implements Writeable {
     private final static char CURLY_LEFT = '{';
     private final static char CURLY_RIGHT = '}';
     private final static char SEMI = ':';
-    private final static char ARR_LEFT = '[';
-    private final static char ARR_RIGHT = ']';
+    private final static char BRACKET_LEFT = '[';
+    private final static char BRACKET_RIGHT = ']';
     private final static char LINEFEED = '\n';
     private final static char TAB = '\t';
     private final static char COMMA = ',';
@@ -48,7 +48,7 @@ public class JsonWriter implements Writeable {
         out.write("rows".getBytes());
         out.write(LINEFEED);
         out.write(SEMI);
-        out.write(ARR_LEFT);
+        out.write(BRACKET_LEFT);
         for (int y = 0; y < csv.getRowCount(); y++) {
             if (y > 0) {
                 out.write(COMMA);
@@ -83,7 +83,7 @@ public class JsonWriter implements Writeable {
             out.write(LINEFEED);
         }
         out.write(TAB);
-        out.write(ARR_RIGHT);
+        out.write(BRACKET_RIGHT);
         out.write(LINEFEED);
         out.write(CURLY_RIGHT);
         out.write(LINEFEED);

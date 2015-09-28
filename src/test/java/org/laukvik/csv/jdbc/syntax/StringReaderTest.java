@@ -16,6 +16,9 @@
 package org.laukvik.csv.jdbc.syntax;
 
 import org.junit.Test;
+import org.laukvik.csv.sql.parser.ReaderListener;
+import org.laukvik.csv.sql.parser.StringReader;
+import org.laukvik.csv.sql.parser.SyntaxException;
 
 /**
  *
@@ -29,7 +32,6 @@ public class StringReaderTest {
     @Test
     public void testSomeMethod() throws SyntaxException {
         StringReader r = new StringReader();
-        r.debug = true;
         r.addReaderListener(new ReaderListener() {
             public void found(String values) {
                 System.err.println("Found: " + values);

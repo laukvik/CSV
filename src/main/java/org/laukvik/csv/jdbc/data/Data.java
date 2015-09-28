@@ -2,8 +2,8 @@ package org.laukvik.csv.jdbc.data;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.laukvik.csv.jdbc.Column;
-import org.laukvik.csv.jdbc.Value;
+import org.laukvik.csv.sql.Column;
+import org.laukvik.csv.sql.Value;
 
 public class Data implements ColumnData {
 

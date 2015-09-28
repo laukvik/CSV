@@ -16,7 +16,9 @@
 package org.laukvik.csv.jdbc.syntax;
 
 import org.junit.Test;
-import org.laukvik.csv.jdbc.query.SelectQuery;
+import org.laukvik.csv.sql.parser.SelectReader;
+import org.laukvik.csv.sql.parser.SyntaxException;
+import org.laukvik.csv.sql.Select;
 
 /**
  *
@@ -41,7 +43,7 @@ public class SelectReaderTest {
 
 //		sql = "SELECT Employee.*,Customer.name FROM Employee INNER JOIN Customer ON Employee.customerID=Customer.customerID";
         SelectReader select = new SelectReader();
-        SelectQuery q = select.parse(sql);
+        Select q = select.parse(sql);
 
         System.out.println(q.toSQL());
 
