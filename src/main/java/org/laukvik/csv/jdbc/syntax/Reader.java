@@ -2,6 +2,7 @@ package org.laukvik.csv.jdbc.syntax;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * The purpose of this class is to read everything until it can't understand
@@ -11,6 +12,8 @@ import java.util.List;
  *
  */
 public abstract class Reader {
+
+    static final Logger LOG = Logger.getLogger(Reader.class.getName());
 
     public static final String SELECT = "SELECT";
     public static final String ALL = "*";
@@ -52,7 +55,6 @@ public abstract class Reader {
     public void addResults(String values) {
         items.add(values);
         fireFoundResults(values);
-//		System.out.println( "Found " + object );
     }
 
     public void fireFoundResults(String values) {
@@ -83,12 +85,6 @@ public abstract class Reader {
 
     public boolean isRequired() {
         return required;
-    }
-
-    public void log(Object message) {
-        if (debug) {
-            System.out.println(message);
-        }
     }
 
     public String nextMatch(String sql, String... strings) {

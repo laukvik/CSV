@@ -8,10 +8,11 @@ import org.laukvik.csv.jdbc.Table;
 
 public class TableReader extends Reader {
 
-    private List<TableListener> tableListeners;
+    private final List<TableListener> tableListeners;
 
     public TableReader() {
-        tableListeners = new ArrayList<TableListener>();
+        super();
+        tableListeners = new ArrayList<>();
     }
 
     public String consume(String sql) throws SyntaxException {
@@ -21,7 +22,7 @@ public class TableReader extends Reader {
         if (m.find()) {
             String word = m.group();
             sql = sql.substring(m.end());
-            log("Found table " + word);
+            LOG.fine("Found table " + word);
             fireTableFound(new Table(word));
         } else {
             if (isRequired()) {

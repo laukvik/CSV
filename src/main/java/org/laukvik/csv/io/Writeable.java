@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv.columns;
+package org.laukvik.csv.io;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import org.laukvik.csv.CSV;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
- * @param <T>
  */
-public interface Column<T> {
+public interface Writeable {
 
-    public String asString(T value);
-
-    public T parse(String value);
-
-    public int compare(T one, T another);
-
-    public String getName();
-
-    public void setName(String name);
+    public void write(CSV csv, OutputStream out, Charset charset) throws IOException;
 
 }

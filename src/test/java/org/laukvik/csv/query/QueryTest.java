@@ -72,8 +72,9 @@ public class QueryTest {
             md.addColumn(new StringColumn());
             md.addColumn(new StringColumn());
 
-            csv = new CSV(getResource("Presidents.csv"), md);
-        } catch (Exception ex) {
+            csv = new CSV(getResource("presidents.csv"), md);
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
         }
     }

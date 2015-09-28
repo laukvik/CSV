@@ -9,6 +9,7 @@ package org.laukvik.csv.jdbc.syntax;
 public class Insert extends GroupReader {
 
     public Insert() {
+        super();
         add("INSERT INTO");
         addEmpty();
         add(new WordReader());

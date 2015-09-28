@@ -27,14 +27,9 @@ public class ListItemReaderTest {
     }
 
     @Test
-    public void testSomeMethod() throws SyntaxException {
-//        try {
-//            ListItemReader r = new ListItemReader();
-//            r.consume("\"Morten \"\"the cool\"\" Laukvik\", \"morten\"");
-//        }
-//        catch (SyntaxException e) {
-//            e.printStackTrace();
-//        }
+    public void shouldReadTwoItems() throws SyntaxException {
+        ListItemReader r = new ListItemReader();
+        r.consume("\"Morten \"\"the cool\"\" Laukvik\", \"morten\"");
     }
 
 }

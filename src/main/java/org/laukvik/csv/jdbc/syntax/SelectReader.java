@@ -19,6 +19,7 @@ public class SelectReader extends GroupReader {
     SelectQuery query;
 
     public SelectReader() {
+        super();
         init();
     }
 

@@ -27,7 +27,7 @@ import org.laukvik.csv.columns.Column;
 public class DistinctColumnValues {
 
     private final Column column;
-    private Map<String, Integer> map;
+    private final Map<String, Integer> map;
 
     public DistinctColumnValues(Column column) {
         this.column = column;

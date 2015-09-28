@@ -5,9 +5,10 @@ import java.util.List;
 
 public class NumberReader extends Reader {
 
-    private List<NumberListener> numberListeners;
+    private final List<NumberListener> numberListeners;
 
     public NumberReader() {
+        super();
         numberListeners = new ArrayList<>();
     }
 
@@ -55,7 +56,7 @@ public class NumberReader extends Reader {
             String n = sql.substring(0, x);
             fireFoundResults(n);
             float number = Float.parseFloat(n);
-            log("Found float " + number);
+            LOG.fine("Found float " + number);
             fireNumberFound(number);
         } else {
             if (x == 0) {
@@ -64,7 +65,7 @@ public class NumberReader extends Reader {
             String n = sql.substring(0, x);
             fireFoundResults(n);
             int number = Integer.parseInt(n);
-            log("Found int " + number);
+            LOG.fine("Found int " + number);
             fireNumberFound(number);
         }
 

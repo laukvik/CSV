@@ -28,6 +28,7 @@ public class ColumnReader extends Either {
     List<ColumnListener> columnListeners;
 
     public ColumnReader() {
+        super();
         columnListeners = new ArrayList<>();
 
         /* WILDCARD ONLY */

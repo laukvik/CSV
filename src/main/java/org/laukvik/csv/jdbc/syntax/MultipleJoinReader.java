@@ -13,10 +13,11 @@ public class MultipleJoinReader extends GroupReader implements JoinReaderListene
     NaturalJoinReader natural;
     FullOuterJoinReader outer;
 
-    List<JoinReaderListener> listeners;
+    private final List<JoinReaderListener> joinListeners;
 
     public MultipleJoinReader() {
-        listeners = new ArrayList<>();
+        super();
+        joinListeners = new ArrayList<>();
         cross = new CrossJoinReader();
         natural = new NaturalJoinReader();
         inner = new InnerJoinReader();
@@ -36,16 +37,16 @@ public class MultipleJoinReader extends GroupReader implements JoinReaderListene
     }
 
     public JoinReaderListener addJoinListener(JoinReaderListener listener) {
-        listeners.add(listener);
+        joinListeners.add(listener);
         return listener;
     }
 
     public void removeJoinListener(JoinReaderListener listener) {
-        listeners.remove(listener);
+        joinListeners.remove(listener);
     }
 
     public void fireTableFound(Join join) {
-        for (JoinReaderListener l : listeners) {
+        for (JoinReaderListener l : joinListeners) {
             l.found(join);
         }
     }

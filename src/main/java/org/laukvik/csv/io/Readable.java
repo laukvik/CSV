@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv.columns;
+package org.laukvik.csv.io;
+
+import java.io.InputStream;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
- * @param <T>
  */
-public interface Column<T> {
+public interface Readable {
 
-    public String asString(T value);
-
-    public T parse(String value);
-
-    public int compare(T one, T another);
-
-    public String getName();
-
-    public void setName(String name);
+    public void read(InputStream in);
 
 }

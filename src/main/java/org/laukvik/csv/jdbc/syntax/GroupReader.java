@@ -5,9 +5,10 @@ import java.util.List;
 
 public class GroupReader extends Reader {
 
-    private List<Reader> readers;
+    private final List<Reader> readers;
 
     public GroupReader() {
+        super();
         this.readers = new ArrayList<>();
     }
 

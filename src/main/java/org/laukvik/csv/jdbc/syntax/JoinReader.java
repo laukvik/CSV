@@ -6,22 +6,23 @@ import org.laukvik.csv.jdbc.Join;
 
 public class JoinReader extends GroupReader {
 
-    private List<JoinReaderListener> listeners;
+    private final List<JoinReaderListener> joinListeners;
 
     public JoinReader() {
-        listeners = new ArrayList<>();
+        super();
+        joinListeners = new ArrayList<>();
     }
 
     public void addJoinReaderListener(JoinReaderListener listener) {
-        listeners.add(listener);
+        joinListeners.add(listener);
     }
 
     public void removeJoinReaderListener(JoinReaderListener listener) {
-        listeners.remove(listener);
+        joinListeners.remove(listener);
     }
 
     public void fireJoinFound(Join join) {
-        for (JoinReaderListener l : listeners) {
+        for (JoinReaderListener l : joinListeners) {
             l.found(join);
         }
     }

@@ -21,6 +21,7 @@ public class Update extends GroupReader {
     public List<Condition> predicates;
 
     public Update() {
+        super();
         add(UPDATE);
         addEmpty();
         add(new WordReader());

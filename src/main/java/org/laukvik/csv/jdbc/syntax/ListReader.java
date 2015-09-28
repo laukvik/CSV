@@ -7,6 +7,7 @@ public class ListReader extends Reader {
     String stop;
 
     public ListReader() {
+        super();
         ListItemReader r = new ListItemReader();
         r.setListReader(this);
         this.reader = r;

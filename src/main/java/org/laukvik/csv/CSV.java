@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -35,6 +36,9 @@ import javax.swing.UIManager;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.query.Query;
+import org.laukvik.csv.io.JsonWriter;
+import org.laukvik.csv.io.Readable;
+import org.laukvik.csv.io.Writeable;
 
 /**
  * An API for reading and writing to Viewer. The implementation is based on the
@@ -71,7 +75,6 @@ public class CSV implements Serializable {
 
     public final static String MIME_TYPE = "text/csv";
     public final static String FILE_EXTENSION = "csv";
-    //public final static Charset CHARSET_DEFAULT = Charset.defaultCharset();
 
     public final static char LINEFEED = 10;
     public final static char RETURN = 13;
@@ -359,7 +362,7 @@ public class CSV implements Serializable {
         return items;
     }
 
-    public static <T> void saveAll(List<? extends Object> objects, Class<T> aClass) throws IllegalArgumentException, IllegalAccessException {
+    public static <T> void saveAll(List<?> objects, Class<T> aClass) throws IllegalArgumentException, IllegalAccessException {
         File file = CSV.getFile(aClass);
         try (CsvWriter writer = new CsvWriter(new FileOutputStream(file), Charset.defaultCharset())) {
             writer.writeMetaData(aClass);
@@ -412,15 +415,19 @@ public class CSV implements Serializable {
      * @throws IOException
      */
     public void writeJson(File file) throws IOException {
-        try (JsonWriter writer = new JsonWriter(new FileOutputStream(file), charset)) {
-            writer.write(this);
-        }
-        catch (IOException e) {
-            throw e;
-        }
+        JsonWriter writer = new JsonWriter();
+        writer.write(this, new FileOutputStream(file), charset);
     }
 
-    public static void main(String args[]) {
+    public void read(Readable readable, InputStream in, Charset charset) throws IOException {
+        readable.read(in);
+    }
+
+    public void write(Writeable writable, OutputStream out, Charset charset) throws IOException {
+        writable.write(this, out, charset);
+    }
+
+    public static void main(final String args[]) {
         try {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -434,6 +441,10 @@ public class CSV implements Serializable {
                 v.setSize(700, 400);
                 v.setLocationRelativeTo(null);
                 v.setVisible(true);
+
+                if (args.length > 0) {
+                    v.openFile(new File(args[0]));
+                }
             }
         });
     }

@@ -5,6 +5,7 @@ public class TextReader extends Reader {
     String text;
 
     public TextReader(String text) {
+        super();
         this.text = text;
     }
 

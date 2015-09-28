@@ -13,41 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.io;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import org.junit.Test;
-import org.laukvik.csv.io.JsonWriter;
+import org.laukvik.csv.CSV;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class JsonWriterTest {
+public class XmlWriterTest {
 
-    public JsonWriterTest() {
+    public XmlWriterTest() {
     }
 
     @Test
     public void emptyRows() throws IOException {
-        File file = File.createTempFile("EmptyRows", ".json");
-
-        CSV csv = new CSV();
-        csv.addColumn("First");
-        csv.addColumn("Last");
-
-        JsonWriter writer = new JsonWriter();
-        writer.write(csv, new FileOutputStream(file), Charset.defaultCharset());
-
-        System.out.println(file.getAbsolutePath());
-    }
-
-    @Test
-    public void singleRow() throws IOException {
-        File file = File.createTempFile("SingleRow", ".json");
+        File file = File.createTempFile("EmptyRows", ".xml");
 
         CSV csv = new CSV();
         csv.addColumn("First");
@@ -55,7 +41,7 @@ public class JsonWriterTest {
 
         csv.addRow("Morten", "Laukvik");
 
-        JsonWriter writer = new JsonWriter();
+        XmlWriter writer = new XmlWriter();
         writer.write(csv, new FileOutputStream(file), Charset.defaultCharset());
 
         System.out.println(file.getAbsolutePath());
