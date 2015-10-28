@@ -9,7 +9,6 @@ public class StringReader extends Reader {
     }
 
     public String consume(String sql) throws SyntaxException {
-        System.out.println("charAt 0= " + sql.charAt(0));
         boolean useQuotation = (sql.charAt(0) == QUOTE);
         if (!useQuotation && isRequired()) {
             throw new SyntaxException("String doesn't start with a qoute");

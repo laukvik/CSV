@@ -299,8 +299,6 @@ public class CSV implements Serializable {
         for (Field f : instance.getClass().getDeclaredFields()) {
             /* Set accessible to allow injecting private fields - otherwise an exception will occur*/
             f.setAccessible(true);
-            /* Get field value */
-            Object value = f.get(instance);
             /* Find the name of the field - in code */
             String nameAttribute = f.getName();
 
@@ -331,18 +329,14 @@ public class CSV implements Serializable {
     public static <T> List<T> findByClass(InputStream inputStream, Charset charset, Class<T> aClass) {
         List<T> items = new ArrayList<>();
         try (CsvReader reader = new CsvReader(inputStream, charset)) {
-            int x = 0;
             while (reader.hasNext()) {
                 Row row = reader.getRow();
                 row.setMetaData(reader.getMetaData());
-                if (row.getValues().size() != reader.getMetaData().getColumnCount()) {
-//                    throw new InvalidRowDataException(row.getValues().size(), reader.getMetaData().getColumnCount(), x, row);
-                }
                 items.add(createInstance(row, aClass));
             }
         }
         catch (IOException e) {
-
+            Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, e);
         }
         catch (InstantiationException ex) {
             Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, ex);

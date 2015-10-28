@@ -39,7 +39,7 @@ public class ListReaderTest {
 
         cr.addColumnListener(new ColumnListener() {
             public void found(Column column) {
-                System.err.println("Column: " + column);
+                //System.out.println("Column: " + column);
             }
         });
 

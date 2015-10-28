@@ -37,7 +37,7 @@ public class MultipleJoinReaderTest {
         r.addJoinListener(new JoinReaderListener() {
 
             public void found(Join join) {
-                System.out.println("Found join: " + join);
+                //System.out.println("Found join: " + join);
             }
         });
         r.consume("NATURAL JOIN Department RIGHT OUTER JOIN Department ON Employee.departmendID=Department.departmentID");

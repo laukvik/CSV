@@ -32,7 +32,7 @@ public class NumberReaderTest {
     public void testSomeMethod() throws SyntaxException {
 
         NumberReader r = new NumberReader();
-        System.out.println(r.consume("250.79 Morten"));
+        //System.out.println(r.consume("250.79 Morten"));
 
     }
 

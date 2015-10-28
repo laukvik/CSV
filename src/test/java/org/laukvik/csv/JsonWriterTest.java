@@ -42,7 +42,6 @@ public class JsonWriterTest {
         JsonWriter writer = new JsonWriter();
         writer.write(csv, new FileOutputStream(file), Charset.defaultCharset());
 
-        System.out.println(file.getAbsolutePath());
     }
 
     @Test

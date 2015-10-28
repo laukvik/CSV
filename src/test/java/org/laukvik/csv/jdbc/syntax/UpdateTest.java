@@ -44,7 +44,7 @@ public class UpdateTest {
 //			for (Object o :u.getWhereReader().getResults()){
 //				System.out.println( o );
 //			}
-        System.out.println(u.toSQL());
+        //System.out.println(u.toSQL());
 
     }
 

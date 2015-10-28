@@ -51,7 +51,7 @@ public class GroupReaderTest {
         where.add(new ListReader(new ConditionReader(), new ArrayReader("AND")));
         group.addOptional(where);
 
-        System.out.println(group.consume("SELECT email,first,last    FROM Employee INNER JOIN Employee ON Employee.customerID=Customer.customerID WHERE customerID>5 OR email=morten AND employeeID=12 AND first=Janne OR lastName=Laukvik"));
+        //System.out.println(group.consume("SELECT email,first,last    FROM Employee INNER JOIN Employee ON Employee.customerID=Customer.customerID WHERE customerID>5 OR email=morten AND employeeID=12 AND first=Janne OR lastName=Laukvik"));
 
     }
 

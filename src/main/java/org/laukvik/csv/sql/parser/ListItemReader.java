@@ -76,7 +76,7 @@ public class ListItemReader extends Reader {
                 rest = sql.substring(index);
             }
 
-            LOG.info("Found using no quotation:" + word);
+            LOG.fine("Found using no quotation:" + word);
             this.listReader.addResults(word);
             return rest;
         }

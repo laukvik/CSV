@@ -33,7 +33,7 @@ public class WhereReaderTest {
 
         String sql = "where employeeID<>1 AND firstName>5";
         WhereReader r = new WhereReader();
-        System.out.println(r.consume(sql));
+        //System.out.println(r.consume(sql));
 
     }
 

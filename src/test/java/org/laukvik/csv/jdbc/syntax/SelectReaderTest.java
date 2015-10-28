@@ -45,7 +45,7 @@ public class SelectReaderTest {
         SelectReader select = new SelectReader();
         Select q = select.parse(sql);
 
-        System.out.println(q.toSQL());
+        //System.out.println(q.toSQL());
 
 //			new ResultSetViewer( new ColumnDataModel( q.createData() ), q.toSQL() );
     }

@@ -39,7 +39,6 @@ public class CSVTest {
     //@Test
     public void findRows() throws IOException, ParseException {
         CSV csv = new CSV(getResource("countries.csv"));
-        System.out.println("Found rows: " + csv.getRowCount());
         assertEquals(249, csv.getRowCount());
     }
 

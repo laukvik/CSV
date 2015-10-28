@@ -36,9 +36,9 @@ public class ColumnReaderTest {
         sql = cr.consume(sql);
 
 //			System.out.println( "Remainder: " + sql + " (" + sql.length() + " bytes)" );
-        System.out.println("Table: " + cr.getColumn().getTable());
-        System.out.println("Column: " + cr.getColumn().getName());
-        System.out.println("AS: " + cr.getColumn().getAlias());
+        //System.out.println("Table: " + cr.getColumn().getTable());
+        //System.out.println("Column: " + cr.getColumn().getName());
+        //System.out.println("AS: " + cr.getColumn().getAlias());
 
     }
 

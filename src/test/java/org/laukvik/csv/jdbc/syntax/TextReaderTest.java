@@ -32,7 +32,7 @@ public class TextReaderTest {
     public void testSomeMethod() throws SyntaxException {
 
         TextReader r = new TextReader("*");
-        System.out.println(r.consume("* FROM Employee"));
+        //System.out.println(r.consume("* FROM Employee"));
 
     }
 

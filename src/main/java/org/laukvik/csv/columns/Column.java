@@ -22,14 +22,14 @@ package org.laukvik.csv.columns;
  */
 public interface Column<T> {
 
-    public String asString(T value);
+    String asString(T value);
 
-    public T parse(String value);
+    T parse(String value);
 
-    public int compare(T one, T another);
+    int compare(T one, T another);
 
-    public String getName();
+    String getName();
 
-    public void setName(String name);
+    void setName(String name);
 
 }

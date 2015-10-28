@@ -20,24 +20,26 @@ import org.laukvik.csv.sql.parser.ReaderListener;
 import org.laukvik.csv.sql.parser.StringReader;
 import org.laukvik.csv.sql.parser.SyntaxException;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
 public class StringReaderTest {
 
-    public StringReaderTest() {
-    }
+    static int x = 0;
 
     @Test
     public void testSomeMethod() throws SyntaxException {
         StringReader r = new StringReader();
         r.addReaderListener(new ReaderListener() {
-            public void found(String values) {
-                System.err.println("Found: " + values);
+            public void found(String value) {
+                x++;
             }
         });
         r.consume("\"Morten \"\"the cool\"\" Laukvik\", \"Mor\"");
+        assertEquals(1, x );
     }
 
 }

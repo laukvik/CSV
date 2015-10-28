@@ -42,7 +42,7 @@ public class Equals extends Condition{
 	public boolean accepts( ColumnData data, String [] values ) {
 		String lval = values[ data.indexOf( column ) ];
 		if (type == VALUE_COMPARISON){
-			System.out.println( lval + "=" + value );
+			//System.out.println( lval + "=" + value );
 			if (lval == null){
 				return false;
 			}

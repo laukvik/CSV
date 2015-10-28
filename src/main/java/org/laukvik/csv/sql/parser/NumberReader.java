@@ -27,10 +27,8 @@ public class NumberReader extends Reader {
         }
     }
 
-    ;
 
 	public String consume(String sql) throws SyntaxException {
-        System.err.println("NumberReader");
         boolean continueToLook = true;
         int x = 0;
         while (continueToLook && x < sql.length()) {

@@ -68,7 +68,6 @@ public class ConditionReader extends GroupReader {
         add(new ComparisonOperatorReader()).addReaderListener(new ReaderListener() {
             public void found(String values) {
                 symbol = values;
-                System.err.println("ConditionReader: " + values);
             }
         });
 

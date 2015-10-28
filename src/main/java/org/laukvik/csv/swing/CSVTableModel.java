@@ -78,7 +78,7 @@ public class CSVTableModel implements TableModel {
     @Override
     public Object getValueAt(int row, int column) {
         try {
-            return csv.getQuery() == null ? csv.getRow(row) : csv.getQuery().getResultList().get(row).getValue(column);
+            return csv.getQuery() == null ? csv.getRow(row).getValue(column) : csv.getQuery().getResultList().get(row).getValue(column);
         }
         catch (Exception e) {
             return null;

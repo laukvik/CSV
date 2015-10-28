@@ -7,7 +7,7 @@
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>LaukvikCSV</name>
+    <name>CSV</name>
     <description>A Java API for parsing comma separated files</description>
 
     <developers>
@@ -35,6 +35,21 @@
         </license>
     </licenses>
 
+    <scm>
+        <url>https://github.com/laukvik/LaukvikCSV</url>
+        <tag>master</tag>
+    </scm>
+
+    <issueManagement>
+        <url>https://github.com/laukvik/LaukvikCSV/issues</url>
+        <system>GitHub</system>
+    </issueManagement>
+
+    <ciManagement>
+        <system>Travis</system>
+        <url>https://travis-ci.org/laukvik/LaukvikCSV</url>
+    </ciManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -58,6 +73,23 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>sh.tak.appbundler</groupId>
+                <artifactId>appbundle-maven-plugin</artifactId>
+                <version>1.0.4</version>
+                <configuration>
+                    <mainClass>org.laukvik.csv.swing.Viewer</mainClass>
+                    <iconFile>archive.icns</iconFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -141,11 +173,12 @@
 
 
         <resources>
-            <resource >
+            <resource>
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.csv</include>
                     <include>**/*.properties</include>
+                    <include>**/*.icns</include>
                 </includes>
             </resource>
         </resources>
