@@ -132,6 +132,7 @@ public class MetaData implements Serializable {
 
     public Row createEmptyRow() {
         Row r = new Row();
+        r.setMetaData(this);
         for (Column c : columns) {
             r.add("");
         }

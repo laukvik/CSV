@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.laukvik</groupId>
-    <artifactId>csv</artifactId>
+    <artifactId>laukvik-csv</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>LaukvikCSV</name>
-    <url>http://maven.apache.org</url>
+    <description>A Java API for parsing comma separated files</description>
 
     <developers>
         <developer>
@@ -55,7 +55,7 @@
             <version>RELEASE701</version>
         </dependency>
     </dependencies>
-    <description>A Java API for parsing comma separated files</description>
+
     <build>
         <plugins>
             <plugin>
@@ -63,8 +63,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>

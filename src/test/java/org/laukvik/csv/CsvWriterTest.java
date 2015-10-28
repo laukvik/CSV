@@ -18,6 +18,7 @@ package org.laukvik.csv;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;
@@ -44,10 +45,10 @@ public class CsvWriterTest {
             w.writeRow(new Row("Bill", "Gates"));
             w.writeRow(new Row("Steve", "Jobs"));
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             fail("Failed to write CSV file!");
         }
-
 
         try {
             CSV csv = new CSV(f);
@@ -57,12 +58,25 @@ public class CsvWriterTest {
             assertEquals("Last", "Last", csv.getMetaData().getColumnName(1));
             assertEquals("Find by row index and index", "Bill", csv.getRow(0).getString(0));
             assertEquals("Find by row index and column name", "Gates", csv.getRow(0).getString("Last"));
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             fail("Failed to read CSV file!");
-        } catch (ParseException ex) {
+        }
+        catch (ParseException ex) {
             fail("Failed to parse CSV file!");
         }
+    }
 
+    @Test
+    public void shouldByDigitsOnly() {
+        Assert.assertEquals(true, CsvWriter.isDigitsOnly("123"));
+    }
+
+    @Test
+    public void shouldFail() {
+        Assert.assertEquals("Can't start with space", false, CsvWriter.isDigitsOnly(" 123"));
+        Assert.assertEquals("Can't end with space", false, CsvWriter.isDigitsOnly("123 "));
+        Assert.assertEquals("Can't have space on left and right", false, CsvWriter.isDigitsOnly("123 "));
     }
 
 }

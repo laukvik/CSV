@@ -36,6 +36,13 @@ import org.laukvik.csv.columns.StringColumn;
  */
 public class CSVTest {
 
+    //@Test
+    public void findRows() throws IOException, ParseException {
+        CSV csv = new CSV(getResource("countries.csv"));
+        System.out.println("Found rows: " + csv.getRowCount());
+        assertEquals(249, csv.getRowCount());
+    }
+
     @Test
     public void createNew() {
         CSV csv = new CSV();
@@ -61,7 +68,8 @@ public class CSVTest {
         assertSame("RowCount", csv.getRowCount(), 2);
         try {
             csv.write(File.createTempFile("ShouldWrite", ".csv"));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             fail(e.getMessage());
         }
     }
@@ -93,10 +101,10 @@ public class CSVTest {
 
             String blueDog = "\"Blue Dog\", \"The Magician\"";
 
-
             assertEquals("Blue Dog The Magician", "\"Blue Dog\", \"The Magician\"", r.getString(2));
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             fail(e.getMessage());
         }
     }
@@ -119,7 +127,8 @@ public class CSVTest {
             Row r = csv.getRow(1);
 
             assertEquals("Venture", "Venture \"Extended Edition\"", r.getString(2));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             fail(e.getMessage());
         }
     }
@@ -141,7 +150,8 @@ public class CSVTest {
 
             Row r = csv.getRow(0);
             assertEquals("ac, abs, moon", "ac, abs, moon", r.getString(3));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             fail(e.getMessage());
         }
     }
@@ -162,7 +172,8 @@ public class CSVTest {
             Row r = csv.getRow(0);
 
             assertEquals("Spoke Tuesday, he's interested", r.getString(3));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             fail(e.getMessage());
         }
     }
@@ -185,7 +196,8 @@ public class CSVTest {
             Row r = csv.getRow(3);
 
             assertEquals("GPA", "3.48", r.getString("GPA"));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             fail(e.getMessage());
         }
     }
@@ -198,7 +210,8 @@ public class CSVTest {
             assertEquals("First", "First", md.getColumnName(0));
             assertEquals("Last", "Last", md.getColumnName(1));
             assertSame("ColumnCount", 2, md.getColumnCount());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             assertTrue("Found invalid data", (e instanceof InvalidRowDataException));
         }
     }
@@ -212,7 +225,8 @@ public class CSVTest {
             for (Person p : items) {
                 x++;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             fail(e.getMessage());
         }
     }

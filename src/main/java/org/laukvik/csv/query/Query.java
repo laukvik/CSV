@@ -26,6 +26,18 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
 /**
+ *
+ * <code>
+ * .select()
+ * .where()
+ * .column("BookID").is(5);
+ * </code>
+ *
+ * <code>
+ * .select()
+ * .where();
+ * </code>
+ *
  * <code>
  * .where
  * .column("BookID").is(5)

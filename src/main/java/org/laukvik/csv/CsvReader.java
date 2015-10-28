@@ -36,23 +36,21 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
     private Charset charset;
     private char currentChar;
     private StringBuilder currentValue;
-
     private StringBuilder rawLine;
     private int lineCounter;
-
     private MetaData metaData;
     private Row row;
     private List<String> values;
 
-    public CsvReader(InputStream is, MetaData metaData) throws IOException {
-        this(is, Charset.defaultCharset(), metaData);
+    public CsvReader(InputStream is) throws IOException {
+        this(is, Charset.defaultCharset());
     }
 
-    public CsvReader(InputStream is, Charset charset, MetaData metaData) throws IOException {
+    public CsvReader(InputStream is, Charset charset) throws IOException {
         this.is = new BufferedInputStream(is);
         this.charset = charset;
         this.lineCounter = 0;
-        this.metaData = metaData;
+        this.metaData = null;
         this.values = new ArrayList<>();
         parseRow();
         this.metaData.setCharset(charset);

@@ -93,6 +93,6 @@ public class CSVTableModel implements TableModel {
     @Override
     public void setValueAt(Object value, int row, int column) {
         Row r = csv.getRow(row);
-        r.setString((String) value, column);
+        r.setString(column, (String) value);
     }
 }

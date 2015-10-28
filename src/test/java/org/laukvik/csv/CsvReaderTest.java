@@ -44,7 +44,7 @@ public class CsvReaderTest {
         long millis = 1322018752992L;
         Date date = new Date(millis);
 
-        try (CsvReader reader = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset), null)) {
+        try (CsvReader reader = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
             int rows = 0;
             while (reader.hasNext()) {
                 Row r = reader.getRow();
@@ -62,13 +62,14 @@ public class CsvReaderTest {
             }
             assertEquals("Row count", 1, rows);
             assertEquals("Column count", 10, reader.getMetaData().getColumnCount());
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             fail(e.getMessage());
         }
     }
 
     public void readFile(String filename, int requiredColumns, int requiredRows, String charset) {
-        try (CsvReader reader = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset), null)) {
+        try (CsvReader reader = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
             int rows = 0;
             while (reader.hasNext()) {
                 Row r = reader.getRow();
@@ -77,7 +78,8 @@ public class CsvReaderTest {
             }
             assertEquals("Row count", rows, requiredRows);
             assertEquals("Column count", reader.getMetaData().getColumnCount(), requiredColumns);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             fail(e.getMessage());
         }
     }
@@ -116,12 +118,13 @@ public class CsvReaderTest {
     public void readWithIterator() {
         String filename = "acid.csv";
         String charset = "utf-8";
-        try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset), null)) {
+        try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
             if (r.hasNext()) {
                 Row row = r.next();
                 assertEquals("Year", "1996", row.getString("year"));
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             fail(e.getMessage());
         }
     }
@@ -131,15 +134,30 @@ public class CsvReaderTest {
         String filename = "charset.csv";
         String charset = "ISO-8859-1";
         String norwegian = "Norwegian æøå and ÆØÅ";
-        try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset), null)) {
+        try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
             while (r.hasNext()) {
                 Row row = r.next();
                 assertEquals("Norwegian chars", norwegian, row.getString("text"));
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             fail(e.getMessage());
         }
     }
 
+    //@Test
+    public void readRows() {
+        String filename = "countries.csv";
+        String charset = "utf-8";
+        try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
+            int x = 1;
+            while (r.hasNext()) {
+                System.out.println(x + ":" + r.getRow().getString(0));
+            }
+        }
+        catch (IOException e) {
+            fail(e.getMessage());
+        }
+    }
 
 }

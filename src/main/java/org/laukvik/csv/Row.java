@@ -46,6 +46,8 @@ import org.laukvik.csv.columns.Column;
  * <li>getByte-
  * <li>getTime -
  *
+ * CSV.createRow().add("First");
+ *
  * @author Morten Laukvik <morten@laukvik.no>
  */
 public class Row implements Serializable {
@@ -76,13 +78,25 @@ public class Row implements Serializable {
         return metaData;
     }
 
-    public void setMetaData(MetaData metaData) {
+    public Row setMetaData(MetaData metaData) {
         this.metaData = metaData;
+        return this;
     }
 
-    public void setValue(int columnIndex, Object value) {
+    public Row setValue(int columnIndex, Object value) {
         Column c = metaData.getColumn(columnIndex);
-        values.set(columnIndex, c.asString(value));
+        if (value instanceof Number) {
+            Number n = (Number) value;
+            values.set(columnIndex, n.toString());
+        } else if (value instanceof Boolean) {
+            Boolean b = (Boolean) value;
+            values.set(columnIndex, b.toString());
+
+        } else {
+            values.set(columnIndex, c.asString(value));
+        }
+
+        return this;
     }
 
     public Object getValue(String column) {
@@ -100,8 +114,9 @@ public class Row implements Serializable {
         return raw;
     }
 
-    protected void add(String value) {
+    protected Row add(String value) {
         this.values.add(value);
+        return this;
     }
 
     protected List<String> getValues() {
@@ -129,7 +144,7 @@ public class Row implements Serializable {
         return getString(metaData.getColumnIndex(column));
     }
 
-    public void setString(String value, int column) {
+    public void setString(int column, String value) {
         values.set(column, value);
     }
 
@@ -139,6 +154,9 @@ public class Row implements Serializable {
 
     public URL getURL(int columnIndex) {
         String value = getString(columnIndex);
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         try {
             return new URL(value);
         }
@@ -153,6 +171,9 @@ public class Row implements Serializable {
 
     public Long getLong(int columnIndex) {
         String value = getString(columnIndex);
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         try {
             return new Long(value);
         }
@@ -167,6 +188,9 @@ public class Row implements Serializable {
 
     public Integer getInteger(int columnIndex) {
         String value = getString(columnIndex);
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         try {
             return new Integer(value);
         }
@@ -181,6 +205,9 @@ public class Row implements Serializable {
 
     public Float getFloat(int columnIndex) {
         String value = getString(columnIndex);
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         try {
             return new Float(value);
         }
@@ -195,6 +222,9 @@ public class Row implements Serializable {
 
     public Double getDouble(int columnIndex) {
         String value = getString(columnIndex);
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         try {
             return new Double(value);
         }
@@ -205,6 +235,9 @@ public class Row implements Serializable {
 
     public Date getDate(String column) {
         String value = getString(column);
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         try {
             Long millis = Long.parseLong(value);
             return new Date(millis);
@@ -216,6 +249,9 @@ public class Row implements Serializable {
 
     public Date getDate(int column) {
         String value = getString(column);
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         try {
             Long millis = Long.parseLong(value);
             return new Date(millis);
@@ -253,6 +289,9 @@ public class Row implements Serializable {
 
     public Boolean getBoolean(int columnIndex) {
         String value = getString(columnIndex);
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         try {
             return new Boolean(value);
         }
@@ -267,6 +306,9 @@ public class Row implements Serializable {
 
     public BigDecimal getBigDecimal(int columnIndex) {
         String value = getString(columnIndex);
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         try {
             return new BigDecimal(value);
         }

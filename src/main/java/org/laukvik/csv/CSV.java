@@ -35,10 +35,10 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.query.Query;
 import org.laukvik.csv.io.JsonWriter;
 import org.laukvik.csv.io.Readable;
 import org.laukvik.csv.io.Writeable;
+import org.laukvik.csv.query.Query;
 
 /**
  * An API for reading and writing to Viewer. The implementation is based on the
@@ -91,10 +91,8 @@ public class CSV implements Serializable {
     private Query query;
 
     public CSV(MetaData metaData) {
+        this();
         this.metaData = metaData;
-        this.rows = new ArrayList<>();
-        this.charset = Charset.defaultCharset();
-        this.query = null;
     }
 
     public CSV() {
@@ -105,39 +103,26 @@ public class CSV implements Serializable {
     }
 
     public CSV(Column... columns) {
+        this();
         this.metaData = new MetaData(columns);
-        this.rows = new ArrayList<>();
-        this.charset = Charset.defaultCharset();
-        this.query = null;
     }
 
-    public CSV(File file, MetaData metadata) throws IOException, ParseException, InvalidRowDataException {
-        this(new FileInputStream(file), Charset.defaultCharset(), metadata);
-    }
-
-    public CSV(File file) throws IOException, ParseException, ParseException {
-        this(new FileInputStream(file), Charset.defaultCharset(), null);
+    public CSV(File file) throws IOException, ParseException, InvalidRowDataException {
+        this(new FileInputStream(file), Charset.defaultCharset());
     }
 
     public CSV(File file, Charset charset) throws IOException, ParseException {
-        this(new FileInputStream(file), charset, null);
+        this(new FileInputStream(file), charset);
     }
 
     public CSV(InputStream inputStream, Charset charset) throws IOException, InvalidRowDataException {
-        this(inputStream, charset, null);
-    }
-
-    public CSV(InputStream inputStream, Charset charset, MetaData metadata) throws IOException, InvalidRowDataException {
         this.query = null;
         rows = new ArrayList<>();
         this.charset = charset;
 
-        try (CsvReader reader = new CsvReader(inputStream, charset, metadata)) {
-            if (metadata == null) {
+        try (CsvReader reader = new CsvReader(inputStream, charset)) {
+            if (this.metaData == null) {
                 this.metaData = reader.getMetaData();
-            } else {
-                this.metaData = metadata;
-
             }
             while (reader.hasNext()) {
                 Row row = reader.getRow();
@@ -184,9 +169,15 @@ public class CSV implements Serializable {
         return rows.get(rowIndex);
     }
 
+    public Row createRow() {
+        Row row = metaData.createEmptyRow();
+        rows.add(row);
+        return row;
+    }
+
     public Row addRow(Row row) {
         if (row.getValues().size() != metaData.getColumnCount()) {
-            throw new IllegalArgumentException("Incorrect columns in row");
+            throw new IllegalArgumentException("Incorrect columns in row: " + row.getValues().size() + ". Excpected: " + metaData.getColumnCount());
         }
         row.setMetaData(metaData);
         rows.add(row);
@@ -339,7 +330,7 @@ public class CSV implements Serializable {
 
     public static <T> List<T> findByClass(InputStream inputStream, Charset charset, Class<T> aClass) {
         List<T> items = new ArrayList<>();
-        try (CsvReader reader = new CsvReader(inputStream, charset, null)) {
+        try (CsvReader reader = new CsvReader(inputStream, charset)) {
             int x = 0;
             while (reader.hasNext()) {
                 Row row = reader.getRow();

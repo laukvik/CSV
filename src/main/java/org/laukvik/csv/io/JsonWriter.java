@@ -18,19 +18,24 @@ package org.laukvik.csv.io;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.logging.Logger;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 
 /**
  *
+ *
  * @author Morten Laukvik <morten@laukvik.no>
  */
 public class JsonWriter implements Writeable {
 
+    private final static Logger LOG = Logger.getLogger(JsonWriter.class.getName());
+
     private final static char CURLY_LEFT = '{';
     private final static char CURLY_RIGHT = '}';
-    private final static char SEMI = ':';
+    private final static char SEMICOLON = ':';
+    private final static char DOUBLE_QUOTE = '"';
     private final static char BRACKET_LEFT = '[';
     private final static char BRACKET_RIGHT = ']';
     private final static char LINEFEED = '\n';
@@ -39,17 +44,12 @@ public class JsonWriter implements Writeable {
 
     @Override
     public void write(CSV csv, OutputStream out, Charset charset) throws IOException {
-
+        LOG.fine("Writing CSV to JSON.");
         MetaData md = csv.getMetaData();
-        out.write(CURLY_LEFT);
-        out.write(LINEFEED);
-        out.write(TAB);
-        out.write(LINEFEED);
-        out.write("rows".getBytes());
-        out.write(LINEFEED);
-        out.write(SEMI);
         out.write(BRACKET_LEFT);
+        out.write(LINEFEED);
         for (int y = 0; y < csv.getRowCount(); y++) {
+            LOG.fine("Writing " + (y + 1) + "/" + csv.getRowCount());
             if (y > 0) {
                 out.write(COMMA);
                 out.write(LINEFEED);
@@ -68,13 +68,14 @@ public class JsonWriter implements Writeable {
                 out.write(TAB);
                 out.write(TAB);
                 out.write(TAB);
-                out.write(LINEFEED);
+                out.write(DOUBLE_QUOTE);
                 out.write(md.getColumnName(x).getBytes(charset));
-                out.write(LINEFEED);
-                out.write(SEMI);
-                out.write(LINEFEED);
+                out.write(DOUBLE_QUOTE);
+                out.write(SEMICOLON);
+                out.write(DOUBLE_QUOTE);
                 out.write(row.getString(x).getBytes(charset));
-                out.write(LINEFEED);
+                out.write(DOUBLE_QUOTE);
+
             }
             out.write(LINEFEED);
             out.write(TAB);
@@ -82,13 +83,10 @@ public class JsonWriter implements Writeable {
             out.write(CURLY_RIGHT);
             out.write(LINEFEED);
         }
-        out.write(TAB);
         out.write(BRACKET_RIGHT);
-        out.write(LINEFEED);
-        out.write(CURLY_RIGHT);
-        out.write(LINEFEED);
         out.flush();
         out.close();
+        LOG.fine("Finished writing CSV to JSON.");
     }
 
 }

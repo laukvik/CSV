@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 public class CsvWriter implements AutoCloseable {
 
     private final OutputStreamWriter out;
-    private final Pattern pattern;
+    private final static Pattern pattern = Pattern.compile("^\\d+$");
 
     public CsvWriter(OutputStream out) {
         this(out, Charset.defaultCharset());
@@ -42,11 +42,13 @@ public class CsvWriter implements AutoCloseable {
 
     public CsvWriter(OutputStream out, Charset charset) {
         this.out = new OutputStreamWriter(out, charset);
-        pattern = Pattern.compile("[0-9]+");
     }
 
-    private boolean isDigitsOnly(String value) {
-        return pattern.matcher(value).find();
+    public static boolean isDigitsOnly(String value) {
+        if (value == null || value.isEmpty()) {
+            return false;
+        }
+        return CsvWriter.pattern.matcher(value).find();
     }
 
     public void writeMetaData(MetaData metaData) throws IOException {
@@ -71,7 +73,10 @@ public class CsvWriter implements AutoCloseable {
                 out.write(CSV.COMMA);
             }
             String column = values.get(x);
-            if (isDigitsOnly(column)) {
+            if (column == null) {
+                out.write(CSV.QUOTE);
+                out.write(CSV.QUOTE);
+            } else if (isDigitsOnly(column)) {
                 /* Digits only */
                 out.write(column);
             } else {
