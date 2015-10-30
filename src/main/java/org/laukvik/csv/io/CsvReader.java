@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.io;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import org.laukvik.csv.CSV;
+import org.laukvik.csv.MetaData;
+import org.laukvik.csv.Row;
 
 /**
  *
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class CsvReader implements AutoCloseable, Iterator<Row> {
+public class CsvReader implements AutoCloseable, Readable {
 
     private final BufferedInputStream is;
-    private Charset charset;
+    //private Charset charset;
     private char currentChar;
     private StringBuilder currentValue;
     private StringBuilder rawLine;
@@ -48,7 +48,6 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
 
     public CsvReader(InputStream is, Charset charset) throws IOException {
         this.is = new BufferedInputStream(is);
-        this.charset = charset;
         this.lineCounter = 0;
         this.metaData = null;
         this.values = new ArrayList<>();
@@ -56,10 +55,9 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
         this.metaData.setCharset(charset);
     }
 
-    public Charset getCharset() {
-        return charset;
-    }
-
+//    public Charset getCharset() {
+//        return charset;
+//    }
     public String getUnprocessedRow() {
         return rawLine.toString();
     }
@@ -234,31 +232,6 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
     @Override
     public Row next() {
         return row;
-    }
-
-    public static <T> T createInstance(Row row, Class<T> aClass) throws InstantiationException, IllegalAccessException {
-        Object instance = aClass.newInstance();
-
-        /* Iterate all fields in object*/
-        for (Field f : instance.getClass().getDeclaredFields()) {
-            /* Set accessible to allow injecting private fields - otherwise an exception will occur*/
-            f.setAccessible(true);
-            /* Get field value */
-            Object value = f.get(instance);
-            /* Find the name of the field - in code */
-            String nameAttribute = f.getName();
-
-            if (f.getType() == String.class) {
-                f.set(instance, row.getString(nameAttribute));
-            } else if (f.getType() == Integer.class) {
-                f.set(instance, row.getInteger(nameAttribute));
-            } else if (f.getType() == URL.class) {
-                f.set(instance, row.getURL(nameAttribute));
-            }
-
-            f.setAccessible(false);
-        }
-        return (T) instance;
     }
 
 }

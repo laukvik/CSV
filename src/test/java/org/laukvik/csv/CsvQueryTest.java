@@ -15,12 +15,10 @@
  */
 package org.laukvik.csv;
 
-import org.junit.Test;
-import org.laukvik.csv.query.Query;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import org.junit.Test;
+import org.laukvik.csv.query.Query;
 
 /**
  *
@@ -30,7 +28,8 @@ public class CsvQueryTest {
 
     @Test
     public void readFile() throws IOException, ParseException {
-        CSV csv = new CSV(getResource("presidents.csv"), Charset.defaultCharset());
+        CSV csv = new CSV();
+        csv.read(getResource("presidents.csv"));
         Query q = csv.findByQuery();
         /*
          List<Row> rows = q.select("Party", "Home state").where().column("Presidency").isGreaterThan(50).getResultList();

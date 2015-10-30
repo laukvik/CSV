@@ -24,38 +24,98 @@ import org.laukvik.csv.CSV;
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class XmlWriter implements Writeable {
-
-    private final static String START = "<rows>";
-    private final static String END = "</rows>";
-
-    private final static String ROW_START = "<row ";
-    private final static String ROW_END = ">";
+public class XmlWriter implements Writeable, AutoCloseable {
 
     private final static char OPEN = '<';
-    private final static char CLOSE = '<';
+    private final static char CLOSE = '>';
     private final static char LINEFEED = '\n';
-    private final static char QUOTE = '"';
+    private final static char CR = '\r';
+    private final static char SLASH = '/';
+    private final static char QUOTATION_MARK = '"';
+    private final static char APOSTROPHE = '\'';
+    private final static char AMPERSAND = '&';
     private final static char SPACE = ' ';
     private final static char EQUAL = '=';
+    private final static char TAB = '\t';
+
+    private OutputStream out;
+    private String rootElementName;
+    private String rowElementName;
+
+    public XmlWriter(OutputStream out, String rootName, String rowName) {
+        this.out = out;
+        this.rootElementName = rootName;
+        this.rowElementName = rowName;
+    }
+
+    public XmlWriter(OutputStream out) {
+        this(out, "rows", "row");
+    }
 
     @Override
-    public void write(CSV csv, OutputStream out, Charset charset) throws IOException {
+    public void write(CSV csv) throws IOException {
+        Charset charset = csv.getMetaData().getCharset();
         out.write(("<?xml version=\"1.0\" encoding=\"" + charset.name() + "\"?>").getBytes());
-        out.write(START.getBytes(charset));
+
+        out.write(CR);
+        out.write(LINEFEED);
+        // Root
+        out.write(OPEN);
+        out.write(this.rootElementName.getBytes());
+        out.write(CLOSE);
+
+        // Iterate rows
         for (int y = 0; y < csv.getRowCount(); y++) {
-            out.write(ROW_START.getBytes(charset));
+            out.write(CR);
+            out.write(LINEFEED);
+            out.write(TAB);
+            out.write(OPEN);
+            out.write(this.rowElementName.getBytes());
             for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
                 out.write(SPACE);
                 out.write(csv.getMetaData().getColumn(x).getName().getBytes(charset));
                 out.write(EQUAL);
-                out.write(QUOTE);
-                out.write(csv.getRow(y).getString(x).getBytes(charset));
-                out.write(QUOTE);
+                out.write(QUOTATION_MARK);
+                String s = csv.getRow(y).getString(x);
+                if (s == null) {
+                } else {
+                    for (int n = 0; n < s.length(); n++) {
+                        char c = s.charAt(n);
+                        if (c == QUOTATION_MARK) {
+                            out.write("&quot;".getBytes());
+                        } else if (c == OPEN) {
+                            out.write("&lt;".getBytes());
+                        } else if (c == CLOSE) {
+                            out.write("&gt;".getBytes());
+                        } else if (c == APOSTROPHE) {
+                            out.write("&apos;".getBytes());
+                        } else if (c == AMPERSAND) {
+                            out.write("&amp;".getBytes());
+                        } else {
+                            out.write(c);
+                        }
+                    }
+                }
+                out.write(QUOTATION_MARK);
             }
-            out.write(ROW_END.getBytes(charset));
+            out.write(SLASH);
+            out.write(CLOSE);
+            out.write(CR);
+            out.write(LINEFEED);
         }
-        out.write(END.getBytes(charset));
+
+        // Close root element
+        out.write(OPEN);
+        out.write(SLASH);
+        out.write(this.rootElementName.getBytes());
+        out.write(CLOSE);
+        out.flush();
+
+    }
+
+    @Override
+    public void close() throws Exception {
+        out.close();
     }
 
 }

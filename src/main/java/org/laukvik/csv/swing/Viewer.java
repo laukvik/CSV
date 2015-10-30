@@ -20,7 +20,9 @@ import java.awt.FileDialog;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -38,8 +40,6 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
-import org.laukvik.csv.InvalidRowDataException;
-import org.laukvik.csv.ParseException;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DateColumn;
@@ -48,9 +48,43 @@ import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
+import org.laukvik.csv.io.CsvReader;
+import org.laukvik.csv.io.CsvWriter;
+import org.laukvik.csv.io.JsonWriter;
 import org.laukvik.csv.query.Query;
 
 /**
+ * Milestone
+ *
+ * @todo Åpning av CSV filer med feilrapportering
+ * @todo Kun på engelsk
+ * @todo Ingen redigering
+ * @todo Webside
+ * @todo Besøksstatistikk
+ * @todo Nedlastingsstatistikk
+ * @todo maven
+ *
+ * Milestone
+ *
+ * @todo Sortering ved trykk på kolonneheadere
+ * @todo Søk i kolonner
+ * @todo Eksport JSON
+ *
+ * Milestone - Redigeringsmuligheter
+ *
+ * @todo Encoding
+ * @todo Redigering av innhold
+ * @todo Eksport av selection
+ * @todo Recent files funksjon
+ * @todo Åpne tab eller pipe separert
+ *
+ * Milestone - MetaData support (ekstra fil)
+ *
+ * @todo Kolonnebredde
+ * @todo Encoding innstilling
+ * @todo DataTyper (int, dato, String etc)
+ *
+ *
  *
  * @author morten
  */
@@ -63,7 +97,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private static final Logger LOG = Logger.getLogger(Viewer.class.getName());
     private List<UniqueTableModel> tableModels;
 
-    private RecentFileModel recentFileModel;
+    private final RecentFileModel recentFileModel;
 
     /**
      * Creates new form Viewer
@@ -96,6 +130,10 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         table.setRowSelectionAllowed(true);
         table.setCellSelectionEnabled(true);
         table.setRowHeight(20);
+
+        table.setDefaultRenderer(Object.class, new EvenOddRenderer());
+        table.setDefaultRenderer(Number.class, new EvenOddRenderer());
+        table.setRowHeight(24);
 
         table.getSelectionModel().addListSelectionListener(this);
 
@@ -143,7 +181,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     }
 
     public void buildQuery() {
-        LOG.info("buildQuery ");
+        LOG.fine("buildQuery ");
         Query query = csv.findByQuery();
         Query.Where where = query.where();
         int selectionCount = 0;
@@ -245,7 +283,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     }
 
     public void createUniqueModels() {
-        LOG.info("Adding unique models: " + csv.getMetaData().getColumnCount());
+        LOG.fine("Adding unique models: " + csv.getMetaData().getColumnCount());
         tabbedPane.removeAll();
         tableModels = new ArrayList<>();
 
@@ -296,14 +334,14 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
             /* Build the current values */
             model.buildValues();
 
-            LOG.info("Adding unique for column " + c.getName());
+            LOG.fine("Adding unique for column " + c.getName());
 
             tableModels.add(model);
 
             model.addChangeListener(new UniqueListener() {
                 @Override
                 public void uniqueSelectionChanged(UniqueTableModel model) {
-                    LOG.info("Selection: " + model);
+                    LOG.fine("Selection: " + model);
                     buildQuery();
                 }
             });
@@ -338,7 +376,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     public void openFile(File file) {
 
         try {
-            csv = new org.laukvik.csv.CSV(file);
+            //csv = new org.laukvik.csv.CSV(file);
+            csv.read(new CsvReader(new FileInputStream(file)));
             this.file = file;
             model = new CSVTableModel(csv);
             table.setModel(model);
@@ -361,12 +400,6 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         }
         catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Kunne ikke åpne", "", JOptionPane.ERROR_MESSAGE);
-        }
-        catch (InvalidRowDataException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage() + "\n" + ex.getRow().getRaw(), "Feil i CSV fil", JOptionPane.ERROR_MESSAGE);
-        }
-        catch (ParseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage() + "\n", "Feil i CSV fil", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -691,7 +724,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         } else {
             try {
                 File file = new File(fd.getDirectory(), filename);
-                csv.write(file);
+                csv.write(new JsonWriter(new FileOutputStream(file)));
             }
             catch (IOException ex) {
                 JOptionPane.showMessageDialog(this,
@@ -708,7 +741,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
         try {
-            csv.write(file);
+
+            csv.write(new CsvWriter(new FileOutputStream(file)));
         }
         catch (IOException ex) {
             JOptionPane.showMessageDialog(this,
@@ -741,13 +775,13 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         if (answer != null) {
             int rowIndex = table.getSelectedColumn();
             if (rowIndex == -1) {
-                LOG.info("Inserting column after last");
+                LOG.fine("Inserting column after last");
                 csv.addColumn(answer);
             } else {
-                LOG.info("Inserting column at " + rowIndex);
+                LOG.fine("Inserting column at " + rowIndex);
                 csv.insertColumn(answer, rowIndex);
             }
-            LOG.info("Columns: " + csv.getMetaData().getColumnCount());
+            LOG.fine("Columns: " + csv.getMetaData().getColumnCount());
 
             table.tableChanged(new TableModelEvent(model, TableModelEvent.HEADER_ROW));
             table.tableChanged(new TableModelEvent(model));
@@ -761,14 +795,14 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         Row emptyRow = csv.getMetaData().createEmptyRow();
 
         if (rowIndex == -1) {
-            LOG.info("Adding empty row at end");
+            LOG.fine("Adding empty row at end");
             csv.addRow(emptyRow);
         } else {
-            LOG.info("Inserting row at " + rowIndex);
+            LOG.fine("Inserting row at " + rowIndex);
             csv.insertRow(emptyRow, rowIndex);
         }
 
-        LOG.info("Rows after insert: " + csv.getRowCount());
+        LOG.fine("Rows after insert: " + csv.getRowCount());
 
         table.tableChanged(new TableModelEvent(model));
 
@@ -808,7 +842,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         } else {
             try {
                 File file = new File(fd.getDirectory(), filename);
-                csv.writeJson(file);
+                csv.write(new JsonWriter(new FileOutputStream(file)));
             }
             catch (IOException ex) {
                 JOptionPane.showMessageDialog(this,
@@ -844,6 +878,10 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 v.setSize(700, 400);
                 v.setLocationRelativeTo(null);
                 v.setVisible(true);
+
+                if (args.length > 0) {
+                    v.openFile(new File(args[0]));
+                }
 
             }
         });

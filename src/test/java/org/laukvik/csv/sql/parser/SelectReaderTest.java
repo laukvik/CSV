@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv.io;
+package org.laukvik.csv.sql.parser;
 
-import java.io.IOException;
-import org.laukvik.csv.CSV;
+import org.junit.Test;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public interface Writeable extends AutoCloseable {
+public class SelectReaderTest {
 
-    public void write(CSV csv) throws IOException;
+    public SelectReaderTest() {
+    }
+
+    @Test
+    public void testSomeMethod() {
+    }
 
 }

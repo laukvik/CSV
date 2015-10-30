@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.io.CsvWriter;
 
 /**
  *
@@ -51,7 +52,8 @@ public class CsvWriterTest {
         }
 
         try {
-            CSV csv = new CSV(f);
+            CSV csv = new CSV();
+            csv.read(f);
 //                    assertEquals("Correct column count", 2, csv.getMetaData().getColumnCount());
             assertEquals("Correct row count", 2, csv.getRowCount());
             assertEquals("First", "First", csv.getMetaData().getColumnName(0));
@@ -61,9 +63,6 @@ public class CsvWriterTest {
         }
         catch (IOException ex) {
             fail("Failed to read CSV file!");
-        }
-        catch (ParseException ex) {
-            fail("Failed to parse CSV file!");
         }
     }
 

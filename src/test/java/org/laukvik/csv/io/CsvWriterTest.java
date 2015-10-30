@@ -15,15 +15,25 @@
  */
 package org.laukvik.csv.io;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import org.junit.Test;
 import org.laukvik.csv.CSV;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public interface Writeable extends AutoCloseable {
+public class CsvWriterTest {
 
-    public void write(CSV csv) throws IOException;
+    @Test
+    public void testSomeMethod() throws IOException {
+        File file = File.createTempFile("tmp", ".csv");
+        CSV csv = new CSV();
+        csv.addColumn("First");
+        csv.addColumn("Last");
+        csv.write(new CsvWriter(new FileOutputStream(file)));
+    }
 
 }

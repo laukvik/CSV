@@ -69,6 +69,12 @@
             <artifactId>AbsoluteLayout</artifactId>
             <version>RELEASE701</version>
         </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -132,10 +138,16 @@
                 <configuration>
                     <instrumentation>
                         <ignores>
-                            <ignore>org/laukvik/csv/javafx/.*</ignore>
+
                         </ignores>
                         <excludes>
                             <exclude>org/laukvik/csv/**/*Exception.class</exclude>
+                            <ignore>org/laukvik/csv/javafx/*.*</ignore>
+                            <ignore>org/laukvik/csv/swing/**/*.*</ignore>
+                            <ignore>org/laukvik/csv/sql/**/*.*</ignore>
+                            <ignore>org/laukvik/csv/annotation/*.*</ignore>
+                            <ignore>org/laukvik/csv/columns/*.*</ignore>
+                            <ignore>org/laukvik/csv/jdbc/**/*.*</ignore>
                         </excludes>
                     </instrumentation>
                     <check>
@@ -148,6 +160,13 @@
                         <packageBranchRate>85</packageBranchRate>
                     </check>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>5.0.3</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <goals>

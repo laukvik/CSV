@@ -15,6 +15,7 @@ public class TableReader extends Reader {
         tableListeners = new ArrayList<>();
     }
 
+    @Override
     public String consume(String sql) throws SyntaxException {
         Pattern p = Pattern.compile("([a-zA-Z0-9]*)");
         Matcher m = p.matcher(sql);

@@ -13,49 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.io;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import org.junit.Test;
-import org.laukvik.csv.io.JsonWriter;
+import org.laukvik.csv.CSV;
+import org.laukvik.csv.Row;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class JsonWriterTest {
+public class CsvReaderTest {
 
-    public JsonWriterTest() {
+    public CsvReaderTest() {
     }
 
     @Test
-    public void emptyRows() throws IOException {
-        File file = File.createTempFile("EmptyRows", ".json");
-
+    public void testSomeMethod() throws IOException {
+        File file = File.createTempFile("Person", ".csv");
         CSV csv = new CSV();
         csv.addColumn("First");
         csv.addColumn("Last");
+        csv.write(new CsvWriter(new FileOutputStream(file)));
 
-        JsonWriter writer = new JsonWriter(new FileOutputStream(file));
-        writer.write(csv);
+        CsvReader r = new CsvReader(new FileInputStream(file));
 
-    }
-
-    @Test
-    public void singleRow() throws IOException {
-        File file = File.createTempFile("SingleRow", ".json");
-
-        CSV csv = new CSV();
-        csv.addColumn("First");
-        csv.addColumn("Last");
-
-        csv.addRow("Morten", "Laukvik");
-
-        JsonWriter writer = new JsonWriter(new FileOutputStream(file));
-        writer.write(csv);
-
+        //Assert.assertEquals(2, r.getMetaData().getColumnCount());
+        while (r.hasNext()) {
+            Row row = r.next();
+            System.out.println("CsvReader: " + row.getString(0));
+        }
     }
 
 }

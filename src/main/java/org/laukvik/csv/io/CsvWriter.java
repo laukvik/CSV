@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.io;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
+import org.laukvik.csv.CSV;
+import org.laukvik.csv.MetaData;
+import org.laukvik.csv.Row;
 
 /**
  * OutputStream for writing CSV data
@@ -31,24 +31,28 @@ import java.util.regex.Pattern;
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class CsvWriter implements AutoCloseable {
+public class CsvWriter implements Writeable {
 
-    private final OutputStreamWriter out;
-    private final static Pattern pattern = Pattern.compile("^\\d+$");
+    private final OutputStream out;
 
     public CsvWriter(OutputStream out) {
-        this(out, Charset.defaultCharset());
+        this.out = out;
     }
 
-    public CsvWriter(OutputStream out, Charset charset) {
-        this.out = new OutputStreamWriter(out, charset);
+    public void write(CSV csv) {
     }
 
     public static boolean isDigitsOnly(String value) {
-        if (value == null || value.isEmpty()) {
+        if (value == null) {
             return false;
         }
-        return CsvWriter.pattern.matcher(value).find();
+        for (int x = 0; x < value.length(); x++) {
+            char c = value.charAt(x);
+            if (c < '0' || c > '9') {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void writeMetaData(MetaData metaData) throws IOException {
@@ -78,7 +82,7 @@ public class CsvWriter implements AutoCloseable {
                 out.write(CSV.QUOTE);
             } else if (isDigitsOnly(column)) {
                 /* Digits only */
-                out.write(column);
+                out.write(column.getBytes());
             } else {
                 /* Text */
                 out.write(CSV.QUOTE);
@@ -93,7 +97,8 @@ public class CsvWriter implements AutoCloseable {
                 out.write(CSV.QUOTE);
             }
         }
-        out.write(CSV.CRLF);
+        out.write(CSV.RETURN);
+        out.write(CSV.LINEFEED);
     }
 
     @Override

@@ -21,7 +21,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -32,10 +31,10 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.UIManager;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.io.JsonWriter;
+import org.laukvik.csv.io.CsvReader;
+import org.laukvik.csv.io.CsvWriter;
 import org.laukvik.csv.io.Readable;
 import org.laukvik.csv.io.Writeable;
 import org.laukvik.csv.query.Query;
@@ -87,57 +86,72 @@ public class CSV implements Serializable {
 
     protected MetaData metaData;
     protected List<Row> rows;
-    protected Charset charset;
     private Query query;
-
-    public CSV(MetaData metaData) {
-        this();
-        this.metaData = metaData;
-    }
 
     public CSV() {
         this.metaData = new MetaData();
         this.rows = new ArrayList<>();
-        this.charset = Charset.defaultCharset();
         this.query = null;
     }
 
-    public CSV(Column... columns) {
-        this();
-        this.metaData = new MetaData(columns);
+    /**
+     * Reads the CSV file
+     *
+     * @param file
+     * @throws IOException
+     */
+    public void read(File file) throws IOException {
+        read(new CsvReader(new FileInputStream(file)));
     }
 
-    public CSV(File file) throws IOException, ParseException, InvalidRowDataException {
-        this(new FileInputStream(file), Charset.defaultCharset());
-    }
-
-    public CSV(File file, Charset charset) throws IOException, ParseException {
-        this(new FileInputStream(file), charset);
-    }
-
-    public CSV(InputStream inputStream, Charset charset) throws IOException, InvalidRowDataException {
+    /**
+     * Reads any readable stream
+     *
+     * @param reader
+     */
+    public void read(Readable reader) {
         this.query = null;
         rows = new ArrayList<>();
-        this.charset = charset;
-
-        try (CsvReader reader = new CsvReader(inputStream, charset)) {
-            if (this.metaData == null) {
-                this.metaData = reader.getMetaData();
-            }
-            while (reader.hasNext()) {
-                Row row = reader.getRow();
-                row.setMetaData(metaData);
-                if (row.getValues().size() != metaData.getColumnCount()) {
-                    throw new InvalidRowDataException(row.getValues().size(), metaData.getColumnCount(), rows.size(), row);
-                }
-                rows.add(row);
-            }
-        }
-        catch (IOException e) {
-            throw e;
+        this.metaData = reader.getMetaData();
+        while (reader.hasNext()) {
+            Row row = reader.getRow();
+            rows.add(row);
         }
     }
 
+//    public CSV(Column... columns) {
+//        this();
+//        this.metaData = new MetaData(columns);
+//    }
+//    public CSV(File file) throws IOException, ParseException, InvalidRowDataException {
+//        this(new FileInputStream(file), Charset.defaultCharset());
+//    }
+//
+//    public CSV(File file, Charset charset) throws IOException, ParseException {
+//        this(new FileInputStream(file), charset);
+//    }
+//    public CSV(InputStream inputStream, Charset charset) throws IOException, InvalidRowDataException {
+//        this.query = null;
+//        rows = new ArrayList<>();
+//        this.charset = charset;
+//
+//        try (CsvReader reader = new CsvReader(inputStream, charset)) {
+//            if (this.metaData == null) {
+//                this.metaData = reader.getMetaData();
+//            }
+//            while (reader.hasNext()) {
+//                Row row = reader.getRow();
+//                row.setMetaData(metaData);
+//                if (row.getValues().size() != metaData.getColumnCount()) {
+//                    throw new InvalidRowDataException(row.getValues().size(), metaData.getColumnCount(), rows.size(), row);
+//                }
+//                rows.add(row);
+//            }
+//        }
+//        catch (IOException e) {
+//            throw e;
+//        }
+//    }
     protected List<Row> getRows() {
         return rows;
     }
@@ -196,22 +210,8 @@ public class CSV implements Serializable {
         rows.clear();
     }
 
-    /**
-     * Writes the contents to file
-     *
-     * @param file
-     * @throws IOException
-     */
-    public void write(File file) throws IOException {
-        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file), charset)) {
-            writer.writeMetaData(metaData);
-            for (Row row : rows) {
-                writer.writeRow(row);
-            }
-        }
-        catch (IOException e) {
-            throw e;
-        }
+    public void write(Writeable writer) throws IOException {
+        writer.write(this);
     }
 
     /**
@@ -349,7 +349,7 @@ public class CSV implements Serializable {
 
     public static <T> void saveAll(List<?> objects, Class<T> aClass) throws IllegalArgumentException, IllegalAccessException {
         File file = CSV.getFile(aClass);
-        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file), Charset.defaultCharset())) {
+        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file))) {
             writer.writeMetaData(aClass);
             for (Object o : objects) {
                 writer.writeEntityRow(o);
@@ -391,47 +391,6 @@ public class CSV implements Serializable {
 
     public Set<String> listDistinct(String column) {
         return listDistinct(getMetaData().getColumnIndex(column));
-    }
-
-    /**
-     * Exports the file as JSON
-     *
-     * @param file
-     * @throws IOException
-     */
-    public void writeJson(File file) throws IOException {
-        JsonWriter writer = new JsonWriter();
-        writer.write(this, new FileOutputStream(file), charset);
-    }
-
-    public void read(Readable readable, InputStream in, Charset charset) throws IOException {
-        readable.read(in);
-    }
-
-    public void write(Writeable writable, OutputStream out, Charset charset) throws IOException {
-        writable.write(this, out, charset);
-    }
-
-    public static void main(final String args[]) {
-        try {
-            System.setProperty("apple.laf.useScreenMenuBar", "true");
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }
-        catch (Exception e) {
-        }
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                org.laukvik.csv.swing.Viewer v = new org.laukvik.csv.swing.Viewer();
-                v.setSize(700, 400);
-                v.setLocationRelativeTo(null);
-                v.setVisible(true);
-
-                if (args.length > 0) {
-                    v.openFile(new File(args[0]));
-                }
-            }
-        });
     }
 
 }

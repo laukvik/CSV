@@ -119,7 +119,7 @@ public class Row implements Serializable {
         return this;
     }
 
-    protected List<String> getValues() {
+    public List<String> getValues() {
         return values;
     }
 

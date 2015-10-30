@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.io;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.junit.Assert;
 import org.junit.Test;
-import org.laukvik.csv.io.JsonWriter;
+import org.laukvik.csv.CSV;
 
 /**
  *
@@ -27,34 +32,26 @@ import org.laukvik.csv.io.JsonWriter;
  */
 public class JsonWriterTest {
 
-    public JsonWriterTest() {
-    }
-
     @Test
-    public void emptyRows() throws IOException {
+    public void shouldWriteJson() throws IOException, ParseException {
         File file = File.createTempFile("EmptyRows", ".json");
 
         CSV csv = new CSV();
         csv.addColumn("First");
-        csv.addColumn("Last");
+
+        csv.addRow("Morten");
+        csv.addRow("\"");
+        csv.addRow(" ");
 
         JsonWriter writer = new JsonWriter(new FileOutputStream(file));
         writer.write(csv);
 
-    }
+        JSONParser parser = new JSONParser();
 
-    @Test
-    public void singleRow() throws IOException {
-        File file = File.createTempFile("SingleRow", ".json");
+        Object obj = parser.parse(new FileReader(file));
+        JSONArray arr = (JSONArray) obj;
 
-        CSV csv = new CSV();
-        csv.addColumn("First");
-        csv.addColumn("Last");
-
-        csv.addRow("Morten", "Laukvik");
-
-        JsonWriter writer = new JsonWriter(new FileOutputStream(file));
-        writer.write(csv);
+        Assert.assertEquals(3, arr.size());
 
     }
 

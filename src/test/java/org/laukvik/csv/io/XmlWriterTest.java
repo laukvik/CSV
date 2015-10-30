@@ -18,9 +18,14 @@ package org.laukvik.csv.io;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -28,23 +33,48 @@ import org.laukvik.csv.CSV;
  */
 public class XmlWriterTest {
 
-    public XmlWriterTest() {
-    }
-
     @Test
-    public void emptyRows() throws IOException {
+    public void shouldWriteReservedCharacters() throws IOException, SAXException, ParserConfigurationException {
         File file = File.createTempFile("EmptyRows", ".xml");
 
         CSV csv = new CSV();
         csv.addColumn("First");
-        csv.addColumn("Last");
 
-        csv.addRow("Morten", "Laukvik");
+        csv.addRow("&");
+        csv.addRow("\"");
+        csv.addRow(">");
+        csv.addRow("<");
+        csv.addRow("'");
 
-        XmlWriter writer = new XmlWriter();
-        writer.write(csv, new FileOutputStream(file), Charset.defaultCharset());
+        XmlWriter writer = new XmlWriter(new FileOutputStream(file));
+        writer.write(csv);
 
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
 
+        Document document = (Document) builder.parse(file);
+    }
+
+    @Test
+    public void shouldWriteWithCustomElementNames() throws IOException, SAXException, ParserConfigurationException {
+        File file = File.createTempFile("EmptyRows", ".xml");
+
+        CSV csv = new CSV();
+        csv.addColumn("First");
+
+        csv.addRow("Bob");
+        csv.addRow("Dylan");
+
+        XmlWriter writer = new XmlWriter(new FileOutputStream(file), "people", "person");
+        writer.write(csv);
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+
+        Document document = (Document) builder.parse(file);
+
+        Assert.assertEquals("people", document.getDocumentElement().getNodeName());
+        Assert.assertEquals(2, document.getDocumentElement().getElementsByTagName("person").getLength());
     }
 
 }
