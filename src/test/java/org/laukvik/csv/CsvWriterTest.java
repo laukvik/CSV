@@ -41,11 +41,15 @@ public class CsvWriterTest {
 
         File f = File.createTempFile("CsvWriter", ".csv");
 
-        try (CsvWriter w = new CsvWriter(new FileOutputStream(f))) {
-            w.writeMetaData(new MetaData(new StringColumn("First"), new StringColumn("Last")));
-            w.writeRow(new Row("Bill", "Gates"));
-            w.writeRow(new Row("Steve", "Jobs"));
+        MetaData md = new MetaData();
 
+        StringColumn first = (StringColumn) md.addColumn(new StringColumn("First"));
+        StringColumn last = (StringColumn) md.addColumn(new StringColumn("Last"));
+
+        try (CsvWriter w = new CsvWriter(new FileOutputStream(f), md)) {
+            //
+            w.writeRow(new Row().update(first, "Bill").update(last, "Gates"));
+            w.writeRow(new Row().update(first, "Steve").update(last, "Jobs"));
         }
         catch (IOException e) {
             fail("Failed to write CSV file!");
@@ -54,12 +58,13 @@ public class CsvWriterTest {
         try {
             CSV csv = new CSV();
             csv.read(f);
+//            StringColumn last = (StringColumn) csv.getMetaData().getColumn("Last");
 //                    assertEquals("Correct column count", 2, csv.getMetaData().getColumnCount());
             assertEquals("Correct row count", 2, csv.getRowCount());
             assertEquals("First", "First", csv.getMetaData().getColumnName(0));
             assertEquals("Last", "Last", csv.getMetaData().getColumnName(1));
-            assertEquals("Find by row index and index", "Bill", csv.getRow(0).getString(0));
-            assertEquals("Find by row index and column name", "Gates", csv.getRow(0).getString("Last"));
+            assertEquals("Find by row index and index", "Bill", csv.getRow(0).getString(first));
+            assertEquals("Find by row index and column name", "Gates", csv.getRow(0).getString(last));
         }
         catch (IOException ex) {
             fail("Failed to read CSV file!");

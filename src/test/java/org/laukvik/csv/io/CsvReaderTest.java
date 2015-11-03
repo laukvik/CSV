@@ -22,6 +22,8 @@ import java.io.IOException;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.StringColumn;
 
 /**
  *
@@ -33,11 +35,11 @@ public class CsvReaderTest {
     }
 
     @Test
-    public void testSomeMethod() throws IOException {
+    public void testSomeMethod() throws IOException, Exception {
         File file = File.createTempFile("Person", ".csv");
         CSV csv = new CSV();
-        csv.addColumn("First");
-        csv.addColumn("Last");
+        StringColumn first = csv.addStringColumn("First");
+        Column last = csv.addColumn("Last");
         csv.write(new CsvWriter(new FileOutputStream(file)));
 
         CsvReader r = new CsvReader(new FileInputStream(file));
@@ -45,7 +47,7 @@ public class CsvReaderTest {
         //Assert.assertEquals(2, r.getMetaData().getColumnCount());
         while (r.hasNext()) {
             Row row = r.next();
-            System.out.println("CsvReader: " + row.getString(0));
+            //System.out.println("CsvReader: " + row.getString(first));
         }
     }
 

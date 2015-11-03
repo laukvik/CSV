@@ -16,6 +16,7 @@
 package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.IntegerColumn;
 
 /**
  *
@@ -24,9 +25,11 @@ import org.laukvik.csv.Row;
 public class IntIsInMatcher extends RowMatcher {
 
     Integer[] values;
+    IntegerColumn column;
 
-    public IntIsInMatcher(int columnIndex, Integer[] values) {
-        super(columnIndex);
+    public IntIsInMatcher(IntegerColumn column, Integer[] values) {
+        super();
+        this.column = column;
         this.values = values;
         if (values == null) {
             throw new IllegalArgumentException("isIn() value cant be null " + values);
@@ -35,16 +38,17 @@ public class IntIsInMatcher extends RowMatcher {
 
     @Override
     public boolean mathes(Row row) {
-        Object o = row.getValue(columnIndex);
-        if (o instanceof Integer) {
-            Integer rv = (Integer) o;
-            for (Integer v : values) {
-                if (v == null) {
-                } else if (rv == v.intValue()) {
-                    return true;
-                }
+        Integer value = row.getInteger(column);
+        if (value == null) {
+            return false;
+        }
+        for (Integer v : values) {
+            if (v == null) {
+            } else if (value.intValue() == v.intValue()) {
+                return true;
             }
         }
+
         return false;
     }
 

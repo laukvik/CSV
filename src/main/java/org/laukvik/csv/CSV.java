@@ -31,7 +31,11 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.laukvik.csv.columns.BooleanColumn;
+import org.laukvik.csv.columns.ByteColumn;
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.FloatColumn;
+import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.CsvReader;
 import org.laukvik.csv.io.CsvWriter;
@@ -119,39 +123,6 @@ public class CSV implements Serializable {
         }
     }
 
-//    public CSV(Column... columns) {
-//        this();
-//        this.metaData = new MetaData(columns);
-//    }
-//    public CSV(File file) throws IOException, ParseException, InvalidRowDataException {
-//        this(new FileInputStream(file), Charset.defaultCharset());
-//    }
-//
-//    public CSV(File file, Charset charset) throws IOException, ParseException {
-//        this(new FileInputStream(file), charset);
-//    }
-//    public CSV(InputStream inputStream, Charset charset) throws IOException, InvalidRowDataException {
-//        this.query = null;
-//        rows = new ArrayList<>();
-//        this.charset = charset;
-//
-//        try (CsvReader reader = new CsvReader(inputStream, charset)) {
-//            if (this.metaData == null) {
-//                this.metaData = reader.getMetaData();
-//            }
-//            while (reader.hasNext()) {
-//                Row row = reader.getRow();
-//                row.setMetaData(metaData);
-//                if (row.getValues().size() != metaData.getColumnCount()) {
-//                    throw new InvalidRowDataException(row.getValues().size(), metaData.getColumnCount(), rows.size(), row);
-//                }
-//                rows.add(row);
-//            }
-//        }
-//        catch (IOException e) {
-//            throw e;
-//        }
-//    }
     protected List<Row> getRows() {
         return rows;
     }
@@ -183,23 +154,16 @@ public class CSV implements Serializable {
         return rows.get(rowIndex);
     }
 
-    public Row createRow() {
-        Row row = metaData.createEmptyRow();
-        rows.add(row);
-        return row;
+    public Row addRow() {
+        Row r = new Row();
+        addRow(r);
+        return r;
     }
 
     public Row addRow(Row row) {
-        if (row.getValues().size() != metaData.getColumnCount()) {
-            throw new IllegalArgumentException("Incorrect columns in row: " + row.getValues().size() + ". Excpected: " + metaData.getColumnCount());
-        }
-        row.setMetaData(metaData);
+        row.setCSV(this);
         rows.add(row);
         return row;
-    }
-
-    public Row addRow(String... values) {
-        return addRow(new Row(values));
     }
 
     public void removeRow(int rowIndex) {
@@ -210,8 +174,9 @@ public class CSV implements Serializable {
         rows.clear();
     }
 
-    public void write(Writeable writer) throws IOException {
+    public void write(Writeable writer) throws IOException, Exception {
         writer.write(this);
+        writer.close();
     }
 
     /**
@@ -225,9 +190,39 @@ public class CSV implements Serializable {
     }
 
     public Row insertRow(Row row, int rowIndex) {
-        row.setMetaData(metaData);
+        row.setCSV(this);
         rows.add(rowIndex, row);
         return row;
+    }
+
+    public Column addColumn(Column column) {
+        metaData.addColumn(column);
+        return column;
+    }
+
+    public StringColumn addStringColumn(StringColumn column) {
+        addColumn(column);
+        return column;
+    }
+
+    public IntegerColumn addIntegerColumn(IntegerColumn column) {
+        addColumn(column);
+        return column;
+    }
+
+    public FloatColumn addFloatColumn(FloatColumn column) {
+        addColumn(column);
+        return column;
+    }
+
+    public BooleanColumn addBooleanColumn(BooleanColumn column) {
+        addColumn(column);
+        return column;
+    }
+
+    public ByteColumn addByteColumn(ByteColumn column) {
+        addColumn(column);
+        return column;
     }
 
     /**
@@ -236,32 +231,29 @@ public class CSV implements Serializable {
      * @param name
      * @return
      */
-    public String addColumn(String name) {
-        metaData.addColumn(new StringColumn(name));
-        for (Row r : rows) {
-            r.add("");
-        }
-        return name;
+    public Column addColumn(String name) {
+        return metaData.addColumn(name);
+    }
+
+    public StringColumn addStringColumn(String name) {
+        return (StringColumn) metaData.addColumn(new StringColumn(name));
     }
 
     public String insertColumn(String name, int columnIndex) {
         metaData.addColumn(name, columnIndex);
-        for (Row r : rows) {
-            r.insert("", columnIndex);
-        }
         return name;
     }
 
     /**
-     * Removes the column with the specified index
+     * Removes the column and all its data
      *
-     * @param index
+     * @param column
      */
-    public void removeColumn(int index) {
-        metaData.removeColumn(index);
+    public void removeColumn(Column column) {
         for (Row r : rows) {
-            r.remove(index);
+            r.remove(column);
         }
+        getMetaData().removeColumn(column);
     }
 
     private static File getLibrary() {
@@ -303,11 +295,11 @@ public class CSV implements Serializable {
             String nameAttribute = f.getName();
 
             if (f.getType() == String.class) {
-                f.set(instance, row.getString(nameAttribute));
+//                f.set(instance, row.getAsString(nameAttribute));
             } else if (f.getType() == Integer.class) {
-                f.set(instance, row.getInteger(nameAttribute));
+//                f.set(instance, row.getInteger(nameAttribute));
             } else if (f.getType() == URL.class) {
-                f.set(instance, row.getURL(nameAttribute));
+//                f.set(instance, row.getURL(nameAttribute));
             }
 
             f.setAccessible(false);
@@ -331,7 +323,7 @@ public class CSV implements Serializable {
         try (CsvReader reader = new CsvReader(inputStream, charset)) {
             while (reader.hasNext()) {
                 Row row = reader.getRow();
-                row.setMetaData(reader.getMetaData());
+//                row.setMetaData(reader.getMetaData());
                 items.add(createInstance(row, aClass));
             }
         }
@@ -370,7 +362,7 @@ public class CSV implements Serializable {
         Column c = metaData.getColumn(columnIndex);
         DistinctColumnValues cv = new DistinctColumnValues(c);
         for (Row r : rows) {
-            cv.addValue(r.getString(columnIndex));
+            cv.addValue(r.getAsString(c));
         }
         return cv;
     }
@@ -381,16 +373,18 @@ public class CSV implements Serializable {
      * @param columnIndex
      * @return
      */
-    public Set<String> listDistinct(int columnIndex) {
+    public Set<String> listDistinct(Column column) {
         Set<String> values = new TreeSet<>();
         for (Row r : rows) {
-            values.add(r.getString(columnIndex));
+            values.add(r.getAsString(column));
         }
         return values;
     }
 
-    public Set<String> listDistinct(String column) {
-        return listDistinct(getMetaData().getColumnIndex(column));
+//    public Set<String> listDistinct(String column) {
+//        return listDistinct(getMetaData().getColumnIndex(column));
+//    }
+    public void close() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }

@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import org.laukvik.csv.CSV;
+import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 
 /**
  *
@@ -71,12 +73,14 @@ public class XmlWriter implements Writeable, AutoCloseable {
             out.write(TAB);
             out.write(OPEN);
             out.write(this.rowElementName.getBytes());
+            Row r = csv.getRow(y);
             for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
+                Column col = csv.getMetaData().getColumn(x);
                 out.write(SPACE);
                 out.write(csv.getMetaData().getColumn(x).getName().getBytes(charset));
                 out.write(EQUAL);
                 out.write(QUOTATION_MARK);
-                String s = csv.getRow(y).getString(x);
+                String s = r.getAsString(col);
                 if (s == null) {
                 } else {
                     for (int n = 0; n < s.length(); n++) {

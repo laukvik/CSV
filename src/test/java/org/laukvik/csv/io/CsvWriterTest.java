@@ -28,7 +28,7 @@ import org.laukvik.csv.CSV;
 public class CsvWriterTest {
 
     @Test
-    public void testSomeMethod() throws IOException {
+    public void testSomeMethod() throws IOException, Exception {
         File file = File.createTempFile("tmp", ".csv");
         CSV csv = new CSV();
         csv.addColumn("First");

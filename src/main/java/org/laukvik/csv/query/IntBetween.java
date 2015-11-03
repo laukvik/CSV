@@ -16,6 +16,7 @@
 package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.IntegerColumn;
 
 /**
  *
@@ -25,17 +26,25 @@ public class IntBetween extends RowMatcher {
 
     int min;
     int max;
+    private IntegerColumn column;
 
-    public IntBetween(int columnIndex, int min, int max) {
-        super(columnIndex);
+    public IntBetween(IntegerColumn column, int min, int max) {
+        super();
+        this.column = column;
         this.min = min;
         this.max = max;
     }
 
     @Override
     public boolean mathes(Row row) {
-        int value = row.getInteger(columnIndex);
+        Integer value = row.getInteger(column);
+        if (value == null) {
+            return false;
+        }
         return value >= min && value <= max;
+
+//        int value = row.getInteger(columnIndex);
+//        return value >= min && value <= max;
     }
 
 }

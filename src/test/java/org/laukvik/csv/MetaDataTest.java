@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv.query;
+package org.laukvik.csv;
 
-import org.laukvik.csv.Row;
-import org.laukvik.csv.columns.Column;
+import org.junit.Test;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class EmptyMatcher extends RowMatcher {
+public class MetaDataTest {
 
-    private Column column;
-
-    public EmptyMatcher(Column column) {
-        super();
-        this.column = column;
+    public MetaDataTest() {
     }
 
-    @Override
-    public boolean mathes(Row row) {
-        return row.isNull(column);
+    @Test
+    public void readExtraMetaData() {
+        String extra = MetaData.getExtraMetaData("Took office(Date:MM/dd/yyyy)");
     }
 
 }

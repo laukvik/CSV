@@ -15,13 +15,15 @@
  */
 package org.laukvik.csv.columns;
 
+import java.util.Objects;
+
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class StringColumn implements Column<String> {
+public class StringColumn extends Column<String> {
 
-    String name;
+    private String name;
 
     public StringColumn() {
     }
@@ -59,4 +61,26 @@ public class StringColumn implements Column<String> {
     public String toString() {
         return name + "(String)";
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final StringColumn other = (StringColumn) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        return true;
+    }
+
 }

@@ -15,21 +15,100 @@
  */
 package org.laukvik.csv.columns;
 
+import org.laukvik.csv.MetaData;
+
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  * @param <T>
  */
-public interface Column<T> {
+public abstract class Column<T> implements Comparable {
 
-    String asString(T value);
+    private MetaData metaData;
 
-    T parse(String value);
+    public abstract String asString(T value);
 
-    int compare(T one, T another);
+    public abstract T parse(String value);
 
-    String getName();
+    public abstract int compare(T one, T another);
 
-    void setName(String name);
+    public abstract String getName();
+
+    public abstract void setName(String name);
+
+    public MetaData getMetaData() {
+        return metaData;
+    }
+
+    public void setMetaData(MetaData metaData) {
+        this.metaData = metaData;
+    }
+
+    public int indexOf() {
+        return metaData.indexOf(this);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof Column) {
+            Column c = (Column) o;
+            return getName().compareTo(c.getName());
+        }
+        return -1;
+    }
+
+    public static Column parseName(String columnName) {
+        /* Extract extra information about the column*/
+        String name = null;
+        String extraDetails = null;
+        String dataType = null;
+        String option = null;
+
+        int firstIndex = columnName.indexOf("(");
+        if (firstIndex == -1) {
+            // No extra information
+            name = columnName;
+        } else {
+            // Found extra information
+            name = columnName;
+            int lastIndex = columnName.indexOf(")", firstIndex);
+            name = columnName.substring(0, firstIndex);
+            if (lastIndex == -1) {
+            } else {
+
+                extraDetails = columnName.substring(firstIndex + 1, lastIndex);
+
+                if (extraDetails.indexOf("=") > -1) {
+                    String[] arr = extraDetails.split("=");
+                    dataType = arr[0];
+                    option = arr[1];
+                } else {
+                    dataType = extraDetails;
+                }
+
+            }
+        }
+
+        if (dataType == null) {
+            return new StringColumn(name);
+        } else {
+            String s = dataType.toUpperCase();
+            if (s.equalsIgnoreCase("INT")) {
+                return new IntegerColumn(name);
+            } else if (s.equalsIgnoreCase("FLOAT")) {
+                return new FloatColumn(name);
+            } else if (s.equalsIgnoreCase("DOUBLE")) {
+                return new DoubleColumn(name);
+            } else if (s.equalsIgnoreCase("URL")) {
+                return new UrlColumn(name);
+            } else if (s.equalsIgnoreCase("BOOLEAN")) {
+                return new BooleanColumn(name);
+            } else if (s.equalsIgnoreCase("DATE")) {
+                return new DateColumn(name, option);
+            } else {
+                return new StringColumn(name);
+            }
+        }
+    }
 
 }

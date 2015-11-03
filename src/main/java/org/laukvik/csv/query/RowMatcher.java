@@ -23,10 +23,7 @@ import org.laukvik.csv.Row;
  */
 public abstract class RowMatcher {
 
-    int columnIndex;
-
-    public RowMatcher(int columnIndex) {
-        this.columnIndex = columnIndex;
+    public RowMatcher() {
     }
 
     public abstract boolean mathes(Row row);

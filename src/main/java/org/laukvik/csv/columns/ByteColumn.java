@@ -15,22 +15,18 @@
  */
 package org.laukvik.csv.columns;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.Arrays;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class UrlColumn extends Column<URL> {
+public class ByteColumn extends Column<byte[]> {
 
     String name;
 
-    public UrlColumn(String name) {
+    public ByteColumn(String name) {
         this.name = name;
-    }
-
-    public UrlColumn() {
     }
 
     @Override
@@ -44,45 +40,31 @@ public class UrlColumn extends Column<URL> {
     }
 
     @Override
-    public String asString(URL value) {
-        return value.toExternalForm();
+    public String asString(byte[] value) {
+        return value.toString();
     }
 
     @Override
-    public URL parse(String value) {
-        try {
-            return new URL(value);
-        }
-        catch (MalformedURLException ex) {
-            return null;
-        }
+    public byte[] parse(String value) {
+        return value.getBytes();
     }
 
-    public int compare(URL one, URL another) {
-        return one.toExternalForm().compareTo(another.toExternalForm());
+    /**
+     * @todo implement sorting for bytecolumn
+     *
+     * @param one
+     * @param another
+     * @return
+     */
+    public int compare(byte[] one, byte[] another) {
+        if (Arrays.equals(one, another)) {
+            return 0;
+        }
+        return 1;
     }
 
     @Override
     public String toString() {
-        return name + "(URL)";
+        return name + "(Byte)";
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final UrlColumn other = (UrlColumn) obj;
-        return true;
-    }
-
 }

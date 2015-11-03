@@ -24,6 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
+import org.laukvik.csv.columns.StringColumn;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -38,13 +39,13 @@ public class XmlWriterTest {
         File file = File.createTempFile("EmptyRows", ".xml");
 
         CSV csv = new CSV();
-        csv.addColumn("First");
+        StringColumn first = csv.addStringColumn("First");
 
-        csv.addRow("&");
-        csv.addRow("\"");
-        csv.addRow(">");
-        csv.addRow("<");
-        csv.addRow("'");
+        csv.addRow().update(first, "&");
+        csv.addRow().update(first, "\"");
+        csv.addRow().update(first, ">");
+        csv.addRow().update(first, "<");
+        csv.addRow().update(first, "'");
 
         XmlWriter writer = new XmlWriter(new FileOutputStream(file));
         writer.write(csv);
@@ -60,10 +61,10 @@ public class XmlWriterTest {
         File file = File.createTempFile("EmptyRows", ".xml");
 
         CSV csv = new CSV();
-        csv.addColumn("First");
+        StringColumn first = csv.addStringColumn("First");
 
-        csv.addRow("Bob");
-        csv.addRow("Dylan");
+        csv.addRow().update(first, "Bob");
+        csv.addRow().update(first, "Dylan");
 
         XmlWriter writer = new XmlWriter(new FileOutputStream(file), "people", "person");
         writer.write(csv);

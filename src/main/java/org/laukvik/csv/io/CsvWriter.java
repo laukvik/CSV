@@ -24,6 +24,7 @@ import java.util.List;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 
 /**
  * OutputStream for writing CSV data
@@ -31,15 +32,43 @@ import org.laukvik.csv.Row;
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class CsvWriter implements Writeable {
+public final class CsvWriter implements Writeable {
 
     private final OutputStream out;
+    private final MetaData metaData;
 
-    public CsvWriter(OutputStream out) {
+    public CsvWriter(OutputStream out, MetaData metaData) throws IOException {
+        this.out = out;
+        this.metaData = metaData;
+        writeMetaData(metaData);
+    }
+
+    public CsvWriter(OutputStream out) throws IOException {
+        this.metaData = null;
         this.out = out;
     }
 
-    public void write(CSV csv) {
+    /**
+     * Writes a single row of CSV data
+     *
+     * @param row
+     * @throws IOException
+     */
+    public void writeRow(Row row) throws IOException {
+        List<String> values = new ArrayList<>();
+        for (int x = 0; x < metaData.getColumnCount(); x++) {
+            Column c = metaData.getColumn(x);
+            Object o = row.getAsString(c);
+            values.add(c.asString(o));
+        }
+        writeValues(values);
+    }
+
+    public void write(CSV csv) throws IOException {
+        writeMetaData(csv.getMetaData());
+        for (int y = 0; y < csv.getRowCount(); y++) {
+            writeRow(csv.getRow(y));
+        }
     }
 
     public static boolean isDigitsOnly(String value) {
@@ -61,10 +90,6 @@ public class CsvWriter implements Writeable {
             items.add(metaData.getColumnName(x));
         }
         writeValues(items);
-    }
-
-    public void writeRow(Row row) throws IOException {
-        writeValues(row.getValues());
     }
 
     public void writeRow(String... values) throws IOException {

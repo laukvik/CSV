@@ -16,10 +16,13 @@
 package org.laukvik.csv.query;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.DateColumn;
+import org.laukvik.csv.columns.StringColumn;
 
 /**
  *
@@ -38,18 +41,28 @@ public class RowSorter implements Comparator<Row> {
     @Override
     public int compare(Row r1, Row r2) {
         for (SortOrder sortOrder : sortOrders) {
-            int columnIndex = sortOrder.getColumnIndex();
-
-            Object o1 = r1.getValue(columnIndex);
-            Object o2 = r2.getValue(columnIndex);
-
-            Column c = metaData.getColumn(columnIndex);
+            Column c = sortOrder.getColumn();
 
             int result = 0;
-            if (sortOrder.getType() == SortOrder.Type.ASC) {
-                result = c.compare(o1, o2);
-            } else {
-                result = c.compare(o2, o1);
+
+            if (c instanceof StringColumn) {
+                StringColumn sc = (StringColumn) c;
+                String v1 = r1.getString(sc);
+                String v2 = r2.getString(sc);
+                if (sortOrder.getType() == SortOrder.Type.ASC) {
+                    result = c.compare(v1, v2);
+                } else {
+                    result = c.compare(v2, v1);
+                }
+            } else if (c instanceof DateColumn) {
+                DateColumn dc = (DateColumn) c;
+                Date v1 = r1.getDate(dc);
+                Date v2 = r2.getDate(dc);
+                if (sortOrder.getType() == SortOrder.Type.ASC) {
+                    result = c.compare(v1, v2);
+                } else {
+                    result = c.compare(v2, v1);
+                }
             }
 
             if (result == 0) {

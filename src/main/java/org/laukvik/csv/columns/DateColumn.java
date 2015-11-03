@@ -17,6 +17,7 @@ package org.laukvik.csv.columns;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -25,22 +26,24 @@ import java.util.GregorianCalendar;
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class DateColumn implements Column<Date> {
+public class DateColumn extends Column<Date> {
 
-    String name;
-    DateFormat format;
+    private String name;
+    private final DateFormat dateFormat;
+    private final String format;
 
-    public DateColumn(String name, DateFormat format) {
+    public DateColumn(String name, String format) {
         this.name = name;
         this.format = format;
+        this.dateFormat = new SimpleDateFormat(format);
     }
 
-    public DateColumn(DateFormat format) {
-        this.format = format;
-    }
-
-    public DateFormat getFormat() {
+    public String getFormat() {
         return format;
+    }
+
+    public DateFormat getDateFormat() {
+        return dateFormat;
     }
 
     public boolean isYear(Date d, int year) {
@@ -55,26 +58,28 @@ public class DateColumn implements Column<Date> {
         return c.get(Calendar.MONTH) == month;
     }
 
-    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public String asString(Date value) {
-        return format.format(value);
+        return dateFormat.format(value);
     }
 
     @Override
     public Date parse(String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
         try {
-            return format.parse(value);
-        } catch (ParseException ex) {
+            return dateFormat.parse(value);
+        }
+        catch (ParseException ex) {
+            ex.printStackTrace();
             return null;
         }
     }
@@ -88,5 +93,22 @@ public class DateColumn implements Column<Date> {
         return name + "(Date)";
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final DateColumn other = (DateColumn) obj;
+        return true;
+    }
 
 }

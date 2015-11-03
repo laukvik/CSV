@@ -24,6 +24,10 @@ import org.laukvik.csv.CSV;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
+import org.laukvik.csv.columns.DoubleColumn;
+import org.laukvik.csv.columns.FloatColumn;
+import org.laukvik.csv.columns.IntegerColumn;
+import org.laukvik.csv.columns.StringColumn;
 
 /**
  *
@@ -58,113 +62,119 @@ public class Query {
     public class Column {
 
         Where where;
-        String name;
+        org.laukvik.csv.columns.Column col;
         RowMatcher matcher;
 
-        public Column(String name) {
-            this.name = name;
+        public Column(org.laukvik.csv.columns.Column col) {
+            this.col = col;
         }
 
-        private int getColumnIndex() {
-            return where.query.metaData.getColumnIndex(name);
-        }
+//        private int getColumnIndex() {
+//            return where.query.metaData.getColumnIndex(name);
+//        }
 
         /* Common */
         public Where isNotEmpty() {
-            matcher = new NotEmptyMatcher(getColumnIndex());
+            matcher = new NotEmptyMatcher(col);
             return where;
         }
 
         public Where isEmpty() {
-            matcher = new EmptyMatcher(getColumnIndex());
+            matcher = new EmptyMatcher(col);
             return where;
         }
 
         /* String */
         public Where is(String value) {
-            matcher = new StringIsMatcher(getColumnIndex(), value);
+            matcher = new StringIsMatcher((StringColumn) col, value);
             return where;
         }
 
         public Where isIn(String[] value) {
-            matcher = new StringIsMatcher(getColumnIndex(), value);
+            matcher = new StringIsMatcher((StringColumn) col, value);
             return where;
         }
 
         /* int */
         public Where is(int value) {
-            matcher = new IntIsMatcher(getColumnIndex(), value);
+            matcher = new IntIsMatcher((IntegerColumn) col, value);
             return where;
         }
 
         public Where isBetween(int min, int max) {
-            matcher = new IntBetween(getColumnIndex(), min, max);
+            matcher = new IntBetween((IntegerColumn) col, min, max);
             return where;
         }
 
         public Where isIn(Integer... values) {
-            matcher = new IntIsInMatcher(getColumnIndex(), values);
+            matcher = new IntIsInMatcher((IntegerColumn) col, values);
             return where;
         }
 
         public Where isIn(Float[] values) {
-            matcher = new IsInMatcher<Float>(getColumnIndex(), values);
+            matcher = new IsInMatcher<Float>((FloatColumn) col, values);
             return where;
         }
 
         public Where isIn(Double[] values) {
-            matcher = new IsInMatcher<Double>(getColumnIndex(), values);
+            matcher = new IsInMatcher<Double>((DoubleColumn) col, values);
             return where;
         }
 
         public Where isGreaterThan(int value) {
-            matcher = new IntGreaterThanMatcher(getColumnIndex(), value);
+            matcher = new IntGreaterThanMatcher((IntegerColumn) col, value);
             return where;
         }
 
         public Where isLessThan(int value) {
-            matcher = new IntLessThan(getColumnIndex(), value);
+//            if (col instanceof IntegerColumn) {
+            matcher = new IntLessThan((IntegerColumn) col, value);
+//            }
             return where;
         }
 
-        public Where isDate(Date value, SimpleDateFormat format) {
-            matcher = new DateIsMatcher(getColumnIndex(), value, format);
+        public Where isDate(Date value) {
+            if (col instanceof DateColumn) {
+                matcher = new DateIsMatcher((DateColumn) col, value, null);
+            } else {
+                throw new IllegalArgumentException("Column " + col + " is not a date column!");
+            }
+            System.out.println("isDate: " + value);
             return where;
         }
 
         public Where isDateGreaterThan(Date value, SimpleDateFormat format) {
-            matcher = new DateGreaterThan(getColumnIndex(), value, format);
+            matcher = new DateGreaterThan((DateColumn) col, value, format);
             return where;
         }
 
         public Where isDateLessThan(Date value, SimpleDateFormat format) {
-            matcher = new DateLessThan(getColumnIndex(), value, format);
+            matcher = new DateLessThan((DateColumn) col, value, format);
             return where;
         }
 
         public Where isYear(int value) {
-            org.laukvik.csv.columns.Column c = where.query.metaData.getColumn(name);
-            if (c instanceof DateColumn) {
-                DateColumn dc = (DateColumn) c;
-                matcher = new YearIs(getColumnIndex(), value, dc.getFormat());
+            if (col instanceof DateColumn) {
+                DateColumn dc = (DateColumn) col;
+                matcher = new YearIs((DateColumn) col, value, dc.getDateFormat());
             } else {
-                throw new IllegalArgumentException("Column " + name + " is not dateformat!");
+                throw new IllegalArgumentException("Column " + col + " is not dateformat!");
             }
             return where;
         }
 
         public Where in(String... selection) {
-            matcher = new StringIsMatcher(getColumnIndex(), selection);
+            matcher = new StringIsMatcher((StringColumn) col, selection);
             return where;
         }
 
         public Where isIn(Date[] arr) {
-            org.laukvik.csv.columns.Column c = where.query.metaData.getColumn(name);
-            if (c instanceof DateColumn) {
-                DateColumn dc = (DateColumn) c;
-                matcher = new DateIsInMatcher(getColumnIndex(), arr, dc.getFormat());
+//            org.laukvik.csv.columns.Column c = where.query.metaData.getColumn(name);
+            if (col instanceof DateColumn) {
+                DateColumn dc = (DateColumn) col;
+                matcher = new DateIsInMatcher(dc, arr, dc.getDateFormat());
             } else {
-                throw new IllegalArgumentException("Column " + name + " is not dateformat!");
+                throw new IllegalArgumentException("Column " + col + " is not dateformat!");
             }
 
             return where;
@@ -184,8 +194,8 @@ public class Query {
             query = null;
         }
 
-        public Column column(String name) {
-            Column c = new Column(name);
+        public Column column(org.laukvik.csv.columns.Column col) {
+            Column c = new Column(col);
             c.where = this;
             columns.add(c);
             return c;
@@ -219,13 +229,13 @@ public class Query {
             return where.query.metaData.getColumnIndex(name);
         }
 
-        public OrderBy asc(String column) {
-            sortOrders.add(new SortOrder(getColumnIndex(column), SortOrder.ASC));
+        public OrderBy asc(org.laukvik.csv.columns.Column column) {
+            sortOrders.add(new SortOrder(column, SortOrder.ASC));
             return this;
         }
 
-        public OrderBy desc(String column) {
-            sortOrders.add(new SortOrder(getColumnIndex(column), SortOrder.DESC));
+        public OrderBy desc(org.laukvik.csv.columns.Column column) {
+            sortOrders.add(new SortOrder(column, SortOrder.DESC));
             return this;
         }
 

@@ -15,22 +15,16 @@
  */
 package org.laukvik.csv.columns;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class UrlColumn extends Column<URL> {
+public class BooleanColumn extends Column<Boolean> {
 
     String name;
 
-    public UrlColumn(String name) {
+    public BooleanColumn(String name) {
         this.name = name;
-    }
-
-    public UrlColumn() {
     }
 
     @Override
@@ -44,45 +38,21 @@ public class UrlColumn extends Column<URL> {
     }
 
     @Override
-    public String asString(URL value) {
-        return value.toExternalForm();
+    public String asString(Boolean value) {
+        return value.toString();
     }
 
     @Override
-    public URL parse(String value) {
-        try {
-            return new URL(value);
-        }
-        catch (MalformedURLException ex) {
-            return null;
-        }
+    public Boolean parse(String value) {
+        return Boolean.parseBoolean(value);
     }
 
-    public int compare(URL one, URL another) {
-        return one.toExternalForm().compareTo(another.toExternalForm());
+    public int compare(Boolean one, Boolean another) {
+        return one.compareTo(another);
     }
 
     @Override
     public String toString() {
-        return name + "(URL)";
+        return name + "(Boolean)";
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final UrlColumn other = (UrlColumn) obj;
-        return true;
-    }
-
 }

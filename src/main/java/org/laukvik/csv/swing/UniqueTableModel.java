@@ -147,7 +147,7 @@ public class UniqueTableModel<T> implements TableModel {
                 if (o instanceof Date) {
                     Date d = (Date) o;
                     DateColumn dc = (DateColumn) column;
-                    return dc.getFormat().format(d);
+                    return dc.getDateFormat().format(d);
                 }
                 return u.getValue();
             case 2:

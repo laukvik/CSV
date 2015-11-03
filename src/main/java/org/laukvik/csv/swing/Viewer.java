@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -47,7 +48,6 @@ import org.laukvik.csv.columns.DoubleColumn;
 import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.columns.UrlColumn;
 import org.laukvik.csv.io.CsvReader;
 import org.laukvik.csv.io.CsvWriter;
 import org.laukvik.csv.io.JsonWriter;
@@ -201,7 +201,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 }
 
                 if (arr.length > 0) {
-                    where.column(c.getName()).isIn(arr);
+                    where.column(ic).isIn(arr);
                 }
                 selectionCount += arr.length;
 
@@ -218,7 +218,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 }
 
                 if (arr.length > 0) {
-                    where.column(c.getName()).isIn(arr);
+                    where.column(ic).isIn(arr);
                 }
                 selectionCount += arr.length;
 
@@ -234,7 +234,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 }
 
                 if (arr.length > 0) {
-                    where.column(c.getName()).isIn(arr);
+                    where.column(ic).isIn(arr);
                 }
                 selectionCount += arr.length;
 
@@ -250,7 +250,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 }
 
                 if (arr.length > 0) {
-                    where.column(c.getName()).isIn(arr);
+                    where.column(ic).isIn(arr);
                 }
                 selectionCount += arr.length;
             } else {
@@ -264,7 +264,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 }
 
                 if (arr.length > 0) {
-                    where.column(c.getName()).isIn(arr);
+                    where.column(ic).isIn(arr);
 
                 }
                 selectionCount += arr.length;
@@ -283,7 +283,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     }
 
     public void createUniqueModels() {
-        LOG.fine("Adding unique models: " + csv.getMetaData().getColumnCount());
+        LOG.log(Level.FINE, "Adding unique models: {0}", csv.getMetaData().getColumnCount());
         tabbedPane.removeAll();
         tableModels = new ArrayList<>();
 
@@ -292,44 +292,54 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
             /**/
             UniqueTableModel model = null;
-            if (c instanceof IntegerColumn) {
-                model = new UniqueTableModel<Integer>(c);
-                for (int y = 0; y < csv.getRowCount(); y++) {
-                    Row r = csv.getRow(y);
-                    model.addValue(r.getInteger(x));
-                }
-            } else if (c instanceof FloatColumn) {
-                model = new UniqueTableModel<Float>(c);
-                for (int y = 0; y < csv.getRowCount(); y++) {
-                    Row r = csv.getRow(y);
-                    model.addValue(r.getFloat(x));
-                }
-            } else if (c instanceof IntegerColumn) {
-                model = new UniqueTableModel<Integer>(c);
-                for (int y = 0; y < csv.getRowCount(); y++) {
-                    Row r = csv.getRow(y);
-                    model.addValue(r.getInteger(x));
-                }
-            } else if (c instanceof DateColumn) {
-                model = new UniqueTableModel<Date>(c);
-                for (int y = 0; y < csv.getRowCount(); y++) {
-                    Row r = csv.getRow(y);
-                    model.addValue(r.getValue(x));
-                }
-            } else if (c instanceof UrlColumn) {
-                model = new UniqueTableModel(c);
-                for (int y = 0; y < csv.getRowCount(); y++) {
-                    Row r = csv.getRow(y);
-                    model.addValue(r.getValue(x));
-                }
-            } else {
+            if (c instanceof StringColumn) {
+                StringColumn sc = (StringColumn) c;
                 model = new UniqueTableModel<String>(c);
                 for (int y = 0; y < csv.getRowCount(); y++) {
                     Row r = csv.getRow(y);
-                    model.addValue(r.getString(x));
+                    model.addValue(r.getString(sc));
                 }
-            }
 
+            }
+            /*
+             else if (c instanceof IntegerColumn) {
+             model = new UniqueTableModel<Integer>(c);
+             for (int y = 0; y < csv.getRowCount(); y++) {
+             Row r = csv.getRow(y);
+             model.addValue(r.getDate(c));
+             }
+             } else if (c instanceof FloatColumn) {
+             model = new UniqueTableModel<Float>(c);
+             for (int y = 0; y < csv.getRowCount(); y++) {
+             Row r = csv.getRow(y);
+             model.addValue(r.getDate(c));
+             }
+             } else if (c instanceof IntegerColumn) {
+             model = new UniqueTableModel<Integer>(c);
+             for (int y = 0; y < csv.getRowCount(); y++) {
+             Row r = csv.getRow(y);
+             model.addValue(r.getDate(c));
+             }
+             } else if (c instanceof DateColumn) {
+             model = new UniqueTableModel<Date>(c);
+             for (int y = 0; y < csv.getRowCount(); y++) {
+             Row r = csv.getRow(y);
+             model.addValue(r.getDate(c));
+             }
+             } else if (c instanceof UrlColumn) {
+             model = new UniqueTableModel(c);
+             for (int y = 0; y < csv.getRowCount(); y++) {
+             Row r = csv.getRow(y);
+             model.addValue(r.getDate(c));
+             }
+             } else {
+             model = new UniqueTableModel<String>(c);
+             for (int y = 0; y < csv.getRowCount(); y++) {
+             Row r = csv.getRow(y);
+             model.addValue(r.getDate(c));
+             }
+             }
+             */
 
             /* Build the current values */
             model.buildValues();
@@ -730,6 +740,9 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 JOptionPane.showMessageDialog(this,
                         "Could not save file!", "", JOptionPane.WARNING_MESSAGE);
             }
+            catch (Exception ex) {
+                Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_saveAsMenuItemActionPerformed
 
@@ -744,7 +757,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
             csv.write(new CsvWriter(new FileOutputStream(file)));
         }
-        catch (IOException ex) {
+        catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
                     "Could not save file!", "", JOptionPane.WARNING_MESSAGE);
         }
@@ -792,7 +805,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private void insertRowMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertRowMenuItemActionPerformed
         int rowIndex = table.getSelectedRow();
 
-        Row emptyRow = csv.getMetaData().createEmptyRow();
+        Row emptyRow = csv.addRow();
 
         if (rowIndex == -1) {
             LOG.fine("Adding empty row at end");
@@ -827,7 +840,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         int min = table.getSelectedRow();
         if (min > -1) {
         }
-        csv.removeColumn(min);
+        Column c = csv.getMetaData().getColumn(min);
+        csv.removeColumn(c);
         table.tableChanged(new TableModelEvent(model, TableModelEvent.HEADER_ROW));
     }//GEN-LAST:event_deleteColumnMenuItemActionPerformed
 
@@ -844,7 +858,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 File file = new File(fd.getDirectory(), filename);
                 csv.write(new JsonWriter(new FileOutputStream(file)));
             }
-            catch (IOException ex) {
+            catch (Exception ex) {
                 JOptionPane.showMessageDialog(this,
                         "Could not save file!", "", JOptionPane.WARNING_MESSAGE);
             }

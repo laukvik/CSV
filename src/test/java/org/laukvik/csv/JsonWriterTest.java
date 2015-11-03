@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import org.junit.Test;
+import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.JsonWriter;
 
 /**
@@ -48,10 +49,11 @@ public class JsonWriterTest {
         File file = File.createTempFile("SingleRow", ".json");
 
         CSV csv = new CSV();
-        csv.addColumn("First");
-        csv.addColumn("Last");
 
-        csv.addRow("Morten", "Laukvik");
+        StringColumn first = csv.addStringColumn("First");
+        StringColumn last = csv.addStringColumn("Last");
+
+        csv.addRow().update(first, "Morten").update(last, "Laukvik");
 
         JsonWriter writer = new JsonWriter(new FileOutputStream(file));
         writer.write(csv);

@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 
 /**
  *
@@ -68,6 +69,7 @@ public class JsonWriter implements Writeable {
             out.write(CURLY_LEFT);
             out.write(LINEFEED);
             for (int x = 0; x < md.getColumnCount(); x++) {
+                Column c = md.getColumn(x);
                 if (x > 0) {
                     out.write(COMMA);
                     out.write(LINEFEED);
@@ -80,9 +82,10 @@ public class JsonWriter implements Writeable {
                 out.write(DOUBLE_QUOTE);
                 out.write(SEMICOLON);
                 out.write(DOUBLE_QUOTE);
-                String s2 = row.getString(x);
+                String s2 = row.getAsString(c);
+
                 writeString(s2, out);
-                //out.write(row.getString(x).getBytes(charset));
+                //out.write(row.getAsString(x).getBytes(charset));
                 out.write(DOUBLE_QUOTE);
             }
             out.write(LINEFEED);

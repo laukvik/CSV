@@ -25,6 +25,7 @@ import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
+import org.laukvik.csv.columns.StringColumn;
 
 /**
  *
@@ -37,11 +38,11 @@ public class JsonWriterTest {
         File file = File.createTempFile("EmptyRows", ".json");
 
         CSV csv = new CSV();
-        csv.addColumn("First");
+        StringColumn first = csv.addStringColumn("First");
 
-        csv.addRow("Morten");
-        csv.addRow("\"");
-        csv.addRow(" ");
+        csv.addRow().update(first, "Morten");
+        csv.addRow().update(first, "\"");
+        csv.addRow().update(first, " ");
 
         JsonWriter writer = new JsonWriter(new FileOutputStream(file));
         writer.write(csv);

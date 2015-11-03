@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv.query;
+package org.laukvik.csv.columns;
 
-import org.laukvik.csv.Row;
-import org.laukvik.csv.columns.Column;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class EmptyMatcher extends RowMatcher {
+public class ColumnTest {
 
-    private Column column;
-
-    public EmptyMatcher(Column column) {
-        super();
-        this.column = column;
+    @Test
+    public void parseInteger() {
+        IntegerColumn c = (IntegerColumn) Column.parseName("Presidency(INT)");
+        Assert.assertEquals("Presidency", c.getName());
     }
 
-    @Override
-    public boolean mathes(Row row) {
-        return row.isNull(column);
+    @Test
+    public void parseDate() {
+        DateColumn c = (DateColumn) Column.parseName("Took office(Date=MM/dd/yyyy)");
+        Assert.assertEquals("Took office", c.getName());
+        Assert.assertEquals("MM/dd/yyyy", c.getFormat());
     }
 
 }

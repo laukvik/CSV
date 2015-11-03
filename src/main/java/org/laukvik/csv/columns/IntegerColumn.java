@@ -19,7 +19,7 @@ package org.laukvik.csv.columns;
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class IntegerColumn implements Column<Integer> {
+public class IntegerColumn extends Column<Integer> {
 
     String name;
 
@@ -57,6 +57,24 @@ public class IntegerColumn implements Column<Integer> {
     @Override
     public String toString() {
         return name + "(Integer)";
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final IntegerColumn other = (IntegerColumn) obj;
+        return true;
     }
 
 }
