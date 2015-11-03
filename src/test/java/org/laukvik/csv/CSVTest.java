@@ -37,7 +37,7 @@ import org.laukvik.csv.io.CsvWriter;
  */
 public class CSVTest {
 
-    //@Test
+    @Test
     public void findRows() throws IOException, ParseException {
         CSV csv = new CSV();
         csv.read(getResource("countries.csv"));

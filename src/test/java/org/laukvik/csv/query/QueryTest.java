@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
@@ -97,9 +98,9 @@ public class QueryTest {
     public void isLessThan() {
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isLessThan(41).getResultList();
-        for (Row r : rows) {
-            System.out.println(r);
-        }
+//        for (Row r : rows) {
+//            System.out.println(r);
+//        }
         Assert.assertEquals("Should be 40", 40, rows.size());
     }
 
@@ -115,9 +116,8 @@ public class QueryTest {
 
     @Test
     public void isDate() throws ParseException {
-        String to = "20/01/2009";
-        Date date = format.parse(to);
         DateColumn tookOffice = (DateColumn) csv.getMetaData().getColumn("Took office");
+        Date date = tookOffice.getDateFormat().parse("20/01/2009");
         List<Row> rows = csv.findByQuery().where().column(tookOffice).isDate(date).getResultList();
 //        for (Row r : rows) {
 //            System.out.println(r);
@@ -127,10 +127,8 @@ public class QueryTest {
 
     @Test
     public void isDateGreater() throws ParseException {
-        String to = "1/1/2000";
-        Date date = format.parse(to);
+        Date date = new GregorianCalendar(2000, 1, 1).getTime();
         DateColumn tookOffice = (DateColumn) csv.getMetaData().getColumn("Took office");
-
         List<Row> rows = csv.findByQuery().where().column(tookOffice).isDateGreaterThan(date, format).getResultList();
         Assert.assertEquals("Should be 2", 2, rows.size());
     }
@@ -195,19 +193,13 @@ public class QueryTest {
     public void isEmpty() throws ParseException {
         DateColumn leftOffice = (DateColumn) csv.getMetaData().getColumn("Left office");
         List<Row> rows = csv.findByQuery().where().column(leftOffice).isEmpty().getResultList();
-//        for (Row r : rows) {
-//            System.out.println(r.getDate(leftOffice));
-//        }
         Assert.assertEquals("Should find 1 empty", 1, rows.size());
     }
 
     @Test
     public void isYear() throws ParseException {
         DateColumn leftOffice = (DateColumn) csv.getMetaData().getColumn("Left office");
-        List<Row> rows = csv.findByQuery().where().column(leftOffice).isYear(1901).getResultList();
-//        for (Row r : rows) {
-//            System.out.println(r.getAsString("President") + " " + r.getAsString("Home State"));
-//        }
+        List<Row> rows = csv.findByQuery().where().column(leftOffice).isYear(1809).getResultList();
         Assert.assertEquals("Should find 1", 1, rows.size());
     }
 

@@ -105,6 +105,8 @@ public abstract class Column<T> implements Comparable {
                 return new BooleanColumn(name);
             } else if (s.equalsIgnoreCase("DATE")) {
                 return new DateColumn(name, option);
+            } else if (s.equalsIgnoreCase("BIGDECIMAL")) {
+                return new BigDecimalColumn(name);
             } else {
                 return new StringColumn(name);
             }

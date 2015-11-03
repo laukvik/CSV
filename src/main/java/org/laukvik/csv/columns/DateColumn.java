@@ -76,7 +76,8 @@ public class DateColumn extends Column<Date> {
             return null;
         }
         try {
-            return dateFormat.parse(value);
+            Date d = dateFormat.parse(value);
+            return d;
         }
         catch (ParseException ex) {
             ex.printStackTrace();

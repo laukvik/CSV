@@ -55,19 +55,6 @@ public class MetaData implements Serializable {
         return columns.size();
     }
 
-    public static String getExtraMetaData(String columnName) {
-        int firstIndex = columnName.indexOf("(");
-        if (firstIndex == -1) {
-        } else {
-            int lastIndex = columnName.indexOf(")", firstIndex);
-            if (lastIndex == -1) {
-            } else {
-                return columnName.substring(firstIndex, lastIndex);
-            }
-        }
-        return null;
-    }
-
     /**
      *
      * columnName(DataType=option)

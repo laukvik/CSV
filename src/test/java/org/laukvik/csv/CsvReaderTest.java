@@ -127,7 +127,6 @@ public class CsvReaderTest {
 
             while (reader.hasNext()) {
                 Row row = reader.next();
-                System.out.println("readWithIterator:  " + row.getString(col1));
             }
 
 //            if (reader.hasNext()) {

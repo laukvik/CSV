@@ -34,7 +34,7 @@ import org.laukvik.csv.columns.StringColumn;
 public class JsonWriterTest {
 
     @Test
-    public void shouldWriteJson() throws IOException, ParseException {
+    public void writeJson() throws IOException, ParseException {
         File file = File.createTempFile("EmptyRows", ".json");
 
         CSV csv = new CSV();

@@ -112,12 +112,12 @@ public class Query {
         }
 
         public Where isIn(Float[] values) {
-            matcher = new IsInMatcher<Float>((FloatColumn) col, values);
+            matcher = new IsInMatcher<>((FloatColumn) col, values);
             return where;
         }
 
         public Where isIn(Double[] values) {
-            matcher = new IsInMatcher<Double>((DoubleColumn) col, values);
+            matcher = new IsInMatcher<>((DoubleColumn) col, values);
             return where;
         }
 
@@ -135,11 +135,10 @@ public class Query {
 
         public Where isDate(Date value) {
             if (col instanceof DateColumn) {
-                matcher = new DateIsMatcher((DateColumn) col, value, null);
+                matcher = new DateIsMatcher((DateColumn) col, value);
             } else {
                 throw new IllegalArgumentException("Column " + col + " is not a date column!");
             }
-            System.out.println("isDate: " + value);
             return where;
         }
 
@@ -169,14 +168,12 @@ public class Query {
         }
 
         public Where isIn(Date[] arr) {
-//            org.laukvik.csv.columns.Column c = where.query.metaData.getColumn(name);
             if (col instanceof DateColumn) {
                 DateColumn dc = (DateColumn) col;
                 matcher = new DateIsInMatcher(dc, arr, dc.getDateFormat());
             } else {
                 throw new IllegalArgumentException("Column " + col + " is not dateformat!");
             }
-
             return where;
         }
 
@@ -225,10 +222,6 @@ public class Query {
             return sortOrders.isEmpty();
         }
 
-        private int getColumnIndex(String name) {
-            return where.query.metaData.getColumnIndex(name);
-        }
-
         public OrderBy asc(org.laukvik.csv.columns.Column column) {
             sortOrders.add(new SortOrder(column, SortOrder.ASC));
             return this;
@@ -248,9 +241,9 @@ public class Query {
     public class Select {
 
         private Where where;
-        private final String[] columns;
+        private final org.laukvik.csv.columns.Column[] columns;
 
-        public Select(String... columns) {
+        public Select(org.laukvik.csv.columns.Column... columns) {
             this.columns = columns;
         }
 
@@ -267,6 +260,8 @@ public class Query {
     public Query(MetaData metaData, CSV csv) {
         this.metaData = metaData;
         this.csv = csv;
+        this.select = new Select();
+        this.select.where = this.where();
     }
 
     public OrderBy orderBy() {
@@ -285,9 +280,9 @@ public class Query {
         return select;
     }
 
-    public Select select(String... columns) {
-        select = new Select(columns);
-        select.where = where;
+    public Select select(org.laukvik.csv.columns.Column... columns) {
+//        select.setColumns(columns);
+        System.out.println("Select: " + select.where);
         return select;
     }
 

@@ -36,12 +36,12 @@ public class YearIs extends RowMatcher {
         super();
         this.value = value;
         this.format = format;
+        this.column = column;
     }
 
     @Override
     public boolean mathes(Row row) {
         Date v = row.getDate(column);
-        System.out.println("YearIs: " + value + "=" + v);
         if (v == null) {
             return false;
         }

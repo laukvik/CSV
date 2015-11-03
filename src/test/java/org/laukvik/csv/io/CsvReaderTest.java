@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
@@ -41,13 +42,10 @@ public class CsvReaderTest {
         StringColumn first = csv.addStringColumn("First");
         Column last = csv.addColumn("Last");
         csv.write(new CsvWriter(new FileOutputStream(file)));
-
         CsvReader r = new CsvReader(new FileInputStream(file));
-
-        //Assert.assertEquals(2, r.getMetaData().getColumnCount());
+        Assert.assertEquals(2, r.getMetaData().getColumnCount());
         while (r.hasNext()) {
             Row row = r.next();
-            //System.out.println("CsvReader: " + row.getString(first));
         }
     }
 
