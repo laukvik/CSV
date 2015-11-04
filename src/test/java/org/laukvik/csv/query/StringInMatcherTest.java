@@ -15,33 +15,19 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
-import org.laukvik.csv.columns.IntegerColumn;
+import org.junit.Test;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class IntBetween extends RowMatcher {
+public class StringInMatcherTest {
 
-    int min;
-    int max;
-    private final IntegerColumn column;
-
-    public IntBetween(IntegerColumn column, int min, int max) {
-        super();
-        this.column = column;
-        this.min = min;
-        this.max = max;
+    public StringInMatcherTest() {
     }
 
-    @Override
-    public boolean mathes(Row row) {
-        Integer value = row.getInteger(column);
-        if (value == null) {
-            return false;
-        }
-        return value >= min && value <= max;
+    @Test
+    public void testSomeMethod() {
     }
 
 }

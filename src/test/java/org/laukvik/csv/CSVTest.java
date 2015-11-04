@@ -45,6 +45,13 @@ public class CSVTest {
     }
 
     @Test
+    public void iterator() throws IOException, ParseException {
+        CSV csv = new CSV();
+        for (Row r : csv.getRows()) {
+        }
+    }
+
+    @Test
     public void createNew() {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");

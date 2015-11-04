@@ -25,7 +25,7 @@ import org.laukvik.csv.columns.StringColumn;
 public class StringInMatcher extends RowMatcher {
 
     private final String value;
-    private StringColumn column;
+    private final StringColumn column;
 
     public StringInMatcher(StringColumn column, String value) {
         super();

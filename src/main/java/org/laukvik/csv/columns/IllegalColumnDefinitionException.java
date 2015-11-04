@@ -13,35 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv.query;
-
-import org.laukvik.csv.Row;
-import org.laukvik.csv.columns.IntegerColumn;
+package org.laukvik.csv.columns;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class IntBetween extends RowMatcher {
+public class IllegalColumnDefinitionException extends RuntimeException {
 
-    int min;
-    int max;
-    private final IntegerColumn column;
-
-    public IntBetween(IntegerColumn column, int min, int max) {
-        super();
-        this.column = column;
-        this.min = min;
-        this.max = max;
-    }
-
-    @Override
-    public boolean mathes(Row row) {
-        Integer value = row.getInteger(column);
-        if (value == null) {
-            return false;
-        }
-        return value >= min && value <= max;
+    public IllegalColumnDefinitionException(String message) {
+        super(message);
     }
 
 }

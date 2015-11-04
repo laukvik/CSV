@@ -24,12 +24,21 @@ import java.util.Objects;
 public class StringColumn extends Column<String> {
 
     private String name;
+    private int size;
 
     public StringColumn() {
     }
 
     public StringColumn(String name) {
         this.name = name;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     @Override
