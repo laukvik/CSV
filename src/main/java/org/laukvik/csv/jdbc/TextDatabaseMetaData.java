@@ -9,7 +9,7 @@ import org.laukvik.csv.jdbc.data.Data;
 
 public class TextDatabaseMetaData implements DatabaseMetaData {
 
-    TextConnection connection;
+    private TextConnection connection;
 
     public TextDatabaseMetaData(TextConnection connection) {
         this.connection = connection;

@@ -54,9 +54,9 @@ public class QueryTest {
             csv = new CSV();
             csv.read(getResource("presidents_meta.csv"));
 
-            for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
-                System.out.println(csv.getMetaData().getColumn(x).getName());
-            }
+//            for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
+//                System.out.println(csv.getMetaData().getColumn(x).getName());
+//            }
         }
         catch (Exception ex) {
             ex.printStackTrace();

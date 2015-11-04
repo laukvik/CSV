@@ -18,9 +18,9 @@ import org.laukvik.csv.sql.parser.SelectReader;
 import org.laukvik.csv.sql.parser.SyntaxException;
 import org.laukvik.csv.swing.CSVFileFilter;
 
-public class Manager {
+public final class Manager {
 
-    File home;
+    private File home;
 
     public Manager() {
         setHome(getApplicationHome());
@@ -43,8 +43,7 @@ public class Manager {
     }
 
     public static boolean isMacOSX() {
-        return (System.getProperty("os.name").toLowerCase()
-                .startsWith("mac os x"));
+        return (System.getProperty("os.name").toLowerCase().startsWith("mac os x"));
     }
 
     public Manager(File home) {

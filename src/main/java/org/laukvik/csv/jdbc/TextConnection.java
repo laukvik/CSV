@@ -1,212 +1,224 @@
 package org.laukvik.csv.jdbc;
 
 import java.io.File;
-import java.sql.*;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.CallableStatement;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.NClob;
+import java.sql.PreparedStatement;
+import java.sql.SQLClientInfoException;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.SQLXML;
+import java.sql.Savepoint;
+import java.sql.Statement;
+import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
+import java.util.logging.Logger;
 
 public class TextConnection implements Connection {
 
-	String url;
-	Properties info;
-	File home;
-	
-	public TextConnection( String url, Properties info ){
-		log( "URL=" + url );
-		this.url = url;
-		this.info = info;
-		String folder = url.substring( url.lastIndexOf(":")+1  );
-		home = new File( folder );
-	}
-	
-	public void setHome(File home) {
-		this.home = home;
-	}
-	
-	public File getHome(){
-		return home;
-	}
-	
-	public void log( Object message ){
-//		System.out.println( this.getClass().getName() + ":\t" + message.toString() );
-	}
-	
-	public void clearWarnings() throws SQLException {
-		throw(new SQLException("Not Supported"));
-	}
+    static private final Logger LOG = Logger.getLogger("org.laukvik.csv");
 
-	public void close() throws SQLException {
-	}
+    String url;
+    Properties info;
+    File home;
 
-	public void commit() throws SQLException {
-		throw(new SQLException("Not Supported"));
-	}
+    public TextConnection(String url, Properties info) {
+        LOG.fine("URL=" + url);
+        this.url = url;
+        this.info = info;
+        String folder = url.substring(url.lastIndexOf(":") + 1);
+        home = new File(folder);
+    }
 
-	public Statement createStatement() throws SQLException {
-		return new TextStatement( this, home );
-	}
+    public void setHome(File home) {
+        this.home = home;
+    }
 
-	public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-		return null;
-	}
+    public File getHome() {
+        return home;
+    }
 
-	public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-		return null;
-	}
+    public void clearWarnings() throws SQLException {
+        throw (new SQLException("Not Supported"));
+    }
 
-	public boolean getAutoCommit() throws SQLException {
-		return false;
-	}
+    public void close() throws SQLException {
+    }
 
-	public String getCatalog() throws SQLException {
-		return null;
-	}
+    public void commit() throws SQLException {
+        throw (new SQLException("Not Supported"));
+    }
 
-	public int getHoldability() throws SQLException {
-		return 0;
-	}
+    public Statement createStatement() throws SQLException {
+        return new TextStatement(this, home);
+    }
 
-	public DatabaseMetaData getMetaData() throws SQLException {
-		return new TextDatabaseMetaData(this );
-	}
+    public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
+        return null;
+    }
 
-	public int getTransactionIsolation() throws SQLException {
-		return Connection.TRANSACTION_NONE;
-	}
+    public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+        return null;
+    }
 
-	public Map<String, Class<?>> getTypeMap() throws SQLException {
-		return null;
-	}
+    public boolean getAutoCommit() throws SQLException {
+        return false;
+    }
 
-	public SQLWarning getWarnings() throws SQLException {	
-		return null;
-	}
+    public String getCatalog() throws SQLException {
+        return null;
+    }
 
-	public boolean isClosed() throws SQLException {
-		return false;
-	}
+    public int getHoldability() throws SQLException {
+        return 0;
+    }
 
-	public boolean isReadOnly() throws SQLException {
-		return false;
-	}
+    public DatabaseMetaData getMetaData() throws SQLException {
+        return new TextDatabaseMetaData(this);
+    }
 
-	public String nativeSQL(String sql) throws SQLException {
-		return null;
-	}
+    public int getTransactionIsolation() throws SQLException {
+        return Connection.TRANSACTION_NONE;
+    }
 
-	public CallableStatement prepareCall(String sql) throws SQLException {
-		return null;
-	}
+    public Map<String, Class<?>> getTypeMap() throws SQLException {
+        return null;
+    }
 
-	public CallableStatement prepareCall(String sql, int resultSetType,	int resultSetConcurrency) throws SQLException {
-		return null;
-	}
+    public SQLWarning getWarnings() throws SQLException {
+        return null;
+    }
 
-	public CallableStatement prepareCall(String sql, int resultSetType,int resultSetConcurrency, int resultSetHoldability)throws SQLException {
-		return null;
-	}
+    public boolean isClosed() throws SQLException {
+        return false;
+    }
 
-	public PreparedStatement prepareStatement(String sql) throws SQLException {
-		return null;
-	}
+    public boolean isReadOnly() throws SQLException {
+        return false;
+    }
 
-	public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
-		return null;
-	}
+    public String nativeSQL(String sql) throws SQLException {
+        return null;
+    }
 
-	public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
-		return null;
-	}
+    public CallableStatement prepareCall(String sql) throws SQLException {
+        return null;
+    }
 
-	public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
-		return null;
-	}
+    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+        return null;
+    }
 
-	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
-		return null;
-	}
+    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+        return null;
+    }
 
-	public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
-		return null;
-	}
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+        return null;
+    }
 
-	public void releaseSavepoint(Savepoint savepoint) throws SQLException {
-		throw(new SQLException("Not Supported"));
-	}
+    public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
+        return null;
+    }
 
-	public void rollback() throws SQLException {
-		throw(new SQLException("Not Supported"));
-	}
+    public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
+        return null;
+    }
 
-	public void rollback(Savepoint savepoint) throws SQLException {
-		throw(new SQLException("Not Supported"));
-	}
+    public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
+        return null;
+    }
 
-	public void setAutoCommit(boolean autoCommit) throws SQLException {
-	}
+    public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
+        return null;
+    }
 
-	public void setCatalog(String catalog) throws SQLException {
-	}
+    public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
+        return null;
+    }
 
-	public void setHoldability(int holdability) throws SQLException {
-	}
+    public void releaseSavepoint(Savepoint savepoint) throws SQLException {
+        throw (new SQLException("Not Supported"));
+    }
 
-	public void setReadOnly(boolean readOnly) throws SQLException {
-	}
+    public void rollback() throws SQLException {
+        throw (new SQLException("Not Supported"));
+    }
 
-	public Savepoint setSavepoint() throws SQLException {
-		throw(new SQLException("Not Supported"));
-	}
+    public void rollback(Savepoint savepoint) throws SQLException {
+        throw (new SQLException("Not Supported"));
+    }
 
-	public Savepoint setSavepoint(String name) throws SQLException {
-		throw(new SQLException("Not Supported"));
-	}
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
+    }
 
-	public void setTransactionIsolation(int level) throws SQLException {
-		throw(new SQLException("Not Supported"));
-	}
+    public void setCatalog(String catalog) throws SQLException {
+    }
 
-	public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
-		throw(new SQLException("Not Supported"));
-	}
+    public void setHoldability(int holdability) throws SQLException {
+    }
 
-	public Array createArrayOf(String arg0, Object[] arg1) throws SQLException {
-		return null;
-	}
+    public void setReadOnly(boolean readOnly) throws SQLException {
+    }
 
-	public Blob createBlob() throws SQLException {
-		return null;
-	}
+    public Savepoint setSavepoint() throws SQLException {
+        throw (new SQLException("Not Supported"));
+    }
 
-	public Clob createClob() throws SQLException {	
-		return null;
-	}
+    public Savepoint setSavepoint(String name) throws SQLException {
+        throw (new SQLException("Not Supported"));
+    }
 
-	public Struct createStruct(String arg0, Object[] arg1) throws SQLException {	
-		return null;
-	}
+    public void setTransactionIsolation(int level) throws SQLException {
+        throw (new SQLException("Not Supported"));
+    }
 
-	public Properties getClientInfo() throws SQLException {
-		return null;
-	}
+    public void setTypeMap(Map<String, Class<?>> map) throws SQLException {
+        throw (new SQLException("Not Supported"));
+    }
 
-	public String getClientInfo(String arg0) throws SQLException {
-		return null;
-	}
+    public Array createArrayOf(String arg0, Object[] arg1) throws SQLException {
+        return null;
+    }
 
-	public boolean isValid(int arg0) throws SQLException {
-		return false;
-	}
+    public Blob createBlob() throws SQLException {
+        return null;
+    }
 
+    public Clob createClob() throws SQLException {
+        return null;
+    }
 
-	public boolean isWrapperFor(Class<?> arg0) throws SQLException {
-		return false;
-	}
+    public Struct createStruct(String arg0, Object[] arg1) throws SQLException {
+        return null;
+    }
 
-	public <T> T unwrap(Class<T> arg0) throws SQLException {
-		return null;
-	}
+    public Properties getClientInfo() throws SQLException {
+        return null;
+    }
+
+    public String getClientInfo(String arg0) throws SQLException {
+        return null;
+    }
+
+    public boolean isValid(int arg0) throws SQLException {
+        return false;
+    }
+
+    public boolean isWrapperFor(Class<?> arg0) throws SQLException {
+        return false;
+    }
+
+    public <T> T unwrap(Class<T> arg0) throws SQLException {
+        return null;
+    }
 
 //	public NClob createNClob() throws SQLException {
 //		return null;
@@ -222,7 +234,6 @@ public class TextConnection implements Connection {
 //	public void setClientInfo(String arg0, String arg1)
 //			throws SQLClientInfoException {
 //	}
-
     public NClob createNClob() throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }

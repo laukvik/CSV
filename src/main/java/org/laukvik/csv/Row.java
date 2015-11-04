@@ -57,7 +57,7 @@ import org.laukvik.csv.columns.UrlColumn;
 public class Row implements Serializable {
 
     private CSV csv;
-    private Map<Column, Object> map;
+    private final Map<Column, Object> map;
 
     public Row() {
         this.map = new TreeMap<>();
@@ -68,11 +68,11 @@ public class Row implements Serializable {
         StringBuilder b = new StringBuilder();
         int x = 0;
         for (Column c : map.keySet()) {
-            Object o = map.get(c);
-            b.append(c.getName() + "=" + o);
             if (x > 0) {
                 b.append(",");
             }
+            Object o = map.get(c);
+            b.append(c.getName()).append("=").append(o);
             x++;
         }
         return b.toString();

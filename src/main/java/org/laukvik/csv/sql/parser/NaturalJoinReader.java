@@ -6,7 +6,7 @@ import org.laukvik.csv.sql.joins.NaturalJoin;
 
 public class NaturalJoinReader extends GroupReader {
 
-    String table;
+    private String table;
 
     public NaturalJoinReader() {
         super();

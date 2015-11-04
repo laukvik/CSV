@@ -28,10 +28,6 @@ import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.CsvWriter;
 
 /**
- * <li>charset encoding
- * <li>escaping quotes
- * <li>linfeeds in values
- *
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
@@ -187,7 +183,6 @@ public class CSVTest {
             assertEquals("ac, abs, moon", "ac, abs, moon", r.getString(desc));
         }
         catch (Exception e) {
-            e.printStackTrace();
             fail(e.getMessage());
         }
     }
