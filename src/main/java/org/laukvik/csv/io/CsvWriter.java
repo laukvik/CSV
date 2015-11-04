@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.io;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
+import org.laukvik.csv.CSV;
+import org.laukvik.csv.MetaData;
+import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 
 /**
  * OutputStream for writing CSV data
@@ -31,24 +32,56 @@ import java.util.regex.Pattern;
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class CsvWriter implements AutoCloseable {
+public final class CsvWriter implements Writeable {
 
-    private final OutputStreamWriter out;
-    private final static Pattern pattern = Pattern.compile("^\\d+$");
+    private final OutputStream out;
+    private final MetaData metaData;
 
-    public CsvWriter(OutputStream out) {
-        this(out, Charset.defaultCharset());
+    public CsvWriter(OutputStream out, MetaData metaData) throws IOException {
+        this.out = out;
+        this.metaData = metaData;
+        writeMetaData(metaData);
     }
 
-    public CsvWriter(OutputStream out, Charset charset) {
-        this.out = new OutputStreamWriter(out, charset);
+    public CsvWriter(OutputStream out) throws IOException {
+        this.metaData = null;
+        this.out = out;
+    }
+
+    /**
+     * Writes a single row of CSV data
+     *
+     * @param row
+     * @throws IOException
+     */
+    public void writeRow(Row row) throws IOException {
+        List<String> values = new ArrayList<>();
+        for (int x = 0; x < metaData.getColumnCount(); x++) {
+            Column c = metaData.getColumn(x);
+            Object o = row.getAsString(c);
+            values.add(c.asString(o));
+        }
+        writeValues(values);
+    }
+
+    public void write(CSV csv) throws IOException {
+        writeMetaData(csv.getMetaData());
+        for (int y = 0; y < csv.getRowCount(); y++) {
+            writeRow(csv.getRow(y));
+        }
     }
 
     public static boolean isDigitsOnly(String value) {
-        if (value == null || value.isEmpty()) {
+        if (value == null) {
             return false;
         }
-        return CsvWriter.pattern.matcher(value).find();
+        for (int x = 0; x < value.length(); x++) {
+            char c = value.charAt(x);
+            if (c < '0' || c > '9') {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void writeMetaData(MetaData metaData) throws IOException {
@@ -57,10 +90,6 @@ public class CsvWriter implements AutoCloseable {
             items.add(metaData.getColumnName(x));
         }
         writeValues(items);
-    }
-
-    public void writeRow(Row row) throws IOException {
-        writeValues(row.getValues());
     }
 
     public void writeRow(String... values) throws IOException {
@@ -78,7 +107,7 @@ public class CsvWriter implements AutoCloseable {
                 out.write(CSV.QUOTE);
             } else if (isDigitsOnly(column)) {
                 /* Digits only */
-                out.write(column);
+                out.write(column.getBytes());
             } else {
                 /* Text */
                 out.write(CSV.QUOTE);
@@ -93,7 +122,8 @@ public class CsvWriter implements AutoCloseable {
                 out.write(CSV.QUOTE);
             }
         }
-        out.write(CSV.CRLF);
+        out.write(CSV.RETURN);
+        out.write(CSV.LINEFEED);
     }
 
     @Override

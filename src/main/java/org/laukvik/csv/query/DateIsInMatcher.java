@@ -18,6 +18,7 @@ package org.laukvik.csv.query;
 import java.text.DateFormat;
 import java.util.Date;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.DateColumn;
 
 /**
  *
@@ -27,23 +28,23 @@ public class DateIsInMatcher extends RowMatcher {
 
     Date[] values;
     DateFormat format;
+    DateColumn column;
 
-    public DateIsInMatcher(int columnIndex, Date[] values, DateFormat format) {
-        super(columnIndex);
+    public DateIsInMatcher(DateColumn column, Date[] values, DateFormat format) {
+        super();
+        this.column = column;
         this.values = values;
         this.format = format;
     }
 
     @Override
     public boolean mathes(Row row) {
-        Date value = (Date) row.getValue(columnIndex);
-
+        Date value = row.getDate(column);
         for (Date d : values) {
             if (value.equals(d)) {
                 return true;
             }
         }
-
         return false;
     }
 

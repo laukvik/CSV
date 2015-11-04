@@ -16,6 +16,7 @@
 package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.StringColumn;
 
 /**
  *
@@ -24,16 +25,22 @@ import org.laukvik.csv.Row;
 public class StringIsMatcher extends RowMatcher {
 
     private final String[] value;
+    private StringColumn column;
 
-    public StringIsMatcher(int columnIndex, String... value) {
-        super(columnIndex);
+    public StringIsMatcher(StringColumn column, String... value) {
+        super();
+        this.column = column;
         this.value = value;
     }
 
     @Override
     public boolean mathes(Row row) {
+        String val = row.getString(column);
+        if (val == null) {
+            return false;
+        }
         for (String v : value) {
-            if (row.getString(columnIndex).equalsIgnoreCase(v)) {
+            if (val.equalsIgnoreCase(v)) {
                 return true;
             }
         }

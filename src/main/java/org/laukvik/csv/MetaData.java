@@ -17,17 +17,9 @@ package org.laukvik.csv;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.laukvik.csv.columns.Column;
-import org.laukvik.csv.columns.DateColumn;
-import org.laukvik.csv.columns.DoubleColumn;
-import org.laukvik.csv.columns.FloatColumn;
-import org.laukvik.csv.columns.IntegerColumn;
-import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.columns.UrlColumn;
 
 /**
  *
@@ -41,11 +33,6 @@ public class MetaData implements Serializable {
     public MetaData() {
         charset = Charset.defaultCharset();
         columns = new ArrayList<>();
-    }
-
-    public MetaData(Column... columns) {
-        charset = Charset.defaultCharset();
-        this.columns = new ArrayList<>(Arrays.asList(columns));
     }
 
     public Column getColumn(String name) {
@@ -68,33 +55,25 @@ public class MetaData implements Serializable {
         return columns.size();
     }
 
-    private String getParantheses() {
-        return "";
+    /**
+     *
+     * columnName(DataType=option)
+     *
+     * @param columnName
+     * @return
+     */
+    public Column addColumn(String columnName) {
+        return addColumn(Column.parseName(columnName));
     }
 
-    public void addColumn(String s) {
-        if (s.toUpperCase().endsWith("(INT)") || s.toUpperCase().endsWith("ID")) {
-            addColumn(new IntegerColumn(s));
-        } else if (s.toUpperCase().endsWith("(FLOAT)")) {
-            addColumn(new FloatColumn(s));
-        } else if (s.toUpperCase().endsWith("(DOUBLE)")) {
-            addColumn(new DoubleColumn(s));
-        } else if (s.toUpperCase().endsWith("(URL)")) {
-            addColumn(new UrlColumn(s));
-//        } else if (s.toUpperCase().endsWith("(BOOLEAN)")) {
-//            addColumn(new BooleanColumn(s));
-        } else if (s.toUpperCase().endsWith("(DATE:MM/DD/YYYY)")) {
-            addColumn(new DateColumn(s, new SimpleDateFormat("MM/dd/yyyy")));
-        } else {
-            addColumn(new StringColumn(s));
-        }
-    }
-
-    public void addColumn(Column column) {
+    public Column addColumn(Column column) {
+        column.setMetaData(this);
         columns.add(column);
+        return column;
     }
 
     public void removeColumn(Column column) {
+        column.setMetaData(null);
         columns.remove(column);
     }
 
@@ -102,6 +81,11 @@ public class MetaData implements Serializable {
         return columns.indexOf(column);
     }
 
+    /**
+     * @todo Remove this convenience method
+     * @param column
+     * @return
+     */
     public String getColumnName(int column) {
         return columns.get(column).getName();
     }
@@ -127,16 +111,8 @@ public class MetaData implements Serializable {
     }
 
     public void removeColumn(int columnIndex) {
+        columns.get(columnIndex).setMetaData(null);
         columns.remove(columnIndex);
-    }
-
-    public Row createEmptyRow() {
-        Row r = new Row();
-        r.setMetaData(this);
-        for (Column c : columns) {
-            r.add("");
-        }
-        return r;
     }
 
 }

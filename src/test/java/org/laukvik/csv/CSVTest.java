@@ -16,8 +16,8 @@
 package org.laukvik.csv;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -25,50 +25,62 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.io.CsvWriter;
 
 /**
- * <li>charset encoding
- * <li>escaping quotes
- * <li>linfeeds in values
- *
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
 public class CSVTest {
 
-    //@Test
+    @Test
     public void findRows() throws IOException, ParseException {
-        CSV csv = new CSV(getResource("countries.csv"));
+        CSV csv = new CSV();
+        csv.read(getResource("countries.csv"));
         assertEquals(249, csv.getRowCount());
+    }
+
+    @Test
+    public void iterator() throws IOException, ParseException {
+        CSV csv = new CSV();
+        for (Row r : csv.getRows()) {
+        }
     }
 
     @Test
     public void createNew() {
         CSV csv = new CSV();
-        csv.addColumn("First");
-        csv.addColumn("Last");
-        Row r1 = csv.addRow("Bill", "Gates");
-        assertEquals("Row1", 2, r1.getValues().size());
-        Row r2 = csv.addRow("Steve", "Jobs");
-        assertEquals("Row1", 2, r2.getValues().size());
+        StringColumn first = csv.addStringColumn("First");
+        StringColumn last = csv.addStringColumn("Last");
+        Row r1 = csv.addRow().update(first, "Bill").update(last, "Gates");
+        Row r2 = csv.addRow().update(first, "Steve").update(last, "Jobs");
+//        assertEquals("Row1", 2, r1.getValues().size());
+//        assertEquals("Row1", 2, r2.getValues().size());
         assertSame("RowCount", csv.getRowCount(), 2);
     }
 
     @Test
-    public void shouldWrite() {
+    public void shouldWrite() throws Exception {
 
-        CSV csv = new CSV(new StringColumn("First"), new StringColumn("Last"));
+        CSV csv = new CSV();
+        StringColumn first = csv.addStringColumn("First");
+        StringColumn last = csv.addStringColumn("Last");
         MetaData md = csv.getMetaData();
 
         assertSame(md.getColumnCount(), 2);
 
-        csv.addRow("Bill", "Gates");
-        csv.addRow("Steve", "Jobs");
+        assertEquals("First should be 0", 0, first.indexOf());
+        assertEquals("Last should be 1", 1, last.indexOf());
+
+        Row r1 = csv.addRow().update(first, "Bill").update(last, "Gates");
+        Row r2 = csv.addRow().update(first, "Steve").update(last, "Jobs");
+
         assertSame("RowCount", csv.getRowCount(), 2);
         try {
-            csv.write(File.createTempFile("ShouldWrite", ".csv"));
+            csv.write(new CsvWriter(new FileOutputStream(File.createTempFile("ShouldWrite", ".csv")), md));
         }
         catch (IOException e) {
+            e.printStackTrace();
             fail(e.getMessage());
         }
     }
@@ -81,26 +93,34 @@ public class CSVTest {
     @Test
     public void readEscaped() {
         try {
-            CSV csv = new CSV(getResource("escaped.csv"), Charset.forName("utf-8"));
+
+            CSV csv = new CSV();
+            csv.read(getResource("escaped.csv"));
+
             MetaData md = csv.getMetaData();
 
-            assertEquals("Player Name", "Player Name", md.getColumnName(0));
-            assertEquals("Position", "Position", md.getColumnName(1));
-            assertEquals("Nicknames", "Nicknames", md.getColumnName(2));
-            assertEquals("Years Active", "Years Active", md.getColumnName(3));
+            StringColumn playerName = (StringColumn) md.getColumn(0);
+            StringColumn position = (StringColumn) md.getColumn(1);
+            StringColumn nicknames = (StringColumn) md.getColumn(2);
+            StringColumn yearsActive = (StringColumn) md.getColumn(3);
+
+            assertEquals("Player Name", "Player Name", playerName.getName());
+            assertEquals("Position", "Position", position.getName());
+            assertEquals("Nicknames", "Nicknames", nicknames.getName());
+            assertEquals("Years Active", "Years Active", yearsActive.getName());
 
             assertSame("RowCount", 3, csv.getRowCount());
             assertSame("ColumnCount", 4, md.getColumnCount());
 
             Row r = csv.getRow(0);
 
-            assertEquals("Skippy", "Skippy Peterson", r.getString(0));
-            assertEquals("First Base", "First Base", r.getString(1));
-            assertEquals("1908-1913", "1908-1913", r.getString(3));
+            assertEquals("Skippy", "Skippy Peterson", r.getString(playerName));
+            assertEquals("First Base", "First Base", r.getString(position));
+            assertEquals("1908-1913", "1908-1913", r.getString(yearsActive));
 
             String blueDog = "\"Blue Dog\", \"The Magician\"";
 
-            assertEquals("Blue Dog The Magician", "\"Blue Dog\", \"The Magician\"", r.getString(2));
+            assertEquals("Blue Dog The Magician", "\"Blue Dog\", \"The Magician\"", r.getString(nicknames));
 
         }
         catch (Exception e) {
@@ -111,7 +131,8 @@ public class CSVTest {
     @Test
     public void readAcid() {
         try {
-            CSV csv = new CSV(getResource("acid.csv"), Charset.forName("utf-8"));
+            CSV csv = new CSV();
+            csv.read(getResource("acid.csv"));
             MetaData md = csv.getMetaData();
 
             assertEquals("Year", "Year", md.getColumnName(0));
@@ -125,7 +146,9 @@ public class CSVTest {
 
             Row r = csv.getRow(1);
 
-            assertEquals("Venture", "Venture \"Extended Edition\"", r.getString(2));
+            StringColumn model = (StringColumn) md.getColumn("Model");
+
+            assertEquals("Venture", "Venture \"Extended Edition\"", r.getString(model));
         }
         catch (Exception e) {
             fail(e.getMessage());
@@ -135,7 +158,13 @@ public class CSVTest {
     @Test
     public void readEmbeddedCommas() {
         try {
-            CSV csv = new CSV(getResource("embeddedcommas.csv"), Charset.forName("utf-8"));
+            CSV csv = new CSV();
+            File f = getResource("embeddedcommas.csv");
+            if (!f.exists()) {
+                fail("Could not read test file:");
+            }
+
+            csv.read(getResource("embeddedcommas.csv"));
             MetaData md = csv.getMetaData();
 
             assertEquals("Year", "Year", md.getColumnName(0));
@@ -148,7 +177,10 @@ public class CSVTest {
             assertSame("RowCount", 1, csv.getRowCount());
 
             Row r = csv.getRow(0);
-            assertEquals("ac, abs, moon", "ac, abs, moon", r.getString(3));
+            System.out.println(r.toString());
+            StringColumn desc = (StringColumn) md.getColumn("Description");
+
+            assertEquals("ac, abs, moon", "ac, abs, moon", r.getString(desc));
         }
         catch (Exception e) {
             fail(e.getMessage());
@@ -158,7 +190,8 @@ public class CSVTest {
     @Test
     public void readQuoted() {
         try {
-            CSV csv = new CSV(getResource("quoted.csv"), Charset.forName("utf-8"));
+            CSV csv = new CSV();
+            csv.read(getResource("quoted.csv"));
             MetaData md = csv.getMetaData();
             assertEquals("Lead", "Lead", md.getColumnName(0));
             assertEquals("Title", "Title", md.getColumnName(1));
@@ -170,7 +203,9 @@ public class CSVTest {
 
             Row r = csv.getRow(0);
 
-            assertEquals("Spoke Tuesday, he's interested", r.getString(3));
+            StringColumn notes = (StringColumn) md.getColumn("Notes");
+
+            assertEquals("Spoke Tuesday, he's interested", r.getString(notes));
         }
         catch (Exception e) {
             fail(e.getMessage());
@@ -181,7 +216,8 @@ public class CSVTest {
     public void readUnqouted() {
         try {
             // Name,Class,Dorm,Room,GPA
-            CSV csv = new CSV(getResource("unquoted.csv"), Charset.forName("utf-8"));
+            CSV csv = new CSV();
+            csv.read(getResource("unquoted.csv"));
             MetaData md = csv.getMetaData();
             assertEquals("Name", "Name", md.getColumnName(0));
             assertEquals("Class", "Class", md.getColumnName(1));
@@ -194,7 +230,9 @@ public class CSVTest {
 
             Row r = csv.getRow(3);
 
-            assertEquals("GPA", "3.48", r.getString("GPA"));
+            StringColumn col = (StringColumn) md.getColumn("GPA");
+
+            assertEquals("GPA", "3.48", r.getString(col));
         }
         catch (Exception e) {
             fail(e.getMessage());
@@ -204,7 +242,8 @@ public class CSVTest {
     @Test
     public void readInvalid() {
         try {
-            CSV csv = new CSV(getResource("invalid.csv"), Charset.forName("utf-8"));
+            CSV csv = new CSV();
+            csv.read(getResource("invalid.csv"));
             MetaData md = csv.getMetaData();
             assertEquals("First", "First", md.getColumnName(0));
             assertEquals("Last", "Last", md.getColumnName(1));
@@ -218,7 +257,8 @@ public class CSVTest {
     @Test
     public void readEntities() {
         try {
-            CSV csv = new CSV(getResource("person.csv"));
+            CSV csv = new CSV();
+            csv.read(getResource("person.csv"));
             List<Person> items = csv.findByClass(Person.class);
             int x = 1;
             for (Person p : items) {

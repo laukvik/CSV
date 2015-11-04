@@ -19,7 +19,7 @@ package org.laukvik.csv.columns;
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class FloatColumn implements Column<Float> {
+public class FloatColumn extends Column<Float> {
 
     String name;
 
@@ -55,4 +55,23 @@ public class FloatColumn implements Column<Float> {
     public String toString() {
         return name + "(Float)";
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FloatColumn other = (FloatColumn) obj;
+        return true;
+    }
+
 }

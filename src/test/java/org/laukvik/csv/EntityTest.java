@@ -32,14 +32,15 @@ public class EntityTest {
         List<RecentFile> recentFiles = CSV.findByClass(RecentFile.class);
     }
 
-//    @Test
+    @Test
     public void write() {
         List<RecentFile> recentFiles = new ArrayList<>();
         recentFiles.add(new RecentFile("Hello.csv"));
         recentFiles.add(new RecentFile("World.csv"));
         try {
             CSV.saveAll(recentFiles, RecentFile.class);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             fail(e.getMessage());
         }
     }

@@ -6,31 +6,44 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.sql.*;
-import org.laukvik.csv.swing.CSVFileFilter;
-import org.laukvik.csv.ParseException;
 import org.laukvik.csv.jdbc.data.ColumnData;
 import org.laukvik.csv.jdbc.data.Data;
+import org.laukvik.csv.sql.Column;
+import org.laukvik.csv.sql.ColumnDataAdapter;
+import org.laukvik.csv.sql.Condition;
+import org.laukvik.csv.sql.Join;
 import org.laukvik.csv.sql.Select;
+import org.laukvik.csv.sql.Table;
 import org.laukvik.csv.sql.parser.SelectReader;
 import org.laukvik.csv.sql.parser.SyntaxException;
+import org.laukvik.csv.swing.CSVFileFilter;
 
-public class Manager {
+public final class Manager {
 
-    File home;
+    private File home;
 
     public Manager() {
-        if (isMacOSX()) {
-            setHome(new File("/Users/morten/Projects/Research/src/org/laukvik/jdbc"));
-//			setHome( new File( System.getProperty("user.home"), "Desktop" ) );
-        } else {
-            setHome(new File("C:\\Users\\Morten\\Prosjekter\\Research\\src\\org\\laukvik\\jdbc\\"));
+        setHome(getApplicationHome());
+    }
+
+    public static File getApplicationHome() {
+        File home = new File(getLibraryHome(), "org.laukvik.csv");
+        if (!home.exists()) {
+            home.mkdir();
         }
+        return home;
+    }
+
+    public static File getLibraryHome() {
+        File home = new File(System.getProperty("user.home"), "Library");
+        if (!home.exists()) {
+            home.mkdir();
+        }
+        return home;
     }
 
     public static boolean isMacOSX() {
-        return (System.getProperty("os.name").toLowerCase()
-                .startsWith("mac os x"));
+        return (System.getProperty("os.name").toLowerCase().startsWith("mac os x"));
     }
 
     public Manager(File home) {
@@ -164,11 +177,12 @@ public class Manager {
 
     public ColumnData getColumnData(File file, String tableName) throws SQLException {
         try {
-            CSV csv = new CSV(file);
+            CSV csv = new CSV();
+            csv.read(file);
             ColumnDataAdapter adapt = new ColumnDataAdapter(csv);
             return adapt;
         }
-        catch (IOException | ParseException ex) {
+        catch (IOException ex) {
             throw new SQLException(ex);
         }
     }

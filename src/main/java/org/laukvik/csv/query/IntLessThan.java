@@ -16,6 +16,7 @@
 package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.IntegerColumn;
 
 /**
  *
@@ -24,15 +25,22 @@ import org.laukvik.csv.Row;
 public class IntLessThan extends RowMatcher {
 
     int value;
+    IntegerColumn column;
 
-    public IntLessThan(int columnIndex, int value) {
-        super(columnIndex);
+    public IntLessThan(IntegerColumn column, int value) {
+        super();
+        this.column = column;
         this.value = value;
     }
 
     @Override
     public boolean mathes(Row row) {
-        return row.getInteger(columnIndex) < value;
+        Integer i = row.getInteger(column);
+        if (i == null) {
+            return false;
+        }
+        //System.out.println("IntLessThan: " + column.getName() + " " + i + "=" + value);
+        return i < value;
     }
 
 }

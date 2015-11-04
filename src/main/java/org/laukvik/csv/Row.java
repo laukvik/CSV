@@ -16,16 +16,20 @@
 package org.laukvik.csv;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
+import org.laukvik.csv.columns.BooleanColumn;
+import org.laukvik.csv.columns.ByteColumn;
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.DateColumn;
+import org.laukvik.csv.columns.DoubleColumn;
+import org.laukvik.csv.columns.FloatColumn;
+import org.laukvik.csv.columns.IntegerColumn;
+import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.columns.UrlColumn;
 
 /**
  * Date created = is.readDate("created");<br>
@@ -39,304 +43,117 @@ import org.laukvik.csv.columns.Column;
  * <li>getFloat
  * <li>getInt
  * <li>getLong
- * <li>getString
+ * <li>getAsString
  * <li>getURL
  *
  * <li>getTimestamp
  * <li>getByte-
  * <li>getTime -
  *
- * CSV.createRow().add("First");
+ * CSV.addRow().add("First");
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
 public class Row implements Serializable {
 
-    private final List<String> values;
-    private MetaData metaData;
-    private String raw;
+    private CSV csv;
+    private final Map<Column, Object> map;
 
     public Row() {
-        values = new ArrayList<>();
-    }
-
-    public Row(String... values) {
-        this.values = new ArrayList<>();
-        this.values.addAll(Arrays.asList(values));
-    }
-
-    public Row(List<String> values) {
-        this.values = values;
-    }
-
-    public Row(MetaData metaData, List<String> values) {
-        this.metaData = metaData;
-        this.values = values;
-    }
-
-    public MetaData getMetaData() {
-        return metaData;
-    }
-
-    public Row setMetaData(MetaData metaData) {
-        this.metaData = metaData;
-        return this;
-    }
-
-    public Row setValue(int columnIndex, Object value) {
-        Column c = metaData.getColumn(columnIndex);
-        if (value instanceof Number) {
-            Number n = (Number) value;
-            values.set(columnIndex, n.toString());
-        } else if (value instanceof Boolean) {
-            Boolean b = (Boolean) value;
-            values.set(columnIndex, b.toString());
-
-        } else {
-            values.set(columnIndex, c.asString(value));
-        }
-
-        return this;
-    }
-
-    public Object getValue(String column) {
-        int columnIndex = metaData.getColumnIndex(column);
-        Column c = metaData.getColumn(columnIndex);
-        return c.parse(values.get(columnIndex));
-    }
-
-    public Object getValue(int columnIndex) {
-        Column c = metaData.getColumn(columnIndex);
-        return c.parse(values.get(columnIndex));
-    }
-
-    public String getRaw() {
-        return raw;
-    }
-
-    protected Row add(String value) {
-        this.values.add(value);
-        return this;
-    }
-
-    protected List<String> getValues() {
-        return values;
-    }
-
-    public String getString(int column) {
-        if (metaData == null) {
-            throw new MetaDataNotFoundException();
-        }
-        if (column > metaData.getColumnCount()) {
-            throw new ColumnNotFoundException(column, metaData.getColumnCount());
-        }
-        String v = values.get(column);
-        if (v == null) {
-            return "";
-        }
-        return new String(v.getBytes(metaData.getCharset()));
-    }
-
-    public String getString(String column) {
-        if (metaData == null) {
-            throw new MetaDataNotFoundException();
-        }
-        return getString(metaData.getColumnIndex(column));
-    }
-
-    public void setString(int column, String value) {
-        values.set(column, value);
-    }
-
-    public URL getURL(String column) {
-        return getURL(metaData.getColumnIndex(column));
-    }
-
-    public URL getURL(int columnIndex) {
-        String value = getString(columnIndex);
-        if (value == null || value.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            return new URL(value);
-        }
-        catch (Exception e) {
-            throw new ConversionException(value, "URL");
-        }
-    }
-
-    public Long getLong(String column) {
-        return getLong(metaData.getColumnIndex(column));
-    }
-
-    public Long getLong(int columnIndex) {
-        String value = getString(columnIndex);
-        if (value == null || value.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            return new Long(value);
-        }
-        catch (Exception e) {
-            throw new ConversionException(value, "Long");
-        }
-    }
-
-    public Integer getInteger(String column) {
-        return getInteger(metaData.getColumnIndex(column));
-    }
-
-    public Integer getInteger(int columnIndex) {
-        String value = getString(columnIndex);
-        if (value == null || value.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            return new Integer(value);
-        }
-        catch (Exception e) {
-            throw new ConversionException(value, "Integer");
-        }
-    }
-
-    public Float getFloat(String column) {
-        return getFloat(metaData.getColumnIndex(column));
-    }
-
-    public Float getFloat(int columnIndex) {
-        String value = getString(columnIndex);
-        if (value == null || value.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            return new Float(value);
-        }
-        catch (Exception e) {
-            throw new ConversionException(value, "Float");
-        }
-    }
-
-    public Double getDouble(String column) {
-        return getDouble(metaData.getColumnIndex(column));
-    }
-
-    public Double getDouble(int columnIndex) {
-        String value = getString(columnIndex);
-        if (value == null || value.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            return new Double(value);
-        }
-        catch (Exception e) {
-            throw new ConversionException(value, "Double");
-        }
-    }
-
-    public Date getDate(String column) {
-        String value = getString(column);
-        if (value == null || value.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            Long millis = Long.parseLong(value);
-            return new Date(millis);
-        }
-        catch (Exception e) {
-            throw new ConversionException(value, "Date(in milliseconds since 1970)");
-        }
-    }
-
-    public Date getDate(int column) {
-        String value = getString(column);
-        if (value == null || value.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            Long millis = Long.parseLong(value);
-            return new Date(millis);
-        }
-        catch (Exception e) {
-            throw new ConversionException(value, "Date(in milliseconds since 1970)");
-        }
-    }
-
-    public Date getDate(int columnIndex, String pattern) {
-        return getDate(columnIndex, new SimpleDateFormat(pattern));
-    }
-
-    public Date getDate(String column, String pattern) {
-        return getDate(metaData.getColumnIndex(column), new SimpleDateFormat(pattern));
-    }
-
-    public Date getDate(String column, SimpleDateFormat format) {
-        return getDate(metaData.getColumnIndex(column), format);
-    }
-
-    public Date getDate(int columnIndex, DateFormat format) {
-        String value = getString(columnIndex);
-        try {
-            return format.parse(value);
-        }
-        catch (Exception e) {
-            throw new ConversionException(value, "Date");
-        }
-    }
-
-    public Boolean getBoolean(String column) {
-        return getBoolean(metaData.getColumnIndex(column));
-    }
-
-    public Boolean getBoolean(int columnIndex) {
-        String value = getString(columnIndex);
-        if (value == null || value.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            return new Boolean(value);
-        }
-        catch (Exception e) {
-            throw new ConversionException(value, "Boolean");
-        }
-    }
-
-    public BigDecimal getBigDecimal(String column) {
-        return getBigDecimal(metaData.getColumnIndex(column));
-    }
-
-    public BigDecimal getBigDecimal(int columnIndex) {
-        String value = getString(columnIndex);
-        if (value == null || value.trim().isEmpty()) {
-            return null;
-        }
-        try {
-            return new BigDecimal(value);
-        }
-        catch (Exception e) {
-            throw new ConversionException(value, "BigDecimal");
-        }
-    }
-
-    protected void insert(String value, int columnIndex) {
-        values.add(columnIndex, value);
-    }
-
-    protected void remove(int columnIndex) {
-        values.remove(columnIndex);
+        this.map = new TreeMap<>();
     }
 
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        b.append(values);
+        int x = 0;
+        for (Column c : map.keySet()) {
+            if (x > 0) {
+                b.append(",");
+            }
+            Object o = map.get(c);
+            b.append(c.getName()).append("=").append(o);
+            x++;
+        }
         return b.toString();
+    }
+
+    public CSV getCSV() {
+        return csv;
+    }
+
+    public void setCSV(CSV csv) {
+        this.csv = csv;
+    }
+
+    public Row update(ByteColumn column, Byte value) {
+        map.put(column, value);
+        return this;
+    }
+
+    public Row update(IntegerColumn column, Integer value) {
+        map.put(column, value);
+        return this;
+    }
+
+    public Row update(FloatColumn column, Float value) {
+        map.put(column, value);
+        return this;
+    }
+
+    public Row update(DoubleColumn column, Double value) {
+        map.put(column, value);
+        return this;
+    }
+
+    public Row update(BooleanColumn column, Boolean value) {
+        map.put(column, value);
+        return this;
+    }
+
+    public Row update(StringColumn column, String value) {
+        map.put(column, value);
+        return this;
+    }
+
+    public Row update(UrlColumn column, URL value) {
+        map.put(column, value);
+        return this;
+    }
+
+    public Row update(DateColumn column, Date value) {
+        map.put(column, value);
+        return this;
+    }
+
+    public boolean isNull(Column column) {
+        return map.get(column) == null;
+    }
+
+    public String getAsString(Column column) {
+        return map.get(column) + "";
+    }
+
+    public String getString(StringColumn column) {
+        return (String) map.get(column);
+    }
+
+    public Date getDate(DateColumn column) {
+        return (Date) map.get(column);
+    }
+
+    public Float getFloat(FloatColumn column) {
+        return (Float) map.get(column);
+    }
+
+    public Integer getInteger(IntegerColumn column) {
+        return (Integer) map.get(column);
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 41 * hash + Objects.hashCode(this.values);
-        hash = 41 * hash + Objects.hashCode(this.raw);
+        int hash = 5;
+        hash = 53 * hash + Objects.hashCode(this.csv);
         return hash;
     }
 
@@ -349,17 +166,11 @@ public class Row implements Serializable {
             return false;
         }
         final Row other = (Row) obj;
-        if (!Objects.equals(this.values, other.values)) {
-            return false;
-        }
-        if (!Objects.equals(this.raw, other.raw)) {
-            return false;
-        }
         return true;
     }
 
-    public boolean isEmpty(int columnIndex) {
-        return values.get(columnIndex).isEmpty();
+    public void remove(Column column) {
+        map.remove(column);
     }
 
 }

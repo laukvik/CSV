@@ -15,9 +15,11 @@
  */
 package org.laukvik.csv.query;
 
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.DateColumn;
 
 /**
  *
@@ -25,19 +27,26 @@ import org.laukvik.csv.Row;
  */
 public class DateIsMatcher extends RowMatcher {
 
-    Date value;
-    SimpleDateFormat format;
+    private final Date value;
+    private final DateColumn column;
 
-    public DateIsMatcher(int columnIndex, Date value, SimpleDateFormat format) {
-        super(columnIndex);
+    public DateIsMatcher(DateColumn column, Date value) {
+        super();
+        this.column = column;
         this.value = value;
-        this.format = format;
     }
 
     @Override
     public boolean mathes(Row row) {
-        Date d = row.getDate(columnIndex, format);
-        return d.compareTo(value) == 0;
+        Date d = row.getDate(column);
+        if (d == null) {
+            return false;
+        }
+        GregorianCalendar c1 = new GregorianCalendar();
+        c1.setTime(value);
+        GregorianCalendar c2 = new GregorianCalendar();
+        c2.setTime(d);
+        return c1.get(Calendar.DATE) == c2.get(Calendar.DATE) && c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) && c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR);
     }
 
 }

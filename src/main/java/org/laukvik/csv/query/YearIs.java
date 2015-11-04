@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.DateColumn;
 
 /**
  *
@@ -29,18 +30,23 @@ public class YearIs extends RowMatcher {
 
     int value;
     DateFormat format;
+    DateColumn column;
 
-    public YearIs(int columnIndex, int value, DateFormat format) {
-        super(columnIndex);
+    public YearIs(DateColumn column, int value, DateFormat format) {
+        super();
         this.value = value;
         this.format = format;
+        this.column = column;
     }
 
     @Override
     public boolean mathes(Row row) {
-        Date d = row.getDate(columnIndex, format);
+        Date v = row.getDate(column);
+        if (v == null) {
+            return false;
+        }
         Calendar c = new GregorianCalendar();
-        c.setTime(d);
+        c.setTime(v);
         return c.get(GregorianCalendar.YEAR) == value;
     }
 

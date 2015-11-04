@@ -22,7 +22,7 @@ import java.net.URL;
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class UrlColumn implements Column<URL> {
+public class UrlColumn extends Column<URL> {
 
     String name;
 
@@ -52,7 +52,8 @@ public class UrlColumn implements Column<URL> {
     public URL parse(String value) {
         try {
             return new URL(value);
-        } catch (MalformedURLException ex) {
+        }
+        catch (MalformedURLException ex) {
             return null;
         }
     }
@@ -60,9 +61,28 @@ public class UrlColumn implements Column<URL> {
     public int compare(URL one, URL another) {
         return one.toExternalForm().compareTo(another.toExternalForm());
     }
+
     @Override
     public String toString() {
         return name + "(URL)";
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final UrlColumn other = (UrlColumn) obj;
+        return true;
     }
 
 }

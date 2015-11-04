@@ -15,12 +15,13 @@
  */
 package org.laukvik.csv;
 
-import org.junit.Test;
-import org.laukvik.csv.query.Query;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.util.List;
+import org.junit.Test;
+import org.laukvik.csv.columns.IntegerColumn;
+import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.query.Query;
 
 /**
  *
@@ -30,13 +31,23 @@ public class CsvQueryTest {
 
     @Test
     public void readFile() throws IOException, ParseException {
-        CSV csv = new CSV(getResource("presidents.csv"), Charset.defaultCharset());
+        CSV csv = new CSV();
+        csv.read(getResource("presidents_meta.csv"));
         Query q = csv.findByQuery();
-        /*
-         List<Row> rows = q.select("Party", "Home state").where().column("Presidency").isGreaterThan(50).getResultList();
-         for (Row r : rows){
-         System.out.println( r.getString("Party") + "=" + r.getString("Home state") );
-         }*/
+
+        StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
+        IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
+        StringColumn homeState = (StringColumn) csv.getMetaData().getColumn("Home state");
+
+        List<Row> rows = csv.findByQuery().
+                select(party, homeState).
+                where().
+                column(presidency).
+                isGreaterThan(10).
+                getResultList();
+        for (Row r : rows) {
+            //System.out.println(r.getInteger(presidency) + "=" + r.getString(homeState));
+        }
     }
 
     public static File getResource(String filename) {

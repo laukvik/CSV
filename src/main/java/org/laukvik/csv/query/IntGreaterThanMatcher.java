@@ -16,6 +16,7 @@
 package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.IntegerColumn;
 
 /**
  *
@@ -24,15 +25,22 @@ import org.laukvik.csv.Row;
 public class IntGreaterThanMatcher extends RowMatcher {
 
     int value;
+    IntegerColumn column;
 
-    public IntGreaterThanMatcher(int columnIndex, int value) {
-        super(columnIndex);
+    public IntGreaterThanMatcher(IntegerColumn column, int value) {
+        super();
+        this.column = column;
         this.value = value;
     }
 
     @Override
     public boolean mathes(Row row) {
-        return row.getInteger(columnIndex) > value;
+        Integer value = row.getInteger(column);
+        if (value == null) {
+            return false;
+        }
+        return value > this.value;
+        //return row.getInteger(columnIndex) > value;
     }
 
 }

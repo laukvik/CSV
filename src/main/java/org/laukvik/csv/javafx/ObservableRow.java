@@ -20,7 +20,9 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 
 /**
  *
@@ -33,8 +35,10 @@ public class ObservableRow implements Observable {
 
     public ObservableRow(Row row) {
         items = FXCollections.observableArrayList();
-        for (int x = 0; x < row.getMetaData().getColumnCount(); x++) {
-            items.add(new SimpleStringProperty(row.getString(x)));
+        MetaData md = row.getCSV().getMetaData();
+        for (int x = 0; x < md.getColumnCount(); x++) {
+            Column col = md.getColumn(x);
+            items.add(new SimpleStringProperty(row.getAsString(col)));
         }
     }
 

@@ -16,6 +16,12 @@
 package org.laukvik.csv;
 
 import org.junit.Test;
+import org.laukvik.csv.columns.BooleanColumn;
+import org.laukvik.csv.columns.ByteColumn;
+import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.FloatColumn;
+import org.laukvik.csv.columns.IntegerColumn;
+import org.laukvik.csv.columns.StringColumn;
 
 /**
  *
@@ -29,48 +35,48 @@ public class RowTest {
     @Test
     public void shoudAddRow() {
         CSV csv = new CSV();
-        csv.addColumn("column");
-        Row r = csv.createRow();
+        Column column = csv.addColumn("column");
+        Row r = csv.addRow();
     }
 
     @Test
     public void shouldSetInteger() {
         CSV csv = new CSV();
-        csv.addColumn("id");
-        Row r = csv.createRow();
-        r.setValue(0, 123);
+        IntegerColumn id = csv.addIntegerColumn(new IntegerColumn("id"));
+        Row r = csv.addRow();
+        r.update(id, 123);
     }
 
     @Test
     public void shouldSetFloat() {
         CSV csv = new CSV();
-        csv.addColumn("id");
-        Row r = csv.createRow();
-        r.setValue(0, 123.45);
+        FloatColumn fc = csv.addFloatColumn(new FloatColumn("id"));
+        Row r = csv.addRow();
+        r.update(fc, 123.45f);
     }
 
     @Test
     public void shouldSetString() {
         CSV csv = new CSV();
-        csv.addColumn("desc");
-        Row r = csv.createRow();
-        r.setValue(0, "just testing");
+        StringColumn sc = csv.addStringColumn("desc");
+        Row r = csv.addRow();
+        r.update(sc, "just testing");
     }
 
     @Test
     public void shouldSetBoolean() {
         CSV csv = new CSV();
-        csv.addColumn("isTrue");
-        Row r = csv.createRow();
-        r.setValue(0, true);
+        BooleanColumn bc = csv.addBooleanColumn(new BooleanColumn("isTrue"));
+        Row r = csv.addRow();
+        r.update(bc, true);
     }
 
     @Test
     public void shouldSetByte() {
         CSV csv = new CSV();
-        csv.addColumn("byte");
-        Row r = csv.createRow();
+        ByteColumn bc = csv.addByteColumn(new ByteColumn("byte"));
+        Row r = csv.addRow();
         byte a = 2;
-        r.setValue(0, a);
+        r.update(bc, a);
     }
 }

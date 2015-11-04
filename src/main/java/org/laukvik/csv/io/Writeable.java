@@ -16,16 +16,14 @@
 package org.laukvik.csv.io;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
 import org.laukvik.csv.CSV;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public interface Writeable {
+public interface Writeable extends AutoCloseable {
 
-    public void write(CSV csv, OutputStream out, Charset charset) throws IOException;
+    public void write(CSV csv) throws IOException;
 
 }

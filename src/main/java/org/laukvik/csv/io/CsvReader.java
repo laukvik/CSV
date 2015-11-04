@@ -13,34 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.io;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import org.laukvik.csv.CSV;
+import org.laukvik.csv.MetaData;
+import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.BooleanColumn;
+import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.DateColumn;
+import org.laukvik.csv.columns.DoubleColumn;
+import org.laukvik.csv.columns.FloatColumn;
+import org.laukvik.csv.columns.IntegerColumn;
+import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.columns.UrlColumn;
 
 /**
  *
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class CsvReader implements AutoCloseable, Iterator<Row> {
+public class CsvReader implements AutoCloseable, Readable {
 
     private final BufferedInputStream is;
-    private Charset charset;
     private char currentChar;
     private StringBuilder currentValue;
     private StringBuilder rawLine;
     private int lineCounter;
     private MetaData metaData;
     private Row row;
-    private List<String> values;
 
     public CsvReader(InputStream is) throws IOException {
         this(is, Charset.defaultCharset());
@@ -48,60 +54,73 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
 
     public CsvReader(InputStream is, Charset charset) throws IOException {
         this.is = new BufferedInputStream(is);
-        this.charset = charset;
         this.lineCounter = 0;
-        this.metaData = null;
-        this.values = new ArrayList<>();
-        parseRow();
+        this.metaData = new MetaData();
         this.metaData.setCharset(charset);
+        List<String> columns = parseRow();
+        for (String c : columns) {
+            this.metaData.addColumn(c);
+        }
     }
 
-    public Charset getCharset() {
-        return charset;
-    }
-
-    public String getUnprocessedRow() {
-        return rawLine.toString();
+    public int getLineCounter() {
+        return lineCounter;
     }
 
     private boolean readRow() throws IOException {
-        row = null;
-        values = new ArrayList<>();
         if (is.available() == 0) {
             return false;
         }
-        parseRow();
+        row = new Row();
+        List<String> values = parseRow();
         if (values.isEmpty()) {
             return false;
         }
-        row = new Row(values);
-        row.setMetaData(metaData);
+
+        for (int x = 0; x < values.size(); x++) {
+            String value = values.get(x);
+            if (x >= metaData.getColumnCount()) {
+            } else {
+                Column c = metaData.getColumn(x);
+                if (c instanceof StringColumn) {
+                    row.update((StringColumn) c, value);
+                } else if (c instanceof IntegerColumn) {
+                    IntegerColumn ic = (IntegerColumn) c;
+                    row.update(ic, ic.parse(value));
+                } else if (c instanceof UrlColumn) {
+                    UrlColumn uc = (UrlColumn) c;
+                    row.update(uc, uc.parse(value));
+                } else if (c instanceof BooleanColumn) {
+                    BooleanColumn bc = (BooleanColumn) c;
+                    row.update(bc, bc.parse(value));
+                } else if (c instanceof DoubleColumn) {
+                    DoubleColumn dc = (DoubleColumn) c;
+                    row.update(dc, dc.parse(value));
+                } else if (c instanceof FloatColumn) {
+                    FloatColumn fc = (FloatColumn) c;
+                    row.update(fc, fc.parse(value));
+                } else if (c instanceof DateColumn) {
+                    DateColumn dc = (DateColumn) c;
+                    row.update(dc, dc.parse(value));
+                }
+            }
+        }
         return true;
-    }
-
-    public Row getRow() {
-        return row;
-    }
-
-    public MetaData getMetaData() {
-        return metaData;
     }
 
     /**
      *
      * @return @throws IOException
      */
-    private void parseRow() throws IOException {
+    private List<String> parseRow() throws IOException {
+        List<String> values = new ArrayList<>();
         boolean isNextLine = false;
 
         /* Current value */
         currentValue = new StringBuilder();
 
         /* the current line */
-        row = new Row();
-        if (lineCounter > 0) {
-            row.setMetaData(metaData);
-        }
+//        row = new Row();
 
         /* The raw chars being read */
         rawLine = new StringBuilder();
@@ -197,23 +216,16 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
                 currentValue = new StringBuilder();
             }
         }
-
-        if (lineCounter == 0) {
-            if (metaData == null) {
-                /* Metadata not provided. Use strings only */
-                this.metaData = new MetaData();
-                for (String s : values) {
-                    metaData.addColumn(s);
-                }
-            } else {
-                /* User specified columns */
-                for (int x = 0; x < values.size(); x++) {
-                    String s = values.get(x);
-                    metaData.getColumn(x).setName(s);
-                }
-            }
-        }
         lineCounter++;
+        return values;
+    }
+
+    public Row getRow() {
+        return row;
+    }
+
+    public MetaData getMetaData() {
+        return metaData;
     }
 
     @Override
@@ -234,31 +246,6 @@ public class CsvReader implements AutoCloseable, Iterator<Row> {
     @Override
     public Row next() {
         return row;
-    }
-
-    public static <T> T createInstance(Row row, Class<T> aClass) throws InstantiationException, IllegalAccessException {
-        Object instance = aClass.newInstance();
-
-        /* Iterate all fields in object*/
-        for (Field f : instance.getClass().getDeclaredFields()) {
-            /* Set accessible to allow injecting private fields - otherwise an exception will occur*/
-            f.setAccessible(true);
-            /* Get field value */
-            Object value = f.get(instance);
-            /* Find the name of the field - in code */
-            String nameAttribute = f.getName();
-
-            if (f.getType() == String.class) {
-                f.set(instance, row.getString(nameAttribute));
-            } else if (f.getType() == Integer.class) {
-                f.set(instance, row.getInteger(nameAttribute));
-            } else if (f.getType() == URL.class) {
-                f.set(instance, row.getURL(nameAttribute));
-            }
-
-            f.setAccessible(false);
-        }
-        return (T) instance;
     }
 
 }

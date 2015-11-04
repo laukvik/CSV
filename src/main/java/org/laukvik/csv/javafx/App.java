@@ -29,6 +29,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -50,7 +51,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.DistinctColumnValues;
-import org.laukvik.csv.ParseException;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
@@ -155,14 +155,12 @@ public class App extends Application {
         if (!file.exists()) {
         } else {
             try {
-                csv = new CSV(file);
+                csv = new CSV();
+                csv.read(file);
                 openCSV(csv);
                 primaryStage.setTitle(file.getName());
             }
             catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            catch (ParseException ex) {
                 ex.printStackTrace();
             }
         }
@@ -213,6 +211,7 @@ public class App extends Application {
             final ObservableList<UniqueRow> data2 = FXCollections.observableArrayList(list);
             // Build table
             TableView<UniqueRow> tv = new TableView(data2);
+            tv.setPlaceholder(new Label("Placeholder"));
             tv.setEditable(true);
 
             TableColumn selectColumn = new TableColumn("");

@@ -21,6 +21,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.query.Query;
 
 public class CSVTableModel implements TableModel {
@@ -76,9 +78,10 @@ public class CSVTableModel implements TableModel {
     }
 
     @Override
-    public Object getValueAt(int row, int column) {
+    public Object getValueAt(int row, int columnIndex) {
         try {
-            return csv.getQuery() == null ? csv.getRow(row).getValue(column) : csv.getQuery().getResultList().get(row).getValue(column);
+            StringColumn column = (StringColumn) csv.getMetaData().getColumn(columnIndex);
+            return csv.getQuery() == null ? csv.getRow(row).getString(column) : csv.getQuery().getResultList().get(row).getString(column);
         }
         catch (Exception e) {
             return null;
@@ -93,6 +96,7 @@ public class CSVTableModel implements TableModel {
     @Override
     public void setValueAt(Object value, int row, int column) {
         Row r = csv.getRow(row);
-        r.setString(column, (String) value);
+        Column c = csv.getMetaData().getColumn(column);
+        //r.update(c, (String) value);
     }
 }

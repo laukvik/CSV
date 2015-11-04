@@ -16,6 +16,7 @@
 package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 
 /**
  *
@@ -23,13 +24,16 @@ import org.laukvik.csv.Row;
  */
 public class NotEmptyMatcher extends RowMatcher {
 
-    public NotEmptyMatcher(int columnIndex) {
-        super(columnIndex);
+    Column column;
+
+    public NotEmptyMatcher(Column column) {
+        super();
+        this.column = column;
     }
 
     @Override
     public boolean mathes(Row row) {
-        return !row.isEmpty(columnIndex);
+        return !row.isNull(column);
     }
 
 }

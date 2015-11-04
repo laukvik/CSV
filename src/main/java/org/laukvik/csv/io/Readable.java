@@ -15,14 +15,18 @@
  */
 package org.laukvik.csv.io;
 
-import java.io.InputStream;
+import java.util.Iterator;
+import org.laukvik.csv.MetaData;
+import org.laukvik.csv.Row;
 
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public interface Readable {
+public interface Readable extends Iterator<Row> {
 
-    public void read(InputStream in);
+    public MetaData getMetaData();
+
+    public Row getRow();
 
 }
