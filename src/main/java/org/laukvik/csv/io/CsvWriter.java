@@ -103,23 +103,23 @@ public final class CsvWriter implements Writeable {
             }
             String column = values.get(x);
             if (column == null) {
-                out.write(CSV.QUOTE);
-                out.write(CSV.QUOTE);
+                out.write(CSV.DOUBLE_QUOTE);
+                out.write(CSV.DOUBLE_QUOTE);
             } else if (isDigitsOnly(column)) {
                 /* Digits only */
                 out.write(column.getBytes());
             } else {
                 /* Text */
-                out.write(CSV.QUOTE);
+                out.write(CSV.DOUBLE_QUOTE);
                 for (int n = 0; n < column.length(); n++) {
                     char ch = column.charAt(n);
-                    if (ch == CSV.QUOTE) {
+                    if (ch == CSV.DOUBLE_QUOTE) {
                         /* Encode quotes - write an extra quote */
-                        out.write(CSV.QUOTE);
+                        out.write(CSV.DOUBLE_QUOTE);
                     }
                     out.write(ch);
                 }
-                out.write(CSV.QUOTE);
+                out.write(CSV.DOUBLE_QUOTE);
             }
         }
         out.write(CSV.RETURN);

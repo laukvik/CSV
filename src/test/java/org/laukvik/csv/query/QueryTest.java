@@ -15,13 +15,6 @@
  */
 package org.laukvik.csv.query;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +25,14 @@ import org.laukvik.csv.columns.DateColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 
 public class QueryTest {
@@ -49,7 +50,7 @@ public class QueryTest {
         try {
             format = new SimpleDateFormat("dd/MM/yyyy");
             csv = new CSV();
-            csv.read(getResource("presidents_meta.csv"));
+            csv.readFile(getResource("presidents_meta.csv"));
 
 //            for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
 //                System.out.println(csv.getMetaData().getColumn(x).getName());
@@ -159,7 +160,7 @@ public class QueryTest {
 
     @Test
     public void sortAsc() throws ParseException, IOException {
-        csv.read(getResource("presidents.csv"));
+        csv.readFile(getResource("presidents.csv"));
         StringColumn president = (StringColumn) csv.getMetaData().getColumn("President");
         List<Row> rows = csv.findByQuery().orderBy().asc(president).getResultList();
 //        for (Row r : rows) {

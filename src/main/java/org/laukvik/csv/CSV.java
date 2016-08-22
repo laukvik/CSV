@@ -82,12 +82,14 @@ public final class CSV implements Serializable {
 
     public final static char LINEFEED = 10;
     public final static char RETURN = 13;
-    public final static char COMMA = ',';
-    public final static char SEMINCOLON = ';';
-    public final static char PIPE = '|';
-    public final static char TAB = '\t';
-    public final static char QUOTE = '"';
-    public final static String CRLF = "\r\n";
+
+    public final static char COMMA = 44;
+    public final static char SEMICOLON = 59;
+    public final static char PIPE = 124;
+    public final static char TAB = 9;
+
+    public final static char DOUBLE_QUOTE = 34;
+    public final static char SINGLE_QUOTE = 39;
 
     private MetaData metaData;
     private List<Row> rows;
@@ -105,8 +107,16 @@ public final class CSV implements Serializable {
      * @param file
      * @throws IOException
      */
-    public void read(File file) throws IOException {
-        read(new CsvReader(new FileInputStream(file)));
+    public void readFile(final File file) throws IOException {
+        readFile(new CsvReader(new FileInputStream(file)));
+    }
+
+    public void readFileWithSeparator(final File file, final char separator) throws IOException {
+        readFile(new CsvReader(new FileInputStream(file), Charset.defaultCharset(), separator ));
+    }
+
+    public void readFileWithSeparator(final File file, final char separator, final char quote) throws IOException {
+        readFile(new CsvReader(new FileInputStream(file), Charset.defaultCharset(), separator, quote ));
     }
 
     /**
@@ -114,7 +124,7 @@ public final class CSV implements Serializable {
      *
      * @param reader
      */
-    public void read(AbstractReader reader) {
+    public void readFile(AbstractReader reader) {
         this.query = null;
         rows = new ArrayList<>();
         this.metaData = reader.getMetaData();

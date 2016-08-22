@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * CSV reader for InputStreams.
  *
  * @author Morten Laukvik
  */
@@ -46,15 +46,28 @@ public class CsvReader implements AbstractReader {
     private MetaData metaData;
     private Row row;
 
+    private final char columnSeparator;
+    private final char quoteChar;
+
     public CsvReader(InputStream is) throws IOException {
-        this(is, Charset.defaultCharset());
+        this(is, Charset.defaultCharset(), CSV.COMMA, CSV.DOUBLE_QUOTE);
     }
 
     public CsvReader(InputStream is, Charset charset) throws IOException {
+        this(is, charset, CSV.COMMA, CSV.DOUBLE_QUOTE);
+    }
+
+    public CsvReader(InputStream is, Charset charset, char separator) throws IOException {
+        this(is, charset, separator, CSV.DOUBLE_QUOTE);
+    }
+
+    public CsvReader(InputStream is, Charset charset, char separator, char qoute) throws IOException {
         this.is = new BufferedInputStream(is);
         this.lineCounter = 0;
         this.metaData = new MetaData();
         this.metaData.setCharset(charset);
+        this.columnSeparator = separator;
+        this.quoteChar = qoute;
         List<String> columns = parseRow();
         for (String c : columns) {
             this.metaData.addColumn(c);
@@ -117,10 +130,7 @@ public class CsvReader implements AbstractReader {
         /* Current value */
         StringBuilder currentValue = new StringBuilder();
 
-        /* the current line */
-//        row = new Row();
-
-        /* The raw chars being read */
+        /* The raw chars being readFile */
         final StringBuilder rawLine = new StringBuilder();
 
         boolean isWithinQuote = false;
@@ -128,6 +138,8 @@ public class CsvReader implements AbstractReader {
 
         /* Read until */
         while (is.available() > 0 && !isNextLine) {
+
+            boolean isBreak = false;
 
             /* Read next char */
             char currentChar = (char) is.read();
@@ -138,64 +150,73 @@ public class CsvReader implements AbstractReader {
             /* Adds the currentValue */
             boolean addValue = false;
 
+            //****************************************************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
             /* Check char */
-            switch (currentChar) {
-                case CSV.RETURN: /* Found carriage return. Do nothing. */
+            if (currentChar == CSV.RETURN) {
 
-                    addChar = false;
-                    break;
+                /* Found carriage return. Do nothing. */
+                addChar = false;
 
-                case CSV.LINEFEED: /* Found new line symbol */
+            } else if (currentChar == CSV.LINEFEED){
 
-                    addChar = false;
-                    addValue = true;
-                    isNextLine = true;
-                    if (isWithinQuote) {
-                        currentValue.deleteCharAt(currentValue.length() - 1);
-                        isWithinQuote = false;
+                /* Found new line symbol */
+                addChar = false;
+                addValue = true;
+                isNextLine = true;
+                if (isWithinQuote) {
+                    currentValue.deleteCharAt(currentValue.length() - 1);
+                    isWithinQuote = false;
+                }
+
+            } else if (currentChar == quoteChar){
+
+                addChar = true;
+                isWithinQuote = true;
+                int read = -1;
+                while (is.available() > 0) {
+                    currentChar = (char) is.read();
+                    rawLine.append(currentChar);
+                    if (currentChar == quoteChar) {
+                        quoteCount++;
+                        break;
+                    } else {
+                        currentValue.append(currentChar);
                     }
-                    break;
+                }
+                quoteCount--;
 
-                case CSV.QUOTE:
+            } else if (currentChar == columnSeparator){
 
-                    /*    "Venture ""Extended Edition"""  */
-                    addChar = true;
+                addChar = false;
+                addValue = true;
+                if (isWithinQuote) {
+                    currentValue.deleteCharAt(currentValue.length() - 1);
+                    isWithinQuote = false;
+                }
 
-                    isWithinQuote = true;
+            } else {
+              /* Everything else... */
+                addChar = true;
 
-                    int read = -1;
-                    while (is.available() > 0) {
-                        currentChar = (char) is.read();
-                        rawLine.append(currentChar);
-                        if (currentChar == CSV.QUOTE) {
-                            quoteCount++;
-                            break;
-                        } else {
-                            currentValue.append(currentChar);
-                        }
-                    }
-
-                    quoteCount--;
-
-                    break;
-
-                case CSV.COMMA:
-
-                    addChar = false;
-                    addValue = true;
-
-                    if (isWithinQuote) {
-                        currentValue.deleteCharAt(currentValue.length() - 1);
-                        isWithinQuote = false;
-                    }
-
-                    break;
-
-                default:
-                    /* Everything else... */
-                    addChar = true;
-                    break;
             }
+
+
+
+
+
+
+            //****************************************************************************************************************************************************************
+
             if (addChar) {
                 currentValue.append(currentChar);
             }
@@ -213,6 +234,8 @@ public class CsvReader implements AbstractReader {
                 values.add(currentValue.toString());
                 currentValue = new StringBuilder();
             }
+
+
         }
         lineCounter++;
         return values;

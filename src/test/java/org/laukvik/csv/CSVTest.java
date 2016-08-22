@@ -35,7 +35,7 @@ public class CSVTest {
     @Test
     public void findRows() throws IOException, ParseException {
         CSV csv = new CSV();
-        csv.read(getResource("countries.csv"));
+        csv.readFile(getResource("countries.csv"));
         assertEquals(249, csv.getRowCount());
     }
 
@@ -94,7 +94,7 @@ public class CSVTest {
         try {
 
             CSV csv = new CSV();
-            csv.read(getResource("escaped.csv"));
+            csv.readFile(getResource("escaped.csv"));
 
             MetaData md = csv.getMetaData();
 
@@ -131,7 +131,7 @@ public class CSVTest {
     public void readAcid() {
         try {
             CSV csv = new CSV();
-            csv.read(getResource("acid.csv"));
+            csv.readFile(getResource("acid.csv"));
             MetaData md = csv.getMetaData();
 
             assertEquals("Year", "Year", md.getColumnName(0));
@@ -160,10 +160,10 @@ public class CSVTest {
             CSV csv = new CSV();
             File f = getResource("embeddedcommas.csv");
             if (!f.exists()) {
-                fail("Could not read test file:");
+                fail("Could not readFile test file:");
             }
 
-            csv.read(getResource("embeddedcommas.csv"));
+            csv.readFile(getResource("embeddedcommas.csv"));
             MetaData md = csv.getMetaData();
 
             assertEquals("Year", "Year", md.getColumnName(0));
@@ -182,6 +182,7 @@ public class CSVTest {
             assertEquals("ac, abs, moon", "ac, abs, moon", r.getString(desc));
         }
         catch (Exception e) {
+            e.printStackTrace();
             fail(e.getMessage());
         }
     }
@@ -190,7 +191,7 @@ public class CSVTest {
     public void readQuoted() {
         try {
             CSV csv = new CSV();
-            csv.read(getResource("quoted.csv"));
+            csv.readFile(getResource("quoted.csv"));
             MetaData md = csv.getMetaData();
             assertEquals("Lead", "Lead", md.getColumnName(0));
             assertEquals("Title", "Title", md.getColumnName(1));
@@ -216,7 +217,7 @@ public class CSVTest {
         try {
             // Name,Class,Dorm,Room,GPA
             CSV csv = new CSV();
-            csv.read(getResource("unquoted.csv"));
+            csv.readFile(getResource("unquoted.csv"));
             MetaData md = csv.getMetaData();
             assertEquals("Name", "Name", md.getColumnName(0));
             assertEquals("Class", "Class", md.getColumnName(1));
@@ -242,7 +243,7 @@ public class CSVTest {
     public void readInvalid() {
         try {
             CSV csv = new CSV();
-            csv.read(getResource("invalid.csv"));
+            csv.readFile(getResource("invalid.csv"));
             MetaData md = csv.getMetaData();
             assertEquals("First", "First", md.getColumnName(0));
             assertEquals("Last", "Last", md.getColumnName(1));
@@ -257,7 +258,7 @@ public class CSVTest {
     public void readEntities() {
         try {
             CSV csv = new CSV();
-            csv.read(getResource("person.csv"));
+            csv.readFile(getResource("person.csv"));
             List<Person> items = CSV.findByClass(Person.class);
             int x = 1;
             for (Person p : items) {
@@ -268,5 +269,75 @@ public class CSVTest {
             fail(e.getMessage());
         }
     }
+
+    @Test
+    public void readWithoutSeparator() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile( getResource("separator_comma.csv")  );
+        MetaData md = csv.getMetaData();
+        assertEquals(3,md.getColumnCount());
+        assertEquals(2,csv.getRowCount());
+    }
+
+    @Test
+    public void readCommaSeparated() throws IOException {
+        CSV csv = new CSV();
+        csv.readFileWithSeparator( getResource("separator_comma.csv"), CSV.COMMA );
+        MetaData md = csv.getMetaData();
+        assertEquals(3,md.getColumnCount());
+        assertEquals(2,csv.getRowCount());
+    }
+
+    @Test
+    public void readSemiColonSeparated() throws IOException {
+        CSV csv = new CSV();
+        csv.readFileWithSeparator( getResource("separator_semi.csv"), CSV.SEMICOLON  );
+        MetaData md = csv.getMetaData();
+        assertEquals(3,md.getColumnCount());
+        assertEquals(1,csv.getRowCount());
+    }
+
+    @Test
+    public void readTabSeparated() throws IOException {
+        CSV csv = new CSV();
+        csv.readFileWithSeparator( getResource("separator_tab.csv"), CSV.TAB  );
+        MetaData md = csv.getMetaData();
+        assertEquals(3,md.getColumnCount());
+        assertEquals(1,csv.getRowCount());
+    }
+
+    @Test
+    public void readPipeSeparated() throws IOException {
+        CSV csv = new CSV();
+        csv.readFileWithSeparator( getResource("separator_pipe.csv"), CSV.PIPE  );
+        MetaData md = csv.getMetaData();
+        assertEquals(3,md.getColumnCount());
+        assertEquals(1,csv.getRowCount());
+    }
+
+    @Test
+    public void readSingleQuote() throws IOException {
+        CSV csv = new CSV();
+        csv.readFileWithSeparator( getResource("quote_single.csv"), CSV.COMMA, CSV.SINGLE_QUOTE );
+        MetaData md = csv.getMetaData();
+        assertEquals(3,md.getColumnCount());
+        assertEquals(1,csv.getRowCount());
+        StringColumn sc = (StringColumn) md.getColumn(0);
+        assertEquals("Heading1",md.getColumnName(0));
+        assertEquals("first", csv.getRow(0).getString(sc));
+    }
+
+    @Test
+    public void readDoubleQuote() throws IOException {
+        CSV csv = new CSV();
+        csv.readFileWithSeparator( getResource("quote_double.csv"), CSV.COMMA, CSV.DOUBLE_QUOTE );
+        MetaData md = csv.getMetaData();
+        assertEquals(3,md.getColumnCount());
+        assertEquals(1,csv.getRowCount());
+        StringColumn sc = (StringColumn) md.getColumn(0);
+        assertEquals("Heading1",md.getColumnName(0));
+        assertEquals("first", csv.getRow(0).getString(sc));
+    }
+
 
 }

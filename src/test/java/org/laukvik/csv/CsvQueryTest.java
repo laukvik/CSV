@@ -15,13 +15,14 @@
  */
 package org.laukvik.csv;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 import org.junit.Test;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.query.Query;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 
 public class CsvQueryTest {
@@ -29,7 +30,7 @@ public class CsvQueryTest {
     @Test
     public void readFile() throws IOException, ParseException {
         CSV csv = new CSV();
-        csv.read(getResource("presidents_meta.csv"));
+        csv.readFile(getResource("presidents_meta.csv"));
         Query q = csv.findByQuery();
 
         StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");

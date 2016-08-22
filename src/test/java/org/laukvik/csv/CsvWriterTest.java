@@ -15,15 +15,17 @@
  */
 package org.laukvik.csv;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.CsvWriter;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class CsvWriterTest {
@@ -54,7 +56,7 @@ public class CsvWriterTest {
 
         try {
             CSV csv = new CSV();
-            csv.read(f);
+            csv.readFile(f);
 //            StringColumn last = (StringColumn) csv.getMetaData().getColumn("Last");
 //                    assertEquals("Correct column count", 2, csv.getMetaData().getColumnCount());
             assertEquals("Correct row count", 2, csv.getRowCount());
@@ -64,7 +66,7 @@ public class CsvWriterTest {
             assertEquals("Find by row index and column name", "Gates", csv.getRow(0).getString(last));
         }
         catch (IOException ex) {
-            fail("Failed to read CSV file!");
+            fail("Failed to readFile CSV file!");
         }
     }
 

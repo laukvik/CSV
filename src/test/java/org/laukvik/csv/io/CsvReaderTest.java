@@ -26,14 +26,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-
+/**
+ *
+ * Separator: TAB, comma, semikolon eller CUSTOM
+ *
+ *
+ *
+ */
 public class CsvReaderTest {
 
-    public CsvReaderTest() {
-    }
-
     @Test
-    public void testSomeMethod() throws Exception {
+    public void shouldRead() throws Exception {
         File file = File.createTempFile("Person", ".csv");
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
