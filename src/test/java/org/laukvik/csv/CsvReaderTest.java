@@ -27,10 +27,7 @@ import org.junit.Test;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.CsvReader;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class CsvReaderTest {
 
     @Test

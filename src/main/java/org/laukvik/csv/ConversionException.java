@@ -15,10 +15,7 @@
  */
 package org.laukvik.csv;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class ConversionException extends RuntimeException {
 
     public ConversionException(String value, String expected) {

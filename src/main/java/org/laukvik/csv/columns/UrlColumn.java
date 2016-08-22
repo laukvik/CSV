@@ -18,10 +18,7 @@ package org.laukvik.csv.columns;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class UrlColumn extends Column<URL> {
 
     String name;

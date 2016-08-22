@@ -24,10 +24,7 @@ import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DateColumn;
 import org.laukvik.csv.columns.StringColumn;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class RowSorter implements Comparator<Row> {
 
     List<SortOrder> sortOrders;

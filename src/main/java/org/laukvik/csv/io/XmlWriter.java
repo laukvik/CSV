@@ -22,10 +22,7 @@ import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class XmlWriter implements Writeable, AutoCloseable {
 
     private final static char OPEN = '<';

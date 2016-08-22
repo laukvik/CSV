@@ -18,10 +18,7 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class IntIsMatcher extends RowMatcher {
 
     private final int value;

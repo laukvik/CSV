@@ -55,7 +55,7 @@ import org.laukvik.csv.columns.StringColumn;
  *
  * </code>
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class Query {
 

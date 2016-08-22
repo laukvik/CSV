@@ -19,10 +19,7 @@ import java.util.Iterator;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public interface Readable extends Iterator<Row> {
 
     public MetaData getMetaData();

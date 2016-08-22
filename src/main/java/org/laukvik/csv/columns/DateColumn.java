@@ -22,10 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class DateColumn extends Column<Date> {
 
     private String name;

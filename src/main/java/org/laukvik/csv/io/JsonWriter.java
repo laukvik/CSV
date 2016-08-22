@@ -28,7 +28,7 @@ import org.laukvik.csv.columns.Column;
 /**
  *
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class JsonWriter implements Writeable {
 

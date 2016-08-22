@@ -22,10 +22,7 @@ import java.util.GregorianCalendar;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class YearIs extends RowMatcher {
 
     int value;

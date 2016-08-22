@@ -36,7 +36,7 @@ import org.laukvik.csv.columns.UrlColumn;
 /**
  *
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class CsvReader implements AutoCloseable, Readable {
 

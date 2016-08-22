@@ -21,10 +21,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class CsvWriterTest {
 
     @Test

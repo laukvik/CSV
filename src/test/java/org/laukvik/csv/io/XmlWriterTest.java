@@ -28,10 +28,7 @@ import org.laukvik.csv.columns.StringColumn;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class XmlWriterTest {
 
     @Test

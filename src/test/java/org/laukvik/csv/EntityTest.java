@@ -15,30 +15,27 @@
  */
 package org.laukvik.csv;
 
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.List;
-import static org.junit.Assert.fail;
-import org.junit.Test;
-import org.laukvik.csv.swing.RecentFile;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+import static org.junit.Assert.fail;
+
+
 public class EntityTest {
 
     @Test
     public void read() {
-        List<RecentFile> recentFiles = CSV.findByClass(RecentFile.class);
+        List<Person> recentFiles = CSV.findByClass(Person.class);
     }
 
     @Test
     public void write() {
-        List<RecentFile> recentFiles = new ArrayList<>();
-        recentFiles.add(new RecentFile("Hello.csv"));
-        recentFiles.add(new RecentFile("World.csv"));
+        List<Person> recentFiles = new ArrayList<>();
+        recentFiles.add(new Person());
         try {
-            CSV.saveAll(recentFiles, RecentFile.class);
+            CSV.saveAll(recentFiles, Person.class);
         }
         catch (Exception e) {
             fail(e.getMessage());

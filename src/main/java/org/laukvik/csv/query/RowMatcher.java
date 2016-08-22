@@ -17,10 +17,7 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public abstract class RowMatcher {
 
     public RowMatcher() {

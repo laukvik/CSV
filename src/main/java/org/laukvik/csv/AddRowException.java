@@ -15,10 +15,7 @@
  */
 package org.laukvik.csv;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class AddRowException extends IllegalArgumentException {
 
     public AddRowException(int provided, int columnCount) {

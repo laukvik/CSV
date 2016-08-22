@@ -25,10 +25,7 @@ import org.junit.Test;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.CsvWriter;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class CsvWriterTest {
 
     public static File getResource(String filename) {

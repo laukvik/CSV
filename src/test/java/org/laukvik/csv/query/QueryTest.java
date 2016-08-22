@@ -33,10 +33,7 @@ import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class QueryTest {
 
     CSV csv;

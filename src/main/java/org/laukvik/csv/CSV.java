@@ -72,7 +72,7 @@ import org.laukvik.csv.query.Query;
  * </code>
  *
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class CSV implements Serializable {
 

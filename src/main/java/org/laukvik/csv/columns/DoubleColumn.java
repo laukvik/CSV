@@ -15,10 +15,7 @@
  */
 package org.laukvik.csv.columns;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class DoubleColumn extends Column<Double> {
 
     String name;

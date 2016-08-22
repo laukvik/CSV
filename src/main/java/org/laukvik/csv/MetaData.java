@@ -15,16 +15,14 @@
  */
 package org.laukvik.csv;
 
+import org.laukvik.csv.columns.Column;
+
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import org.laukvik.csv.columns.Column;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class MetaData implements Serializable {
 
     private final List<Column> columns;

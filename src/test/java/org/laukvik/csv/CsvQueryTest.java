@@ -23,10 +23,7 @@ import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.query.Query;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class CsvQueryTest {
 
     @Test

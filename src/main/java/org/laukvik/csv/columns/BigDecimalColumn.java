@@ -17,10 +17,7 @@ package org.laukvik.csv.columns;
 
 import java.math.BigDecimal;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class BigDecimalColumn extends Column<BigDecimal> {
 
     String name;

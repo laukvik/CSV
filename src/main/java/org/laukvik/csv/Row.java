@@ -15,12 +15,6 @@
  */
 package org.laukvik.csv;
 
-import java.io.Serializable;
-import java.net.URL;
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
 import org.laukvik.csv.columns.BooleanColumn;
 import org.laukvik.csv.columns.ByteColumn;
 import org.laukvik.csv.columns.Column;
@@ -30,6 +24,13 @@ import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
+
+import java.io.Serializable;
+import java.net.URL;
+import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 
 /**
  * Date created = is.readDate("created");<br>
@@ -52,7 +53,7 @@ import org.laukvik.csv.columns.UrlColumn;
  *
  * CSV.addRow().add("First");
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class Row implements Serializable {
 

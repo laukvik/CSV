@@ -20,10 +20,7 @@ import java.util.Date;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class DateGreaterThan extends RowMatcher {
 
     Date value;

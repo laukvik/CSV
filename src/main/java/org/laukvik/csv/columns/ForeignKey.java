@@ -17,10 +17,7 @@ package org.laukvik.csv.columns;
 
 import java.util.Objects;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class ForeignKey {
 
     private String table;

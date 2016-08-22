@@ -17,10 +17,7 @@ package org.laukvik.csv.query;
 
 import org.junit.Test;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class StringInMatcherTest {
 
     public StringInMatcherTest() {

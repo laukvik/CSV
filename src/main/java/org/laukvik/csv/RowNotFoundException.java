@@ -15,10 +15,7 @@
  */
 package org.laukvik.csv;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class RowNotFoundException extends IllegalArgumentException {
 
     public RowNotFoundException(int index, int required) {
