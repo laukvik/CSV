@@ -15,12 +15,6 @@
  */
 package org.laukvik.csv.io;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
@@ -33,12 +27,19 @@ import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  *
  * @author Morten Laukvik
  */
-public class CsvReader implements AutoCloseable, Readable {
+public class CsvReader implements AbstractReader {
 
     private final BufferedInputStream is;
     private char currentChar;

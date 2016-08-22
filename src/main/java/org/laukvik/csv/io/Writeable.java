@@ -15,12 +15,13 @@
  */
 package org.laukvik.csv.io;
 
-import java.io.IOException;
 import org.laukvik.csv.CSV;
+
+import java.io.IOException;
 
 
 public interface Writeable extends AutoCloseable {
 
-    public void write(CSV csv) throws IOException;
+    void write(CSV csv) throws IOException;
 
 }

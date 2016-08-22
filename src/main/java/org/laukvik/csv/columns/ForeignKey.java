@@ -89,10 +89,7 @@ public class ForeignKey {
         if (!Objects.equals(this.table, other.table)) {
             return false;
         }
-        if (!Objects.equals(this.column, other.column)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.column, other.column);
     }
 
 }

@@ -15,6 +15,18 @@
  */
 package org.laukvik.csv;
 
+import org.laukvik.csv.columns.BooleanColumn;
+import org.laukvik.csv.columns.ByteColumn;
+import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.FloatColumn;
+import org.laukvik.csv.columns.IntegerColumn;
+import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.io.AbstractReader;
+import org.laukvik.csv.io.CsvReader;
+import org.laukvik.csv.io.CsvWriter;
+import org.laukvik.csv.io.Writeable;
+import org.laukvik.csv.query.Query;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,17 +43,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.laukvik.csv.columns.BooleanColumn;
-import org.laukvik.csv.columns.ByteColumn;
-import org.laukvik.csv.columns.Column;
-import org.laukvik.csv.columns.FloatColumn;
-import org.laukvik.csv.columns.IntegerColumn;
-import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.io.CsvReader;
-import org.laukvik.csv.io.CsvWriter;
-import org.laukvik.csv.io.Readable;
-import org.laukvik.csv.io.Writeable;
-import org.laukvik.csv.query.Query;
 
 /**
  * An API for reading and writing to Viewer. The implementation is based on the
@@ -74,7 +75,7 @@ import org.laukvik.csv.query.Query;
  *
  * @author Morten Laukvik
  */
-public class CSV implements Serializable {
+public final class CSV implements Serializable {
 
     public final static String MIME_TYPE = "text/csv";
     public final static String FILE_EXTENSION = "csv";
@@ -88,8 +89,8 @@ public class CSV implements Serializable {
     public final static char QUOTE = '"';
     public final static String CRLF = "\r\n";
 
-    protected MetaData metaData;
-    protected List<Row> rows;
+    private MetaData metaData;
+    private List<Row> rows;
     private Query query;
 
     public CSV() {
@@ -113,7 +114,7 @@ public class CSV implements Serializable {
      *
      * @param reader
      */
-    public void read(Readable reader) {
+    public void read(AbstractReader reader) {
         this.query = null;
         rows = new ArrayList<>();
         this.metaData = reader.getMetaData();
@@ -174,7 +175,7 @@ public class CSV implements Serializable {
         rows.clear();
     }
 
-    public void write(Writeable writer) throws IOException, Exception {
+    public void write(Writeable writer) throws Exception {
         writer.write(this);
         writer.close();
     }
@@ -370,7 +371,7 @@ public class CSV implements Serializable {
     /**
      * Returns a set of unique values for the specified column
      *
-     * @param columnIndex
+     * @param column
      * @return
      */
     public Set<String> listDistinct(Column column) {

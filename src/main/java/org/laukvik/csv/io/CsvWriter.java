@@ -15,20 +15,20 @@
  */
 package org.laukvik.csv.io;
 
+import org.laukvik.csv.CSV;
+import org.laukvik.csv.MetaData;
+import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.laukvik.csv.CSV;
-import org.laukvik.csv.MetaData;
-import org.laukvik.csv.Row;
-import org.laukvik.csv.columns.Column;
 
 /**
- * OutputStream for writing CSV data
- *
+ * OutputStream for writing CSV data.
  *
  * @author Morten Laukvik
  */

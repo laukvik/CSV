@@ -15,16 +15,16 @@
  */
 package org.laukvik.csv.io;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 
 public class CsvReaderTest {
@@ -33,7 +33,7 @@ public class CsvReaderTest {
     }
 
     @Test
-    public void testSomeMethod() throws IOException, Exception {
+    public void testSomeMethod() throws Exception {
         File file = File.createTempFile("Person", ".csv");
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");

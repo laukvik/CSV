@@ -15,15 +15,15 @@
  */
 package org.laukvik.csv.io;
 
-import java.util.Iterator;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 
+import java.util.Iterator;
 
-public interface Readable extends Iterator<Row> {
+interface Readable extends Iterator<Row> {
 
-    public MetaData getMetaData();
+    MetaData getMetaData();
 
-    public Row getRow();
+    Row getRow();
 
 }

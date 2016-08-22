@@ -15,18 +15,19 @@
  */
 package org.laukvik.csv.io;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.columns.StringColumn;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 public class XmlWriterTest {
@@ -50,7 +51,7 @@ public class XmlWriterTest {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
 
-        Document document = (Document) builder.parse(file);
+        builder.parse(file);
     }
 
     @Test
@@ -69,7 +70,7 @@ public class XmlWriterTest {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
 
-        Document document = (Document) builder.parse(file);
+        Document document = builder.parse(file);
 
         Assert.assertEquals("people", document.getDocumentElement().getNodeName());
         Assert.assertEquals(2, document.getDocumentElement().getElementsByTagName("person").getLength());

@@ -83,10 +83,7 @@ public class StringColumn extends Column<String> {
             return false;
         }
         final StringColumn other = (StringColumn) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.name, other.name);
     }
 
 }

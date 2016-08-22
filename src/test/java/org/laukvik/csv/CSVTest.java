@@ -15,17 +15,19 @@
  */
 package org.laukvik.csv;
 
+import org.junit.Test;
+import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.io.CsvWriter;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import org.junit.Test;
-import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.io.CsvWriter;
 
 
 public class CSVTest {
@@ -256,7 +258,7 @@ public class CSVTest {
         try {
             CSV csv = new CSV();
             csv.read(getResource("person.csv"));
-            List<Person> items = csv.findByClass(Person.class);
+            List<Person> items = CSV.findByClass(Person.class);
             int x = 1;
             for (Person p : items) {
                 x++;

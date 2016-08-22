@@ -15,22 +15,3 @@
  */
 package org.laukvik.csv;
 
-/**
- * An easy to use API for reading and writing to CSV
- *
- * @author Morten Laukvik
- *
- * Re  * <code>
- * CSV csv = new CSV( new File("contacts.csv") );
- *
- * </code>
- *
- * <code>
- * CSV csv = new CSV();
- * csv.addColumn("First","Last");
- * csv.addRow("Bill","Gates");
- * csv.addRow("Steve","Jobs");
- * csv.write( new File("contacts.csv") );
- * </code>
- *
- */
