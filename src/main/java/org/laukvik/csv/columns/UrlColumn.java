@@ -66,8 +66,7 @@ public class UrlColumn extends Column<URL> {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        return hash;
+        return 3;
     }
 
     @Override

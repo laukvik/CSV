@@ -196,7 +196,7 @@
                 <artifactId>cobertura-maven-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <check></check>
+                    <check>true</check>
                     <formats>
                         <format>html</format>
                         <format>xml</format>

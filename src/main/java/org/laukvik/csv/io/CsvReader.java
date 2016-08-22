@@ -42,9 +42,6 @@ import java.util.List;
 public class CsvReader implements AbstractReader {
 
     private final BufferedInputStream is;
-    private char currentChar;
-    private StringBuilder currentValue;
-    private StringBuilder rawLine;
     private int lineCounter;
     private MetaData metaData;
     private Row row;
@@ -118,13 +115,13 @@ public class CsvReader implements AbstractReader {
         boolean isNextLine = false;
 
         /* Current value */
-        currentValue = new StringBuilder();
+        StringBuilder currentValue = new StringBuilder();
 
         /* the current line */
 //        row = new Row();
 
         /* The raw chars being read */
-        rawLine = new StringBuilder();
+        final StringBuilder rawLine = new StringBuilder();
 
         boolean isWithinQuote = false;
         int quoteCount = 0;
@@ -133,7 +130,7 @@ public class CsvReader implements AbstractReader {
         while (is.available() > 0 && !isNextLine) {
 
             /* Read next char */
-            currentChar = (char) is.read();
+            char currentChar = (char) is.read();
 
             /* Determines whether or not to add char */
             boolean addChar;

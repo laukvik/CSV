@@ -33,11 +33,8 @@ public class IntGreaterThanMatcher extends RowMatcher {
     @Override
     public boolean mathes(Row row) {
         Integer value = row.getInteger(column);
-        if (value == null) {
-            return false;
-        }
-        return value > this.value;
-        //return row.getInteger(columnIndex) > value;
+        return value != null && value > this.value;
+//return row.getInteger(columnIndex) > value;
     }
 
 }

@@ -73,8 +73,7 @@ public class DateColumn extends Column<Date> {
             return null;
         }
         try {
-            Date d = dateFormat.parse(value);
-            return d;
+            return dateFormat.parse(value);
         }
         catch (ParseException ex) {
             ex.printStackTrace();
@@ -93,8 +92,7 @@ public class DateColumn extends Column<Date> {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        return hash;
+        return 3;
     }
 
     @Override

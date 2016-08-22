@@ -60,8 +60,7 @@ public class BigDecimalColumn extends Column<BigDecimal> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        return hash;
+        return 7;
     }
 
     @Override

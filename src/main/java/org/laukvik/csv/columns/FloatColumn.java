@@ -55,8 +55,7 @@ public class FloatColumn extends Column<Float> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        return hash;
+        return 7;
     }
 
     @Override

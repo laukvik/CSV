@@ -270,8 +270,7 @@ public final class CSV implements Serializable {
     }
 
     public static File getFile(Class aClass) {
-        File file = new File(getHome(), aClass.getCanonicalName() + ".csv");
-        return file;
+        return new File(getHome(), aClass.getCanonicalName() + ".csv");
     }
 
     /**
@@ -314,8 +313,7 @@ public final class CSV implements Serializable {
             return findByClass(new FileInputStream(file), Charset.defaultCharset(), aClass);
         }
         catch (FileNotFoundException ex) {
-            List<T> items = new ArrayList<>();
-            return items;
+            return new ArrayList<>();
         }
     }
 

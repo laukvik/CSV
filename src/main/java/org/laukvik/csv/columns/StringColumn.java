@@ -70,8 +70,7 @@ public class StringColumn extends Column<String> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        return hash;
+        return 7;
     }
 
     @Override

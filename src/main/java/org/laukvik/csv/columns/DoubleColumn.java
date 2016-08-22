@@ -55,8 +55,7 @@ public class DoubleColumn extends Column<Double> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        return hash;
+        return 7;
     }
 
     @Override

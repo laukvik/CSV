@@ -35,10 +35,7 @@ public class IntBetween extends RowMatcher {
     @Override
     public boolean mathes(Row row) {
         Integer value = row.getInteger(column);
-        if (value == null) {
-            return false;
-        }
-        return value >= min && value <= max;
+        return value != null && value >= min && value <= max;
     }
 
 }

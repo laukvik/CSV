@@ -33,10 +33,7 @@ public class StringInMatcher extends RowMatcher {
     @Override
     public boolean mathes(Row row) {
         String v = row.getString(column);
-        if (v == null) {
-            return false;
-        }
-        return v.equalsIgnoreCase(value);
+        return v != null && v.equalsIgnoreCase(value);
     }
 
 }
