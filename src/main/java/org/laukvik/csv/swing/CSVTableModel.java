@@ -31,6 +31,7 @@ public class CSVTableModel implements TableModel {
     private final CSV csv;
     private final List<TableModelListener> listeners;
     private final Query query;
+    private List<Row> rows;
 
     public CSVTableModel(CSV csv) {
         this.csv = csv;
@@ -42,6 +43,24 @@ public class CSVTableModel implements TableModel {
         this.csv = csv;
         this.listeners = new ArrayList<>();
         this.query = query;
+        this.rows = query.getResultList();
+    }
+
+    public int getMaxColumnWidth(Column column) {
+        int x = column.getName().length();
+        for (int y = 0; y < csv.getRowCount(); y++) {
+            Row row = csv.getRow(y);
+            if (column instanceof StringColumn) {
+                StringColumn vcc = (StringColumn) column;
+                String s = row.getString(vcc);
+                if (s != null) {
+                    if (s.length() > x) {
+                        x = s.length();
+                    }
+                }
+            }
+        }
+        return x;
     }
 
     @Override
@@ -75,14 +94,14 @@ public class CSVTableModel implements TableModel {
 
     @Override
     public int getRowCount() {
-        return csv.getQuery() == null ? csv.getRowCount() : csv.getQuery().getResultList().size();
+        return csv.getQuery() == null ? csv.getRowCount() : rows.size();
     }
 
     @Override
     public Object getValueAt(int row, int columnIndex) {
         try {
             StringColumn column = (StringColumn) csv.getMetaData().getColumn(columnIndex);
-            return csv.getQuery() == null ? csv.getRow(row).getString(column) : csv.getQuery().getResultList().get(row).getString(column);
+            return csv.getQuery() == null ? csv.getRow(row).getString(column) : rows.get(row).getString(column);
         }
         catch (Exception e) {
             return null;

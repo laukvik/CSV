@@ -12,5 +12,6 @@ public interface AbstractReader extends AutoCloseable, Readable{
     MetaData getMetaData();
     boolean hasNext();
     Row getRow();
+    int getBytesRead();
 
 }

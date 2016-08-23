@@ -20,6 +20,8 @@ import org.laukvik.csv.annotation.Entity;
 
 import java.util.Objects;
 
+
+
 /**
  *
  * @author Morten Laukvik <morten@laukvik.no>
@@ -61,10 +63,7 @@ public class RecentFile {
             return false;
         }
         final RecentFile other = (RecentFile) obj;
-        if (!Objects.equals(this.path, other.path)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.path, other.path);
     }
 
 

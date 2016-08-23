@@ -43,6 +43,7 @@ public class CsvReader implements AbstractReader {
 
     private final BufferedInputStream is;
     private int lineCounter;
+    private int bytesRead;
     private MetaData metaData;
     private Row row;
 
@@ -68,10 +69,15 @@ public class CsvReader implements AbstractReader {
         this.metaData.setCharset(charset);
         this.columnSeparator = separator;
         this.quoteChar = qoute;
+        this.bytesRead = 0;
         List<String> columns = parseRow();
         for (String c : columns) {
             this.metaData.addColumn(c);
         }
+    }
+
+    public int getBytesRead(){
+        return bytesRead;
     }
 
     public int getLineCounter() {
@@ -138,6 +144,7 @@ public class CsvReader implements AbstractReader {
 
         /* Read until */
         while (is.available() > 0 && !isNextLine) {
+            bytesRead++;
 
             boolean isBreak = false;
 

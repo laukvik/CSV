@@ -23,7 +23,7 @@ import java.io.File;
  */
 public interface RecentFileListener {
 
-    public void openFile(File file);
+    void openFile(File file);
 
 //    public void clearRecent();
 }

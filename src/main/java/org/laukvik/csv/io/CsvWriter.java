@@ -23,29 +23,37 @@ import org.laukvik.csv.columns.Column;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
- * OutputStream for writing CSV data.
+ * OutputStream for writing CSV data
  *
- * @author Morten Laukvik
+ *
+ * @author Morten Laukvik <morten@laukvik.no>
  */
 public final class CsvWriter implements Writeable {
 
-    private final OutputStream out;
-    private final MetaData metaData;
+    private static final Logger LOG = Logger.getLogger(CsvWriter.class.getName());
 
-    public CsvWriter(OutputStream out, MetaData metaData) throws IOException {
+    private final OutputStream out;
+    private MetaData metaData;
+    private Charset charset;
+
+    public CsvWriter(OutputStream out, MetaData metaData, Charset charset) throws IOException {
         this.out = out;
         this.metaData = metaData;
+        this.charset = charset;
         writeMetaData(metaData);
     }
 
-    public CsvWriter(OutputStream out) throws IOException {
+    public CsvWriter(OutputStream out, Charset charset) throws IOException {
         this.metaData = null;
         this.out = out;
+        this.charset = charset;
     }
 
     /**
@@ -58,14 +66,15 @@ public final class CsvWriter implements Writeable {
         List<String> values = new ArrayList<>();
         for (int x = 0; x < metaData.getColumnCount(); x++) {
             Column c = metaData.getColumn(x);
-            Object o = row.getAsString(c);
-            values.add(c.asString(o));
+            values.add(row.getAsString(c));
         }
         writeValues(values);
     }
 
+    @Override
     public void write(CSV csv) throws IOException {
         writeMetaData(csv.getMetaData());
+        metaData = csv.getMetaData();
         for (int y = 0; y < csv.getRowCount(); y++) {
             writeRow(csv.getRow(y));
         }
@@ -87,9 +96,12 @@ public final class CsvWriter implements Writeable {
     public void writeMetaData(MetaData metaData) throws IOException {
         List<String> items = new ArrayList<>();
         for (int x = 0; x < metaData.getColumnCount(); x++) {
-            items.add(metaData.getColumnName(x));
+            Column c = metaData.getColumn(x);
+            String header = c.getName() + "(" + c.getName() + ")";
+            items.add(header);
         }
         writeValues(items);
+
     }
 
     public void writeRow(String... values) throws IOException {

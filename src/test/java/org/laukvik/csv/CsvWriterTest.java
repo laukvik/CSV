@@ -23,6 +23,7 @@ import org.laukvik.csv.io.CsvWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -45,7 +46,7 @@ public class CsvWriterTest {
         StringColumn first = (StringColumn) md.addColumn(new StringColumn("First"));
         StringColumn last = (StringColumn) md.addColumn(new StringColumn("Last"));
 
-        try (CsvWriter w = new CsvWriter(new FileOutputStream(f), md)) {
+        try (CsvWriter w = new CsvWriter(new FileOutputStream(f), Charset.defaultCharset())) {
             //
             w.writeRow(new Row().update(first, "Bill").update(last, "Gates"));
             w.writeRow(new Row().update(first, "Steve").update(last, "Jobs"));

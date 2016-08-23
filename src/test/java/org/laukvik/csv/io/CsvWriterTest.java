@@ -20,6 +20,7 @@ import org.laukvik.csv.CSV;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.charset.Charset;
 
 
 public class CsvWriterTest {
@@ -30,7 +31,7 @@ public class CsvWriterTest {
         CSV csv = new CSV();
         csv.addColumn("First");
         csv.addColumn("Last");
-        csv.write(new CsvWriter(new FileOutputStream(file)));
+        csv.write(new CsvWriter(new FileOutputStream(file), Charset.defaultCharset()));
     }
 
 }

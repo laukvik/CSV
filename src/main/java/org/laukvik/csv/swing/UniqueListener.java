@@ -21,6 +21,6 @@ package org.laukvik.csv.swing;
  */
 public interface UniqueListener {
 
-    public void uniqueSelectionChanged(UniqueTableModel model);
+    void uniqueSelectionChanged(UniqueTableModel model);
 
 }

@@ -27,6 +27,8 @@ public class MetaData implements Serializable {
 
     private final List<Column> columns;
     private Charset charset;
+    private char separatorChar;
+    private char quoteChar;
 
     public MetaData() {
         charset = Charset.defaultCharset();

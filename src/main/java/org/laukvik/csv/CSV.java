@@ -350,7 +350,7 @@ public final class CSV implements Serializable {
 
     public static <T> void saveAll(List<?> objects, Class<T> aClass) throws IllegalArgumentException, IllegalAccessException {
         File file = CSV.getFile(aClass);
-        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file))) {
+        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file),Charset.defaultCharset())) {
             writer.writeMetaData(aClass);
             for (Object o : objects) {
                 writer.writeEntityRow(o);
@@ -360,6 +360,10 @@ public final class CSV implements Serializable {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void clearQuery() {
+        this.query = null;
     }
 
     public Query findByQuery() {
