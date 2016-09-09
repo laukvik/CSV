@@ -25,10 +25,10 @@ import static org.junit.Assert.fail;
 
 public class EntityTest {
 
-    @Test
-    public void read() {
-        List<Person> recentFiles = CSV.findByClass(Person.class);
-    }
+//    @Test
+//    public void read() {
+//        List<Person> recentFiles = CSV.findByClass(Person.class);
+//    }
 
     @Test
     public void write() {

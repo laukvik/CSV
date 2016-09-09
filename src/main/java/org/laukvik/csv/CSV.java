@@ -28,11 +28,8 @@ import org.laukvik.csv.io.Writeable;
 import org.laukvik.csv.query.Query;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -108,15 +105,15 @@ public final class CSV implements Serializable {
      * @throws IOException
      */
     public void readFile(final File file) throws IOException {
-        readFile(new CsvReader(new FileInputStream(file)));
+        readFile(new CsvReader(file));
     }
 
     public void readFileWithSeparator(final File file, final char separator) throws IOException {
-        readFile(new CsvReader(new FileInputStream(file), Charset.defaultCharset(), separator ));
+        readFile(new CsvReader(file, Charset.defaultCharset(), separator, CSV.DOUBLE_QUOTE ));
     }
 
     public void readFileWithSeparator(final File file, final char separator, final char quote) throws IOException {
-        readFile(new CsvReader(new FileInputStream(file), Charset.defaultCharset(), separator, quote ));
+        readFile(new CsvReader(file, Charset.defaultCharset(), separator, quote ));
     }
 
     /**
@@ -317,19 +314,19 @@ public final class CSV implements Serializable {
         return (T) instance;
     }
 
-    public static <T> List<T> findByClass(Class<T> aClass) {
-        File file = getFile(aClass);
-        try {
-            return findByClass(new FileInputStream(file), Charset.defaultCharset(), aClass);
-        }
-        catch (FileNotFoundException ex) {
-            return new ArrayList<>();
-        }
-    }
+//    public static <T> List<T> findByClass(Class<T> aClass) {
+//        File file = getFile(aClass);
+//        try {
+//            return findByClass(new FileInputStream(file), Charset.defaultCharset(), aClass);
+//        }
+//        catch (FileNotFoundException ex) {
+//            return new ArrayList<>();
+//        }
+//    }
 
-    public static <T> List<T> findByClass(InputStream inputStream, Charset charset, Class<T> aClass) {
+    public static <T> List<T> findByClass(final File file, final Charset charset, final Class<T> aClass) {
         List<T> items = new ArrayList<>();
-        try (CsvReader reader = new CsvReader(inputStream, charset)) {
+        try (CsvReader reader = new CsvReader(file, charset)) {
             while (reader.hasNext()) {
                 Row row = reader.getRow();
 //                row.setMetaData(reader.getMetaData());
@@ -350,7 +347,7 @@ public final class CSV implements Serializable {
 
     public static <T> void saveAll(List<?> objects, Class<T> aClass) throws IllegalArgumentException, IllegalAccessException {
         File file = CSV.getFile(aClass);
-        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file),Charset.defaultCharset())) {
+        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file), new MetaData())) {
             writer.writeMetaData(aClass);
             for (Object o : objects) {
                 writer.writeEntityRow(o);

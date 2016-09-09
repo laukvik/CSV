@@ -43,18 +43,12 @@ public final class CsvWriter implements Writeable {
     private MetaData metaData;
     private Charset charset;
 
-    public CsvWriter(OutputStream out, MetaData metaData, Charset charset) throws IOException {
+    public CsvWriter(OutputStream out, MetaData metaData) throws IOException {
         this.out = out;
         this.metaData = metaData;
-        this.charset = charset;
         writeMetaData(metaData);
     }
 
-    public CsvWriter(OutputStream out, Charset charset) throws IOException {
-        this.metaData = null;
-        this.out = out;
-        this.charset = charset;
-    }
 
     /**
      * Writes a single row of CSV data

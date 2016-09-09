@@ -25,7 +25,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -82,7 +81,7 @@ public class LoadingWorker extends javax.swing.JDialog implements ActionListener
             MessageFormat mf = new MessageFormat(bundle.getString("loading.rows"));
             CSV csv = new CSV();
             boolean success = false;
-            try (CsvReader r = new CsvReader(new FileInputStream(file), charset)) {
+            try (CsvReader r = new CsvReader(file, charset)) {
                 csv.setMetaData(r.getMetaData());
                 while (canContinue && r.hasNext()) {
                     progressBar.setValue(r.getBytesRead());
@@ -96,16 +95,19 @@ public class LoadingWorker extends javax.swing.JDialog implements ActionListener
                 setVisible(false);
             }
             catch (IllegalColumnDefinitionException ex) {
+                ex.printStackTrace();
                 MessageFormat f = new MessageFormat(bundle.getString("loading.column_exception"));
                 Object[] params = {file.getAbsolutePath()};
                 JOptionPane.showMessageDialog(viewer, f.format(params), "", JOptionPane.ERROR_MESSAGE);
             }
             catch (FileNotFoundException ex) {
+                ex.printStackTrace();
                 MessageFormat f = new MessageFormat(bundle.getString("loading.file_not_found"));
                 Object[] params = {file.getAbsolutePath()};
                 JOptionPane.showMessageDialog(viewer, f.format(params), "", JOptionPane.ERROR_MESSAGE);
             }
             catch (IOException ex) {
+                ex.printStackTrace();
                 MessageFormat f = new MessageFormat(bundle.getString("loading.failed_to_load"));
                 Object[] params = {file.getAbsolutePath()};
                 JOptionPane.showMessageDialog(viewer, f.format(params), "", JOptionPane.ERROR_MESSAGE);

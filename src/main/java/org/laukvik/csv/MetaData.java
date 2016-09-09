@@ -28,6 +28,7 @@ public class MetaData implements Serializable {
     private final List<Column> columns;
     private Charset charset;
     private char separatorChar;
+    private boolean CRLF;
     private char quoteChar;
 
     public MetaData() {
@@ -115,4 +116,19 @@ public class MetaData implements Serializable {
         columns.remove(columnIndex);
     }
 
+    public char getSeparatorChar() {
+        return separatorChar;
+    }
+
+    public void setSeparator(final Character separatorChar) {
+        this.separatorChar = separatorChar;
+    }
+
+    public char getQuoteChar() {
+        return quoteChar;
+    }
+
+    public void setQuoteChar(final char quoteChar) {
+        this.quoteChar = quoteChar;
+    }
 }

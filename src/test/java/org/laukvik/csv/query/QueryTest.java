@@ -50,11 +50,10 @@ public class QueryTest {
         try {
             format = new SimpleDateFormat("dd/MM/yyyy");
             csv = new CSV();
-            csv.readFile(getResource("presidents_meta.csv"));
-
-//            for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
-//                System.out.println(csv.getMetaData().getColumn(x).getName());
-//            }
+            csv.readFile(getResource("metadata.csv"));
+            for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
+                System.out.println(csv.getMetaData().getColumn(x).getName());
+            }
         }
         catch (Exception ex) {
             ex.printStackTrace();

@@ -18,7 +18,6 @@ package org.laukvik.csv;
 import org.junit.Test;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.query.Query;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,8 +29,8 @@ public class CsvQueryTest {
     @Test
     public void readFile() throws IOException, ParseException {
         CSV csv = new CSV();
-        csv.readFile(getResource("presidents_meta.csv"));
-        Query q = csv.findByQuery();
+        csv.readFile(getResource("metadata.csv"));
+//        Query q = csv.findByQuery();
 
         StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");

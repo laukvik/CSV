@@ -42,11 +42,12 @@ public class CsvWriterTest {
         File f = File.createTempFile("CsvWriter", ".csv");
 
         MetaData md = new MetaData();
+        md.setCharset(Charset.defaultCharset());
 
         StringColumn first = (StringColumn) md.addColumn(new StringColumn("First"));
         StringColumn last = (StringColumn) md.addColumn(new StringColumn("Last"));
 
-        try (CsvWriter w = new CsvWriter(new FileOutputStream(f), Charset.defaultCharset())) {
+        try (CsvWriter w = new CsvWriter(new FileOutputStream(f), md)) {
             //
             w.writeRow(new Row().update(first, "Bill").update(last, "Gates"));
             w.writeRow(new Row().update(first, "Steve").update(last, "Jobs"));

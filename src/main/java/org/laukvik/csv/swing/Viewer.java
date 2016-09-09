@@ -117,6 +117,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         recentMenu.setVisible(false);
         undoMenuItem.setVisible(false);
         redoMenuItem.setVisible(false);
+
         newDocument();
     }
 
@@ -142,9 +143,9 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         colsLabel.setText(bundle.getString("status.columns") + ": ");
         columnsLabel.setText("" + csv.getMetaData().getColumnCount());
         encLabel.setText(bundle.getString("status.encoding") + ": ");
-        encodingLabel.setText(csv.getMetaData().getCharset().displayName());
+        encodingLabel.setText(csv.getMetaData().getCharset() == null ? "" : csv.getMetaData().getCharset().displayName());
         sepLabel.setText(bundle.getString("status.seperator") + ": ");
-//        seperatorLabel.setText("" + (csv.getMetaData().getSeperator() == null ? CSV.COMMA : csv.getMetaData().getSeperator()));
+        seperatorLabel.setText(getSeparatorString(csv.getMetaData().getSeparatorChar()));
 
         sizLabel.setText(bundle.getString("status.filesize") + ": ");
 
@@ -157,6 +158,16 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
         setTitle(file == null ? "" : file.getAbsolutePath());
         getRootPane().putClientProperty("Window.documentFile", file);
+    }
+
+    private static String getSeparatorString(char separator){
+        switch(separator){
+            case CSV.COMMA : return "COMMA";
+            case CSV.TAB : return "TAB";
+            case CSV.PIPE : return "PIPE";
+            case CSV.SEMICOLON : return "SEMICOLON";
+            default : return "?";
+        }
     }
 
     public ResourceBundle getBundle() {
@@ -433,12 +444,14 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 //        recentFileModel.add(new RecentFile(file.getAbsolutePath()));
         createUniqueModels();
         updateStatusBar();
+
     }
 
     @Override
     public void openFile(File file) {
         this.file = file;
     }
+
 
     /**
      * Returns a cross-platform keystroke that enables the platform behave
@@ -484,6 +497,9 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
         openMenuItem = new javax.swing.JMenuItem();
+        openTabItem = new javax.swing.JMenuItem();
+        openSemiItem = new javax.swing.JMenuItem();
+        openPipeItem = new javax.swing.JMenuItem();
         recentMenu = new javax.swing.JMenu();
         jSeparator7 = new javax.swing.JPopupMenu.Separator();
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
@@ -605,7 +621,36 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
         openMenuItem.setText(bundle.getString("file.open")); // NOI18N
         openMenuItem.setToolTipText("Opens a CSV file for editing");
+        openMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(openMenuItem);
+
+        openTabItem.setText("Open TAB");
+        openTabItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openTabItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(openTabItem);
+
+        openSemiItem.setText("Open SEMI");
+        openSemiItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openSemiItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(openSemiItem);
+
+        openPipeItem.setText("Open PIPE");
+        openPipeItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openPipeItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(openPipeItem);
 
         recentMenu.setText(bundle.getString("file.open_recent")); // NOI18N
         recentMenu.add(jSeparator7);
@@ -783,7 +828,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
         try {
-            csv.write(new CsvWriter(new FileOutputStream(file), Charset.defaultCharset()));
+            csv.write(new CsvWriter(new FileOutputStream(file), csv.getMetaData()));
         }
         catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Could not save file!", "", JOptionPane.WARNING_MESSAGE);
@@ -919,6 +964,40 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         }
     }//GEN-LAST:event_exportMenuItemActionPerformed
 
+    private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_openMenuItemActionPerformed
+
+    private void openSemiItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openSemiItemActionPerformed
+        openFile(CSV.SEMICOLON);
+    }//GEN-LAST:event_openSemiItemActionPerformed
+
+    private void openPipeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openPipeItemActionPerformed
+        openFile(CSV.PIPE);
+    }//GEN-LAST:event_openPipeItemActionPerformed
+
+    private void openTabItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openTabItemActionPerformed
+        openFile(CSV.TAB);
+    }//GEN-LAST:event_openTabItemActionPerformed
+
+    private void openFile(char separator){
+        java.awt.FileDialog fd = new FileDialog(this, "Velg fil", FileDialog.LOAD);
+        fd.setVisible(true);
+        String filename = fd.getFile();
+        if (filename == null) {
+        } else {
+            try {
+                File file = new File(fd.getDirectory(), filename);
+                csv.readFileWithSeparator(file,separator);
+                openCSV(csv, file);
+            }
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Could not open file!", "", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+
+    }
+
     /**
      *
      * @param columnIndex
@@ -993,6 +1072,9 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
+    private javax.swing.JMenuItem openPipeItem;
+    private javax.swing.JMenuItem openSemiItem;
+    private javax.swing.JMenuItem openTabItem;
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem printMenuItem;
     private javax.swing.JMenu recentMenu;
