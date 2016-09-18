@@ -1,3 +1,8 @@
+
+[![Code Climate](https://codeclimate.com/github/laukvik/LaukvikCSV/badges/gpa.svg)](https://codeclimate.com/github/laukvik/LaukvikCSV)
+
+
+
 An easy to use API for reading and writing to CSV files.
 
 Create an empty CSV
