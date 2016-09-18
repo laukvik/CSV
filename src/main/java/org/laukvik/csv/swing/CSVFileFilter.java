@@ -15,10 +15,11 @@
  */
 package org.laukvik.csv.swing;
 
+import org.laukvik.csv.CSV;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
-import org.laukvik.csv.CSV;
 
 public class CSVFileFilter extends javax.swing.filechooser.FileFilter implements FileFilter, FilenameFilter {
 
@@ -29,10 +30,7 @@ public class CSVFileFilter extends javax.swing.filechooser.FileFilter implements
     @Override
     public boolean accept(File f) {
         String filename = f.getName().toLowerCase();
-        if (f.isHidden()) {
-            return false;
-        }
-        return (filename.endsWith("." + CSV.FILE_EXTENSION));
+        return !f.isHidden() && (filename.endsWith("." + CSV.FILE_EXTENSION));
     }
 
     public String getDescription() {

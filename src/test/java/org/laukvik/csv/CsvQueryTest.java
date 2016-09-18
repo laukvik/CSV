@@ -15,25 +15,22 @@
  */
 package org.laukvik.csv;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 import org.junit.Test;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.query.Query;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+
 public class CsvQueryTest {
 
     @Test
     public void readFile() throws IOException, ParseException {
         CSV csv = new CSV();
-        csv.read(getResource("presidents_meta.csv"));
-        Query q = csv.findByQuery();
+        csv.readFile(getResource("metadata.csv"));
+//        Query q = csv.findByQuery();
 
         StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");

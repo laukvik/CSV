@@ -19,10 +19,7 @@ import java.net.URL;
 import org.laukvik.csv.annotation.Column;
 import org.laukvik.csv.annotation.Entity;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 @Entity
 public class Person {
 

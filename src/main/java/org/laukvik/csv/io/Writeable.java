@@ -15,15 +15,13 @@
  */
 package org.laukvik.csv.io;
 
-import java.io.IOException;
 import org.laukvik.csv.CSV;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+import java.io.IOException;
+
+
 public interface Writeable extends AutoCloseable {
 
-    public void write(CSV csv) throws IOException;
+    void write(CSV csv) throws IOException;
 
 }

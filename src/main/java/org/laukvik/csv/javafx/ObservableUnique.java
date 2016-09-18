@@ -15,8 +15,9 @@
  */
 package org.laukvik.csv.javafx;
 
-import java.util.Set;
 import javafx.beans.property.SimpleListProperty;
+
+import java.util.Set;
 
 /**
  *

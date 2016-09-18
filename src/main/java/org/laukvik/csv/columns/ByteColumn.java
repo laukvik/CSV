@@ -17,10 +17,7 @@ package org.laukvik.csv.columns;
 
 import java.util.Arrays;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class ByteColumn extends Column<byte[]> {
 
     String name;

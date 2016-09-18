@@ -18,10 +18,7 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class EmptyMatcher extends RowMatcher {
 
     private Column column;

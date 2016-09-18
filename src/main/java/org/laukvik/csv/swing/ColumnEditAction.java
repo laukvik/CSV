@@ -15,22 +15,22 @@
  */
 package org.laukvik.csv.swing;
 
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 import org.laukvik.csv.MetaData;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class ColumnEditAction extends AbstractAction {
 
-    MetaData metaData;
-    int columnIndex;
-    Viewer viewer;
+    private int columnIndex;
+    private Viewer viewer;
 
     public ColumnEditAction(Viewer viewer, MetaData metaData, int columnIndex) {
-        this.metaData = metaData;
+        final MetaData metaData1 = metaData;
         this.columnIndex = columnIndex;
         this.viewer = viewer;
         putValue(AbstractAction.NAME, metaData.getColumn(columnIndex).getName());

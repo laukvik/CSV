@@ -17,10 +17,7 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.columns.Column;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class SortOrder {
 
     private final Column column;

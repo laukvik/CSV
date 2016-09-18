@@ -17,10 +17,10 @@ package org.laukvik.csv.swing;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public interface UniqueListener {
 
-    public void uniqueSelectionChanged(UniqueTableModel model);
+    void uniqueSelectionChanged(UniqueTableModel model);
 
 }

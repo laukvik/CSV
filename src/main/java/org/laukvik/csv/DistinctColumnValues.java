@@ -20,10 +20,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import org.laukvik.csv.columns.Column;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class DistinctColumnValues {
 
     private final Column column;

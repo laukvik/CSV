@@ -15,25 +15,22 @@
  */
 package org.laukvik.csv.io;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+import java.io.File;
+import java.io.FileOutputStream;
+
+
 public class CsvWriterTest {
 
     @Test
-    public void canWrite() throws IOException, Exception {
+    public void canWrite() throws Exception {
         File file = File.createTempFile("tmp", ".csv");
         CSV csv = new CSV();
         csv.addColumn("First");
         csv.addColumn("Last");
-        csv.write(new CsvWriter(new FileOutputStream(file)));
+        csv.write(new CsvWriter(new FileOutputStream(file), csv.getMetaData()));
     }
 
 }

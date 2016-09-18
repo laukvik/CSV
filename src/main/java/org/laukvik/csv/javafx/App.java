@@ -15,12 +15,6 @@
  */
 package org.laukvik.csv.javafx;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -54,21 +48,17 @@ import org.laukvik.csv.DistinctColumnValues;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class App extends Application {
 
     private CSV csv;
 
-    private MenuBar menu;
-    private Menu fileMenu;
-    private Menu editMenu;
-    private Menu helpMenu;
-
-    //
-    private VBox topContainer;  //Creates a container to hold all Menu Objects.
-    private BorderPane root;
-    private SplitPane split;
     private ScrollPane scrollAccordion;
-    private ScrollPane scrollTable;
     private Accordion accordion;
     private TableView<ObservableRow> tableView;
     private ObservableList<ObservableRow> data = FXCollections.observableArrayList();
@@ -78,10 +68,10 @@ public class App extends Application {
     public void start(final Stage primaryStage) {
         this.primaryStage = primaryStage;
         // Menu
-        menu = new MenuBar();
+        final MenuBar menu = new MenuBar();
         menu.setUseSystemMenuBar(true);
         // ----- File -----
-        fileMenu = new Menu("File");
+        final Menu fileMenu = new Menu("File");
         MenuItem newItem = new MenuItem("New");
         newItem.setAccelerator(KeyCombination.keyCombination("Meta+n"));
         newItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -115,29 +105,29 @@ public class App extends Application {
         });
         fileMenu.getItems().add(quitItem);
         // ----- Edit -----
-        editMenu = new Menu("Edit");
+        final Menu editMenu = new Menu("Edit");
         editMenu.getItems().add(new MenuItem("Cut"));
         // ----- Help -----
-        helpMenu = new Menu("Help");
+        final Menu helpMenu = new Menu("Help");
         helpMenu.getItems().add(new MenuItem("About"));
         menu.getMenus().addAll(fileMenu, editMenu, helpMenu);
         //
         accordion = new Accordion();
         //
         tableView = new TableView<>();
-        scrollTable = new ScrollPane(tableView);
+        final ScrollPane scrollTable = new ScrollPane(tableView);
         scrollTable.setFitToHeight(true);
         scrollTable.setFitToWidth(true);
         //
-        split = new SplitPane();
+        final SplitPane split = new SplitPane();
         split.getItems().addAll(accordion, scrollTable);
         split.setDividerPositions(0.2);
 
         //
-        topContainer = new VBox();
+        final VBox topContainer = new VBox();
         topContainer.getChildren().add(menu);
         //
-        root = new BorderPane();
+        final BorderPane root = new BorderPane();
         root.setTop(topContainer);
         root.setCenter(split);
         // Calculate window size
@@ -156,7 +146,7 @@ public class App extends Application {
         } else {
             try {
                 csv = new CSV();
-                csv.read(file);
+                csv.readFile(file);
                 openCSV(csv);
                 primaryStage.setTitle(file.getName());
             }

@@ -15,10 +15,7 @@
  */
 package org.laukvik.csv;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class ColumnNotFoundException extends IllegalArgumentException {
 
     public ColumnNotFoundException(int index, int required) {

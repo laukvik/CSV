@@ -22,10 +22,7 @@ import org.junit.Test;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.JsonWriter;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class JsonWriterTest {
 
     public JsonWriterTest() {

@@ -15,14 +15,16 @@
  */
 package org.laukvik.csv.javafx;
 
-import java.util.List;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import org.laukvik.csv.CSV;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
+
+import java.util.List;
 
 /**
  *
@@ -30,12 +32,12 @@ import org.laukvik.csv.columns.Column;
  */
 public class ObservableRow implements Observable {
 
-    private Row row;
     private List<SimpleStringProperty> items;
 
     public ObservableRow(Row row) {
         items = FXCollections.observableArrayList();
-        MetaData md = row.getCSV().getMetaData();
+        CSV csv = row.getCSV();
+        MetaData md = csv.getMetaData();
         for (int x = 0; x < md.getColumnCount(); x++) {
             Column col = md.getColumn(x);
             items.add(new SimpleStringProperty(row.getAsString(col)));

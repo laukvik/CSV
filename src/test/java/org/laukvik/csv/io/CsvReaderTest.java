@@ -15,10 +15,6 @@
  */
 package org.laukvik.csv.io;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
@@ -26,23 +22,26 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * Separator: TAB, comma, semikolon eller CUSTOM
+ *
+ *
+ *
  */
 public class CsvReaderTest {
 
-    public CsvReaderTest() {
-    }
-
     @Test
-    public void testSomeMethod() throws IOException, Exception {
+    public void shouldRead() throws Exception {
         File file = File.createTempFile("Person", ".csv");
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         Column last = csv.addColumn("Last");
-        csv.write(new CsvWriter(new FileOutputStream(file)));
-        CsvReader r = new CsvReader(new FileInputStream(file));
+        csv.write(new CsvWriter(new FileOutputStream(file), csv.getMetaData()));
+        CsvReader r = new CsvReader(file);
         Assert.assertEquals(2, r.getMetaData().getColumnCount());
         while (r.hasNext()) {
             Row row = r.next();

@@ -15,61 +15,53 @@
  */
 package org.laukvik.csv;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.CsvReader;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+
 public class CsvReaderTest {
 
-    @Test
-    public void readDataTypes() {
-        String filename = "datatypes.csv";
-        String charset = "utf-8";
+    public static File getResource(String filename) {
+        ClassLoader classLoader = CsvReaderTest.class.getClassLoader();
+        return new File(classLoader.getResource(filename).getFile());
+    }
 
+    @Test
+    public void readMetaData() {
+        String filename = "metadata.csv";
+        String charset = "utf-8";
         String pattern = "yyyy-MM-dd HH:mm:ss";
         SimpleDateFormat f = new SimpleDateFormat(pattern);
         long millis = 1322018752992L;
         Date date = new Date(millis);
-
-        try (CsvReader reader = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
+        try (CsvReader reader = new CsvReader(getResource(filename), Charset.forName(charset))) {
             int rows = 0;
             while (reader.hasNext()) {
-                Row r = reader.getRow();
-                /* @todo - Fix tests back again */
-//                assertEquals("BigDecimal", new BigDecimal("1234567890123456789.12345"), r.getBigDecimal("BigDecimal"));
-//                assertEquals("Boolean", new Boolean("true"), r.getBoolean("Boolean"));
-////                assertEquals("Date1", date, r.getDate("Date1", f));
-////                assertEquals("Date2", date, r.getDate("Date2"));
-//                assertEquals("Float", new Float(123.456), r.getFloat("Float"));
-//                assertEquals("Double", new Double(123456.789), r.getDouble("Double"));
-//                assertEquals("Integer", new Integer(123), r.getInteger("Integer"));
-//                assertEquals("Long", new Long(123456789), r.getLong("Long"));
-//                assertEquals("String", new String("Hello world!"), r.getAsString("String"));
-//                assertEquals("URL", new URL("http://www.google.com/home.html"), r.getURL("URL"));
                 rows++;
+                Row r = reader.getRow();
+                System.out.println( rows + " " );
+
             }
-            assertEquals("Row count", 1, rows);
-            assertEquals("Column count", 10, reader.getMetaData().getColumnCount());
+            assertEquals("Row count", 44, rows);
+            assertEquals("Column count", 9, reader.getMetaData().getColumnCount());
         }
         catch (IOException e) {
             fail(e.getMessage());
         }
     }
 
-    public void readFile(String filename, int requiredColumns, int requiredRows, String charset) {
-        try (CsvReader reader = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
+    private void readFile(String filename, int requiredColumns, int requiredRows, String charset) {
+        try (CsvReader reader = new CsvReader(getResource(filename), charset == null ? null : Charset.forName(charset) )) {
             int rows = 0;
             while (reader.hasNext()) {
                 Row r = reader.getRow();
@@ -90,51 +82,46 @@ public class CsvReaderTest {
     }
 
     @Test
-    public void readEmbeddedCommas() {
-        readFile("embeddedcommas.csv", 5, 1, "us-ascii");
+    public void readQuoteWithCommas() {
+        readFile("quote_withcomma.csv", 5, 1, "us-ascii");
     }
 
     @Test
-    public void readEscaped() {
-        readFile("escaped.csv", 4, 3, "utf-8");
+    public void readQuotedEscaped() {
+        readFile("quote_escaped.csv", 4, 3, "utf-8");
     }
 
     @Test
-    public void readQuoted() {
-        readFile("quoted.csv", 4, 3, "us-ascii");
+    public void readQuotedSingle() {
+        readFile("quote_single.csv", 3, 2, null);
     }
 
     @Test
-    public void readUnquoted() {
-        readFile("unquoted.csv", 5, 4, "us-ascii");
+    public void readQuotedDouble() {
+        readFile("quote_double.csv", 3, 2, null);
     }
 
-    public static File getResource(String filename) {
-        ClassLoader classLoader = CsvReaderTest.class.getClassLoader();
-        return new File(classLoader.getResource(filename).getFile());
+    @Test
+    public void readQuoteNone() {
+        readFile("quote_none.csv", 5, 4, "us-ascii");
     }
+
+
+
 
     @Test
     public void readWithIterator() {
         String filename = "acid.csv";
         String charset = "utf-8";
-        try (CsvReader reader = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
+        try (CsvReader reader = new CsvReader(getResource(filename), Charset.forName(charset))) {
             // Find columns
             StringColumn col1 = (StringColumn) reader.getMetaData().getColumn(0);
             StringColumn col2 = (StringColumn) reader.getMetaData().getColumn(1);
             StringColumn col3 = (StringColumn) reader.getMetaData().getColumn(2);
             StringColumn col4 = (StringColumn) reader.getMetaData().getColumn(3);
-
             while (reader.hasNext()) {
                 Row row = reader.next();
             }
-
-//            if (reader.hasNext()) {
-//                Row row = reader.next();
-//                assertEquals("Year", "1996", row.getString(col));
-//            } else {
-//                fail("Next row not found");
-//            }
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -147,7 +134,7 @@ public class CsvReaderTest {
         String filename = "charset.csv";
         String charset = "ISO-8859-1";
         String norwegian = "Norwegian æøå and ÆØÅ";
-        try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
+        try (CsvReader r = new CsvReader(getResource(filename), Charset.forName(charset))) {
             while (r.hasNext()) {
                 Row row = r.next();
                 //assertEquals("Norwegian chars", norwegian, row.getAsString("text"));
@@ -158,20 +145,76 @@ public class CsvReaderTest {
         }
     }
 
-    //@Test
-    public void readRows() {
-        String filename = "countries.csv";
-        String charset = "utf-8";
-        try (CsvReader r = new CsvReader(new FileInputStream(getResource(filename)), Charset.forName(charset))) {
-            StringColumn col = (StringColumn) r.getMetaData().getColumn(0);
-            int x = 1;
-            while (r.hasNext()) {
-                r.getRow().getString(col);
-            }
-        }
-        catch (IOException e) {
-            fail(e.getMessage());
-        }
+    @Test
+    public void detectCharsetUtf8() throws IOException {
+        CsvReader r = new CsvReader(getResource("charset_utf_8.csv"));
+        assertEquals(Charset.forName("utf-8"),r.getMetaData().getCharset());
+    }
+
+    @Test
+    public void detectCharsetUtf16BE() throws IOException {
+        CsvReader r = new CsvReader(getResource("charset_utf_16_be.csv"));
+        assertEquals(Charset.forName("utf-16be"),r.getMetaData().getCharset());
+    }
+
+    @Test
+    public void detectCharsetUtf16LE() throws IOException {
+        CsvReader r = new CsvReader(getResource("charset_utf_16_le.csv"));
+        assertEquals(Charset.forName("utf-16le"),r.getMetaData().getCharset());
+    }
+
+    @Test
+    public void detectCharsetUtf32BE() throws IOException {
+        CsvReader r = new CsvReader(getResource("charset_utf_32_be.csv"));
+        assertEquals(Charset.forName("utf-32be"),r.getMetaData().getCharset());
+    }
+
+    @Test
+    public void detectCharsetUtf32LE() throws IOException {
+        CsvReader r = new CsvReader(getResource("charset_utf_32_le.csv"));
+        assertEquals(Charset.forName("utf-32le"),r.getMetaData().getCharset());
+    }
+
+    @Test
+    public void detectCharsetLatin() throws IOException {
+        CsvReader r = new CsvReader(getResource("charset_windows_1252.csv"));
+//        System.out.println(r.getMetaData().getCharset());
+        assertEquals(Charset.forName("Windows-1252"),r.getMetaData().getCharset());
+    }
+
+
+    @Test
+    public void detectTab() throws IOException {
+        CsvReader r = new CsvReader(getResource("separator_tab.csv"));
+        assertEquals(CSV.TAB, r.getColumnSeparatorChar());
+    }
+
+    @Test
+    public void detectPipe() throws IOException {
+        CsvReader r = new CsvReader(getResource("separator_pipe.csv"));
+        assertEquals(CSV.PIPE, r.getColumnSeparatorChar());
+    }
+
+    @Test
+    public void detectSemi() throws IOException {
+        CsvReader r = new CsvReader(getResource("separator_semi.csv"));
+        assertEquals(CSV.SEMICOLON, r.getColumnSeparatorChar());
+    }
+
+    @Test
+    public void detectComma() throws IOException {
+        CsvReader r = new CsvReader(getResource("separator_comma.csv"));
+        assertEquals(CSV.COMMA, r.getColumnSeparatorChar());
+    }
+
+    @Test
+    public void detectComma2() throws IOException {
+//        CsvReader r = new CsvReader(new File("/Users/morten/Downloads/worldcitiespop.txt") );
+//        CsvReader r = new CsvReader(new File("/Users/morten/Downloads/CountriesOfTheWorld.csv") );
+        CsvReader r = new CsvReader(getResource("CountriesOfTheWorld.csv"));
+        CSV csv = new CSV();
+        assertEquals(CSV.SEMICOLON, r.getColumnSeparatorChar());
+//        assertEquals(Charset.forName("utf-16"),r.getMetaData().getCharset());
     }
 
 }

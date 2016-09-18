@@ -15,13 +15,13 @@
  */
 package org.laukvik.csv.swing;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import javax.swing.AbstractAction;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class OpenRecentFileAction extends AbstractAction {
 

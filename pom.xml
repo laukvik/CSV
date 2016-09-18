@@ -21,10 +21,6 @@
         </developer>
     </developers>
 
-    <organization>
-        <name>Laukviks Bedrifter</name>
-        <url>http://www.laukvik.no</url>
-    </organization>
 
     <licenses>
         <license>
@@ -65,9 +61,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.netbeans.external</groupId>
-            <artifactId>AbsoluteLayout</artifactId>
-            <version>RELEASE701</version>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -79,23 +82,7 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>sh.tak.appbundler</groupId>
-                <artifactId>appbundle-maven-plugin</artifactId>
-                <version>1.0.4</version>
-                <configuration>
-                    <mainClass>org.laukvik.csv.swing.Viewer</mainClass>
-                    <iconFile>archive.icns</iconFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -138,7 +125,6 @@
                 <configuration>
                     <instrumentation>
                         <ignores>
-
                         </ignores>
                         <excludes>
                             <exclude>org/laukvik/csv/**/*Exception.class</exclude>
@@ -197,26 +183,18 @@
                 <includes>
                     <include>**/*.csv</include>
                     <include>**/*.properties</include>
-                    <include>**/*.icns</include>
+                    <include>*.png</include>
                 </includes>
             </resource>
         </resources>
     </build>
-    <repositories>
-        <!--These are needed for Swing/Netbeans -->
-        <repository>
-            <id>maven2-repository.netbeans.maven2</id>
-            <name>Netbeans Maven Repository</name>
-            <url>http://bits.netbeans.org/maven2/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
+
+
     <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.18</version>
                 <reportSets>
                     <reportSet>
                         <id>integration-tests</id>
@@ -231,6 +209,7 @@
                 <artifactId>cobertura-maven-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
+                    <check>true</check>
                     <formats>
                         <format>html</format>
                         <format>xml</format>
@@ -248,9 +227,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.2</version>
                 <configuration>
-                    <linkXref>true</linkXref>
                     <sourceEncoding>utf-8</sourceEncoding>
                     <minimumTokens>100</minimumTokens>
                     <targetJdk>1.7</targetJdk>
@@ -259,7 +236,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.13</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

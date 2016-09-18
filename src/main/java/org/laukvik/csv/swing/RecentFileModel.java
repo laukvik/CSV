@@ -15,16 +15,16 @@
  */
 package org.laukvik.csv.swing;
 
+import org.laukvik.csv.CSV;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import org.laukvik.csv.CSV;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class RecentFileModel {
 
@@ -33,23 +33,22 @@ public class RecentFileModel {
     RecentFileListener listener;
     private static final Logger LOG = Logger.getLogger(RecentFileModel.class.getName());
 
-
     public RecentFileModel(JMenu recentMenu, RecentFileListener listener) {
-        this.files = CSV.findByClass(RecentFile.class);
-        this.recentMenu = recentMenu;
-        this.listener = listener;
-        for (RecentFile rf : files) {
-            add(rf, false);
-        }
-
+//        this.files = CSV.findByClass(RecentFile.class);
+//        this.recentMenu = recentMenu;
+//        this.listener = listener;
+//        for (RecentFile rf : files) {
+//            add(rf, false);
+//        }
     }
 
     private void save() {
         try {
-            LOG.info("Saving recent");
+            LOG.fine("Saving recent");
             CSV.saveAll(files, RecentFile.class);
-            LOG.info("Saved recent!");
-        } catch (Exception e) {
+            LOG.fine("Saved recent!");
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -65,7 +64,7 @@ public class RecentFileModel {
             item.setAction(new OpenRecentFileAction(file, listener));
             item.setText(file.getPath());
             recentMenu.add(item);
-            LOG.info("Adding recent!");
+            LOG.fine("Adding recent!");
             if (save) {
                 save();
             }

@@ -17,10 +17,7 @@ package org.laukvik.csv.columns;
 
 import java.math.BigDecimal;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class BigDecimalColumn extends Column<BigDecimal> {
 
     String name;
@@ -63,8 +60,7 @@ public class BigDecimalColumn extends Column<BigDecimal> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        return hash;
+        return 7;
     }
 
     @Override

@@ -15,27 +15,33 @@
  */
 package org.laukvik.csv.io;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
+
 /**
  * OutputStream for writing CSV data
  *
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public final class CsvWriter implements Writeable {
 
+    private static final Logger LOG = Logger.getLogger(CsvWriter.class.getName());
+
     private final OutputStream out;
-    private final MetaData metaData;
+    private MetaData metaData;
+    private Charset charset;
 
     public CsvWriter(OutputStream out, MetaData metaData) throws IOException {
         this.out = out;
@@ -43,10 +49,6 @@ public final class CsvWriter implements Writeable {
         writeMetaData(metaData);
     }
 
-    public CsvWriter(OutputStream out) throws IOException {
-        this.metaData = null;
-        this.out = out;
-    }
 
     /**
      * Writes a single row of CSV data
@@ -58,14 +60,15 @@ public final class CsvWriter implements Writeable {
         List<String> values = new ArrayList<>();
         for (int x = 0; x < metaData.getColumnCount(); x++) {
             Column c = metaData.getColumn(x);
-            Object o = row.getAsString(c);
-            values.add(c.asString(o));
+            values.add(row.getAsString(c));
         }
         writeValues(values);
     }
 
+    @Override
     public void write(CSV csv) throws IOException {
         writeMetaData(csv.getMetaData());
+        metaData = csv.getMetaData();
         for (int y = 0; y < csv.getRowCount(); y++) {
             writeRow(csv.getRow(y));
         }
@@ -87,9 +90,12 @@ public final class CsvWriter implements Writeable {
     public void writeMetaData(MetaData metaData) throws IOException {
         List<String> items = new ArrayList<>();
         for (int x = 0; x < metaData.getColumnCount(); x++) {
-            items.add(metaData.getColumnName(x));
+            Column c = metaData.getColumn(x);
+            String header = c.getName() + "(" + c.getName() + ")";
+            items.add(header);
         }
         writeValues(items);
+
     }
 
     public void writeRow(String... values) throws IOException {
@@ -103,23 +109,23 @@ public final class CsvWriter implements Writeable {
             }
             String column = values.get(x);
             if (column == null) {
-                out.write(CSV.QUOTE);
-                out.write(CSV.QUOTE);
+                out.write(CSV.DOUBLE_QUOTE);
+                out.write(CSV.DOUBLE_QUOTE);
             } else if (isDigitsOnly(column)) {
                 /* Digits only */
                 out.write(column.getBytes());
             } else {
                 /* Text */
-                out.write(CSV.QUOTE);
+                out.write(CSV.DOUBLE_QUOTE);
                 for (int n = 0; n < column.length(); n++) {
                     char ch = column.charAt(n);
-                    if (ch == CSV.QUOTE) {
+                    if (ch == CSV.DOUBLE_QUOTE) {
                         /* Encode quotes - write an extra quote */
-                        out.write(CSV.QUOTE);
+                        out.write(CSV.DOUBLE_QUOTE);
                     }
                     out.write(ch);
                 }
-                out.write(CSV.QUOTE);
+                out.write(CSV.DOUBLE_QUOTE);
             }
         }
         out.write(CSV.RETURN);

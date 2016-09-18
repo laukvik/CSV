@@ -18,10 +18,7 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class IntIsMatcher extends RowMatcher {
 
     private final int value;
@@ -37,10 +34,7 @@ public class IntIsMatcher extends RowMatcher {
     public boolean mathes(Row row) {
         Integer i = row.getInteger(column);
 //        System.out.println("IntIsMatcher: " + value + "=" + i);
-        if (i == null) {
-            return false;
-        }
-        return value == i;
+        return i != null && value == i;
     }
 
 }

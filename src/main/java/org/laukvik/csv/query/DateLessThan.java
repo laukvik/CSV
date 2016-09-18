@@ -15,15 +15,13 @@
  */
 package org.laukvik.csv.query;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
 public class DateLessThan extends RowMatcher {
 
     Date value;
@@ -40,10 +38,7 @@ public class DateLessThan extends RowMatcher {
     @Override
     public boolean mathes(Row row) {
         Date d = row.getDate(column);
-        if (d == null) {
-            return false;
-        }
-        return d.compareTo(value) < 0;
+        return d != null && d.compareTo(value) < 0;
 //        Date d = row.getDate(columnIndex, format);
 //        return d.compareTo(value) < 0;
     }

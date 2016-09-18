@@ -15,10 +15,7 @@
  */
 package org.laukvik.csv.columns;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class DoubleColumn extends Column<Double> {
 
     String name;
@@ -58,8 +55,7 @@ public class DoubleColumn extends Column<Double> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        return hash;
+        return 7;
     }
 
     @Override

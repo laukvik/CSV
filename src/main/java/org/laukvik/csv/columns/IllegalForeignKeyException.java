@@ -15,10 +15,7 @@
  */
 package org.laukvik.csv.columns;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 class IllegalForeignKeyException extends RuntimeException {
 
     public IllegalForeignKeyException(String message) {

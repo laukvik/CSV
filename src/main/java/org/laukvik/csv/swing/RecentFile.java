@@ -15,13 +15,16 @@
  */
 package org.laukvik.csv.swing;
 
-import java.util.Objects;
 import org.laukvik.csv.annotation.Column;
 import org.laukvik.csv.annotation.Entity;
 
+import java.util.Objects;
+
+
+
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 @Entity
 public class RecentFile {
@@ -60,10 +63,7 @@ public class RecentFile {
             return false;
         }
         final RecentFile other = (RecentFile) obj;
-        if (!Objects.equals(this.path, other.path)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.path, other.path);
     }
 
 

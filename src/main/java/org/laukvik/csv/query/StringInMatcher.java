@@ -18,10 +18,7 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class StringInMatcher extends RowMatcher {
 
     private final String value;
@@ -36,10 +33,7 @@ public class StringInMatcher extends RowMatcher {
     @Override
     public boolean mathes(Row row) {
         String v = row.getString(column);
-        if (v == null) {
-            return false;
-        }
-        return v.equalsIgnoreCase(value);
+        return v != null && v.equalsIgnoreCase(value);
     }
 
 }

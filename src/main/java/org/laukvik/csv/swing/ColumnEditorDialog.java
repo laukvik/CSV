@@ -19,18 +19,16 @@ import org.laukvik.csv.columns.Column;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class ColumnEditorDialog extends javax.swing.JDialog {
-
-    private Column column;
 
     /**
      * Creates new form ColumnEditorDialog
      */
     public ColumnEditorDialog(java.awt.Frame parent, Column column) {
         super(parent, true);
-        this.column = column;
+        final Column column1 = column;
         initComponents();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -59,19 +57,19 @@ public class ColumnEditorDialog extends javax.swing.JDialog {
         setPreferredSize(new java.awt.Dimension(350, 296));
 
         jPanel2.setPreferredSize(new java.awt.Dimension(400, 251));
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+//        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel2.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 380, -1));
+//        jPanel2.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 380, -1));
 
         jLabel3.setText("jLabel3");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 380, -1));
+//        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 380, -1));
 
         jLabel1.setText("jLabel1");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 370, -1));
+//        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 370, -1));
 
         jTextField1.setText("jTextField1");
-        jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 380, -1));
+//        jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 380, -1));
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 

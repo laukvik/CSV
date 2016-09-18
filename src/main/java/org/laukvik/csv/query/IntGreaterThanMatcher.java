@@ -18,10 +18,7 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class IntGreaterThanMatcher extends RowMatcher {
 
     int value;
@@ -36,11 +33,8 @@ public class IntGreaterThanMatcher extends RowMatcher {
     @Override
     public boolean mathes(Row row) {
         Integer value = row.getInteger(column);
-        if (value == null) {
-            return false;
-        }
-        return value > this.value;
-        //return row.getInteger(columnIndex) > value;
+        return value != null && value > this.value;
+//return row.getInteger(columnIndex) > value;
     }
 
 }

@@ -17,10 +17,7 @@ package org.laukvik.csv.columns;
 
 import java.util.Objects;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class ForeignKey {
 
     private String table;
@@ -89,13 +86,7 @@ public class ForeignKey {
             return false;
         }
         final ForeignKey other = (ForeignKey) obj;
-        if (!Objects.equals(this.table, other.table)) {
-            return false;
-        }
-        if (!Objects.equals(this.column, other.column)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.table, other.table) && Objects.equals(this.column, other.column);
     }
 
 }

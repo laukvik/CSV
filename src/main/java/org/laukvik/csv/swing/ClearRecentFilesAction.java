@@ -15,12 +15,12 @@
  */
 package org.laukvik.csv.swing;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class ClearRecentFilesAction extends AbstractAction {
 

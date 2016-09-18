@@ -19,11 +19,11 @@ import java.io.File;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public interface RecentFileListener {
 
-    public void openFile(File file);
+    void openFile(File file);
 
 //    public void clearRecent();
 }

@@ -15,10 +15,7 @@
  */
 package org.laukvik.csv.columns;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class FloatColumn extends Column<Float> {
 
     String name;
@@ -58,8 +55,7 @@ public class FloatColumn extends Column<Float> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        return hash;
+        return 7;
     }
 
     @Override

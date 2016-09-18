@@ -22,7 +22,7 @@ import org.laukvik.csv.MetaData;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  * @param <T>
  */
 public abstract class Column<T> implements Comparable {

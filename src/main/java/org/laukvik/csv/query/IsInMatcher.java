@@ -20,7 +20,7 @@ import org.laukvik.csv.columns.Column;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  * @param <T>
  */
 public class IsInMatcher<T> extends RowMatcher {

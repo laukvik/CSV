@@ -15,20 +15,21 @@
  */
 package org.laukvik.csv;
 
+import org.laukvik.csv.columns.Column;
+
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import org.laukvik.csv.columns.Column;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class MetaData implements Serializable {
 
     private final List<Column> columns;
     private Charset charset;
+    private char separatorChar;
+    private boolean CRLF;
+    private char quoteChar;
 
     public MetaData() {
         charset = Charset.defaultCharset();
@@ -115,4 +116,19 @@ public class MetaData implements Serializable {
         columns.remove(columnIndex);
     }
 
+    public char getSeparatorChar() {
+        return separatorChar;
+    }
+
+    public void setSeparator(final Character separatorChar) {
+        this.separatorChar = separatorChar;
+    }
+
+    public char getQuoteChar() {
+        return quoteChar;
+    }
+
+    public void setQuoteChar(final char quoteChar) {
+        this.quoteChar = quoteChar;
+    }
 }

@@ -15,10 +15,7 @@
  */
 package org.laukvik.csv;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class MetaDataNotFoundException extends IllegalArgumentException {
 
     public MetaDataNotFoundException() {

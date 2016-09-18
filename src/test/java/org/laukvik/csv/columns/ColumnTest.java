@@ -18,10 +18,7 @@ package org.laukvik.csv.columns;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class ColumnTest {
 
     @Test

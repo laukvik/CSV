@@ -15,22 +15,28 @@
  */
 package org.laukvik.csv.swing;
 
+import java.util.ResourceBundle;
+
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class AboutDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form AboutDialog
+     *
+     * @param parent
+     * @param modal
+     * @param bundle
      */
-    public AboutDialog(java.awt.Frame parent, boolean modal) {
+    public AboutDialog(java.awt.Frame parent, boolean modal, ResourceBundle bundle) {
         super(parent, modal);
         initComponents();
-        editorPane.setEditable(false);
-        editorPane.setText("About");
-    }
 
+        aboutLabel.setText(bundle.getString("about.title"));
+        descLabel.setText(bundle.getString("about.description"));
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -42,73 +48,55 @@ public class AboutDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        editorPane = new javax.swing.JEditorPane();
+        jPanel1 = new javax.swing.JPanel();
+        aboutLabel = new javax.swing.JLabel();
+        descLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
+        setLocationByPlatform(true);
+        setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+        setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         setName("aboutDialog"); // NOI18N
         setResizable(false);
 
-        jScrollPane1.setViewportView(editorPane);
+        jScrollPane1.setBorder(null);
+
+        jPanel1.setLayout(null);
+
+        aboutLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        aboutLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/feather.png"))); // NOI18N
+        aboutLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        aboutLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jPanel1.add(aboutLabel);
+        aboutLabel.setBounds(10, 10, 370, 170);
+
+        descLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        descLabel.setText("Written by Morten Laukvik");
+        descLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jPanel1.add(descLabel);
+        descLabel.setBounds(10, 190, 370, 50);
+
+        jScrollPane1.setViewportView(jPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AboutDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AboutDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AboutDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AboutDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                AboutDialog dialog = new AboutDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JEditorPane editorPane;
+    private javax.swing.JLabel aboutLabel;
+    private javax.swing.JLabel descLabel;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

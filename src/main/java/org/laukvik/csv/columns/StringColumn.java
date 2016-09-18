@@ -17,10 +17,7 @@ package org.laukvik.csv.columns;
 
 import java.util.Objects;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class StringColumn extends Column<String> {
 
     private String name;
@@ -73,8 +70,7 @@ public class StringColumn extends Column<String> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        return hash;
+        return 7;
     }
 
     @Override
@@ -86,10 +82,7 @@ public class StringColumn extends Column<String> {
             return false;
         }
         final StringColumn other = (StringColumn) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.name, other.name);
     }
 
 }

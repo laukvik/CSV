@@ -15,12 +15,21 @@
  */
 package org.laukvik.csv;
 
+import org.laukvik.csv.columns.BooleanColumn;
+import org.laukvik.csv.columns.ByteColumn;
+import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.FloatColumn;
+import org.laukvik.csv.columns.IntegerColumn;
+import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.io.AbstractReader;
+import org.laukvik.csv.io.CsvReader;
+import org.laukvik.csv.io.CsvWriter;
+import org.laukvik.csv.io.Writeable;
+import org.laukvik.csv.query.Query;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -31,17 +40,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.laukvik.csv.columns.BooleanColumn;
-import org.laukvik.csv.columns.ByteColumn;
-import org.laukvik.csv.columns.Column;
-import org.laukvik.csv.columns.FloatColumn;
-import org.laukvik.csv.columns.IntegerColumn;
-import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.io.CsvReader;
-import org.laukvik.csv.io.CsvWriter;
-import org.laukvik.csv.io.Readable;
-import org.laukvik.csv.io.Writeable;
-import org.laukvik.csv.query.Query;
 
 /**
  * An API for reading and writing to Viewer. The implementation is based on the
@@ -72,24 +70,26 @@ import org.laukvik.csv.query.Query;
  * </code>
  *
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
-public class CSV implements Serializable {
+public final class CSV implements Serializable {
 
     public final static String MIME_TYPE = "text/csv";
     public final static String FILE_EXTENSION = "csv";
 
     public final static char LINEFEED = 10;
     public final static char RETURN = 13;
-    public final static char COMMA = ',';
-    public final static char SEMINCOLON = ';';
-    public final static char PIPE = '|';
-    public final static char TAB = '\t';
-    public final static char QUOTE = '"';
-    public final static String CRLF = "\r\n";
 
-    protected MetaData metaData;
-    protected List<Row> rows;
+    public final static char COMMA = 44;
+    public final static char SEMICOLON = 59;
+    public final static char PIPE = 124;
+    public final static char TAB = 9;
+
+    public final static char DOUBLE_QUOTE = 34;
+    public final static char SINGLE_QUOTE = 39;
+
+    private MetaData metaData;
+    private List<Row> rows;
     private Query query;
 
     public CSV() {
@@ -104,8 +104,16 @@ public class CSV implements Serializable {
      * @param file
      * @throws IOException
      */
-    public void read(File file) throws IOException {
-        read(new CsvReader(new FileInputStream(file)));
+    public void readFile(final File file) throws IOException {
+        readFile(new CsvReader(file));
+    }
+
+    public void readFileWithSeparator(final File file, final char separator) throws IOException {
+        readFile(new CsvReader(file, Charset.defaultCharset(), separator, CSV.DOUBLE_QUOTE ));
+    }
+
+    public void readFileWithSeparator(final File file, final char separator, final char quote) throws IOException {
+        readFile(new CsvReader(file, Charset.defaultCharset(), separator, quote ));
     }
 
     /**
@@ -113,7 +121,7 @@ public class CSV implements Serializable {
      *
      * @param reader
      */
-    public void read(Readable reader) {
+    public void readFile(AbstractReader reader) {
         this.query = null;
         rows = new ArrayList<>();
         this.metaData = reader.getMetaData();
@@ -174,7 +182,7 @@ public class CSV implements Serializable {
         rows.clear();
     }
 
-    public void write(Writeable writer) throws IOException, Exception {
+    public void write(Writeable writer) throws Exception {
         writer.write(this);
         writer.close();
     }
@@ -269,8 +277,7 @@ public class CSV implements Serializable {
     }
 
     public static File getFile(Class aClass) {
-        File file = new File(getHome(), aClass.getCanonicalName() + ".csv");
-        return file;
+        return new File(getHome(), aClass.getCanonicalName() + ".csv");
     }
 
     /**
@@ -307,20 +314,19 @@ public class CSV implements Serializable {
         return (T) instance;
     }
 
-    public static <T> List<T> findByClass(Class<T> aClass) {
-        File file = getFile(aClass);
-        try {
-            return findByClass(new FileInputStream(file), Charset.defaultCharset(), aClass);
-        }
-        catch (FileNotFoundException ex) {
-            List<T> items = new ArrayList<>();
-            return items;
-        }
-    }
+//    public static <T> List<T> findByClass(Class<T> aClass) {
+//        File file = getFile(aClass);
+//        try {
+//            return findByClass(new FileInputStream(file), Charset.defaultCharset(), aClass);
+//        }
+//        catch (FileNotFoundException ex) {
+//            return new ArrayList<>();
+//        }
+//    }
 
-    public static <T> List<T> findByClass(InputStream inputStream, Charset charset, Class<T> aClass) {
+    public static <T> List<T> findByClass(final File file, final Charset charset, final Class<T> aClass) {
         List<T> items = new ArrayList<>();
-        try (CsvReader reader = new CsvReader(inputStream, charset)) {
+        try (CsvReader reader = new CsvReader(file, charset)) {
             while (reader.hasNext()) {
                 Row row = reader.getRow();
 //                row.setMetaData(reader.getMetaData());
@@ -341,7 +347,7 @@ public class CSV implements Serializable {
 
     public static <T> void saveAll(List<?> objects, Class<T> aClass) throws IllegalArgumentException, IllegalAccessException {
         File file = CSV.getFile(aClass);
-        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file))) {
+        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file), new MetaData())) {
             writer.writeMetaData(aClass);
             for (Object o : objects) {
                 writer.writeEntityRow(o);
@@ -351,6 +357,10 @@ public class CSV implements Serializable {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void clearQuery() {
+        this.query = null;
     }
 
     public Query findByQuery() {
@@ -370,7 +380,7 @@ public class CSV implements Serializable {
     /**
      * Returns a set of unique values for the specified column
      *
-     * @param columnIndex
+     * @param column
      * @return
      */
     public Set<String> listDistinct(Column column) {

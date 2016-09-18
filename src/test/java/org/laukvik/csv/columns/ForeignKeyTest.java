@@ -17,10 +17,7 @@ package org.laukvik.csv.columns;
 
 import org.junit.Test;
 
-/**
- *
- * @author Morten Laukvik <morten@laukvik.no>
- */
+
 public class ForeignKeyTest {
 
     @Test

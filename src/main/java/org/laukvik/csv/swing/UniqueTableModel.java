@@ -15,6 +15,11 @@
  */
 package org.laukvik.csv.swing;
 
+import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.DateColumn;
+
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,14 +27,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
-import org.laukvik.csv.columns.Column;
-import org.laukvik.csv.columns.DateColumn;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  * @param <T>
  */
 public class UniqueTableModel<T> implements TableModel {
