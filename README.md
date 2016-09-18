@@ -1,6 +1,7 @@
 
 [![Code Climate](https://codeclimate.com/github/laukvik/LaukvikCSV/badges/gpa.svg)](https://codeclimate.com/github/laukvik/LaukvikCSV)
 
+[![Build Status](https://travis-ci.org/laukvik/LaukvikCSV.svg?branch=master)](https://travis-ci.org/laukvik/LaukvikCSV)
 
 
 An easy to use API for reading and writing to CSV files.
