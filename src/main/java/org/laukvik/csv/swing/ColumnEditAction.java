@@ -26,12 +26,11 @@ import java.awt.event.ActionEvent;
  */
 public class ColumnEditAction extends AbstractAction {
 
-    private MetaData metaData;
     private int columnIndex;
     private Viewer viewer;
 
     public ColumnEditAction(Viewer viewer, MetaData metaData, int columnIndex) {
-        this.metaData = metaData;
+        final MetaData metaData1 = metaData;
         this.columnIndex = columnIndex;
         this.viewer = viewer;
         putValue(AbstractAction.NAME, metaData.getColumn(columnIndex).getName());

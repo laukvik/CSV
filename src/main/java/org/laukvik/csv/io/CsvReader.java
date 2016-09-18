@@ -34,8 +34,6 @@ public class CsvReader implements AbstractReader {
 
     private static final Logger LOG = Logger.getLogger(CsvReader.class.getName());
 
-    private StringBuilder currentValue;
-    private StringBuilder rawLine;
     private int bytesRead;
     private int lineCounter;
 
@@ -44,25 +42,21 @@ public class CsvReader implements AbstractReader {
     private Character columnSeparatorChar;
     private final Character quoteChar;
     private boolean autoDetectSeperator;
-    private boolean autoDetectCharset;
-    private boolean autoDetectColumnSeparator;
-    private boolean autoDetectQuoteChar;
 
-    private File file;
     private BufferedReader reader;
     private Charset charset;
 
     public CsvReader(final File file, final Charset charset, final Character separator, final Character quote) throws IOException {
         this.autoDetectSeperator = (separator == null);
-        this.autoDetectCharset = (charset == null);
-        this.autoDetectColumnSeparator = (separator == null);
-        this.autoDetectQuoteChar = (quote == null);
-        this.file = file;
+        final boolean autoDetectCharset = (charset == null);
+        final boolean autoDetectColumnSeparator = (separator == null);
+        final boolean autoDetectQuoteChar = (quote == null);
+        final File file1 = file;
         if (separator != null) {
             this.columnSeparatorChar = separator;
         }
         this.quoteChar = quote == null ? CSV.DOUBLE_QUOTE : quote;
-        if (this.autoDetectCharset) {
+        if (autoDetectCharset) {
             // Try to find BOM signature
             BOM bom = BOM.findBom(file);
             if (bom == null) {
@@ -135,10 +129,10 @@ public class CsvReader implements AbstractReader {
         boolean isNextLine = false;
 
         /* Current value */
-        currentValue = new StringBuilder();
+        StringBuilder currentValue = new StringBuilder();
 
         /* The raw chars being read */
-        rawLine = new StringBuilder();
+        final StringBuilder rawLine = new StringBuilder();
 
         boolean isWithinQuote = false;
         int quoteCount = 0;

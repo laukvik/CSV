@@ -56,7 +56,6 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private File file = null;
     private CSVTableModel model;
     private List<UniqueTableModel> tableModels;
-    private final RecentFileModel recentFileModel;
     private final LoadingWorker loadingWorker;
     private EmptyPanel emptyPanel;
     private String icon = "/feather.png";
@@ -93,7 +92,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         emptyPanel = new EmptyPanel(bundle.getString("status.nofile"), icon);
 
         /* Recent stuff */
-        recentFileModel = new RecentFileModel(recentMenu, this);
+        final RecentFileModel recentFileModel = new RecentFileModel(recentMenu, this);
 
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
 

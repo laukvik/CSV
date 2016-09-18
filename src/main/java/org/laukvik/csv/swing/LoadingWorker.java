@@ -42,7 +42,6 @@ public class LoadingWorker extends javax.swing.JDialog implements ActionListener
     private static final Logger LOG = Logger.getLogger(LoadingWorker.class.getName());
 
     private final Viewer viewer;
-    private Task task;
     private boolean canContinue;
     ResourceBundle bundle;
 
@@ -171,7 +170,7 @@ public class LoadingWorker extends javax.swing.JDialog implements ActionListener
 
     public void openFile(File file, Charset charset) {
         LOG.log(Level.FINE, "Opening file {0} with charset {1}", new Object[]{file.getAbsolutePath(), charset});
-        task = new Task(file, viewer);
+        final Task task = new Task(file, viewer);
         task.charset = charset;
         task.execute();
     }

@@ -23,14 +23,12 @@ import org.laukvik.csv.columns.Column;
  */
 public class ColumnEditorDialog extends javax.swing.JDialog {
 
-    private Column column;
-
     /**
      * Creates new form ColumnEditorDialog
      */
     public ColumnEditorDialog(java.awt.Frame parent, Column column) {
         super(parent, true);
-        this.column = column;
+        final Column column1 = column;
         initComponents();
         setLocationRelativeTo(null);
         setVisible(true);

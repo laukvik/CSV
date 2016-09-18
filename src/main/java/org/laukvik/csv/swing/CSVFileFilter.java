@@ -30,10 +30,7 @@ public class CSVFileFilter extends javax.swing.filechooser.FileFilter implements
     @Override
     public boolean accept(File f) {
         String filename = f.getName().toLowerCase();
-        if (f.isHidden()) {
-            return false;
-        }
-        return (filename.endsWith("." + CSV.FILE_EXTENSION));
+        return !f.isHidden() && (filename.endsWith("." + CSV.FILE_EXTENSION));
     }
 
     public String getDescription() {
