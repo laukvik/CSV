@@ -28,9 +28,6 @@
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Opens a CSV file for editing"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openMenuItemActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="openTabItem">
               <Properties>

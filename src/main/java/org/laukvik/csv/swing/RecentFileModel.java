@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class RecentFileModel {
 

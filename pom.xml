@@ -183,6 +183,7 @@
                 <includes>
                     <include>**/*.csv</include>
                     <include>**/*.properties</include>
+                    <include>*.png</include>
                 </includes>
             </resource>
         </resources>

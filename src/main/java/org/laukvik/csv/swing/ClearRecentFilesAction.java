@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class ClearRecentFilesAction extends AbstractAction {
 

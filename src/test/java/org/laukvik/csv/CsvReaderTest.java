@@ -177,8 +177,44 @@ public class CsvReaderTest {
 
     @Test
     public void detectCharsetLatin() throws IOException {
-        CsvReader r = new CsvReader(getResource("charset_latin1.csv"));
-        assertEquals(Charset.forName("latin1"),r.getMetaData().getCharset());
+        CsvReader r = new CsvReader(getResource("charset_windows_1252.csv"));
+//        System.out.println(r.getMetaData().getCharset());
+        assertEquals(Charset.forName("Windows-1252"),r.getMetaData().getCharset());
+    }
+
+
+    @Test
+    public void detectTab() throws IOException {
+        CsvReader r = new CsvReader(getResource("separator_tab.csv"));
+        assertEquals(CSV.TAB, r.getColumnSeparatorChar());
+    }
+
+    @Test
+    public void detectPipe() throws IOException {
+        CsvReader r = new CsvReader(getResource("separator_pipe.csv"));
+        assertEquals(CSV.PIPE, r.getColumnSeparatorChar());
+    }
+
+    @Test
+    public void detectSemi() throws IOException {
+        CsvReader r = new CsvReader(getResource("separator_semi.csv"));
+        assertEquals(CSV.SEMICOLON, r.getColumnSeparatorChar());
+    }
+
+    @Test
+    public void detectComma() throws IOException {
+        CsvReader r = new CsvReader(getResource("separator_comma.csv"));
+        assertEquals(CSV.COMMA, r.getColumnSeparatorChar());
+    }
+
+    @Test
+    public void detectComma2() throws IOException {
+//        CsvReader r = new CsvReader(new File("/Users/morten/Downloads/worldcitiespop.txt") );
+//        CsvReader r = new CsvReader(new File("/Users/morten/Downloads/CountriesOfTheWorld.csv") );
+        CsvReader r = new CsvReader(getResource("CountriesOfTheWorld.csv"));
+        CSV csv = new CSV();
+        assertEquals(CSV.SEMICOLON, r.getColumnSeparatorChar());
+//        assertEquals(Charset.forName("utf-16"),r.getMetaData().getCharset());
     }
 
 }

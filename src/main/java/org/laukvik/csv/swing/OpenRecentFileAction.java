@@ -21,7 +21,7 @@ import java.io.File;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class OpenRecentFileAction extends AbstractAction {
 

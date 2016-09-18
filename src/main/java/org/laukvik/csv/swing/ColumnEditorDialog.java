@@ -19,7 +19,7 @@ import org.laukvik.csv.columns.Column;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class ColumnEditorDialog extends javax.swing.JDialog {
 

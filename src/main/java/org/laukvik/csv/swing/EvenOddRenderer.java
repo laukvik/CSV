@@ -7,7 +7,7 @@ import java.awt.*;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class EvenOddRenderer implements TableCellRenderer {
 

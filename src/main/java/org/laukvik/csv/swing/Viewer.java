@@ -46,21 +46,21 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class Viewer extends javax.swing.JFrame implements ListSelectionListener, RecentFileListener {
 
     private static final Logger LOG = Logger.getLogger(Viewer.class.getName());
     private final ResourceBundle bundle;
-
     private CSV csv = null;
     private File file = null;
     private CSVTableModel model;
-
     private List<UniqueTableModel> tableModels;
     private final RecentFileModel recentFileModel;
     private final LoadingWorker loadingWorker;
     private EmptyPanel emptyPanel;
+    private String icon = "/feather.png";
+    private final static String APP_TITLE = "CSV";
 
     /**
      * Creates new form Viewer
@@ -76,16 +76,13 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         saveMenuItem.setAccelerator(getKeystroke(java.awt.event.KeyEvent.VK_S));
         printMenuItem.setAccelerator(getKeystroke(java.awt.event.KeyEvent.VK_P));
         exitMenuItem.setAccelerator(getKeystroke(java.awt.event.KeyEvent.VK_Q));
-
         gotoMenuItem.setAccelerator(getKeystroke(java.awt.event.KeyEvent.VK_G));
-
         findMenuItem.setAccelerator(getKeystroke(java.awt.event.KeyEvent.VK_F));
         toolsMenu.setVisible(true);
         file = null;
         csv = new CSV();
         model = new CSVTableModel(csv);
         table.setModel(model);
-
         loadingWorker = new LoadingWorker(this, bundle);
         for (Charset c : Charset.availableCharsets().values()) {
             JMenuItem item = new JMenuItem(c.name());
@@ -93,7 +90,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
             item.addActionListener(loadingWorker);
             charsetMenu.add(item);
         }
-        emptyPanel = new EmptyPanel(bundle.getString("status.nofile"));
+        emptyPanel = new EmptyPanel(bundle.getString("status.nofile"), icon);
 
         /* Recent stuff */
         recentFileModel = new RecentFileModel(recentMenu, this);
@@ -109,7 +106,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         openMenuItem.setActionCommand(null);
         setSize(width.intValue(), height.intValue());
         importMenuItem.setVisible(false);
-        exportMenuItem.setVisible(false);
+//        exportMenuItem.setVisible(false);
         cutMenuItem.setVisible(false);
         copyMenuItem.setVisible(false);
         pasteMenuItem.setVisible(false);
@@ -118,6 +115,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         undoMenuItem.setVisible(false);
         redoMenuItem.setVisible(false);
 
+        editMenu.setVisible(false);
         newDocument();
     }
 
@@ -166,7 +164,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
             case CSV.TAB : return "TAB";
             case CSV.PIPE : return "PIPE";
             case CSV.SEMICOLON : return "SEMICOLON";
-            default : return "?";
+            default : return "COMMA";
         }
     }
 
@@ -379,9 +377,6 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
             tabbedPane.add(c.getName(), scrollPane);
         }
         tabbedPane.invalidate();
-    }
-
-    public void addUniqueTable() {
     }
 
     private void createModel(CSVTableModel model) {
@@ -621,11 +616,6 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
         openMenuItem.setText(bundle.getString("file.open")); // NOI18N
         openMenuItem.setToolTipText("Opens a CSV file for editing");
-        openMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openMenuItemActionPerformed(evt);
-            }
-        });
         fileMenu.add(openMenuItem);
 
         openTabItem.setText("Open TAB");
@@ -853,10 +843,12 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         table.setModel(model);
         tabbedPane.removeAll();
         tableModels.clear();
-        scroll.setViewportView(new EmptyPanel(bundle.getString("status.nofile")));
+        scroll.setViewportView(new EmptyPanel(bundle.getString("status.nofile"), icon));
         setEmptyVisible(true);
         updateStatusBar();
     }
+
+
 
     public void setEmptyVisible(boolean isVisible) {
         if (isVisible) {
@@ -945,7 +937,6 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     }//GEN-LAST:event_deleteColumnMenuItemActionPerformed
 
     private void exportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportMenuItemActionPerformed
-
         java.awt.FileDialog fd = new FileDialog(this, "Velg fil", FileDialog.SAVE);
         //fd.setFilenameFilter(new CSVFileFilter());
         fd.setVisible(true);
@@ -955,7 +946,10 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         } else {
             try {
                 File file = new File(fd.getDirectory(), filename);
+
                 csv.write(new JsonWriter(new FileOutputStream(file)));
+
+
             }
             catch (Exception ex) {
                 JOptionPane.showMessageDialog(this,
@@ -964,35 +958,35 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         }
     }//GEN-LAST:event_exportMenuItemActionPerformed
 
-    private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_openMenuItemActionPerformed
-
     private void openSemiItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openSemiItemActionPerformed
-        openFile(CSV.SEMICOLON);
+        openFileWithSeparator(CSV.SEMICOLON);
     }//GEN-LAST:event_openSemiItemActionPerformed
 
     private void openPipeItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openPipeItemActionPerformed
-        openFile(CSV.PIPE);
+        openFileWithSeparator(CSV.PIPE);
     }//GEN-LAST:event_openPipeItemActionPerformed
 
     private void openTabItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openTabItemActionPerformed
-        openFile(CSV.TAB);
+        openFileWithSeparator(CSV.TAB);
     }//GEN-LAST:event_openTabItemActionPerformed
 
-    private void openFile(char separator){
-        java.awt.FileDialog fd = new FileDialog(this, "Velg fil", FileDialog.LOAD);
+    private void openFileWithSeparator(Character separator){
+        java.awt.FileDialog fd = new FileDialog(this, APP_TITLE, FileDialog.LOAD);
         fd.setVisible(true);
         String filename = fd.getFile();
         if (filename == null) {
         } else {
             try {
                 File file = new File(fd.getDirectory(), filename);
-                csv.readFileWithSeparator(file,separator);
+                if (separator == null){
+                    csv.readFile(file);
+                } else {
+                    csv.readFileWithSeparator(file,separator);
+                }
                 openCSV(csv, file);
             }
-            catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Could not open file!", "", JOptionPane.WARNING_MESSAGE);
+            catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), APP_TITLE, JOptionPane.WARNING_MESSAGE);
             }
         }
 
@@ -1011,12 +1005,12 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
      * @param args the command line arguments
      */
     public static void main(final String args[]) {
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "CSV");
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
         }
-        catch (Exception e) {
-        }
-        System.setProperty("apple.laf.useScreenMenuBar", "true");
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -1025,7 +1019,6 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 v.setSize(700, 400);
                 v.setLocationRelativeTo(null);
                 v.setVisible(true);
-
                 if (args.length > 0) {
                     v.openFile(new File(args[0]));
                 }

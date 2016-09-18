@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class LoadingWorker extends javax.swing.JDialog implements ActionListener {
 
@@ -81,7 +81,7 @@ public class LoadingWorker extends javax.swing.JDialog implements ActionListener
             MessageFormat mf = new MessageFormat(bundle.getString("loading.rows"));
             CSV csv = new CSV();
             boolean success = false;
-            try (CsvReader r = new CsvReader(file, charset)) {
+            try (CsvReader r = new CsvReader(file, charset, null)) {
                 csv.setMetaData(r.getMetaData());
                 while (canContinue && r.hasNext()) {
                     progressBar.setValue(r.getBytesRead());

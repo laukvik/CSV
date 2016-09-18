@@ -17,7 +17,7 @@ package org.laukvik.csv.swing;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public class EmptyPanel extends javax.swing.JPanel {
 
@@ -26,9 +26,11 @@ public class EmptyPanel extends javax.swing.JPanel {
      *
      * @param message
      */
-    public EmptyPanel(String message) {
+    public EmptyPanel(String message, String icon) {
+        super();
         initComponents();
         jLabel1.setText(message);
+        jLabel1.setIcon(new javax.swing.ImageIcon( this.getClass().getResource(icon) )); // NOI18N
     }
 
     /**
@@ -39,11 +41,8 @@ public class EmptyPanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
         jLabel1 = new javax.swing.JLabel();
-
         setLayout(new java.awt.GridBagLayout());
-
 //        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/feather.png"))); // NOI18N
         jLabel1.setText("Ingen fil er valgt...");
         jLabel1.setEnabled(false);

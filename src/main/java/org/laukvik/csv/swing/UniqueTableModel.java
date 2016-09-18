@@ -30,7 +30,7 @@ import java.util.TreeSet;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  * @param <T>
  */
 public class UniqueTableModel<T> implements TableModel {

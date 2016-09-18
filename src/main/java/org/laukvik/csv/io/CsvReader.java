@@ -82,20 +82,19 @@ public class CsvReader implements AbstractReader {
         this.lineCounter = 0;
         this.bytesRead = 0;
         if (this.charset == null) {
+//            this.charset = Charset.forName("utf-8");
             reader = Files.newBufferedReader(file.toPath());
         } else {
             reader = Files.newBufferedReader(file.toPath(), this.charset);
         }
+//        reader = Files.newBufferedReader(file.toPath(), this.charset);
         List<String> columns = parseRow();
         for (String rawColumnName : columns) {
             this.metaData.addColumn(Column.parseName(rawColumnName));
         }
         this.metaData.setSeparator(columnSeparatorChar);
         this.metaData.setQuoteChar(this.quoteChar);
-
     }
-
-
 
     /**
      * Reads the CSV file and detects encoding and seperator characters
@@ -104,8 +103,8 @@ public class CsvReader implements AbstractReader {
      * @param file
      * @throws IOException
      */
-    public CsvReader(File file) throws IOException {
-        this( file, null, CSV.COMMA, CSV.DOUBLE_QUOTE);
+    public CsvReader(final File file) throws IOException {
+        this( file, null, null, CSV.DOUBLE_QUOTE);
     }
 
     /**
@@ -118,6 +117,10 @@ public class CsvReader implements AbstractReader {
      */
     public CsvReader(final File file, final Charset charset) throws IOException {
         this( file, charset, CSV.COMMA, CSV.DOUBLE_QUOTE );
+    }
+
+    public CsvReader(final File file, final Charset charset, final Character columnSeparatorChar) throws IOException {
+        this( file, charset, columnSeparatorChar, CSV.DOUBLE_QUOTE );
     }
 
     /**
@@ -199,7 +202,7 @@ public class CsvReader implements AbstractReader {
 
                 quoteCount--;
 
-            } else if (currentChar == columnSeparatorChar) {
+            } else if (columnSeparatorChar != null && currentChar == columnSeparatorChar) {
                 addChar = false;
                 addValue = true;
 

@@ -13,12 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv.swing;
+package org.laukvik.csv.javafx;
+
+import javafx.beans.property.SimpleListProperty;
+
+import java.util.Set;
 
 /**
  *
- * @author Morten Laukvik
+ * @author Morten Laukvik <morten@laukvik.no>
  */
-public class Settings {
+public class ObservableUnique extends SimpleListProperty<UniqueRow> {
+
+    public ObservableUnique(Set<String> set) {
+        super();
+//        for (String s : set) {
+//            add(new UniqueRow(s));
+//        }
+    }
 
 }

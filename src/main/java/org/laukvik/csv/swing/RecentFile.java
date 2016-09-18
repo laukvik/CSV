@@ -24,7 +24,7 @@ import java.util.Objects;
 
 /**
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 @Entity
 public class RecentFile {

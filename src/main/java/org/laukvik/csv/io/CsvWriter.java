@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  * OutputStream for writing CSV data
  *
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ * @author Morten Laukvik
  */
 public final class CsvWriter implements Writeable {
 
