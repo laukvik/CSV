@@ -18,23 +18,8 @@ package org.laukvik.csv.columns;
 
 public class IntegerColumn extends Column<Integer> {
 
-    String name;
-
     public IntegerColumn(String name) {
-        this.name = name;
-    }
-
-    public IntegerColumn() {
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        super(name);
     }
 
     @Override
@@ -53,7 +38,7 @@ public class IntegerColumn extends Column<Integer> {
 
     @Override
     public String toString() {
-        return name + "(Integer)";
+        return getName() + "(Integer)";
     }
 
     @Override

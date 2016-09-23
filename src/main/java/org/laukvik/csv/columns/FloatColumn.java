@@ -18,20 +18,8 @@ package org.laukvik.csv.columns;
 
 public class FloatColumn extends Column<Float> {
 
-    String name;
-
     public FloatColumn(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        super(name);
     }
 
     @Override
@@ -50,7 +38,7 @@ public class FloatColumn extends Column<Float> {
 
     @Override
     public String toString() {
-        return name + "(Float)";
+        return getName() + "(Float)";
     }
 
     @Override

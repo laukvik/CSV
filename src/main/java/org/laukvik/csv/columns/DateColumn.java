@@ -25,12 +25,11 @@ import java.util.GregorianCalendar;
 
 public class DateColumn extends Column<Date> {
 
-    private String name;
     private final DateFormat dateFormat;
     private final String format;
 
     public DateColumn(String name, String format) {
-        this.name = name;
+        super(name);
         this.format = format;
         this.dateFormat = new SimpleDateFormat(format);
     }
@@ -53,14 +52,6 @@ public class DateColumn extends Column<Date> {
         GregorianCalendar c = new GregorianCalendar();
         c.setTime(d);
         return c.get(Calendar.MONTH) == month;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String asString(Date value) {
@@ -87,7 +78,7 @@ public class DateColumn extends Column<Date> {
 
     @Override
     public String toString() {
-        return name + "(Date)";
+        return getName() + "(Date)";
     }
 
     @Override

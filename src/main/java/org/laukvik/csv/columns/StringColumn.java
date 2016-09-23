@@ -20,14 +20,11 @@ import java.util.Objects;
 
 public class StringColumn extends Column<String> {
 
-    private String name;
     private int size;
 
-    public StringColumn() {
-    }
 
     public StringColumn(String name) {
-        this.name = name;
+        super(name);
     }
 
     public int getSize() {
@@ -36,16 +33,6 @@ public class StringColumn extends Column<String> {
 
     public void setSize(int size) {
         this.size = size;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override
@@ -65,7 +52,7 @@ public class StringColumn extends Column<String> {
 
     @Override
     public String toString() {
-        return name + "(String)";
+        return getName() + "(String)";
     }
 
     @Override
@@ -82,7 +69,7 @@ public class StringColumn extends Column<String> {
             return false;
         }
         final StringColumn other = (StringColumn) obj;
-        return Objects.equals(this.name, other.name);
+        return Objects.equals(this.getName(), other.getName());
     }
 
 }

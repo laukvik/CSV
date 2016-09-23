@@ -15,10 +15,11 @@
  */
 package org.laukvik.csv.columns;
 
+import org.laukvik.csv.MetaData;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import org.laukvik.csv.MetaData;
 
 /**
  *
@@ -32,6 +33,32 @@ public abstract class Column<T> implements Comparable {
     private boolean allowNulls;
     private ForeignKey foreignKey;
     private String defaultValue;
+    private String name;
+    private boolean visible;
+    private int width;
+
+    public Column(String name) {
+        this.name = name;
+        this.visible = true;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(final boolean visible) {
+        this.visible = visible;
+        fireColumnChanged();
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(final int width) {
+        this.width = width;
+        fireColumnChanged();
+    }
 
     public abstract String asString(T value);
 
@@ -39,9 +66,14 @@ public abstract class Column<T> implements Comparable {
 
     public abstract int compare(T one, T another);
 
-    public abstract String getName();
+    public final void setName(String name) {
+        this.name = name;
+        fireColumnChanged();
+    }
 
-    public abstract void setName(String name);
+    public final String getName() {
+        return name;
+    }
 
     public MetaData getMetaData() {
         return metaData;
@@ -85,6 +117,10 @@ public abstract class Column<T> implements Comparable {
 
     public int indexOf() {
         return metaData.indexOf(this);
+    }
+
+    private void fireColumnChanged(){
+        metaData.fireColumnChanged( this );
     }
 
     @Override

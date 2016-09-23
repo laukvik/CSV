@@ -20,20 +20,8 @@ import java.util.Arrays;
 
 public class ByteColumn extends Column<byte[]> {
 
-    String name;
-
     public ByteColumn(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        super(name);
     }
 
     @Override
@@ -62,6 +50,6 @@ public class ByteColumn extends Column<byte[]> {
 
     @Override
     public String toString() {
-        return name + "(Byte)";
+        return getName() + "(Byte)";
     }
 }

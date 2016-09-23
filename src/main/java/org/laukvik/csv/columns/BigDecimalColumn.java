@@ -20,23 +20,9 @@ import java.math.BigDecimal;
 
 public class BigDecimalColumn extends Column<BigDecimal> {
 
-    String name;
 
     public BigDecimalColumn(String name) {
-        this.name = name;
-    }
-
-    public BigDecimalColumn() {
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        super(name);
     }
 
     @Override
@@ -55,7 +41,7 @@ public class BigDecimalColumn extends Column<BigDecimal> {
 
     @Override
     public String toString() {
-        return name + "(Integer)";
+        return getName() + "(Integer)";
     }
 
     @Override

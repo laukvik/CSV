@@ -21,23 +21,8 @@ import java.net.URL;
 
 public class UrlColumn extends Column<URL> {
 
-    String name;
-
     public UrlColumn(String name) {
-        this.name = name;
-    }
-
-    public UrlColumn() {
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        super(name);
     }
 
     @Override
@@ -61,7 +46,7 @@ public class UrlColumn extends Column<URL> {
 
     @Override
     public String toString() {
-        return name + "(URL)";
+        return getName() + "(URL)";
     }
 
     @Override

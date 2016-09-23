@@ -15,23 +15,10 @@
  */
 package org.laukvik.csv.columns;
 
-
 public class DoubleColumn extends Column<Double> {
 
-    String name;
-
     public DoubleColumn(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        super(name);
     }
 
     @Override
@@ -50,7 +37,7 @@ public class DoubleColumn extends Column<Double> {
 
     @Override
     public String toString() {
-        return name + "(Double)";
+        return getName() + "(Double)";
     }
 
     @Override

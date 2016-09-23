@@ -18,20 +18,9 @@ package org.laukvik.csv.columns;
 
 public class BooleanColumn extends Column<Boolean> {
 
-    String name;
 
     public BooleanColumn(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        super(name);
     }
 
     @Override
@@ -50,6 +39,6 @@ public class BooleanColumn extends Column<Boolean> {
 
     @Override
     public String toString() {
-        return name + "(Boolean)";
+        return getName() + "(Boolean)";
     }
 }
