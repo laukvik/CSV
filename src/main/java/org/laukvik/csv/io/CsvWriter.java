@@ -23,7 +23,6 @@ import org.laukvik.csv.columns.Column;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +40,6 @@ public final class CsvWriter implements Writeable {
 
     private final OutputStream out;
     private MetaData metaData;
-    private Charset charset;
 
     public CsvWriter(OutputStream out, MetaData metaData) throws IOException {
         this.out = out;
@@ -67,6 +65,10 @@ public final class CsvWriter implements Writeable {
 
     @Override
     public void write(CSV csv) throws IOException {
+        BOM bom = metaData.getBOM();
+        if (bom != null){
+            out.write(bom.getBytes());
+        }
         writeMetaData(csv.getMetaData());
         metaData = csv.getMetaData();
         for (int y = 0; y < csv.getRowCount(); y++) {

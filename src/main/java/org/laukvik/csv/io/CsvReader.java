@@ -60,11 +60,7 @@ public class CsvReader implements AbstractReader {
             // Try to find BOM signature
             BOM bom = BOM.findBom(file);
             if (bom == null) {
-//                LOG.info("BOM signature not found.");
-//                this.charset = Charset.forName("utf-8");
-//                this.charset = Charset.forName("iso-8859-1");
             } else {
-//                LOG.log(Level.INFO, "Found BOM signature {0}", bom);
                 this.charset = bom.getCharset();
             }
         } else {
@@ -76,8 +72,8 @@ public class CsvReader implements AbstractReader {
         this.lineCounter = 0;
         this.bytesRead = 0;
         if (this.charset == null) {
-//            this.charset = Charset.forName("utf-8");
-            reader = Files.newBufferedReader(file.toPath());
+            this.charset = Charset.forName("utf-8");
+            reader = Files.newBufferedReader(file.toPath(), this.charset);
         } else {
             reader = Files.newBufferedReader(file.toPath(), this.charset);
         }

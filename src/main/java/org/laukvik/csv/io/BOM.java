@@ -18,7 +18,9 @@ package org.laukvik.csv.io;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
@@ -55,18 +57,8 @@ public enum BOM {
      */
     public static BOM findBom(File file) {
         try (InputStream is = new FileInputStream(file)) {
-            byte[] bytes = new byte[5];
-            is.read(bytes, 0, 5);
-
-            System.out.println( 1 + " - " + Integer.toHexString(bytes[0]& 0xFF));
-            System.out.println( 2 + " - " + Integer.toHexString(bytes[1]& 0xFF));
-            System.out.println( 3 + " - " + Integer.toHexString(bytes[2]& 0xFF));
-            System.out.println( 4 + " - " + Integer.toHexString(bytes[3]& 0xFF));
-            System.out.println( 5 + " - " + Integer.toHexString(bytes[4]& 0xFF));
-//
-            System.out.println();
-            System.out.println( new String(bytes) );
-
+            byte[] bytes = new byte[8];
+            is.read(bytes, 0, 8);
             return BOM.parse(bytes);
         }
         catch (Exception e) {
@@ -95,5 +87,13 @@ public enum BOM {
         }
         byte [] sameBytes = Arrays.copyOfRange(bytes, 0, this.bytes.length);
         return Arrays.equals( sameBytes, this.bytes);
+    }
+
+    public void write(final OutputStream out) throws IOException {
+        out.write(getBytes());
+    }
+
+    public byte[] getBytes() {
+        return bytes;
     }
 }
