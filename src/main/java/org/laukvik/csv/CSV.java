@@ -91,11 +91,13 @@ public final class CSV implements Serializable {
     private MetaData metaData;
     private List<Row> rows;
     private Query query;
+    private List<ChangeListener> listeners;
 
     public CSV() {
         this.metaData = new MetaData();
         this.rows = new ArrayList<>();
         this.query = null;
+        listeners = new ArrayList<>();
     }
 
     /**
@@ -125,11 +127,13 @@ public final class CSV implements Serializable {
         this.query = null;
         rows = new ArrayList<>();
         this.metaData = reader.getMetaData();
+        this.metaData.setCSV(this);
+        fireMetaDataRead();
         while (reader.hasNext()) {
-            Row row = reader.getRow();
-            rows.add(row);
+            addRow(reader.getRow());
         }
     }
+
 
     protected List<Row> getRows() {
         return rows;
@@ -171,14 +175,16 @@ public final class CSV implements Serializable {
     public Row addRow(Row row) {
         row.setCSV(this);
         rows.add(row);
+        fireRowCreated(rows.size(), row);
         return row;
     }
 
     public void removeRow(int rowIndex) {
-        rows.remove(rowIndex);
+        Row row = rows.remove(rowIndex);
+        fireRowRemoved(rowIndex, row );
     }
 
-    public void removeAllRows() {
+    public void removeRows() {
         rows.clear();
     }
 
@@ -200,11 +206,13 @@ public final class CSV implements Serializable {
     public Row insertRow(Row row, int rowIndex) {
         row.setCSV(this);
         rows.add(rowIndex, row);
+        fireRowCreated(rowIndex, row);
         return row;
     }
 
     public Column addColumn(Column column) {
         metaData.addColumn(column);
+        fireColumnCreated(column);
         return column;
     }
 
@@ -397,4 +405,60 @@ public final class CSV implements Serializable {
     public void close() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+
+
+    /******************* Listeners ***************************************************/
+    public void addChangeListener(ChangeListener l) {
+        listeners.add(l);
+    }
+
+    public void removeChangeListener(ChangeListener l) {
+        listeners.remove(l);
+    }
+
+    private void fireMetaDataRead(){
+        for (ChangeListener l : listeners){
+            l.metaDataRead(this.getMetaData());
+        }
+    }
+    private void fireRowCreated(int rowIndex, Row row){
+        for (ChangeListener l : listeners){
+            l.rowCreated(rowIndex,row);
+        }
+    }
+
+    private void fireRowUpdated(int rowIndex, Row row){
+        for (ChangeListener l : listeners){
+            l.rowUpdated(rowIndex,row);
+        }
+    }
+
+    private void fireRowRemoved(int rowIndex, Row row){
+        for (ChangeListener l : listeners){
+            l.rowRemoved(rowIndex,row);
+        }
+    }
+
+    protected void fireColumnCreated(Column column){
+        for (ChangeListener l : listeners){
+            l.columnCreated(column);
+        }
+    }
+
+    protected void fireColumnUpdated(Column column){
+        for (ChangeListener l : listeners){
+            l.columnUpdated(column);
+        }
+    }
+
+    protected void fireColumnRemoved(Column column){
+        for (ChangeListener l : listeners){
+            l.columnRemoved(column);
+        }
+    }
+
+
+
+
 }

@@ -16,6 +16,7 @@
 package org.laukvik.csv;
 
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.io.BOM;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;
@@ -28,12 +29,24 @@ public class MetaData implements Serializable {
     private final List<Column> columns;
     private Charset charset;
     private char separatorChar;
-    private boolean CRLF;
     private char quoteChar;
+    private CSV csv;
 
-    public MetaData() {
+    public MetaData(){
         charset = Charset.defaultCharset();
         columns = new ArrayList<>();
+    }
+
+    public void fireColumnChanged(Column column){
+        csv.fireColumnUpdated(column);
+    }
+
+    public CSV getCSV() {
+        return csv;
+    }
+
+    public void setCSV(CSV csv) {
+        this.csv = csv;
     }
 
     public Column getColumn(String name) {
@@ -70,12 +83,16 @@ public class MetaData implements Serializable {
     public Column addColumn(Column column) {
         column.setMetaData(this);
         columns.add(column);
+        if (csv != null){
+            csv.fireColumnCreated(column);
+        }
         return column;
     }
 
     public void removeColumn(Column column) {
         column.setMetaData(null);
         columns.remove(column);
+        csv.fireColumnCreated(column);
     }
 
     public int indexOf(Column column) {
@@ -112,8 +129,10 @@ public class MetaData implements Serializable {
     }
 
     public void removeColumn(int columnIndex) {
-        columns.get(columnIndex).setMetaData(null);
-        columns.remove(columnIndex);
+        Column c = columns.get(columnIndex);
+        c.setMetaData(null);
+        columns.remove(c);
+        csv.fireColumnRemoved(c);
     }
 
     public char getSeparatorChar() {
@@ -130,5 +149,17 @@ public class MetaData implements Serializable {
 
     public void setQuoteChar(final char quoteChar) {
         this.quoteChar = quoteChar;
+    }
+
+    public BOM getBOM(){
+        if (charset == null){
+            return null;
+        }
+        for (BOM b : BOM.values()){
+            if (charset.equals(b)){
+                return b;
+            }
+        }
+        return null;
     }
 }

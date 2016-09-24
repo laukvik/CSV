@@ -40,7 +40,7 @@ public enum BOM {
     private final byte[] bytes;
     private final String charset;
 
-    private BOM(String charset, byte... chars) {
+    BOM(String charset, byte... chars) {
         this.charset = charset;
         this.bytes = chars;
     }
