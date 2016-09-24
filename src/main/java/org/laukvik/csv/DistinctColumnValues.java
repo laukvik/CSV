@@ -15,10 +15,11 @@
  */
 package org.laukvik.csv;
 
+import org.laukvik.csv.columns.Column;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import org.laukvik.csv.columns.Column;
 
 
 public class DistinctColumnValues {
@@ -28,6 +29,11 @@ public class DistinctColumnValues {
 
     public DistinctColumnValues(Column column) {
         this.column = column;
+        this.map = new TreeMap<>();
+    }
+
+    public DistinctColumnValues() {
+        this.column = null;
         this.map = new TreeMap<>();
     }
 
