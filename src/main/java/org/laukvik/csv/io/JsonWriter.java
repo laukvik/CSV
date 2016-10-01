@@ -15,15 +15,16 @@
  */
 package org.laukvik.csv.io;
 
+import org.laukvik.csv.CSV;
+import org.laukvik.csv.MetaData;
+import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.laukvik.csv.CSV;
-import org.laukvik.csv.MetaData;
-import org.laukvik.csv.Row;
-import org.laukvik.csv.columns.Column;
 
 /**
  *
@@ -117,7 +118,7 @@ public class JsonWriter implements Writeable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws IOException {
         out.close();
     }
 

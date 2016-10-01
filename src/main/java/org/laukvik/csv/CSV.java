@@ -24,6 +24,7 @@ import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.AbstractReader;
 import org.laukvik.csv.io.CsvReader;
 import org.laukvik.csv.io.CsvWriter;
+import org.laukvik.csv.io.JsonWriter;
 import org.laukvik.csv.io.Writeable;
 import org.laukvik.csv.query.Query;
 
@@ -459,6 +460,7 @@ public final class CSV implements Serializable {
     }
 
 
-
-
+    public void writeFile(final File file) throws Exception {
+        write(new JsonWriter(new FileOutputStream(file)));
+    }
 }

@@ -59,7 +59,6 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     private final LoadingWorker loadingWorker;
     private EmptyPanel emptyPanel;
     private String icon = "/feather.png";
-    private final static String APP_TITLE = "CSV";
 
     /**
      * Creates new form Viewer
@@ -946,8 +945,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
             try {
                 File file = new File(fd.getDirectory(), filename);
 
-                csv.write(new JsonWriter(new FileOutputStream(file)));
 
+                csv.writeFile(file);
 
             }
             catch (Exception ex) {
@@ -970,7 +969,8 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
     }//GEN-LAST:event_openTabItemActionPerformed
 
     private void openFileWithSeparator(Character separator){
-        java.awt.FileDialog fd = new FileDialog(this, APP_TITLE, FileDialog.LOAD);
+
+        java.awt.FileDialog fd = new FileDialog(this, bundle.getString("about.title"), FileDialog.LOAD);
         fd.setVisible(true);
         String filename = fd.getFile();
         if (filename == null) {
@@ -985,7 +985,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 openCSV(csv, file);
             }
             catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), APP_TITLE, JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, ex.getMessage(), bundle.getString("about.title"), JOptionPane.WARNING_MESSAGE);
             }
         }
 

@@ -15,8 +15,6 @@
  */
 package org.laukvik.csv.swing;
 
-import org.laukvik.csv.CSV;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,16 +40,16 @@ public class RecentFileModel {
 //        }
     }
 
-    private void save() {
-        try {
-            LOG.fine("Saving recent");
-            CSV.saveAll(files, RecentFile.class);
-            LOG.fine("Saved recent!");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private void save() {
+//        try {
+//            LOG.fine("Saving recent");
+//            CSV.saveAll(files, RecentFile.class);
+//            LOG.fine("Saved recent!");
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void add(RecentFile file) {
         add(file, true);
@@ -66,7 +64,7 @@ public class RecentFileModel {
             recentMenu.add(item);
             LOG.fine("Adding recent!");
             if (save) {
-                save();
+//                save();
             }
         }
     }
