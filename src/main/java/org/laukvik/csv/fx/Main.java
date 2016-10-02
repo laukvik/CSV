@@ -4,12 +4,16 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
@@ -18,6 +22,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -28,9 +33,13 @@ import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.io.BOM;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -42,6 +51,7 @@ import static org.laukvik.csv.fx.Builder.createResultsColumns;
 import static org.laukvik.csv.fx.Builder.createResultsRows;
 import static org.laukvik.csv.fx.Builder.createUniqueObservableList;
 import static org.laukvik.csv.fx.Builder.getPercentSize;
+import static org.laukvik.csv.fx.Builder.getSeparatorCharByString;
 import static org.laukvik.csv.fx.Builder.getSeparatorString;
 import static org.laukvik.csv.fx.Builder.toKb;
 
@@ -65,50 +75,12 @@ public class Main extends Application implements ChangeListener, FileListener {
     private Label separatorLabel;
     private ProgressBar progressBar;
 
-
-    public void setSelectedColumnIndex(int selectedColumnIndex){
-        this.selectedColumnIndex = selectedColumnIndex;
-//        columnsTableView.getSelectionModel().select(selectedColumnIndex);
-//        columnsTableView.getFocusModel().focus(selectedColumnIndex);
-        if (selectedColumnIndex > -1){
-            uniqueTableView.setItems(createUniqueObservableList(selectedColumnIndex, csv));
-        }
-    }
-
-    public void openFileDialog(){
-        final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open .CSV file");
-        final File selectedFile = fileChooser.showOpenDialog(stage);
-        if (selectedFile != null){
-            loadFile(selectedFile);
-        }
-    }
-
-    public void newFile() {
-        csv = new CSV();
-        csv.addChangeListener(this);
-        csv.addFileListener(this);
-        selectedColumnIndex = 0;
-        columnsTableView.setItems(FXCollections.observableArrayList());
-        uniqueTableView.setItems(FXCollections.observableArrayList());
-        resultsTableView.setItems(FXCollections.observableArrayList());
-        resultsTableView.getColumns().clear();
-        updateToolbar();
-    }
-
-
-    public void loadFile(File file){
-        newFile();
-        try {
-            csv.readFile(file);
-        } catch (IOException e) {
-            alert(e.getMessage());
-        }
-
+    public static void main(String[] args) {
+        launch(args);
     }
 
     @Override
-    public void start(final Stage primaryStage) throws Exception {
+    public void start(final Stage primaryStage ) throws Exception {
         this.stage = primaryStage;
         columnsTableView = buildColumnsTable();
         uniqueTableView = buildUniqueTable();
@@ -161,7 +133,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         separator.setDisable(true);
         separatorLabel = new Label("-");
         progressBar = new ProgressBar(100);
-        progressBar.setVisible(true);
+        progressBar.setVisible(false);
         progressBar.setPrefWidth(200);
         bar.getItems().addAll(rows, rowsLabel, cols, colsLabel, size, sizeLabel, encoding, encodingLabel, separator, separatorLabel, progressBar);
 
@@ -177,12 +149,124 @@ public class Main extends Application implements ChangeListener, FileListener {
         newFile();
     }
 
+
+    public void setSelectedColumnIndex(int selectedColumnIndex){
+        this.selectedColumnIndex = selectedColumnIndex;
+//        columnsTableView.getSelectionModel().select(selectedColumnIndex);
+//        columnsTableView.getFocusModel().focus(selectedColumnIndex);
+        if (selectedColumnIndex > -1){
+            uniqueTableView.setItems(createUniqueObservableList(selectedColumnIndex, csv));
+        }
+    }
+
+    public void openFileDialog(){
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open .CSV file");
+        final File selectedFile = fileChooser.showOpenDialog(stage);
+        if (selectedFile != null){
+            loadFile(selectedFile, null, null);
+        }
+    }
+
+    public void openFileDialogWithOptions() {
+        final Dialog dialog = new Dialog();
+        dialog.setTitle(bundle.getString("app.title"));
+        dialog.setHeaderText("Open file");
+
+        final GridPane gridpane = new GridPane();
+        gridpane.setPadding(new Insets(10,20,10,20));
+        gridpane.setHgap(20);
+        gridpane.setVgap(10);
+
+        final Label separatorLabel = new Label("Separator");
+        gridpane.add(separatorLabel, 0, 1);
+        final ChoiceBox separatorBox = new ChoiceBox();
+        List<String> items = new ArrayList<>();
+        items.add("auto");
+        for (char c : CSV.getSupportedSeparatorChars()){
+            items.add(Builder.getSeparatorString(c));
+        }
+        separatorBox.getItems().addAll(items);
+        gridpane.add(separatorBox, 1, 1);
+        separatorBox.getSelectionModel().select(0);
+
+        final Label charsetLabel = new Label("Encoding");
+        gridpane.add(charsetLabel, 0, 2);
+        final ChoiceBox charsetBox = new ChoiceBox();
+        charsetBox.getItems().add("auto");
+        for (BOM b : BOM.values()){
+            charsetBox.getItems().add(b.name());
+        }
+        for (String key : Charset.availableCharsets().keySet()){
+            charsetBox.getItems().add(key);
+        }
+        charsetBox.getSelectionModel().select(0);
+        gridpane.add(charsetBox, 1, 2);
+        dialog.getDialogPane().setContent(gridpane);
+
+        // Set the button types.
+        ButtonType okButtonType = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
+        dialog.showAndWait();
+        ButtonType resultButtonType = (ButtonType) dialog.getResult();
+
+        if (resultButtonType.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)){
+            String separatorString =  (String)separatorBox.getSelectionModel().getSelectedItem();
+//            alert("SEPString: " + separatorString);
+            Character separator = separatorString.equals("auto") ? null : getSeparatorCharByString(separatorString);
+            String encoding =  (String)charsetBox.getSelectionModel().getSelectedItem();
+//            alert("encoding: " + encoding);
+            Charset charset = encoding.equals("auto") ? null : Charset.forName(encoding);
+
+            final FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open file");
+            final File selectedFile = fileChooser.showOpenDialog(stage);
+            if (selectedFile != null){
+                loadFile(selectedFile, separator, charset);
+            }
+        }
+    }
+
+    public void newFile() {
+        csv = new CSV();
+        csv.addChangeListener(this);
+        csv.addFileListener(this);
+        selectedColumnIndex = 0;
+        columnsTableView.setItems(FXCollections.observableArrayList());
+        uniqueTableView.setItems(FXCollections.observableArrayList());
+        resultsTableView.setItems(FXCollections.observableArrayList());
+        resultsTableView.getColumns().clear();
+        updateToolbar();
+    }
+
+
+    public void loadFile(File file, Character separatorChar, Charset charset){
+        newFile();
+        try {
+//            System.out.println(file);
+//            System.out.println(separatorChar);
+//            System.out.println(charset);
+//            csv.readFile(file, charset, separatorChar);
+
+            if (charset == null && separatorChar == null){
+                csv.readFile(file);
+            } else if (charset != null){
+                csv.readFile(file, charset, separatorChar);
+            } else if (separatorChar != null){
+                csv.readFile(file, separatorChar);
+            }
+        } catch (IOException e) {
+            alert(e.getMessage());
+        }
+    }
+
     public void updateToolbar(){
         rowsLabel.setText(csv.getRowCount() + "");
         colsLabel.setText(csv.getMetaData().getColumnCount() + "");
         encodingLabel.setText(csv.getMetaData().getCharset() == null ? "N/A" : csv.getMetaData().getCharset().name());
         sizeLabel.setText(toKb(csv.getFile() == null ? 0 : csv.getFile().length()) + "");
-        separatorLabel.setText(getSeparatorString(csv.getMetaData().getSeparatorChar()));
+        separatorLabel.setText(csv.getMetaData().getSeparatorChar() == null ? "" : getSeparatorString(csv.getMetaData().getSeparatorChar()));
         stage.setTitle(csv.getFile() == null ? "" : csv.getFile().getName() + "");
     }
 
@@ -276,7 +360,6 @@ public class Main extends Application implements ChangeListener, FileListener {
     @Override
     public void readBytes(final long count, final long total) {
         Platform.runLater(() -> progressBar.setProgress(count/(total*1f)));
-        System.out.print("#");
     }
 
     @Override
@@ -384,4 +467,5 @@ public class Main extends Application implements ChangeListener, FileListener {
         csv.insertHeaders();
         updateRows();
     }
+
 }

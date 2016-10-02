@@ -280,7 +280,7 @@ public class CSVTest {
     @Test
     public void readCommaSeparated() throws IOException {
         CSV csv = new CSV();
-        csv.readFileWithSeparator( getResource("separator_comma.csv"), CSV.COMMA );
+        csv.readFile( getResource("separator_comma.csv"), CSV.COMMA );
         MetaData md = csv.getMetaData();
         assertEquals(3,md.getColumnCount());
         assertEquals(2,csv.getRowCount());
@@ -289,7 +289,7 @@ public class CSVTest {
     @Test
     public void readSemiColonSeparated() throws IOException {
         CSV csv = new CSV();
-        csv.readFileWithSeparator( getResource("separator_semi.csv"), CSV.SEMICOLON  );
+        csv.readFile( getResource("separator_semi.csv"), CSV.SEMICOLON  );
         MetaData md = csv.getMetaData();
         assertEquals(3,md.getColumnCount());
         assertEquals(1,csv.getRowCount());
@@ -298,7 +298,7 @@ public class CSVTest {
     @Test
     public void readTabSeparated() throws IOException {
         CSV csv = new CSV();
-        csv.readFileWithSeparator( getResource("separator_tab.csv"), CSV.TAB  );
+        csv.readFile( getResource("separator_tab.csv"), CSV.TAB  );
         MetaData md = csv.getMetaData();
         assertEquals(3,md.getColumnCount());
         assertEquals(1,csv.getRowCount());
@@ -307,7 +307,7 @@ public class CSVTest {
     @Test
     public void readPipeSeparated() throws IOException {
         CSV csv = new CSV();
-        csv.readFileWithSeparator( getResource("separator_pipe.csv"), CSV.PIPE  );
+        csv.readFile( getResource("separator_pipe.csv"), CSV.PIPE  );
         MetaData md = csv.getMetaData();
         assertEquals(3,md.getColumnCount());
         assertEquals(1,csv.getRowCount());
@@ -316,7 +316,7 @@ public class CSVTest {
     @Test
     public void readSingleQuote() throws IOException {
         CSV csv = new CSV();
-        csv.readFileWithSeparator( getResource("quote_single.csv"), CSV.COMMA, CSV.SINGLE_QUOTE );
+        csv.readFile( getResource("quote_single.csv"), CSV.COMMA, CSV.SINGLE_QUOTE );
         MetaData md = csv.getMetaData();
         assertEquals(3,md.getColumnCount());
         assertEquals(2,csv.getRowCount());
@@ -328,7 +328,7 @@ public class CSVTest {
     @Test
     public void readDoubleQuote() throws IOException {
         CSV csv = new CSV();
-        csv.readFileWithSeparator( getResource("quote_double.csv"), CSV.COMMA, CSV.DOUBLE_QUOTE );
+        csv.readFile( getResource("quote_double.csv"), CSV.COMMA, CSV.DOUBLE_QUOTE );
         MetaData md = csv.getMetaData();
         assertEquals(3,md.getColumnCount());
         assertEquals(2,csv.getRowCount());

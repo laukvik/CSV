@@ -146,7 +146,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
         encLabel.setText(bundle.getString("status.encoding") + ": ");
         encodingLabel.setText(csv.getMetaData().getCharset() == null ? "" : csv.getMetaData().getCharset().displayName());
         sepLabel.setText(bundle.getString("status.seperator") + ": ");
-        seperatorLabel.setText(getSeparatorString(csv.getMetaData().getSeparatorChar()));
+        seperatorLabel.setText(csv.getMetaData().getSeparatorChar() == null ? "" : getSeparatorString(csv.getMetaData().getSeparatorChar()));
 
         sizLabel.setText(bundle.getString("status.filesize") + ": ");
 
@@ -975,7 +975,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
                 if (separator == null){
                     csv.readFile(file);
                 } else {
-                    csv.readFileWithSeparator(file,separator);
+                    csv.readFile(file,separator);
                 }
                 openCSV(csv, file);
             }

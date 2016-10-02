@@ -14,6 +14,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCombination;
@@ -38,6 +40,11 @@ public class Builder {
 
     public static ResourceBundle getBundle(){
         return ResourceBundle.getBundle("fx");
+    }
+
+    public static ImageView getImage(){
+        ImageView v =  new ImageView(new Image("feather.png"));
+        return v;
     }
 
     public static java.awt.Dimension getPercentSize(float w, float h){
@@ -196,7 +203,7 @@ public class Builder {
                 main.newFile();
             }
         });
-        fileMenu.getItems().add(newItem);
+
         MenuItem openItem = new MenuItem("Open");
         openItem.setAccelerator(KeyCombination.keyCombination("Meta+o"));
         openItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -204,6 +211,16 @@ public class Builder {
                 main.openFileDialog();
             }
         });
+
+
+        MenuItem openFileOptions = new MenuItem("Open...");
+        openFileOptions.setAccelerator(KeyCombination.keyCombination("Meta+o+shift"));
+        openFileOptions.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.openFileDialogWithOptions();
+            }
+        });
+
         MenuItem saveItem = new MenuItem("Save");
         saveItem.setAccelerator(KeyCombination.keyCombination("Meta+s"));
         MenuItem saveAsItem = new MenuItem("Save as");
@@ -218,7 +235,7 @@ public class Builder {
                 main.handlePrintAction();
             }
         });
-        fileMenu.getItems().addAll(openItem, saveItem, saveAsItem, exportItem, printItem);
+        fileMenu.getItems().addAll(newItem, openItem, openFileOptions, saveItem, saveAsItem, exportItem, printItem);
 
 
 
@@ -291,6 +308,16 @@ public class Builder {
             case CSV.PIPE : return "PIPE";
             case CSV.SEMICOLON : return "SEMICOLON";
             default : return "COMMA";
+        }
+    }
+
+    public static Character getSeparatorCharByString(String separator){
+        switch(separator){
+            case "COMMA" : return CSV.COMMA;
+            case "TAB" : return CSV.TAB;
+            case "PIPE" : return CSV.PIPE;
+            case "SEMICOLON" : return CSV.SEMICOLON;
+            default : return null;
         }
     }
 

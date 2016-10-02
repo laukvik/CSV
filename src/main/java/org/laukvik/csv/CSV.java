@@ -22,6 +22,7 @@ import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.AbstractReader;
+import org.laukvik.csv.io.BOM;
 import org.laukvik.csv.io.CsvReader;
 import org.laukvik.csv.io.CsvWriter;
 import org.laukvik.csv.io.Writeable;
@@ -29,10 +30,10 @@ import org.laukvik.csv.query.Query;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -57,6 +58,7 @@ public final class CSV implements Serializable {
     public final static char PIPE = 124;
     public final static char TAB = 9;
 
+
     public final static char DOUBLE_QUOTE = 34;
     public final static char SINGLE_QUOTE = 39;
 
@@ -73,6 +75,18 @@ public final class CSV implements Serializable {
         query = null;
         changeListeners = new ArrayList<>();
         fileListeners = new ArrayList<>();
+    }
+
+    public static char[] getSupportedSeparatorChars() {
+        return new char []{COMMA,SEMICOLON,PIPE,TAB};
+    }
+
+    public static List<Charset> getSupportedCharsets(){
+        List<Charset> sets = new ArrayList<>();
+        for (BOM b : BOM.values()){
+            sets.add(b.getCharset());
+        }
+        return sets;
     }
 
     public List<ChangeListener> getChangeListeners() {
@@ -246,17 +260,21 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Reads the File
+     * Reads the File using the specified reader. System default charset is used when the charset is not
+     * specified.
      *
+     * @param file
+     * @param charset
      * @param reader
      */
-    public void readFile(final File file, final AbstractReader reader) {
+    public void readFile(final File file, final Charset charset, final AbstractReader reader) {
         this.file = file;
         this.query = null;
         this.rows = new ArrayList<>();
         fireBeginRead(file);
         this.metaData = reader.getMetaData();
         this.metaData.setCSV(this);
+        this.metaData.setCharset(charset == null ? findCharsetByBOM(file) : charset);
         fireMetaDataRead();
         long max = file.length();
         while (reader.hasNext()) {
@@ -266,6 +284,11 @@ public final class CSV implements Serializable {
         fireFinishRead(file);
     }
 
+    protected static Charset findCharsetByBOM(final File file){
+            BOM bom = BOM.findBom(file);
+        return bom == null ? Charset.defaultCharset() : bom.getCharset();
+    }
+
     /**
      * Reads the CSV file
      *
@@ -273,16 +296,50 @@ public final class CSV implements Serializable {
      * @throws IOException
      */
     public void readFile(final File file) throws IOException {
-        readFile(file,new CsvReader(new BufferedReader(new FileReader(file))));
+        Charset charset = findCharsetByBOM(file);
+        CsvReader reader = new CsvReader(  Files.newBufferedReader(file.toPath(), charset), null, CSV.DOUBLE_QUOTE );
+        readFile(file, charset, reader );
     }
 
-    public void readFileWithSeparator(final File file, final char separator) throws IOException {
-        readFile(file,new CsvReader(new BufferedReader(new FileReader(file)),Charset.defaultCharset(), separator, CSV.DOUBLE_QUOTE));
+    public void readFile(final File file, final Charset charset) throws IOException {
+        CsvReader reader = new CsvReader(Files.newBufferedReader(file.toPath(), charset), null, null);
+        readFile(file, charset, reader );
     }
 
-    public void readFileWithSeparator(final File file, final char separator, final char quote) throws IOException {
-        readFile(file,new CsvReader(new BufferedReader(new FileReader(file)), Charset.defaultCharset(), separator, quote));
+    public void readFile(final File file, final Character separator, final Character quote) throws IOException {
+        Charset charset = findCharsetByBOM(file);
+        BufferedReader buffered = Files.newBufferedReader(file.toPath(), charset);
+        CsvReader reader = new CsvReader( buffered, separator, quote );
+        readFile(file, charset, reader);
     }
+
+    public void readFile(final File file, final Charset charset, final Character separator) throws IOException {
+        BufferedReader buffered = Files.newBufferedReader(file.toPath(), charset);
+        CsvReader reader = new CsvReader( buffered, separator, null );
+        readFile(file, charset, reader);
+    }
+
+    public void readFile(final File file, final Character separator) throws IOException {
+        BufferedReader buffered = Files.newBufferedReader(file.toPath());
+        CsvReader reader = new CsvReader( buffered, separator, CSV.DOUBLE_QUOTE );
+        readFile(file, findCharsetByBOM(file), reader);
+    }
+
+//    public void readFileWithSeparator(final File file, final char separator) throws IOException {
+//        readFile(file,new CsvReader(new BufferedReader(new FileReader(file)), Charset.defaultCharset(), separator, CSV.DOUBLE_QUOTE));
+//    }
+
+//    public void readFileWithSeparator(final File file, final char separator, Charset charset) throws IOException {
+//        readFile(file,new CsvReader(new BufferedReader(new FileReader(file)), Charset.defaultCharset(), separator, CSV.DOUBLE_QUOTE));
+//    }
+
+//    public void readFileWithSeparator(final File file, final char separator, final char quote) throws IOException {
+//        readFile(file,new CsvReader(new BufferedReader(new FileReader(file)), Charset.defaultCharset(), separator, quote));
+//    }
+//
+//    public void readFileWithSeparator(final File file, final char separator, final Charset charset, final char quote) throws IOException {
+//        readFile(file,new CsvReader(new BufferedReader(new FileReader(file)), charset, separator, quote));
+//    }
 
     public void importFile(final File file){
     }

@@ -28,8 +28,8 @@ public class MetaData implements Serializable {
 
     private final List<Column> columns;
     private Charset charset;
-    private char separatorChar;
-    private char quoteChar;
+    private Character separatorChar;
+    private Character quoteChar;
     private CSV csv;
 
     public MetaData(){
@@ -130,7 +130,7 @@ public class MetaData implements Serializable {
         csv.fireColumnRemoved(c);
     }
 
-    public char getSeparatorChar() {
+    public Character getSeparatorChar() {
         return separatorChar;
     }
 

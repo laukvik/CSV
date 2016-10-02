@@ -17,7 +17,6 @@ import org.laukvik.csv.columns.UrlColumn;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,52 +27,28 @@ import java.util.List;
  */
 public class CsvReader implements AbstractReader {
 
+    private BufferedReader reader;
+    private boolean autoDetectColumnSeparator;
+    private boolean autoDetectQuoteChar;
 
     private int bytesRead;
     private int lineCounter;
-
     private MetaData metaData;
     private Row row;
     private Character columnSeparatorChar;
-    private final Character quoteChar;
-    private boolean autoDetectSeperator;
+    private Character quoteChar;
 
-    private BufferedReader reader;
-    private Charset charset;
-
-    public CsvReader(final BufferedReader reader, final Charset charset, final Character separator, final Character quote) throws IOException {
-        this.autoDetectSeperator = (separator == null);
-        final boolean autoDetectCharset = (charset == null);
-        final boolean autoDetectColumnSeparator = (separator == null);
-        final boolean autoDetectQuoteChar = (quote == null);
+    public CsvReader(final BufferedReader reader, final Character separator, final Character quote) throws IOException {
+        this.autoDetectColumnSeparator = (separator == null);
         if (separator != null) {
             this.columnSeparatorChar = separator;
         }
+        this.autoDetectQuoteChar = quote == null;
         this.reader = reader;
         this.quoteChar = quote == null ? CSV.DOUBLE_QUOTE : quote;
-//        if (autoDetectCharset) {
-//            // Try to find BOM signature
-//            BOM bom = BOM.findBom(file);
-//            if (bom == null) {
-//            } else {
-//                this.charset = bom.getCharset();
-//            }
-//        } else {
-//            this.charset = charset;
-//        }
-
         this.metaData = new MetaData();
-        this.metaData.setCharset(this.charset);
         this.lineCounter = 0;
         this.bytesRead = 0;
-
-//        if (this.charset == null) {
-//            this.charset = Charset.forName("utf-8");
-//            reader = Files.newBufferedReader(file.toPath(), this.charset);
-//        } else {
-//            reader = Files.newBufferedReader(file.toPath(), this.charset);
-//        }
-//        reader = Files.newBufferedReader(file.toPath(), this.charset);
         List<String> columns = parseRow();
         for (String rawColumnName : columns) {
             this.metaData.addColumn(Column.parseName(rawColumnName));
@@ -82,29 +57,8 @@ public class CsvReader implements AbstractReader {
         this.metaData.setQuoteChar(this.quoteChar);
     }
 
-    /**
-     * Reads the CSV file and detects encoding and seperator characters
-     * automatically
-     *
-     * @throws IOException
-     */
     public CsvReader(final BufferedReader reader) throws IOException {
-        this(reader, null, null, CSV.DOUBLE_QUOTE);
-    }
-
-    /**
-     * Reads the CSV file using the specified charset and automatically detects
-     * seperator characters
-     *
-     * @param charset
-     * @throws IOException
-     */
-    public CsvReader(final BufferedReader reader, final Charset charset) throws IOException {
-        this( reader, charset, CSV.COMMA, CSV.DOUBLE_QUOTE );
-    }
-
-    public CsvReader(final BufferedReader reader, final Charset charset, final Character columnSeparatorChar) throws IOException {
-        this( reader, charset, columnSeparatorChar, CSV.DOUBLE_QUOTE );
+        this(reader, null, null);
     }
 
     /**
@@ -146,10 +100,10 @@ public class CsvReader implements AbstractReader {
             boolean addValue = false;
 
             // Look for seperator characters in first line
-            if (lineCounter == 0 && autoDetectSeperator) {
+            if (lineCounter == 0 && autoDetectColumnSeparator) {
                 if (currentChar == CSV.TAB || currentChar == CSV.SEMICOLON || currentChar == CSV.PIPE || currentChar == CSV.COMMA) {
                     columnSeparatorChar = currentChar;
-                    autoDetectSeperator = false;
+                    autoDetectColumnSeparator = false;
                     metaData.setSeparator(columnSeparatorChar);
                 }
             }

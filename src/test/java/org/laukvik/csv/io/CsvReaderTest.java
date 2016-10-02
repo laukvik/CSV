@@ -42,7 +42,7 @@ public class CsvReaderTest {
         StringColumn first = csv.addStringColumn("First");
         Column last = csv.addColumn("Last");
         csv.writeFile(file);
-        CsvReader r = new CsvReader(new BufferedReader(new FileReader(file)));
+        CsvReader r = new CsvReader(new BufferedReader(new FileReader(file)), null, null);
         Assert.assertEquals(2, r.getMetaData().getColumnCount());
         while (r.hasNext()) {
             Row row = r.next();

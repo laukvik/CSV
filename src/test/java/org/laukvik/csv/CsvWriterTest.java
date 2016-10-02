@@ -22,7 +22,6 @@ import org.laukvik.csv.io.CsvWriter;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -37,34 +36,26 @@ public class CsvWriterTest {
 
     @Test
     public void writeAndRead() throws IOException {
-
         File f = File.createTempFile("CsvWriter", ".csv");
-
-        MetaData md = new MetaData();
-        md.setCharset(Charset.defaultCharset());
-
-        StringColumn first = (StringColumn) md.addColumn(new StringColumn("First"));
-        StringColumn last = (StringColumn) md.addColumn(new StringColumn("Last"));
-
-//        try (CsvWriter w = new CsvWriter(file, md)) {
-
-//            w.writeRow(new Row().update(first, "Bill").update(last, "Gates"));
-//            w.writeRow(new Row().update(first, "Steve").update(last, "Jobs"));
-//        }
-//        catch (IOException e) {
-//            fail("Failed to writeFile CSV file!");
-//        }
+        CSV csv = new CSV();
+        StringColumn first = csv.addStringColumn("First");
+        StringColumn last = csv.addStringColumn("Last");
+        try (CsvWriter w = new CsvWriter(f, csv)) {
+            w.writeRow(new Row().update(first, "Bill").update(last, "Gates"));
+            w.writeRow(new Row().update(first, "Steve").update(last, "Jobs"));
+        }
+        catch (IOException e) {
+            fail("Failed to writeFile CSV file!");
+        }
 
         try {
-            CSV csv = new CSV();
-            csv.readFile(f);
-//            StringColumn last = (StringColumn) csv.getMetaData().getColumn("Last");
-//                    assertEquals("Correct column count", 2, csv.getMetaData().getColumnCount());
-            assertEquals("Correct row count", 2, csv.getRowCount());
-            assertEquals("First", "First", csv.getMetaData().getColumnName(0));
-            assertEquals("Last", "Last", csv.getMetaData().getColumnName(1));
-            assertEquals("Find by row index and index", "Bill", csv.getRow(0).getString(first));
-            assertEquals("Find by row index and column name", "Gates", csv.getRow(0).getString(last));
+            CSV csv2 = new CSV();
+            csv2.readFile(f);
+            assertEquals("Correct row count", 2, csv2.getRowCount());
+            assertEquals("First", "First", csv2.getMetaData().getColumnName(0));
+            assertEquals("Last", "Last", csv2.getMetaData().getColumnName(1));
+            assertEquals("Find by row index and index", "Bill", csv2.getRow(0).getString(first));
+            assertEquals("Find by row index and column name", "Gates", csv2.getRow(0).getString(last));
         }
         catch (IOException ex) {
             fail("Failed to readFile CSV file!");

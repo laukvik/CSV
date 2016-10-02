@@ -25,12 +25,11 @@ import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -83,7 +82,7 @@ public class LoadingWorker extends javax.swing.JDialog implements ActionListener
             MessageFormat mf = new MessageFormat(bundle.getString("loading.rows"));
             CSV csv = new CSV();
             boolean success = false;
-            try (CsvReader r = new CsvReader(new BufferedReader(new FileReader(file)), charset, null)) {
+            try (CsvReader r = new CsvReader(Files.newBufferedReader(file.toPath()), null, null)) {
                 csv.setMetaData(r.getMetaData());
                 while (canContinue && r.hasNext()) {
                     progressBar.setValue(r.getBytesRead());
