@@ -63,7 +63,7 @@ public final class CSV implements Serializable {
     private MetaData metaData;
     private List<Row> rows;
     private Query query;
-    private List<ChangeListener> listeners;
+    private List<ChangeListener> changeListeners;
     private List<FileListener> fileListeners;
     private File file;
 
@@ -71,8 +71,24 @@ public final class CSV implements Serializable {
         metaData = new MetaData();
         rows = new ArrayList<>();
         query = null;
-        listeners = new ArrayList<>();
+        changeListeners = new ArrayList<>();
         fileListeners = new ArrayList<>();
+    }
+
+    public List<ChangeListener> getChangeListeners() {
+        return changeListeners;
+    }
+
+    public void setChangeListeners(final List<ChangeListener> changeListeners) {
+        this.changeListeners = changeListeners;
+    }
+
+    public List<FileListener> getFileListeners() {
+        return fileListeners;
+    }
+
+    public void setFileListeners(final List<FileListener> fileListeners) {
+        this.fileListeners = fileListeners;
     }
 
     public File getFile() {
@@ -242,7 +258,9 @@ public final class CSV implements Serializable {
         this.metaData = reader.getMetaData();
         this.metaData.setCSV(this);
         fireMetaDataRead();
+        long max = file.length();
         while (reader.hasNext()) {
+            fireBytesRead(reader.getBytesRead(), max);
             addRow(reader.getRow());
         }
         fireFinishRead(file);
@@ -349,51 +367,51 @@ public final class CSV implements Serializable {
 
     /******************* Change: Listeners ***************************************************/
     public void addChangeListener(ChangeListener l) {
-        listeners.add(l);
+        changeListeners.add(l);
     }
 
     public void removeChangeListener(ChangeListener l) {
-        listeners.remove(l);
+        changeListeners.remove(l);
     }
 
     private void fireMetaDataRead(){
-        for (ChangeListener l : listeners){
+        for (ChangeListener l : changeListeners){
             l.metaDataRead(this.getMetaData());
         }
     }
 
     private void fireRowCreated(int rowIndex, Row row){
-        for (ChangeListener l : listeners){
+        for (ChangeListener l : changeListeners){
             l.rowCreated(rowIndex,row);
         }
     }
 
     private void fireRowUpdated(int rowIndex, Row row){
-        for (ChangeListener l : listeners){
+        for (ChangeListener l : changeListeners){
             l.rowUpdated(rowIndex,row);
         }
     }
 
     private void fireRowRemoved(int rowIndex, Row row){
-        for (ChangeListener l : listeners){
+        for (ChangeListener l : changeListeners){
             l.rowRemoved(rowIndex,row);
         }
     }
 
     protected void fireColumnCreated(Column column){
-        for (ChangeListener l : listeners){
+        for (ChangeListener l : changeListeners){
             l.columnCreated(column);
         }
     }
 
     public void fireColumnUpdated(Column column){
-        for (ChangeListener l : listeners){
+        for (ChangeListener l : changeListeners){
             l.columnUpdated(column);
         }
     }
 
     protected void fireColumnRemoved(Column column){
-        for (ChangeListener l : listeners){
+        for (ChangeListener l : changeListeners){
             l.columnRemoved(column.indexOf());
         }
     }
@@ -414,9 +432,17 @@ public final class CSV implements Serializable {
         }
     }
 
+
+
     private void fireFinishRead(File file){
         for (FileListener l : fileListeners){
             l.finishRead(file);
+        }
+    }
+
+    private void fireBytesRead(long read, long max){
+        for (FileListener l : fileListeners){
+            l.readBytes(read, max);
         }
     }
 

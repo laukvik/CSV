@@ -1,6 +1,7 @@
 package org.laukvik.csv.fx;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Orientation;
@@ -22,6 +23,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.ChangeListener;
+import org.laukvik.csv.FileListener;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
@@ -47,7 +49,7 @@ import static org.laukvik.csv.fx.Builder.toKb;
 /**
  * @author Morten Laukvik
  */
-public class Main extends Application implements ChangeListener {
+public class Main extends Application implements ChangeListener, FileListener {
 
     private ResourceBundle bundle = Builder.getBundle();
     private CSV csv;
@@ -83,9 +85,9 @@ public class Main extends Application implements ChangeListener {
     }
 
     public void newFile() {
-        stage.setTitle("");
         csv = new CSV();
         csv.addChangeListener(this);
+        csv.addFileListener(this);
         selectedColumnIndex = 0;
         columnsTableView.setItems(FXCollections.observableArrayList());
         uniqueTableView.setItems(FXCollections.observableArrayList());
@@ -100,11 +102,9 @@ public class Main extends Application implements ChangeListener {
         try {
             csv.readFile(file);
         } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle(bundle.getString("app.title"));
-            alert.setContentText(e.getMessage());
-            alert.show();
+            alert(e.getMessage());
         }
+
     }
 
     @Override
@@ -130,7 +130,6 @@ public class Main extends Application implements ChangeListener {
                 setSelectedColumnIndex(rowIndex);
             }
         });
-
 
         final ScrollPane resultsScroll = new ScrollPane(resultsTableView);
         resultsScroll.setFitToHeight(true);
@@ -161,8 +160,9 @@ public class Main extends Application implements ChangeListener {
         Label separator = new Label("Separator: ");
         separator.setDisable(true);
         separatorLabel = new Label("-");
-        progressBar = new ProgressBar();
-        progressBar.setVisible(false);
+        progressBar = new ProgressBar(100);
+        progressBar.setVisible(true);
+        progressBar.setPrefWidth(200);
         bar.getItems().addAll(rows, rowsLabel, cols, colsLabel, size, sizeLabel, encoding, encodingLabel, separator, separatorLabel, progressBar);
 
         final BorderPane root = new BorderPane();
@@ -183,6 +183,7 @@ public class Main extends Application implements ChangeListener {
         encodingLabel.setText(csv.getMetaData().getCharset() == null ? "N/A" : csv.getMetaData().getCharset().name());
         sizeLabel.setText(toKb(csv.getFile() == null ? 0 : csv.getFile().length()) + "");
         separatorLabel.setText(getSeparatorString(csv.getMetaData().getSeparatorChar()));
+        stage.setTitle(csv.getFile() == null ? "" : csv.getFile().getName() + "");
     }
 
     public void alert(String message){
@@ -261,7 +262,7 @@ public class Main extends Application implements ChangeListener {
     @Override
     public void beginRead(final File file) {
         progressBar.setVisible(true);
-        alert("beginRead: " + file.getName());
+//        alert("beginRead: " + file.getName());
     }
 
     @Override
@@ -269,7 +270,13 @@ public class Main extends Application implements ChangeListener {
         progressBar.setVisible(false);
         stage.setTitle(file.getAbsolutePath());
         setSelectedColumnIndex(0);
-        alert("finishRead: " + file.getName());
+//        alert("finishRead: " + file.getName());
+    }
+
+    @Override
+    public void readBytes(final long count, final long total) {
+        Platform.runLater(() -> progressBar.setProgress(count/(total*1f)));
+        System.out.print("#");
     }
 
     @Override

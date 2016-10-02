@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -30,7 +28,6 @@ import java.util.logging.Logger;
  */
 public class CsvReader implements AbstractReader {
 
-    private static final Logger LOG = Logger.getLogger(CsvReader.class.getName());
 
     private int bytesRead;
     private int lineCounter;
@@ -154,7 +151,6 @@ public class CsvReader implements AbstractReader {
                     columnSeparatorChar = currentChar;
                     autoDetectSeperator = false;
                     metaData.setSeparator(columnSeparatorChar);
-                    LOG.log(Level.FINE, "Detected seperator: {0}", columnSeparatorChar);
                 }
             }
 
