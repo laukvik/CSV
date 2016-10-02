@@ -279,7 +279,6 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     @Override
     public void columnCreated(final Column column) {
-//        columnsTableView.setItems(createColumnsObservableList(csv.getMetaData()));
         updateColumns();
         updateRows();
         updateToolbar();
@@ -288,12 +287,12 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     @Override
     public void columnUpdated(final Column column) {
-        resultsTableView.getColumns().get(column.indexOf()).setText(column.getName());
+        if (column.isVisible()){
+            resultsTableView.getColumns().get(column.indexOf()).setText(column.getName());
+        }
         updateColumns();
-//        columnsTableView.getSelectionModel().select(selectedColumnIndex);
-//        columnsTableView.getFocusModel().focus(selectedColumnIndex);
         updateRows();
-//        alert("columnUpdated: " + column.getName());
+//        alert("updated");
     }
 
     @Override

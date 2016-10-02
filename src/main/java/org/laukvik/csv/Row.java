@@ -33,25 +33,7 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 /**
- * Date created = is.readDate("created");<br>
- * Float percent = is.readFloat("sallary");<br>
- * int sallary = is .readInt("sallary");<br>
  *
- * <li>getBigDecimal
- * <li>getBoolean
- * <li>getDate
- * <li>getDouble
- * <li>getFloat
- * <li>getInt
- * <li>getLong
- * <li>getAsString
- * <li>getURL
- *
- * <li>getTimestamp
- * <li>getByte-
- * <li>getTime -
- *
- * CSV.addRow().add("First");
  *
  * @author Morten Laukvik
  */
@@ -85,6 +67,11 @@ public class Row implements Serializable {
 
     public void setCSV(CSV csv) {
         this.csv = csv;
+    }
+
+    public Row updateColumn(Column column, String value) {
+        map.put(column, column.parse(value));
+        return this;
     }
 
     public Row update(ByteColumn column, Byte value) {

@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -16,11 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.DistinctColumnValues;
@@ -57,7 +54,10 @@ public class Builder {
     public static ObservableList<ObservableColumn> createColumnsObservableList(final MetaData md){
         List<ObservableColumn> list = new ArrayList<>();
         for (int x=0; x<md.getColumnCount(); x++){
-            list.add( new ObservableColumn(true, md.getColumn(x)) );
+            Column c = md.getColumn(x);
+            if (c.isVisible()){
+                list.add( new ObservableColumn(true, c) );
+            }
         }
         return FXCollections.observableArrayList( list );
     }
@@ -71,65 +71,78 @@ public class Builder {
         return FXCollections.observableArrayList( list );
     }
 
+    private TableColumn createColumnVisibleColumn(Callback<TableColumn, TableCell> checkBoxFactory) {
+        TableColumn activeCol = new TableColumn("Active");
+        activeCol.setMinWidth(25);
+        activeCol.setCellValueFactory(new PropertyValueFactory<ObservableColumn, Boolean>("active"));
+        activeCol.setCellFactory(checkBoxFactory);
+        activeCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ObservableColumn, Boolean>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<ObservableColumn, Boolean> isVisible) {
+
+            }
+        });
+        return activeCol;
+    }
+
     public static TableView<ObservableColumn> buildColumnsTable(){
-        TableView<ObservableColumn> columnsTableView = new TableView<>();
+        TableView<ObservableColumn> columnsTableView = new TableView<ObservableColumn>();
         columnsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         columnsTableView.setEditable(true);
-        /* Checkbox */
-        final TableColumn checkboxColumn = new TableColumn("");
+
+
+        /*       Checkbox          */
+        final TableColumn<ObservableColumn, Boolean> checkboxColumn = new TableColumn<>("");
         checkboxColumn.setMinWidth(32);
         checkboxColumn.setMaxWidth(32);
-        checkboxColumn.setCellValueFactory(
-                new PropertyValueFactory<Column,Boolean>("selected")
-        );
+        checkboxColumn.setEditable(true);
+        checkboxColumn.setCellValueFactory(new PropertyValueFactory<ObservableColumn,Boolean>("visible"));
         checkboxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(checkboxColumn));
-        /* Name */
+        checkboxColumn.setOnEditCommit(
+            new EventHandler<TableColumn.CellEditEvent<ObservableColumn, Boolean>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<ObservableColumn, Boolean> t) {
+                    System.out.println( "visible: " + t.getNewValue() );
+                    ((ObservableColumn) t.getTableView().getItems().get( t.getTablePosition().getRow() )).setVisible(t.getNewValue());
+                }
+            }
+        );
+
+//        TableColumn<Job,Boolean>  checkCol = new TableColumn<>("Check");
+//        checkCol.setCellValueFactory( new PropertyValueFactory<Job,Boolean>( "checkBoxValue" ) );
+//        checkCol.setCellFactory( CheckBoxTableCell.forTableColumn( checkCol ) );
+
+        checkboxColumn.setEditable(true);
+//        checkboxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(checkboxColumn));
+//        checkboxColumn.setCellValueFactory(new PropertyValueFactory<ObservableColumn,Boolean>("selected"));
+//        checkboxColumn.setEditable(true);  // Checkboxen werden editierbar gemacht
+
+
+        /*          Name          */
         final TableColumn columnNameColumn = new TableColumn("Name");
-        columnsTableView.getColumns().add(checkboxColumn);
         columnNameColumn.setCellValueFactory(
-                new PropertyValueFactory<Column,String>("name")
+                new PropertyValueFactory<ObservableColumn,String>("name")
         );
         columnNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        columnsTableView.getColumns().add(columnNameColumn);
+        columnsTableView.getColumns().addAll(checkboxColumn, columnNameColumn);
+        columnNameColumn.setOnEditCommit(
+            new EventHandler<TableColumn.CellEditEvent<ObservableColumn, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<ObservableColumn, String> t) {
+                    ((ObservableColumn) t.getTableView().getItems().get( t.getTablePosition().getRow() )).setName(t.getNewValue());
+                }
+            }
+        );
+
+        /* Resizing */
+        columnsTableView.setPlaceholder(new Label("No columns"));
         checkboxColumn.prefWidthProperty().bind(columnsTableView.widthProperty().multiply(0.2));
         columnNameColumn.prefWidthProperty().bind(columnsTableView.widthProperty().multiply(0.8));
-        columnsTableView.setPlaceholder(new Label("No columns"));
-        /* DRAG AND DROP */
-        columnsTableView.setOnDragDropped(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(final DragEvent event) {
-                System.out.println("Drag drop");
-            }
-        });
-        columnsTableView.setOnDragDone(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-        /* the drag and drop gesture ended */
-        /* if the data was successfully moved, clear it */
-                if (event.getTransferMode() == TransferMode.MOVE) {
-
-                }
-                event.consume();
-            }
-        });
-
-        columnsTableView.setOnDragDetected(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent event) {
-        /* drag was detected, start a drag-and-drop gesture*/
-        /* allow any transfer mode */
-                System.out.println("Drag detected");
-                Dragboard db = columnsTableView.startDragAndDrop(TransferMode.MOVE);
-
-                event.consume();
-            }
-        });
-
-
         return columnsTableView;
     }
 
     public static TableView<ObservableUnique> buildUniqueTable(){
         TableView<ObservableUnique> uniqueTableView = new TableView<>();
-        uniqueTableView.setStyle("-fx-table-cell-border-color-vertical: transparent;");
         uniqueTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         uniqueTableView.setEditable(true);
 
@@ -174,20 +187,22 @@ public class Builder {
         resultsTableView.getColumns().clear();
         for (int x = 0; x < md.getColumnCount(); x++) {
             final Column c = md.getColumn(x);
-            final TableColumn<ObservableRow, String> tc = new TableColumn<>(c.getName());
-            tc.setCellFactory(TextFieldTableCell.forTableColumn());
-            resultsTableView.getColumns().add(tc);
-            final int colX = x;
-            tc.setCellValueFactory(
-                    new Callback<TableColumn.CellDataFeatures<ObservableRow, String>, ObservableValue<String>>() {
-                        @Override
-                        public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableRow, String> param) {
-                            return param.getValue().getValue(colX);
+            if (c.isVisible()){
+                final TableColumn<ObservableRow, String> tc = new TableColumn<>(c.getName());
+                tc.setCellFactory(TextFieldTableCell.forTableColumn());
+                resultsTableView.getColumns().add(tc);
+                final int colX = x;
+                tc.setCellValueFactory(
+                        new Callback<TableColumn.CellDataFeatures<ObservableRow, String>, ObservableValue<String>>() {
+                            @Override
+                            public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableRow, String> param) {
+                                return param.getValue().getValue(colX);
+                            }
                         }
-                    }
-            );
-            tc.setCellFactory(TextFieldTableCell.<ObservableRow>forTableColumn());
-            tc.setMinWidth(100);
+                );
+                tc.setCellFactory(TextFieldTableCell.<ObservableRow>forTableColumn());
+                tc.setMinWidth(100);
+            }
         }
     }
 
