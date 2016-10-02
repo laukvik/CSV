@@ -24,52 +24,21 @@ import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.AbstractReader;
 import org.laukvik.csv.io.CsvReader;
 import org.laukvik.csv.io.CsvWriter;
-import org.laukvik.csv.io.JsonWriter;
 import org.laukvik.csv.io.Writeable;
 import org.laukvik.csv.query.Query;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An API for reading and writing to Viewer. The implementation is based on the
  * specficiations from http://tools.ietf.org/rfc/rfc4180.txt
- *
- * Read whole file into memory<br>
- *
- * <code>
- * Viewer c = new Viewer( new File("nerds.csv") );
- * </code>
- *
- * Write Viewer to file
- *
- * <code>
- * Viewer c = new Viewer("First","Last");
- * c.addRow( "Bill","Gates" );
- * c.addRow( new Row("Steve","Jobs") );
- * c.removeColumn("First");
- * c.addColumn("Email);
- * c.addColumn("Address",0);
- * c.write( new File("nerds.csv") );
- * </code>
- *
- * <code>
- * Viewer c = new Viewer( Person.class );
- * c.addValue( new Person("Bill","Gates") );
- * c.write( new File("persons.csv") );
- * </code>
- *
  *
  * @author Morten Laukvik
  */
@@ -93,48 +62,34 @@ public final class CSV implements Serializable {
     private List<Row> rows;
     private Query query;
     private List<ChangeListener> listeners;
+    private List<FileListener> fileListeners;
+    private File file;
 
     public CSV() {
-        this.metaData = new MetaData();
-        this.rows = new ArrayList<>();
-        this.query = null;
-        listeners = new ArrayList<>();
-    }
-
-    /**
-     * Reads the CSV file
-     *
-     * @param file
-     * @throws IOException
-     */
-    public void readFile(final File file) throws IOException {
-        readFile(new CsvReader(file));
-    }
-
-    public void readFileWithSeparator(final File file, final char separator) throws IOException {
-        readFile(new CsvReader(file, Charset.defaultCharset(), separator, CSV.DOUBLE_QUOTE ));
-    }
-
-    public void readFileWithSeparator(final File file, final char separator, final char quote) throws IOException {
-        readFile(new CsvReader(file, Charset.defaultCharset(), separator, quote ));
-    }
-
-    /**
-     * Reads any readable stream
-     *
-     * @param reader
-     */
-    public void readFile(AbstractReader reader) {
-        this.query = null;
+        metaData = new MetaData();
         rows = new ArrayList<>();
-        this.metaData = reader.getMetaData();
-        this.metaData.setCSV(this);
-        fireMetaDataRead();
-        while (reader.hasNext()) {
-            addRow(reader.getRow());
-        }
+        query = null;
+        listeners = new ArrayList<>();
+        fileListeners = new ArrayList<>();
     }
 
+    public File getFile() {
+        return file;
+    }
+
+    /**
+     * Creates new headers.
+     *
+     */
+    public void insertHeaders(){
+        Row r = addRow(0);
+        for (int x=0; x<getMetaData().getColumnCount(); x++){
+            StringColumn c = (StringColumn) getMetaData().getColumn(x);
+            r.update(c, c.getName());
+            c.setName("Column" + (x+1));
+        }
+        fireRowCreated(0, r);
+    }
 
     protected List<Row> getRows() {
         return rows;
@@ -173,6 +128,14 @@ public final class CSV implements Serializable {
         return r;
     }
 
+    public Row addRow(int rowIndex) {
+        Row r = new Row();
+        r.setCSV(this);
+        rows.add(rowIndex, r);
+        fireRowCreated(rowIndex, r);
+        return r;
+    }
+
     public Row addRow(Row row) {
         row.setCSV(this);
         rows.add(row);
@@ -185,36 +148,28 @@ public final class CSV implements Serializable {
         fireRowRemoved(rowIndex, row );
     }
 
-    public void removeRows() {
+    public void clear() {
         rows.clear();
-    }
-
-    public void write(Writeable writer) throws Exception {
-        writer.write(this);
-        writer.close();
-    }
-
-    /**
-     * Removes all rows
-     *
-     * @param fromRowIndex
-     * @param endRowIndex
-     */
-    public void removeRows(int fromRowIndex, int endRowIndex) {
-        rows.subList(fromRowIndex, endRowIndex + 1).clear();
-    }
-
-    public Row insertRow(Row row, int rowIndex) {
-        row.setCSV(this);
-        rows.add(rowIndex, row);
-        fireRowCreated(rowIndex, row);
-        return row;
     }
 
     public Column addColumn(Column column) {
         metaData.addColumn(column);
         fireColumnCreated(column);
         return column;
+    }
+
+    /**
+     * Adds a new text column with the specified name
+     *
+     * @param name
+     * @return
+     */
+    public Column addColumn(String name) {
+        return addStringColumn(name);
+    }
+
+    public StringColumn addStringColumn(String name) {
+        return addStringColumn(new StringColumn(name));
     }
 
     public StringColumn addStringColumn(StringColumn column) {
@@ -243,25 +198,6 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Adds a new text column with the specified name
-     *
-     * @param name
-     * @return
-     */
-    public Column addColumn(String name) {
-        return metaData.addColumn(name);
-    }
-
-    public StringColumn addStringColumn(String name) {
-        return (StringColumn) metaData.addColumn(new StringColumn(name));
-    }
-
-    public String insertColumn(String name, int columnIndex) {
-        metaData.addColumn(name, columnIndex);
-        return name;
-    }
-
-    /**
      * Removes the column and all its data
      *
      * @param column
@@ -273,99 +209,108 @@ public final class CSV implements Serializable {
         getMetaData().removeColumn(column);
     }
 
+
+    /**
+     * Removes all rows
+     *
+     * @param fromRowIndex
+     * @param endRowIndex
+     */
+    public void removeRows(int fromRowIndex, int endRowIndex) {
+        rows.subList(fromRowIndex, endRowIndex + 1).clear();
+    }
+
+    public Row insertRow(Row row, int rowIndex) {
+        row.setCSV(this);
+        rows.add(rowIndex, row);
+        fireRowCreated(rowIndex, row);
+        return row;
+    }
+
+    /**
+     * Reads the File
+     *
+     * @param reader
+     */
+    public void readFile(final File file, final AbstractReader reader) {
+        this.query = null;
+        rows = new ArrayList<>();
+        fireBeginRead(file);
+        this.metaData = reader.getMetaData();
+        this.metaData.setCSV(this);
+        fireMetaDataRead();
+        while (reader.hasNext()) {
+            addRow(reader.getRow());
+        }
+        fireFinishRead(file);
+    }
+
+    /**
+     * Reads the CSV file
+     *
+     * @param file
+     * @throws IOException
+     */
+    public void readFile(final File file) throws IOException {
+        readFile(file,new CsvReader(file));
+        this.file = file;
+    }
+
+    public void readFileWithSeparator(final File file, final char separator) throws IOException {
+        readFile(file,new CsvReader(file, Charset.defaultCharset(), separator, CSV.DOUBLE_QUOTE ));
+    }
+
+    public void readFileWithSeparator(final File file, final char separator, final char quote) throws IOException {
+        readFile(file,new CsvReader(file, Charset.defaultCharset(), separator, quote ));
+    }
+
+    public void importFile(final File file){
+    }
+
+    /**
+     * Writes the contents to a file using the specified Writer.
+     *
+     * @param writer the Writer
+     * @throws Exception
+     */
+    public void write(final Writeable writer) throws Exception {
+        fireBeginWrite(writer.getFile());
+        writer.writeFile(this);
+        writer.close();
+        fireFinishWrite(writer.getFile());
+    }
+
+    public void writeFile(final File file) throws Exception {
+        write(new CsvWriter(file,this));
+    }
+
+    /**
+     * Writes the
+     * @param file
+     */
+    public void exportFile(final File file){
+    }
+
+    /**
+     * Returns the Library folder for the user.
+     *
+     * @return
+     */
     private static File getLibrary() {
         return new File(System.getProperty("user.home"), "Library");
     }
 
+    /**
+     * Returns the folder where all configuration of CSV is.
+     *
+     * @return
+     */
     private static File getHome() {
         File file = new File(getLibrary(), "org.laukvik.csv");
         if (!file.exists()) {
             file.mkdir();
         }
         return file;
-    }
-
-    public static File getFile(Class aClass) {
-        return new File(getHome(), aClass.getCanonicalName() + ".csv");
-    }
-
-    /**
-     * Find an object directly
-     *
-     * @param <T>
-     * @param aClass
-     * @return
-     */
-    public static <T> T find(Class<T> aClass) {
-        return null;
-    }
-
-    private static <T> T createInstance(Row row, Class<T> aClass) throws InstantiationException, IllegalAccessException {
-        Object instance = aClass.newInstance();
-
-        /* Iterate all fields in object*/
-        for (Field f : instance.getClass().getDeclaredFields()) {
-            /* Set accessible to allow injecting private fields - otherwise an exception will occur*/
-            f.setAccessible(true);
-            /* Find the name of the field - in code */
-            String nameAttribute = f.getName();
-
-            if (f.getType() == String.class) {
-//                f.set(instance, row.getAsString(nameAttribute));
-            } else if (f.getType() == Integer.class) {
-//                f.set(instance, row.getInteger(nameAttribute));
-            } else if (f.getType() == URL.class) {
-//                f.set(instance, row.getURL(nameAttribute));
-            }
-
-            f.setAccessible(false);
-        }
-        return (T) instance;
-    }
-
-//    public static <T> List<T> findByClass(Class<T> aClass) {
-//        File file = getFile(aClass);
-//        try {
-//            return findByClass(new FileInputStream(file), Charset.defaultCharset(), aClass);
-//        }
-//        catch (FileNotFoundException ex) {
-//            return new ArrayList<>();
-//        }
-//    }
-
-    public static <T> List<T> findByClass(final File file, final Charset charset, final Class<T> aClass) {
-        List<T> items = new ArrayList<>();
-        try (CsvReader reader = new CsvReader(file, charset)) {
-            while (reader.hasNext()) {
-                Row row = reader.getRow();
-//                row.setMetaData(reader.getMetaData());
-                items.add(createInstance(row, aClass));
-            }
-        }
-        catch (IOException e) {
-            Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, e);
-        }
-        catch (InstantiationException ex) {
-            Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (IllegalAccessException ex) {
-            Logger.getLogger(CSV.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return items;
-    }
-
-    public static <T> void saveAll(List<?> objects, Class<T> aClass) throws IllegalArgumentException, IllegalAccessException {
-        File file = CSV.getFile(aClass);
-        try (CsvWriter writer = new CsvWriter(new FileOutputStream(file), new MetaData())) {
-            writer.writeMetaData(aClass);
-            for (Object o : objects) {
-                writer.writeEntityRow(o);
-            }
-
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void clearQuery() {
@@ -400,16 +345,7 @@ public final class CSV implements Serializable {
         return values;
     }
 
-//    public Set<String> listDistinct(String column) {
-//        return listDistinct(getMetaData().getColumnIndex(column));
-//    }
-    public void close() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
-
-    /******************* Listeners ***************************************************/
+    /******************* Change: Listeners ***************************************************/
     public void addChangeListener(ChangeListener l) {
         listeners.add(l);
     }
@@ -423,6 +359,7 @@ public final class CSV implements Serializable {
             l.metaDataRead(this.getMetaData());
         }
     }
+
     private void fireRowCreated(int rowIndex, Row row){
         for (ChangeListener l : listeners){
             l.rowCreated(rowIndex,row);
@@ -447,7 +384,7 @@ public final class CSV implements Serializable {
         }
     }
 
-    protected void fireColumnUpdated(Column column){
+    public void fireColumnUpdated(Column column){
         for (ChangeListener l : listeners){
             l.columnUpdated(column);
         }
@@ -455,12 +392,42 @@ public final class CSV implements Serializable {
 
     protected void fireColumnRemoved(Column column){
         for (ChangeListener l : listeners){
-            l.columnRemoved(column);
+            l.columnRemoved(column.indexOf());
         }
     }
 
+    /******************* File: Listeners ***************************************************/
 
-    public void writeFile(final File file) throws Exception {
-        write(new JsonWriter(new FileOutputStream(file)));
+    public void addFileListener(FileListener l) {
+        fileListeners.add(l);
     }
+
+    public void removeFileListener(FileListener l) {
+        fileListeners.remove(l);
+    }
+
+    private void fireBeginRead(File file){
+        for (FileListener l : fileListeners){
+            l.beginRead(file);
+        }
+    }
+
+    private void fireFinishRead(File file){
+        for (FileListener l : fileListeners){
+            l.finishRead(file);
+        }
+    }
+
+    private void fireBeginWrite(File file){
+        for (FileListener l : fileListeners){
+            l.beginRead(file);
+        }
+    }
+
+    private void fireFinishWrite(File file){
+        for (FileListener l : fileListeners){
+            l.finishRead(file);
+        }
+    }
+
 }

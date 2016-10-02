@@ -15,12 +15,13 @@
  */
 package org.laukvik.csv;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import org.junit.Test;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.JsonWriter;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 public class JsonWriterTest {
@@ -37,7 +38,7 @@ public class JsonWriterTest {
         csv.addColumn("Last");
 
         JsonWriter writer = new JsonWriter(new FileOutputStream(file));
-        writer.write(csv);
+        writer.writeFile(csv);
 
     }
 
@@ -53,7 +54,7 @@ public class JsonWriterTest {
         csv.addRow().update(first, "Morten").update(last, "Laukvik");
 
         JsonWriter writer = new JsonWriter(new FileOutputStream(file));
-        writer.write(csv);
+        writer.writeFile(csv);
     }
 
 }

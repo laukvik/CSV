@@ -23,7 +23,6 @@ import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
-import java.io.FileOutputStream;
 
 /**
  *
@@ -40,7 +39,7 @@ public class CsvReaderTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         Column last = csv.addColumn("Last");
-        csv.write(new CsvWriter(new FileOutputStream(file), csv.getMetaData()));
+        csv.writeFile(file);
         CsvReader r = new CsvReader(file);
         Assert.assertEquals(2, r.getMetaData().getColumnCount());
         while (r.hasNext()) {

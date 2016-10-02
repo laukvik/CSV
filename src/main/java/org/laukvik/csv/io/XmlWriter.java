@@ -15,12 +15,16 @@
  */
 package org.laukvik.csv.io;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 
 public class XmlWriter implements Writeable, AutoCloseable {
@@ -37,22 +41,24 @@ public class XmlWriter implements Writeable, AutoCloseable {
     private final static char EQUAL = '=';
     private final static char TAB = '\t';
 
+    private File file;
     private OutputStream out;
     private String rootElementName;
     private String rowElementName;
 
-    public XmlWriter(OutputStream out, String rootName, String rowName) {
-        this.out = out;
+    public XmlWriter(File file, String rootName, String rowName) throws FileNotFoundException {
+        this.out = new FileOutputStream(file);
         this.rootElementName = rootName;
         this.rowElementName = rowName;
+        this.file = file;
     }
 
-    public XmlWriter(OutputStream out) {
-        this(out, "rows", "row");
+    public XmlWriter(File file) throws FileNotFoundException {
+        this(file, "rows", "row");
     }
 
     @Override
-    public void write(CSV csv) throws IOException {
+    public void writeFile(CSV csv) throws IOException {
         Charset charset = csv.getMetaData().getCharset();
         out.write(("<?xml version=\"1.0\" encoding=\"" + charset.name() + "\"?>").getBytes());
 
@@ -112,6 +118,11 @@ public class XmlWriter implements Writeable, AutoCloseable {
         out.write(CLOSE);
         out.flush();
 
+    }
+
+    @Override
+    public File getFile() {
+        return file;
     }
 
     @Override

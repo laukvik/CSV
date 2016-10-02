@@ -17,10 +17,8 @@ package org.laukvik.csv;
 
 import org.junit.Test;
 import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.io.CsvWriter;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
@@ -75,7 +73,7 @@ public class CSVTest {
 
         assertSame("RowCount", csv.getRowCount(), 2);
         try {
-            csv.write(new CsvWriter(new FileOutputStream(File.createTempFile("ShouldWrite", ".csv")), md));
+            csv.writeFile(File.createTempFile("ShouldWrite", ".csv"));
         }
         catch (IOException e) {
             e.printStackTrace();

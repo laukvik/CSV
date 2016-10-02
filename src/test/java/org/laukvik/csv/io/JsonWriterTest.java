@@ -41,7 +41,7 @@ public class JsonWriterTest {
         csv.addRow().update(first, " ");
 
         JsonWriter writer = new JsonWriter(new FileOutputStream(file));
-        writer.write(csv);
+        writer.writeFile(csv);
 
 //        JSONParser parser = new JSONParser( csv );
 //

@@ -19,7 +19,6 @@ import org.junit.Test;
 import org.laukvik.csv.CSV;
 
 import java.io.File;
-import java.io.FileOutputStream;
 
 
 public class CsvWriterTest {
@@ -30,7 +29,7 @@ public class CsvWriterTest {
         CSV csv = new CSV();
         csv.addColumn("First");
         csv.addColumn("Last");
-        csv.write(new CsvWriter(new FileOutputStream(file), csv.getMetaData()));
+        csv.writeFile(file);
     }
 
 }

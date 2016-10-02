@@ -23,7 +23,6 @@ import org.laukvik.csv.columns.DoubleColumn;
 import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.io.CsvWriter;
 import org.laukvik.csv.io.JsonWriter;
 import org.laukvik.csv.query.Query;
 
@@ -31,7 +30,11 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FileDialog;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -816,7 +819,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
         try {
-            csv.write(new CsvWriter(new FileOutputStream(file), csv.getMetaData()));
+            csv.writeFile(file);
         }
         catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Could not save file!", "", JOptionPane.WARNING_MESSAGE);

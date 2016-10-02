@@ -26,7 +26,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 
@@ -45,8 +44,8 @@ public class XmlWriterTest {
         csv.addRow().update(first, "<");
         csv.addRow().update(first, "'");
 
-        XmlWriter writer = new XmlWriter(new FileOutputStream(file));
-        writer.write(csv);
+        XmlWriter writer = new XmlWriter(file);
+        writer.writeFile(csv);
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -64,8 +63,8 @@ public class XmlWriterTest {
         csv.addRow().update(first, "Bob");
         csv.addRow().update(first, "Dylan");
 
-        XmlWriter writer = new XmlWriter(new FileOutputStream(file), "people", "person");
-        writer.write(csv);
+        XmlWriter writer = new XmlWriter(file, "people", "person");
+        writer.writeFile(csv);
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();

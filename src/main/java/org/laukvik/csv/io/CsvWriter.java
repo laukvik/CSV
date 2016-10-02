@@ -20,13 +20,13 @@ import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * OutputStream for writing CSV data
@@ -36,17 +36,16 @@ import java.util.logging.Logger;
  */
 public final class CsvWriter implements Writeable {
 
-    private static final Logger LOG = Logger.getLogger(CsvWriter.class.getName());
-
     private final OutputStream out;
-    private MetaData metaData;
+    private CSV csv;
+    private File file;
 
-    public CsvWriter(OutputStream out, MetaData metaData) throws IOException {
-        this.out = out;
-        this.metaData = metaData;
-        writeMetaData(metaData);
+    public CsvWriter(File file, CSV csv) throws IOException {
+        this.out = new FileOutputStream(file);
+        this.csv = csv;
+        this.file = file;
+        writeMetaData(csv.getMetaData());
     }
-
 
     /**
      * Writes a single row of CSV data
@@ -56,21 +55,20 @@ public final class CsvWriter implements Writeable {
      */
     public void writeRow(Row row) throws IOException {
         List<String> values = new ArrayList<>();
-        for (int x = 0; x < metaData.getColumnCount(); x++) {
-            Column c = metaData.getColumn(x);
+        for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
+            Column c = csv.getMetaData().getColumn(x);
             values.add(row.getAsString(c));
         }
         writeValues(values);
     }
 
     @Override
-    public void write(CSV csv) throws IOException {
-        BOM bom = metaData.getBOM();
+    public void writeFile(CSV csv) throws IOException {
+        BOM bom = csv.getMetaData().getBOM();
         if (bom != null){
             out.write(bom.getBytes());
         }
         writeMetaData(csv.getMetaData());
-        metaData = csv.getMetaData();
         for (int y = 0; y < csv.getRowCount(); y++) {
             writeRow(csv.getRow(y));
         }
@@ -122,7 +120,7 @@ public final class CsvWriter implements Writeable {
                 for (int n = 0; n < column.length(); n++) {
                     char ch = column.charAt(n);
                     if (ch == CSV.DOUBLE_QUOTE) {
-                        /* Encode quotes - write an extra quote */
+                        /* Encode quotes - writeFile an extra quote */
                         out.write(CSV.DOUBLE_QUOTE);
                     }
                     out.write(ch);
@@ -140,31 +138,8 @@ public final class CsvWriter implements Writeable {
         out.close();
     }
 
-    public void writeEntityRow(Object instance) throws IllegalArgumentException, IllegalAccessException, IOException {
-        /* Iterate all annotated fields */
-        for (Field f : instance.getClass().getDeclaredFields()) {
-            List<String> values = new ArrayList<>();
-            /* Set accessible to allow injecting private fields - otherwise an exception will occur*/
-            f.setAccessible(true);
-            /* Get field value */
-            Object value = f.get(instance);
-            if (value == null) {
-                values.add("");
-            } else {
-                values.add(value.toString());
-            }
-            writeValues(values);
-        }
+    @Override
+    public File getFile() {
+        return file;
     }
-
-    public void writeMetaData(Class aClass) throws IOException {
-        List<String> values = new ArrayList<>();
-        for (Field f : aClass.getDeclaredFields()) {
-            /* Find the name of the field - in code */
-            String nameAttribute = f.getName();
-            values.add(nameAttribute);
-        }
-        writeValues(values);
-    }
-
 }

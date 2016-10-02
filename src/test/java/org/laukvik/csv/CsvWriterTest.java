@@ -21,7 +21,6 @@ import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.CsvWriter;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -47,14 +46,14 @@ public class CsvWriterTest {
         StringColumn first = (StringColumn) md.addColumn(new StringColumn("First"));
         StringColumn last = (StringColumn) md.addColumn(new StringColumn("Last"));
 
-        try (CsvWriter w = new CsvWriter(new FileOutputStream(f), md)) {
-            //
-            w.writeRow(new Row().update(first, "Bill").update(last, "Gates"));
-            w.writeRow(new Row().update(first, "Steve").update(last, "Jobs"));
-        }
-        catch (IOException e) {
-            fail("Failed to write CSV file!");
-        }
+//        try (CsvWriter w = new CsvWriter(file, md)) {
+
+//            w.writeRow(new Row().update(first, "Bill").update(last, "Gates"));
+//            w.writeRow(new Row().update(first, "Steve").update(last, "Jobs"));
+//        }
+//        catch (IOException e) {
+//            fail("Failed to writeFile CSV file!");
+//        }
 
         try {
             CSV csv = new CSV();

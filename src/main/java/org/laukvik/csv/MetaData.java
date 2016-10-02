@@ -90,9 +90,9 @@ public class MetaData implements Serializable {
     }
 
     public void removeColumn(Column column) {
-        column.setMetaData(null);
         columns.remove(column);
-        csv.fireColumnCreated(column);
+        csv.fireColumnRemoved(column);
+        column.setMetaData(null);
     }
 
     public int indexOf(Column column) {
@@ -121,11 +121,6 @@ public class MetaData implements Serializable {
             x++;
         }
         throw new ColumnNotFoundException(x);
-    }
-
-    public void addColumn(String name, int columnIndex) {
-//        columns.add(new StringColumn(name), name);
-        throw new IllegalArgumentException("Not implemented yet");
     }
 
     public void removeColumn(int columnIndex) {

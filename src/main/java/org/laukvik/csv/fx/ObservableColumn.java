@@ -31,12 +31,13 @@ public class ObservableColumn {
         return name.get();
     }
 
-    public SimpleStringProperty nameProperty() {
-        return name;
-    }
+//    public SimpleStringProperty nameProperty() {
+//        return name;
+//    }
 
     public void setName(final String name) {
         this.name.set(name);
         column.setName(name);
+        System.out.println("change column: " + name);
     }
 }

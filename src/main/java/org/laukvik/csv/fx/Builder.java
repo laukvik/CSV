@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -13,7 +14,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.DistinctColumnValues;
@@ -32,7 +37,7 @@ import java.util.ResourceBundle;
 public class Builder {
 
     public static ResourceBundle getBundle(){
-        return ResourceBundle.getBundle("messages");
+        return ResourceBundle.getBundle("fx");
     }
 
     public static java.awt.Dimension getPercentSize(float w, float h){
@@ -42,9 +47,8 @@ public class Builder {
         return new java.awt.Dimension( width.intValue(), height.intValue());
     }
 
-    public static ObservableList<ObservableColumn> createColumnsObservableList(final CSV csv){
+    public static ObservableList<ObservableColumn> createColumnsObservableList(final MetaData md){
         List<ObservableColumn> list = new ArrayList<>();
-        MetaData md = csv.getMetaData();
         for (int x=0; x<md.getColumnCount(); x++){
             list.add( new ObservableColumn(true, md.getColumn(x)) );
         }
@@ -65,7 +69,7 @@ public class Builder {
         columnsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         columnsTableView.setEditable(true);
         /* Checkbox */
-        final TableColumn checkboxColumn = new TableColumn("Visible");
+        final TableColumn checkboxColumn = new TableColumn("");
         checkboxColumn.setMinWidth(32);
         checkboxColumn.setMaxWidth(32);
         checkboxColumn.setCellValueFactory(
@@ -82,14 +86,48 @@ public class Builder {
         columnsTableView.getColumns().add(columnNameColumn);
         checkboxColumn.prefWidthProperty().bind(columnsTableView.widthProperty().multiply(0.2));
         columnNameColumn.prefWidthProperty().bind(columnsTableView.widthProperty().multiply(0.8));
+        columnsTableView.setPlaceholder(new Label("No columns"));
+        /* DRAG AND DROP */
+        columnsTableView.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(final DragEvent event) {
+                System.out.println("Drag drop");
+            }
+        });
+        columnsTableView.setOnDragDone(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+        /* the drag and drop gesture ended */
+        /* if the data was successfully moved, clear it */
+                if (event.getTransferMode() == TransferMode.MOVE) {
+
+                }
+                event.consume();
+            }
+        });
+
+        columnsTableView.setOnDragDetected(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+        /* drag was detected, start a drag-and-drop gesture*/
+        /* allow any transfer mode */
+                System.out.println("Drag detected");
+                Dragboard db = columnsTableView.startDragAndDrop(TransferMode.MOVE);
+
+                event.consume();
+            }
+        });
+
+
         return columnsTableView;
     }
 
     public static TableView<ObservableUnique> buildUniqueTable(){
         TableView<ObservableUnique> uniqueTableView = new TableView<>();
+        uniqueTableView.setStyle("-fx-table-cell-border-color-vertical: transparent;");
         uniqueTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         uniqueTableView.setEditable(true);
-        final TableColumn selectUniqueColumn = new TableColumn("Selected");
+
+        final TableColumn selectUniqueColumn = new TableColumn("");
+        selectUniqueColumn.setSortable(false);
         selectUniqueColumn.setMinWidth(32);
         selectUniqueColumn.setMaxWidth(32);
         selectUniqueColumn.setCellValueFactory(
@@ -103,12 +141,14 @@ public class Builder {
                 new PropertyValueFactory<ObservableUnique,String>("value")
         );
         uniqueTableView.getColumns().add(valueUniqueColumn);
-        final TableColumn countUniqueColumn = new TableColumn("Count");
+        final TableColumn countUniqueColumn = new TableColumn("");
         countUniqueColumn.setCellValueFactory(
                 new PropertyValueFactory<ObservableUnique,Integer>("count")
         );
+        countUniqueColumn.setStyle("-fx-alignment: CENTER_RIGHT");
         countUniqueColumn.setMinWidth(32);
-        countUniqueColumn.setMaxWidth(64);
+        countUniqueColumn.setMaxWidth(120);
+        countUniqueColumn.setPrefWidth(96);
         uniqueTableView.getColumns().add(countUniqueColumn);
         selectUniqueColumn.prefWidthProperty().bind(uniqueTableView.widthProperty().multiply(0.1));
         valueUniqueColumn.prefWidthProperty().bind(uniqueTableView.widthProperty().multiply(0.7));
@@ -116,13 +156,19 @@ public class Builder {
         return uniqueTableView;
     }
 
-    public static void fillData(final TableView<ObservableRow> resultsTableView, final CSV csv){
+    public static void createResultsRows(final TableView<ObservableRow> resultsTableView, final CSV csv){
         resultsTableView.getItems().clear();
+        for (int y=0; y<csv.getRowCount(); y++){
+            resultsTableView.getItems().add(new ObservableRow(csv.getRow(y)));
+        }
+    }
+
+    public static void createResultsColumns(final TableView<ObservableRow> resultsTableView, final MetaData md){
         resultsTableView.getColumns().clear();
-        MetaData md = csv.getMetaData();
         for (int x = 0; x < md.getColumnCount(); x++) {
-            Column c = md.getColumn(x);
-            TableColumn<ObservableRow, String> tc = new TableColumn<>(c.getName());
+            final Column c = md.getColumn(x);
+            final TableColumn<ObservableRow, String> tc = new TableColumn<>(c.getName());
+            tc.setCellFactory(TextFieldTableCell.forTableColumn());
             resultsTableView.getColumns().add(tc);
             final int colX = x;
             tc.setCellValueFactory(
@@ -136,13 +182,9 @@ public class Builder {
             tc.setCellFactory(TextFieldTableCell.<ObservableRow>forTableColumn());
             tc.setMinWidth(100);
         }
-        for (int y=0; y<csv.getRowCount(); y++){
-            resultsTableView.getItems().add(new ObservableRow(csv.getRow(y)));
-        }
-
     }
 
-    public static MenuBar buildMenuBar(){
+    public static MenuBar buildMenuBar(final Main main){
         final MenuBar menu = new MenuBar();
         menu.setUseSystemMenuBar(true);
         // ----- File -----
@@ -151,16 +193,76 @@ public class Builder {
         newItem.setAccelerator(KeyCombination.keyCombination("Meta+n"));
         newItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
-//                newCSV();
+                main.newFile();
             }
         });
+        fileMenu.getItems().add(newItem);
+        MenuItem openItem = new MenuItem("Open");
+        openItem.setAccelerator(KeyCombination.keyCombination("Meta+o"));
+        openItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.openFileDialog();
+            }
+        });
+        MenuItem saveItem = new MenuItem("Save");
+        saveItem.setAccelerator(KeyCombination.keyCombination("Meta+s"));
+        MenuItem saveAsItem = new MenuItem("Save as");
+        saveAsItem.setAccelerator(KeyCombination.keyCombination("Meta+s+shift"));
+        MenuItem exportItem = new MenuItem("Export");
+        exportItem.setAccelerator(KeyCombination.keyCombination("Meta+e"));
+
+        MenuItem printItem = new MenuItem("Print");
+        printItem.setAccelerator(KeyCombination.keyCombination("Meta+p"));
+        printItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handlePrintAction();
+            }
+        });
+        fileMenu.getItems().addAll(openItem, saveItem, saveAsItem, exportItem, printItem);
+
+
 
         // ----- Edit ------
         final Menu edit = new Menu("Edit");
+        MenuItem cutItem = new MenuItem("Cut");
+        cutItem.setAccelerator(KeyCombination.keyCombination("Meta+x"));
+        MenuItem copyItem = new MenuItem("Copy");
+        copyItem.setAccelerator(KeyCombination.keyCombination("Meta+c"));
+        MenuItem pasteItem = new MenuItem("Paste");
+        pasteItem.setAccelerator(KeyCombination.keyCombination("Meta+v"));
+        MenuItem deleteItem = new MenuItem("Delete");
+        deleteItem.setAccelerator(KeyCombination.keyCombination("Meta+backspace"));
+        deleteItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                System.out.println(t);
+                main.handleDeleteAction();
+            }
+        });
+        edit.getItems().addAll(cutItem, copyItem, pasteItem, deleteItem);
 
-        // ----- Options ------
-        final Menu options = new Menu("Options");
-
+        // ----- Insert ------
+        final Menu insert = new Menu("Sett inn");
+        MenuItem newColumnItem = new MenuItem("Kolonne");
+        newColumnItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handleNewColumnAction();
+            }
+        });
+        MenuItem newRowItem = new MenuItem("Rad");
+        newRowItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                System.out.println(t);
+                main.handleNewRowAction();
+            }
+        });
+        MenuItem headersRowItem = new MenuItem("Headers");
+        headersRowItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                System.out.println(t);
+                main.handleNewHeaders();
+            }
+        });
+        insert.getItems().addAll(newColumnItem,newRowItem,headersRowItem);
 
         // ----- Help ------
         final Menu help = new Menu("Help");
@@ -168,10 +270,12 @@ public class Builder {
         //
         menu.getMenus().add(fileMenu);
         menu.getMenus().add(edit);
-        menu.getMenus().add(options);
+        menu.getMenus().add(insert);
         menu.getMenus().add(help);
 
         return menu;
     }
+
+
 
 }

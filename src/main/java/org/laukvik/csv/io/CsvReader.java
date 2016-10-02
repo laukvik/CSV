@@ -45,6 +45,7 @@ public class CsvReader implements AbstractReader {
 
     private BufferedReader reader;
     private Charset charset;
+    private File file;
 
     public CsvReader(final File file, final Charset charset, final Character separator, final Character quote) throws IOException {
         this.autoDetectSeperator = (separator == null);
@@ -55,6 +56,7 @@ public class CsvReader implements AbstractReader {
         if (separator != null) {
             this.columnSeparatorChar = separator;
         }
+        this.file = file;
         this.quoteChar = quote == null ? CSV.DOUBLE_QUOTE : quote;
         if (autoDetectCharset) {
             // Try to find BOM signature
@@ -84,6 +86,10 @@ public class CsvReader implements AbstractReader {
         }
         this.metaData.setSeparator(columnSeparatorChar);
         this.metaData.setQuoteChar(this.quoteChar);
+    }
+
+    public File getFile(){
+        return file;
     }
 
     /**
