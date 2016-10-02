@@ -276,6 +276,22 @@ public class Builder {
         return menu;
     }
 
+    public static String toKb(long value){
+        if (value < 1000) {
+            return (value) + " bytes";
+        } else {
+            return (value / 1024) + " KB";
+        }
+    }
 
+    public static String getSeparatorString(char separator){
+        switch(separator){
+            case CSV.COMMA : return "COMMA";
+            case CSV.TAB : return "TAB";
+            case CSV.PIPE : return "PIPE";
+            case CSV.SEMICOLON : return "SEMICOLON";
+            default : return "COMMA";
+        }
+    }
 
 }

@@ -40,6 +40,8 @@ import static org.laukvik.csv.fx.Builder.createResultsColumns;
 import static org.laukvik.csv.fx.Builder.createResultsRows;
 import static org.laukvik.csv.fx.Builder.createUniqueObservableList;
 import static org.laukvik.csv.fx.Builder.getPercentSize;
+import static org.laukvik.csv.fx.Builder.getSeparatorString;
+import static org.laukvik.csv.fx.Builder.toKb;
 
 
 /**
@@ -69,7 +71,6 @@ public class Main extends Application implements ChangeListener {
         if (selectedColumnIndex > -1){
             uniqueTableView.setItems(createUniqueObservableList(selectedColumnIndex, csv));
         }
-
     }
 
     public void openFileDialog(){
@@ -90,6 +91,7 @@ public class Main extends Application implements ChangeListener {
         uniqueTableView.setItems(FXCollections.observableArrayList());
         resultsTableView.setItems(FXCollections.observableArrayList());
         resultsTableView.getColumns().clear();
+        updateToolbar();
     }
 
 
@@ -97,8 +99,6 @@ public class Main extends Application implements ChangeListener {
         newFile();
         try {
             csv.readFile(file);
-            stage.setTitle(file.getAbsolutePath());
-            setSelectedColumnIndex(0);
         } catch (IOException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(bundle.getString("app.title"));
@@ -147,14 +147,19 @@ public class Main extends Application implements ChangeListener {
 
         final ToolBar bar = new ToolBar();
         Label rows = new Label("Rows: ");
+        rows.setDisable(true);
         rowsLabel = new Label("-");
         Label cols = new Label("Cols: ");
+        cols.setDisable(true);
         colsLabel = new Label("-");
         Label encoding = new Label("Encoding: ");
+        encoding.setDisable(true);
         encodingLabel = new Label("-");
         Label size = new Label("Size: ");
+        size.setDisable(true);
         sizeLabel = new Label("-");
         Label separator = new Label("Separator: ");
+        separator.setDisable(true);
         separatorLabel = new Label("-");
         progressBar = new ProgressBar();
         progressBar.setVisible(false);
@@ -172,13 +177,12 @@ public class Main extends Application implements ChangeListener {
         newFile();
     }
 
-
     public void updateToolbar(){
         rowsLabel.setText(csv.getRowCount() + "");
         colsLabel.setText(csv.getMetaData().getColumnCount() + "");
-        encodingLabel.setText(csv.getRowCount() + "");
-        sizeLabel.setText(csv.getFile().getName() + "");
-        separatorLabel.setText(csv.getMetaData().getSeparatorChar() + "");
+        encodingLabel.setText(csv.getMetaData().getCharset() == null ? "N/A" : csv.getMetaData().getCharset().name());
+        sizeLabel.setText(toKb(csv.getFile() == null ? 0 : csv.getFile().length()) + "");
+        separatorLabel.setText(getSeparatorString(csv.getMetaData().getSeparatorChar()));
     }
 
     public void alert(String message){
@@ -263,6 +267,8 @@ public class Main extends Application implements ChangeListener {
     @Override
     public void finishRead(final File file) {
         progressBar.setVisible(false);
+        stage.setTitle(file.getAbsolutePath());
+        setSelectedColumnIndex(0);
         alert("finishRead: " + file.getName());
     }
 
@@ -345,7 +351,6 @@ public class Main extends Application implements ChangeListener {
     }
 
     public void handleNewColumnAction() {
-        System.out.println("handleNewColumnAction");
         TextInputDialog dialog = new TextInputDialog("");
         dialog.setTitle(bundle.getString("app.title"));
         dialog.setHeaderText("Ny kolonne");

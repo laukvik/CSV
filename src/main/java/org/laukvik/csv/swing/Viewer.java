@@ -47,6 +47,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.laukvik.csv.fx.Builder.getSeparatorString;
+
 /**
  *
  * @author Morten Laukvik
@@ -157,16 +159,6 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
 
         setTitle(file == null ? "" : file.getAbsolutePath());
         getRootPane().putClientProperty("Window.documentFile", file);
-    }
-
-    private static String getSeparatorString(char separator){
-        switch(separator){
-            case CSV.COMMA : return "COMMA";
-            case CSV.TAB : return "TAB";
-            case CSV.PIPE : return "PIPE";
-            case CSV.SEMICOLON : return "SEMICOLON";
-            default : return "COMMA";
-        }
     }
 
     public ResourceBundle getBundle() {

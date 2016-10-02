@@ -27,7 +27,9 @@ import org.laukvik.csv.io.CsvWriter;
 import org.laukvik.csv.io.Writeable;
 import org.laukvik.csv.query.Query;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.Charset;
@@ -233,8 +235,9 @@ public final class CSV implements Serializable {
      * @param reader
      */
     public void readFile(final File file, final AbstractReader reader) {
+        this.file = file;
         this.query = null;
-        rows = new ArrayList<>();
+        this.rows = new ArrayList<>();
         fireBeginRead(file);
         this.metaData = reader.getMetaData();
         this.metaData.setCSV(this);
@@ -252,16 +255,15 @@ public final class CSV implements Serializable {
      * @throws IOException
      */
     public void readFile(final File file) throws IOException {
-        readFile(file,new CsvReader(file));
-        this.file = file;
+        readFile(file,new CsvReader(new BufferedReader(new FileReader(file))));
     }
 
     public void readFileWithSeparator(final File file, final char separator) throws IOException {
-        readFile(file,new CsvReader(file, Charset.defaultCharset(), separator, CSV.DOUBLE_QUOTE ));
+        readFile(file,new CsvReader(new BufferedReader(new FileReader(file)),Charset.defaultCharset(), separator, CSV.DOUBLE_QUOTE));
     }
 
     public void readFileWithSeparator(final File file, final char separator, final char quote) throws IOException {
-        readFile(file,new CsvReader(file, Charset.defaultCharset(), separator, quote ));
+        readFile(file,new CsvReader(new BufferedReader(new FileReader(file)), Charset.defaultCharset(), separator, quote));
     }
 
     public void importFile(final File file){

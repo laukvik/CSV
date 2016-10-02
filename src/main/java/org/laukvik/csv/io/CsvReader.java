@@ -16,10 +16,8 @@ import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -45,40 +43,39 @@ public class CsvReader implements AbstractReader {
 
     private BufferedReader reader;
     private Charset charset;
-    private File file;
 
-    public CsvReader(final File file, final Charset charset, final Character separator, final Character quote) throws IOException {
+    public CsvReader(final BufferedReader reader, final Charset charset, final Character separator, final Character quote) throws IOException {
         this.autoDetectSeperator = (separator == null);
         final boolean autoDetectCharset = (charset == null);
         final boolean autoDetectColumnSeparator = (separator == null);
         final boolean autoDetectQuoteChar = (quote == null);
-        final File file1 = file;
         if (separator != null) {
             this.columnSeparatorChar = separator;
         }
-        this.file = file;
+        this.reader = reader;
         this.quoteChar = quote == null ? CSV.DOUBLE_QUOTE : quote;
-        if (autoDetectCharset) {
-            // Try to find BOM signature
-            BOM bom = BOM.findBom(file);
-            if (bom == null) {
-            } else {
-                this.charset = bom.getCharset();
-            }
-        } else {
-            this.charset = charset;
-        }
+//        if (autoDetectCharset) {
+//            // Try to find BOM signature
+//            BOM bom = BOM.findBom(file);
+//            if (bom == null) {
+//            } else {
+//                this.charset = bom.getCharset();
+//            }
+//        } else {
+//            this.charset = charset;
+//        }
 
         this.metaData = new MetaData();
         this.metaData.setCharset(this.charset);
         this.lineCounter = 0;
         this.bytesRead = 0;
-        if (this.charset == null) {
-            this.charset = Charset.forName("utf-8");
-            reader = Files.newBufferedReader(file.toPath(), this.charset);
-        } else {
-            reader = Files.newBufferedReader(file.toPath(), this.charset);
-        }
+
+//        if (this.charset == null) {
+//            this.charset = Charset.forName("utf-8");
+//            reader = Files.newBufferedReader(file.toPath(), this.charset);
+//        } else {
+//            reader = Files.newBufferedReader(file.toPath(), this.charset);
+//        }
 //        reader = Files.newBufferedReader(file.toPath(), this.charset);
         List<String> columns = parseRow();
         for (String rawColumnName : columns) {
@@ -88,35 +85,29 @@ public class CsvReader implements AbstractReader {
         this.metaData.setQuoteChar(this.quoteChar);
     }
 
-    public File getFile(){
-        return file;
-    }
-
     /**
      * Reads the CSV file and detects encoding and seperator characters
      * automatically
      *
-     * @param file
      * @throws IOException
      */
-    public CsvReader(final File file) throws IOException {
-        this( file, null, null, CSV.DOUBLE_QUOTE);
+    public CsvReader(final BufferedReader reader) throws IOException {
+        this(reader, null, null, CSV.DOUBLE_QUOTE);
     }
 
     /**
      * Reads the CSV file using the specified charset and automatically detects
      * seperator characters
      *
-     * @param file
      * @param charset
      * @throws IOException
      */
-    public CsvReader(final File file, final Charset charset) throws IOException {
-        this( file, charset, CSV.COMMA, CSV.DOUBLE_QUOTE );
+    public CsvReader(final BufferedReader reader, final Charset charset) throws IOException {
+        this( reader, charset, CSV.COMMA, CSV.DOUBLE_QUOTE );
     }
 
-    public CsvReader(final File file, final Charset charset, final Character columnSeparatorChar) throws IOException {
-        this( file, charset, columnSeparatorChar, CSV.DOUBLE_QUOTE );
+    public CsvReader(final BufferedReader reader, final Charset charset, final Character columnSeparatorChar) throws IOException {
+        this( reader, charset, columnSeparatorChar, CSV.DOUBLE_QUOTE );
     }
 
     /**

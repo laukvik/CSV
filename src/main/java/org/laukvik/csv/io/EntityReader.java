@@ -43,11 +43,6 @@ public class EntityReader implements AbstractReader{
     }
 
     @Override
-    public File getFile() {
-        return file;
-    }
-
-    @Override
     public void close() throws Exception {
 
     }
