@@ -15,13 +15,9 @@
  */
 package org.laukvik.csv.columns;
 
-import java.util.Objects;
-
-
 public class StringColumn extends Column<String> {
 
     private int size;
-
 
     public StringColumn(String name) {
         super(name);
@@ -58,18 +54,6 @@ public class StringColumn extends Column<String> {
     @Override
     public int hashCode() {
         return 7;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final StringColumn other = (StringColumn) obj;
-        return Objects.equals(this.getName(), other.getName());
     }
 
 }

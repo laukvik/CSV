@@ -9,17 +9,28 @@ import org.laukvik.csv.columns.Column;
 /**
  * @author Morten Laukvik
  */
-public class ObservableColumn implements ChangeListener<Boolean> {
+public class ObservableColumn{
 
     private SimpleBooleanProperty visible;
     private SimpleStringProperty name;
     private Column column;
+    private Main main;
 
-    public ObservableColumn(final boolean selected, final Column column) {
-        this.visible = new SimpleBooleanProperty(selected);
-        this.name = new SimpleStringProperty(column.getName());
+    public ObservableColumn(final Column column) {
+        visible = new SimpleBooleanProperty(column.isVisible());
+        name = new SimpleStringProperty(column.getName());
         this.column = column;
-        visible.addListener(this);
+        visible.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
+                column.setVisible(newValue);
+            }
+        });
+    }
+
+    public void setName(String name) {
+        this.name.setValue(name);
+        column.setName(name);
     }
 
     public SimpleBooleanProperty visibleProperty() {
@@ -30,26 +41,8 @@ public class ObservableColumn implements ChangeListener<Boolean> {
         return name;
     }
 
-    public boolean getVisible() {
-        return visible.getValue();
-    }
-
-    public void setVisible(final boolean visible) {
-        this.visible.set(visible);
-        this.column.setVisible(visible);
-    }
-
     public String getName() {
         return column.getName();
     }
 
-    public void setName(final String name) {
-        this.name.setValue(name);
-        column.setName(name);
-    }
-
-    @Override
-    public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean visible) {
-        this.column.setVisible(visible);
-    }
 }
