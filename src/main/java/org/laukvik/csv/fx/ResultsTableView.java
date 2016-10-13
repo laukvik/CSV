@@ -9,7 +9,7 @@ import static org.laukvik.csv.fx.Builder.createResultsColumns;
 import static org.laukvik.csv.fx.Builder.createResultsRows;
 
 /**
- *
+ * A JavaFX component showing all columns in a CSV.
  *
  * @author Morten Laukvik
  */
