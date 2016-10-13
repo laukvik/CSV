@@ -9,6 +9,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 
 /**
+ * JavaFX table component with the available columns in CSV.
+ *
  * @author Morten Laukvik
  */
 public class ColumnsTableView extends TableView<ObservableColumn>{
