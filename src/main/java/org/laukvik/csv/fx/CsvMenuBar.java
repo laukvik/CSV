@@ -8,13 +8,15 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCombination;
 
 /**
+ * JavaFX MenuBar for the CSV application.
+ *
  * @author Morten Laukvik
  */
-public class CsvMenuBar extends MenuBar{
+class CsvMenuBar extends MenuBar {
 
     final Main main;
 
-    public CsvMenuBar(final Main main) {
+    CsvMenuBar(final Main main) {
         super();
         this.main = main;
         setUseSystemMenuBar(true);
