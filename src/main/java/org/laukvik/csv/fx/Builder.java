@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- *
+ * A helper class for the JavaFX application.
  *
  * @author Morten Laukvik
  */
@@ -100,7 +100,7 @@ public class Builder {
                         }
                     }
                 );
-                tc.setCellFactory(TextFieldTableCell.<ObservableRow>forTableColumn());
+                tc.setCellFactory(TextFieldTableCell.forTableColumn());
                 tc.setMinWidth(100);
             }
         }
