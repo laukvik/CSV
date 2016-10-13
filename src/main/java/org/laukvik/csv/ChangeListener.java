@@ -5,7 +5,7 @@ import org.laukvik.csv.columns.Column;
 import java.io.File;
 
 /**
- *
+ * Listener class for when the CSV data changes.
  *
  * @author Morten Laukvik
  */
