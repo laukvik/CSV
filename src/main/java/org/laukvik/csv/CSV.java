@@ -35,6 +35,7 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -188,6 +189,11 @@ public final class CSV implements Serializable {
         metaData.addColumn(column);
         fireColumnCreated(column);
         return column;
+    }
+
+    public void moveRow(final int fromRowIndex, final int toRowIndex) {
+        Collections.swap(rows, fromRowIndex, toRowIndex);
+        fireRowMoved(fromRowIndex, toRowIndex);
     }
 
     /**
@@ -455,6 +461,12 @@ public final class CSV implements Serializable {
         }
     }
 
+    private void fireRowMoved(int fromRowIndex, int toRowIndex){
+        for (ChangeListener l : changeListeners){
+            l.rowMoved(fromRowIndex, toRowIndex);
+        }
+    }
+
     protected void fireColumnCreated(Column column){
         for (ChangeListener l : changeListeners){
             l.columnCreated(column);
@@ -488,8 +500,6 @@ public final class CSV implements Serializable {
             l.beginRead(file);
         }
     }
-
-
 
     private void fireFinishRead(File file){
         for (FileListener l : fileListeners){

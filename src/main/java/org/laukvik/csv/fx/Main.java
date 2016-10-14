@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -324,6 +325,11 @@ public class Main extends Application implements ChangeListener, FileListener {
     }
 
     @Override
+    public void rowMoved(final int fromRowIndex, final int toRowIndex) {
+        Collections.swap(resultsTableView.getItems(), fromRowIndex, toRowIndex);
+    }
+
+    @Override
     public void metaDataRead(final MetaData metaData) {
         columnsTableView.setItems(createAllObservableList(metaData));
         createResultsColumns(resultsTableView, metaData);
@@ -496,8 +502,25 @@ public class Main extends Application implements ChangeListener, FileListener {
         if (rowIndex > -1) {
             handleCopyAction();
             csv.removeRow(rowIndex);
-            updateRows();
+//            updateRows();
+            resultsTableView.getItems().remove(rowIndex);
             resultsTableView.getSelectionModel().select(rowIndex);
+        }
+    }
+
+    public void handleUpAction() {
+        int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
+        if (rowIndex > 0){
+            csv.moveRow(rowIndex, rowIndex-1);
+            resultsTableView.getSelectionModel().select(rowIndex-1);
+        }
+    }
+
+    public void handleDownAction() {
+        int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
+        if (rowIndex < csv.getRowCount()){
+            csv.moveRow(rowIndex, rowIndex+1);
+            resultsTableView.getSelectionModel().select(rowIndex+1);
         }
     }
 }

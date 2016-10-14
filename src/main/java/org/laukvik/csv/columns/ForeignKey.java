@@ -48,7 +48,6 @@ public class ForeignKey {
             if (column.trim().isEmpty()) {
                 throw new IllegalForeignKeyException("Missing column in '" + fkValue + "'");
             }
-//            System.out.println("parse: " + fkValue + " t: " + table + " c: " + column);
             return new ForeignKey(table, column);
         }
     }

@@ -31,7 +31,6 @@ public class CsvQueryTest {
         CSV csv = new CSV();
         csv.readFile(getResource("metadata.csv"));
 //        Query q = csv.findByQuery();
-
         StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         StringColumn homeState = (StringColumn) csv.getMetaData().getColumn("Home state");
@@ -42,9 +41,6 @@ public class CsvQueryTest {
                 column(presidency).
                 isGreaterThan(10).
                 getResultList();
-        for (Row r : rows) {
-            //System.out.println(r.getInteger(presidency) + "=" + r.getString(homeState));
-        }
     }
 
     public static File getResource(String filename) {

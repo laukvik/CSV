@@ -36,7 +36,6 @@ public class IntLessThan extends RowMatcher {
         if (i == null) {
             return false;
         }
-        //System.out.println("IntLessThan: " + column.getName() + " " + i + "=" + value);
         return i < value;
     }
 

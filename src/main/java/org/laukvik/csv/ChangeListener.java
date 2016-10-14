@@ -18,6 +18,7 @@ public interface ChangeListener {
     void rowUpdated(int rowIndex, final Row row);
     void rowRemoved(int rowIndex, final Row row);
     void rowCreated(int rowIndex, final Row row);
+    void rowMoved(int fromRowIndex, int toRowIndex);
 
     void metaDataRead(final MetaData metaData);
 

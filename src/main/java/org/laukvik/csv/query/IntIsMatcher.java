@@ -33,7 +33,6 @@ public class IntIsMatcher extends RowMatcher {
     @Override
     public boolean mathes(Row row) {
         Integer i = row.getInteger(column);
-//        System.out.println("IntIsMatcher: " + value + "=" + i);
         return i != null && value == i;
     }
 

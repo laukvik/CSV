@@ -41,8 +41,10 @@ public class Row implements Serializable {
 
     private CSV csv;
     private final Map<Column, Object> map;
+    private long timestamp;
 
     public Row() {
+        timestamp = System.nanoTime();
         this.map = new TreeMap<>();
     }
 
@@ -153,8 +155,8 @@ public class Row implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Row other = (Row) obj;
-        return true;
+        final Row otherRow = (Row) obj;
+        return timestamp == otherRow.timestamp;
     }
 
     public void remove(Column column) {

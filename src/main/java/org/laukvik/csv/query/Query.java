@@ -15,11 +15,6 @@
  */
 package org.laukvik.csv.query;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
@@ -28,6 +23,12 @@ import org.laukvik.csv.columns.DoubleColumn;
 import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -282,7 +283,6 @@ public class Query {
 
     public Select select(org.laukvik.csv.columns.Column... columns) {
 //        select.setColumns(columns);
-        System.out.println("Select: " + select.where);
         return select;
     }
 

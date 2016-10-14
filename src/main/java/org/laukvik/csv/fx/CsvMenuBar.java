@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 
 /**
@@ -93,11 +94,29 @@ class CsvMenuBar extends MenuBar {
         deleteItem.setAccelerator(KeyCombination.keyCombination("Meta+backspace"));
         deleteItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
-                System.out.println(t);
                 main.handleDeleteAction();
             }
         });
-        edit.getItems().addAll(cutItem, copyItem, pasteItem, deleteItem);
+
+        MenuItem moveUpItem = new MenuItem("Move Up");
+        moveUpItem.setAccelerator(KeyCombination.keyCombination("Meta+"+ KeyCode.UP));
+        moveUpItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handleUpAction();
+            }
+        });
+        MenuItem moveDownItem = new MenuItem("Move Down");
+        moveDownItem.setAccelerator(KeyCombination.keyCombination("Meta+"+ KeyCode.DOWN));
+        moveDownItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handleDownAction();
+            }
+        });
+
+        edit.getItems().addAll(cutItem, copyItem, pasteItem, deleteItem, moveUpItem, moveDownItem);
+
+
+
 
         // ----- Insert ------
         final Menu insert = new Menu("Sett inn");
@@ -112,7 +131,6 @@ class CsvMenuBar extends MenuBar {
         newRowItem.setAccelerator(KeyCombination.keyCombination("Meta+R"));
         newRowItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
-                System.out.println(t);
                 main.handleNewRowAction();
             }
         });
@@ -120,7 +138,6 @@ class CsvMenuBar extends MenuBar {
         headersRowItem.setAccelerator(KeyCombination.keyCombination("Meta+H"));
         headersRowItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
-                System.out.println(t);
                 main.handleNewHeaders();
             }
         });

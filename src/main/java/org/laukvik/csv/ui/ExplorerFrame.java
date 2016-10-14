@@ -108,7 +108,6 @@ public class ExplorerFrame extends JFrame implements ChangeListener{
         for (int x=0; x<csv.getMetaData().getColumnCount(); x++){
             Column c = csv.getMetaData().getColumn(x);
             if (c.isVisible() ){
-                System.out.println( c.getWidth() );
                 if (c.getWidth() > 0){
                     explorer.getResultsTable().getColumnModel().getColumn(y).setPreferredWidth( c.getWidth() );
                 }
@@ -130,7 +129,6 @@ public class ExplorerFrame extends JFrame implements ChangeListener{
 
     @Override
     public void columnUpdated(final Column column) {
-        System.out.println("Column.update: " + column.getName());
         resultsModel = new ResultsModel(csv);
         final JTable resultsTable = explorer.getResultsTable();
         resultsTable.setModel(resultsModel);
@@ -154,6 +152,11 @@ public class ExplorerFrame extends JFrame implements ChangeListener{
 
     @Override
     public void rowCreated(final int rowIndex, final Row row) {
+
+    }
+
+    @Override
+    public void rowMoved(final int fromRowIndex, final int toRowIndex) {
 
     }
 
