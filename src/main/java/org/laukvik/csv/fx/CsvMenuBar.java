@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 
@@ -113,7 +114,8 @@ class CsvMenuBar extends MenuBar {
             }
         });
 
-        edit.getItems().addAll(cutItem, copyItem, pasteItem, deleteItem, moveUpItem, moveDownItem);
+
+        edit.getItems().addAll(cutItem, copyItem, pasteItem, deleteItem, new SeparatorMenuItem(), moveUpItem, moveDownItem);
 
 
 
