@@ -69,9 +69,25 @@ class CsvMenuBar extends MenuBar {
         final Menu edit = new Menu("Edit");
         MenuItem cutItem = new MenuItem("Cut");
         cutItem.setAccelerator(KeyCombination.keyCombination("Meta+x"));
+        cutItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handleCutAction();
+            }
+        });
+
         MenuItem copyItem = new MenuItem("Copy");
+        copyItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handleCopyAction();
+            }
+        });
         copyItem.setAccelerator(KeyCombination.keyCombination("Meta+c"));
         MenuItem pasteItem = new MenuItem("Paste");
+        pasteItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handlePasteAction();
+            }
+        });
         pasteItem.setAccelerator(KeyCombination.keyCombination("Meta+v"));
         MenuItem deleteItem = new MenuItem("Delete");
         deleteItem.setAccelerator(KeyCombination.keyCombination("Meta+backspace"));

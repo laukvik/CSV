@@ -20,6 +20,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToolBar;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -72,6 +75,18 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static String toClipboardString(final int rowIndex, final CSV csv) {
+        StringBuilder b = new StringBuilder();
+        for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
+            if (x > 0) {
+                b.append(CSV.TAB);
+            }
+            StringColumn sc = (StringColumn) csv.getMetaData().getColumn(x);
+            b.append(csv.getRow(rowIndex).getString(sc));
+        }
+        return b.toString();
     }
 
     @Override
@@ -227,7 +242,6 @@ public class Main extends Application implements ChangeListener, FileListener {
         resultsTableView.clearRows();
         updateToolbar();
     }
-
 
     public void loadFile(File file, Character separatorChar, Charset charset){
         newFile();
@@ -409,6 +423,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     public void handleDeleteRow(int rowIndex){
         csv.removeRow(rowIndex);
+        resultsTableView.getSelectionModel().select(rowIndex);
     }
 
     public void handlePrintAction(){
@@ -449,4 +464,40 @@ public class Main extends Application implements ChangeListener, FileListener {
         updateRows();
     }
 
+    public void handleCopyAction() {
+        int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
+        if (rowIndex > -1) {
+            final Clipboard clipboard = Clipboard.getSystemClipboard();
+            final ClipboardContent content = new ClipboardContent();
+            content.putString(toClipboardString(rowIndex, csv));
+            clipboard.setContent(content);
+        }
+    }
+
+    public void handlePasteAction() {
+        int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
+        if (rowIndex > -1) {
+            final Clipboard clipboard = Clipboard.getSystemClipboard();
+            String pasted = (String) clipboard.getContent(DataFormat.PLAIN_TEXT);
+            String[] values = pasted.split(CSV.TAB + "");
+            Row r = csv.addRow(rowIndex);
+            for (int x = 0; x < values.length; x++) {
+                String value = values[x];
+                Column c = csv.getMetaData().getColumn(x);
+                r.updateColumn(c, value);
+            }
+            updateRows();
+            resultsTableView.getSelectionModel().select(rowIndex);
+        }
+    }
+
+    public void handleCutAction() {
+        int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
+        if (rowIndex > -1) {
+            handleCopyAction();
+            csv.removeRow(rowIndex);
+            updateRows();
+            resultsTableView.getSelectionModel().select(rowIndex);
+        }
+    }
 }
