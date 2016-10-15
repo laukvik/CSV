@@ -165,7 +165,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         final Scene scene = new Scene(root, percent.getWidth(), percent.getHeight() );
         stage.setScene(scene);
         stage.show();
-        recent = new Recent( Recent.getConfigurationFile() );
+        recent = new Recent(Recent.getConfigurationFile(), 10);
         menuBar.buildRecentList(recent);
         newFile();
     }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Remembers to recently opened files.
+ * Remembers a list of recently opened files.
  *
  * @author Morten Laukvik
  */
@@ -18,55 +18,18 @@ public final class Recent {
 
     final private CSV csv;
     final private File file;
-    final private int size = 20;
-//    private StringColumn column;
+    private int limit;
 
-    public Recent(final File file) {
+    public Recent(final File file, final int limit) {
         this.csv = new CSV();
         this.file = file;
+        this.limit = limit;
         load();
     }
 
-    private void load(){
-        if (!file.exists() || file.length() == 0){
-            csv.getMetaData().addColumn("filename");
-        } else {
-            try {
-                csv.readFile(file);
-                System.out.println("load: rows=" + csv.getRowCount());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public Recent(final File file) {
+        this(file, 10);
     }
-
-    public boolean save(){
-        try {
-            System.out.println("Saving: rows=" + csv.getRowCount());
-            csv.writeFile(file);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public List<File> getList(){
-        StringColumn c = (StringColumn)csv.getMetaData().getColumn(0);
-        List<File> list = new ArrayList<>();
-        for (int y=0; y<csv.getRowCount(); y++){
-            Row r = csv.getRow(y);
-            list.add( new File(r.getString(c)) );
-        }
-        return list;
-    }
-
-    public void open(final File file){
-        StringColumn c = (StringColumn) csv.getMetaData().getColumn(0);
-        csv.addRow().update(c, file.getAbsolutePath());
-        save();
-    }
-
-
 
     /**
      * Returns the Library folder for the user.
@@ -90,11 +53,53 @@ public final class Recent {
         return file;
     }
 
-    public static File getConfigurationFile(){
+    public static File getConfigurationFile() {
         return new File(getHome(), "recent.csv");
+    }
+
+    private void load(){
+        if (!file.exists() || file.length() == 0){
+            csv.getMetaData().addColumn("filename");
+        } else {
+            try {
+                csv.readFile(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean save(){
+        try {
+            csv.writeFile(file);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public List<File> getList(){
+        StringColumn c = (StringColumn)csv.getMetaData().getColumn(0);
+        List<File> list = new ArrayList<>();
+        for (int y=0; y<csv.getRowCount(); y++){
+            Row r = csv.getRow(y);
+            list.add( new File(r.getString(c)) );
+        }
+        return list;
+    }
+
+    public void open(final File file){
+        StringColumn c = (StringColumn) csv.getMetaData().getColumn(0);
+        csv.addRow().update(c, file.getAbsolutePath());
+        if (csv.getRowCount() > limit) {
+            int extra = csv.getRowCount() - limit;
+            csv.removeRows(0, extra);
+        }
+        save();
     }
 
     public void clear() {
         csv.clear();
     }
+
 }
