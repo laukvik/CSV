@@ -58,27 +58,33 @@ public class CSVTest {
     @Test
     public void shouldWrite() throws Exception {
 
+        File file = File.createTempFile("ShouldWrite", ".csv");
+
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
         MetaData md = csv.getMetaData();
-
         assertSame(md.getColumnCount(), 2);
-
         assertEquals("First should be 0", 0, first.indexOf());
         assertEquals("Last should be 1", 1, last.indexOf());
 
-        Row r1 = csv.addRow().update(first, "Bill").update(last, "Gates");
-        Row r2 = csv.addRow().update(first, "Steve").update(last, "Jobs");
+        csv.addRow().update(first, "Bill").update(last, "Gates");
+        csv.addRow().update(first, "Steve").update(last, "Jobs");
 
         assertSame("RowCount", csv.getRowCount(), 2);
         try {
-            csv.writeFile(File.createTempFile("ShouldWrite", ".csv"));
+            csv.writeFile(file);
         }
         catch (IOException e) {
             e.printStackTrace();
             fail(e.getMessage());
         }
+
+        CSV csv2 = new CSV();
+        csv2.readFile(file);
+
+        assertEquals(2, csv2.getRowCount());
+
     }
 
     public static File getResource(String filename) {

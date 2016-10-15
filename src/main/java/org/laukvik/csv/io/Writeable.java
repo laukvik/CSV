@@ -17,7 +17,6 @@ package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -33,6 +32,5 @@ public interface Writeable extends AutoCloseable {
      * @throws IOException
      */
     void writeFile(CSV csv) throws IOException;
-    File getFile();
 
 }

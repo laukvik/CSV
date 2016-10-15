@@ -30,6 +30,7 @@ import org.laukvik.csv.query.Query;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.Charset;
@@ -331,22 +332,6 @@ public final class CSV implements Serializable {
         readFile(file, findCharsetByBOM(file), reader);
     }
 
-//    public void readFileWithSeparator(final File file, final char separator) throws IOException {
-//        readFile(file,new CsvReader(new BufferedReader(new FileReader(file)), Charset.defaultCharset(), separator, CSV.DOUBLE_QUOTE));
-//    }
-
-//    public void readFileWithSeparator(final File file, final char separator, Charset charset) throws IOException {
-//        readFile(file,new CsvReader(new BufferedReader(new FileReader(file)), Charset.defaultCharset(), separator, CSV.DOUBLE_QUOTE));
-//    }
-
-//    public void readFileWithSeparator(final File file, final char separator, final char quote) throws IOException {
-//        readFile(file,new CsvReader(new BufferedReader(new FileReader(file)), Charset.defaultCharset(), separator, quote));
-//    }
-//
-//    public void readFileWithSeparator(final File file, final char separator, final Charset charset, final char quote) throws IOException {
-//        readFile(file,new CsvReader(new BufferedReader(new FileReader(file)), charset, separator, quote));
-//    }
-
     public void importFile(final File file){
     }
 
@@ -357,14 +342,12 @@ public final class CSV implements Serializable {
      * @throws Exception
      */
     public void write(final Writeable writer) throws Exception {
-        fireBeginWrite(writer.getFile());
         writer.writeFile(this);
         writer.close();
-        fireFinishWrite(writer.getFile());
     }
 
     public void writeFile(final File file) throws Exception {
-        write(new CsvWriter(file,this));
+        write(new CsvWriter(new FileOutputStream(file)));
     }
 
     /**

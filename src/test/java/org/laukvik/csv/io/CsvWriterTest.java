@@ -22,6 +22,7 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
@@ -41,9 +42,11 @@ public class CsvWriterTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
-        try (CsvWriter w = new CsvWriter(f, csv)) {
-            w.writeRow(new Row().update(first, "Bill").update(last, "Gates"));
-            w.writeRow(new Row().update(first, "Steve").update(last, "Jobs"));
+
+        try (CsvWriter w = new CsvWriter(new FileOutputStream(f))) {
+            w.writeMetaData(csv.getMetaData());
+            w.writeRow(new Row().update(first, "Bill").update(last, "Gates"), csv.getMetaData());
+            w.writeRow(new Row().update(first, "Steve").update(last, "Jobs"), csv.getMetaData());
         }
         catch (IOException e) {
             fail("Failed to writeFile CSV file!");

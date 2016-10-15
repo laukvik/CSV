@@ -1,9 +1,11 @@
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
+import org.laukvik.csv.MetaData;
+import org.laukvik.csv.Row;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +15,12 @@ import java.util.List;
  */
 public class EntityWriter implements Writeable{
 
-    private File file;
+    private OutputStream out;
 
-    public EntityWriter(final File file) {
-        this.file = file;
+    public EntityWriter() {
     }
 
-    public void writeEntityRow(Object instance) throws IllegalArgumentException, IllegalAccessException, IOException {
+    public void writeEntityRow(Class instance) throws IllegalArgumentException, IllegalAccessException, IOException {
         /* Iterate all annotated fields */
         for (Field f : instance.getClass().getDeclaredFields()) {
             List<String> values = new ArrayList<>();
@@ -36,28 +37,41 @@ public class EntityWriter implements Writeable{
         }
     }
 
-    public void writeMetaData(Class aClass) throws IOException {
+//    public void writeMetaData(T aClass) throws IOException {
+//        List<String> values = new ArrayList<>();
+//        for (Field f : aClass.getDeclaredFields()) {
+//            /* Find the name of the field - in code */
+//            String nameAttribute = f.getName();
+//            values.add(nameAttribute);
+//        }
+////        writeValues(values);
+//    }
+
+    @Override
+    public void writeFile(final CSV csv) throws IOException {
+//        CsvWriter writer = new CsvWriter(new FileOutputStream(file));
+    }
+
+    @Override
+    public void close() throws Exception {
+        out.flush();
+        out.close();
+    }
+
+    public static MetaData buildMetaData(Class aClass){
+        MetaData md = new MetaData();
         List<String> values = new ArrayList<>();
         for (Field f : aClass.getDeclaredFields()) {
             /* Find the name of the field - in code */
             String nameAttribute = f.getName();
             values.add(nameAttribute);
         }
-//        writeValues(values);
+        return md;
     }
 
-    @Override
-    public void writeFile(final CSV csv) throws IOException {
-
+    public static Row buildRow(Class aClass){
+        Row row = new Row();
+        return row;
     }
 
-    @Override
-    public File getFile() {
-        return file;
-    }
-
-    @Override
-    public void close() throws Exception {
-
-    }
 }

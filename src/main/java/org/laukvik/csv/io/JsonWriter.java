@@ -20,7 +20,6 @@ import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -32,7 +31,7 @@ import java.util.logging.Logger;
  *
  * @author Morten Laukvik
  */
-public class JsonWriter implements Writeable {
+public final class JsonWriter implements Writeable {
 
     private final static Logger LOG = Logger.getLogger(JsonWriter.class.getName());
 
@@ -48,14 +47,13 @@ public class JsonWriter implements Writeable {
     private final static char SPACE = ' ';
 
     private final OutputStream out;
-    private File file;
 
-    public JsonWriter(OutputStream out) {
+    public JsonWriter(final OutputStream out) {
         this.out = out;
     }
 
     @Override
-    public void writeFile(CSV csv) throws IOException {
+    public void writeFile(final CSV csv) throws IOException {
         Charset charset = csv.getMetaData().getCharset();
         LOG.fine("Writing CSV to JSON.");
         MetaData md = csv.getMetaData();
@@ -102,11 +100,6 @@ public class JsonWriter implements Writeable {
         LOG.fine("Finished writing CSV to JSON.");
     }
 
-    @Override
-    public File getFile() {
-        return file;
-    }
-
     private void writeString(String s, OutputStream out) throws IOException {
         if (s == null) {
 
@@ -126,6 +119,7 @@ public class JsonWriter implements Writeable {
 
     @Override
     public void close() throws IOException {
+        out.flush();
         out.close();
     }
 

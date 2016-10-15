@@ -31,8 +31,6 @@ public class JsonWriterTest {
     public void writeJson() throws IOException, ParseException {
         File file = File.createTempFile("EmptyRows", ".json");
 
-
-
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
 

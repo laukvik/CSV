@@ -20,12 +20,9 @@ import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,32 +35,14 @@ public final class CsvWriter implements Writeable {
 
     private final OutputStream out;
     private CSV csv;
-    private File file;
 
-    public CsvWriter(File file, CSV csv) throws IOException {
-        this.out = new FileOutputStream(file);
-        this.csv = csv;
-        this.file = file;
-        writeMetaData(csv.getMetaData());
-    }
-
-    /**
-     * Writes a single row of CSV data
-     *
-     * @param row
-     * @throws IOException
-     */
-    public void writeRow(Row row) throws IOException {
-        List<String> values = new ArrayList<>();
-        for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
-            Column c = csv.getMetaData().getColumn(x);
-            values.add(row.getAsString(c));
-        }
-        writeValues(values);
+    public CsvWriter(final OutputStream out) throws IOException {
+        this.out = out;
     }
 
     @Override
-    public void writeFile(CSV csv) throws IOException {
+    public void writeFile(final CSV csv) throws IOException {
+        this.csv = csv;
         BOM bom = csv.getMetaData().getBOM();
         if (bom != null){
             out.write(bom.getBytes());
@@ -72,6 +51,25 @@ public final class CsvWriter implements Writeable {
         for (int y = 0; y < csv.getRowCount(); y++) {
             writeRow(csv.getRow(y));
         }
+    }
+
+    /**
+     * Writes a single row of CSV data
+     *
+     * @param row
+     * @throws IOException
+     */
+    private void writeRow(final Row row) throws IOException {
+        writeRow(row, row.getCSV().getMetaData());
+    }
+
+    public void writeRow(final Row row, final MetaData metaData) throws IOException {
+        List<String> values = new ArrayList<>();
+        for (int x = 0; x < metaData.getColumnCount(); x++) {
+            Column c = metaData.getColumn(x);
+            values.add(row.getAsString(c));
+        }
+        writeValues(values);
     }
 
     public static boolean isDigitsOnly(String value) {
@@ -95,14 +93,9 @@ public final class CsvWriter implements Writeable {
             items.add(header);
         }
         writeValues(items);
-
     }
 
-    public void writeRow(String... values) throws IOException {
-        writeValues(Arrays.asList(values));
-    }
-
-    private void writeValues(List<String> values) throws IOException {
+    private void writeValues(final List<String> values) throws IOException {
         for (int x = 0; x < values.size(); x++) {
             if (x > 0) {
                 out.write(CSV.COMMA);
@@ -138,8 +131,4 @@ public final class CsvWriter implements Writeable {
         out.close();
     }
 
-    @Override
-    public File getFile() {
-        return file;
-    }
 }

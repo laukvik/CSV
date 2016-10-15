@@ -19,12 +19,7 @@ public final class Recent {
     final private CSV csv;
     final private File file;
     final private int size = 20;
-
-    public Recent() {
-        this.csv = new CSV();
-        this.file = getRecentFileList();
-        load();
-    }
+//    private StringColumn column;
 
     public Recent(final File file) {
         this.csv = new CSV();
@@ -32,43 +27,42 @@ public final class Recent {
         load();
     }
 
-    public boolean load(){
-        if (file.exists() && file.length() > 0 ){
+    private void load(){
+        if (!file.exists() || file.length() == 0){
+            csv.getMetaData().addColumn("filename");
+        } else {
             try {
                 csv.readFile(file);
-                return true;
+                System.out.println("load: rows=" + csv.getRowCount());
             } catch (IOException e) {
-                return false;
+                e.printStackTrace();
             }
-        } else {
-
-            csv.getMetaData().addColumn(new StringColumn("file2"));
-            return true;
         }
     }
 
     public boolean save(){
         try {
+            System.out.println("Saving: rows=" + csv.getRowCount());
             csv.writeFile(file);
-            return false;
+            return true;
         } catch (Exception e) {
             return false;
         }
     }
 
     public List<File> getList(){
+        StringColumn c = (StringColumn)csv.getMetaData().getColumn(0);
         List<File> list = new ArrayList<>();
-        StringColumn sc = (StringColumn) csv.getMetaData().getColumn(0);
         for (int y=0; y<csv.getRowCount(); y++){
             Row r = csv.getRow(y);
-            list.add( new File(r.getString(sc)) );
+            list.add( new File(r.getString(c)) );
         }
         return list;
     }
 
     public void open(final File file){
-        StringColumn sc = (StringColumn) csv.getMetaData().getColumn(0);
-        csv.addRow().update(sc, file.getAbsolutePath());
+        StringColumn c = (StringColumn) csv.getMetaData().getColumn(0);
+        csv.addRow().update(c, file.getAbsolutePath());
         save();
     }
 
@@ -96,7 +90,7 @@ public final class Recent {
         return file;
     }
 
-    public File getRecentFileList(){
+    public static File getConfigurationFile(){
         return new File(getHome(), "recent.csv");
     }
 
