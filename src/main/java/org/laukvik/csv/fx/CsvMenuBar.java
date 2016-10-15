@@ -9,6 +9,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 
+import java.io.File;
 import java.util.ResourceBundle;
 
 /**
@@ -18,15 +19,17 @@ import java.util.ResourceBundle;
  */
 class CsvMenuBar extends MenuBar {
 
-    final Main main;
+    private final Main main;
+    private final Menu openRecentMenu;
+    private final ResourceBundle bundle;
 
     CsvMenuBar(final Main main) {
         super();
         this.main = main;
-        ResourceBundle bundle = Builder.getBundle();
+        bundle = Builder.getBundle();
         setUseSystemMenuBar(true);
         // ----- File -----
-        final Menu fileMenu = new Menu("File");
+        final Menu fileMenu = new Menu(bundle.getString("file"));
         MenuItem newItem = new MenuItem(bundle.getString("file.new"));
         newItem.setAccelerator(KeyCombination.keyCombination("Meta+n"));
         newItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -43,19 +46,22 @@ class CsvMenuBar extends MenuBar {
             }
         });
 
-
-        MenuItem openFileOptions = new MenuItem(bundle.getString("file.open..."));
-        openFileOptions.setAccelerator(KeyCombination.keyCombination("Meta+o+shift"));
-        openFileOptions.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
-                main.openFileDialogWithOptions();
-            }
-        });
+        // ------ Recent files ------
+        openRecentMenu = new Menu(bundle.getString("file.recent"));
 
         MenuItem saveItem = new MenuItem(bundle.getString("file.save"));
         saveItem.setAccelerator(KeyCombination.keyCombination("Meta+s"));
         MenuItem saveAsItem = new MenuItem(bundle.getString("file.saveas"));
         saveAsItem.setAccelerator(KeyCombination.keyCombination("Meta+s+shift"));
+
+        MenuItem importItem = new MenuItem(bundle.getString("file.import"));
+        importItem.setAccelerator(KeyCombination.keyCombination("Meta+i"));
+        importItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.openFileDialogWithOptions();
+            }
+        });
+
         MenuItem exportItem = new MenuItem(bundle.getString("file.export"));
         exportItem.setAccelerator(KeyCombination.keyCombination("Meta+e"));
 
@@ -66,7 +72,8 @@ class CsvMenuBar extends MenuBar {
                 main.handlePrintAction();
             }
         });
-        fileMenu.getItems().addAll(newItem, openItem, openFileOptions, saveItem, saveAsItem, exportItem, new SeparatorMenuItem(), printItem);
+        fileMenu.getItems().addAll(newItem, openItem, openRecentMenu, saveItem, saveAsItem, new SeparatorMenuItem(),
+                importItem, exportItem, new SeparatorMenuItem(), printItem);
 
 
 
@@ -116,12 +123,7 @@ class CsvMenuBar extends MenuBar {
                 main.handleDownAction();
             }
         });
-
-
         edit.getItems().addAll(cutItem, copyItem, pasteItem, deleteItem, new SeparatorMenuItem(), moveUpItem, moveDownItem);
-
-
-
 
         // ----- Insert ------
         final Menu insert = new Menu(bundle.getString("insert"));
@@ -157,5 +159,28 @@ class CsvMenuBar extends MenuBar {
         getMenus().add(insert);
         getMenus().add(help);
     }
+
+    public void buildRecentList(Recent recent){
+        openRecentMenu.getItems().clear();
+        for (File file : recent.getList()){
+            MenuItem openRecentItem = new MenuItem(file.getAbsolutePath());
+            openRecentItem.setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent t) {
+                    main.loadFile(file, null, null);
+                }
+            });
+            openRecentMenu.getItems().add(openRecentItem);
+        }
+        openRecentMenu.getItems().add( new SeparatorMenuItem());
+        MenuItem openRecentItem = new MenuItem(bundle.getString("file.recent.clear"));
+        openRecentItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                recent.clear();
+                buildRecentList(recent);
+            }
+        });
+        openRecentMenu.getItems().add(openRecentItem);
+    }
+
 
 }

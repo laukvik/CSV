@@ -75,6 +75,8 @@ public class Main extends Application implements ChangeListener, FileListener {
     private Label sizeLabel;
     private Label separatorLabel;
     private ProgressBar progressBar;
+    private Recent recent;
+    private CsvMenuBar menuBar;
 
     public static void main(String[] args) {
         launch(args);
@@ -126,7 +128,11 @@ public class Main extends Application implements ChangeListener, FileListener {
         mainSplit.setDividerPositions(0.2);
 
         final VBox topContainer = new VBox();
-        topContainer.getChildren().add(new CsvMenuBar(this));
+
+        menuBar = new CsvMenuBar(this);
+        topContainer.getChildren().add(menuBar);
+
+
 
         final ToolBar bar = new ToolBar();
         Label rows = new Label(bundle.getString("status.rows"));
@@ -159,6 +165,8 @@ public class Main extends Application implements ChangeListener, FileListener {
         final Scene scene = new Scene(root, percent.getWidth(), percent.getHeight() );
         stage.setScene(scene);
         stage.show();
+        recent = new Recent();
+        menuBar.buildRecentList(recent);
         newFile();
     }
 
@@ -252,6 +260,11 @@ public class Main extends Application implements ChangeListener, FileListener {
                 csv.readFile(file, charset, separatorChar);
             } else if (separatorChar != null){
                 csv.readFile(file, separatorChar);
+            }
+
+            if (csv.getFile() != null){
+                recent.open(file);
+                menuBar.buildRecentList(recent);
             }
         } catch (IOException e) {
             alert(e.getMessage());

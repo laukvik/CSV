@@ -52,4 +52,32 @@ public class JsonWriterTest {
 
     }
 
+    @Test
+    public void emptyRows() throws IOException {
+        File file = File.createTempFile("EmptyRows", ".json");
+
+        CSV csv = new CSV();
+        csv.addColumn("First");
+        csv.addColumn("Last");
+
+        JsonWriter writer = new JsonWriter(new FileOutputStream(file));
+        writer.writeFile(csv);
+
+    }
+
+    @Test
+    public void singleRow() throws IOException {
+        File file = File.createTempFile("SingleRow", ".json");
+
+        CSV csv = new CSV();
+
+        StringColumn first = csv.addStringColumn("First");
+        StringColumn last = csv.addStringColumn("Last");
+
+        csv.addRow().update(first, "Morten").update(last, "Laukvik");
+
+        JsonWriter writer = new JsonWriter(new FileOutputStream(file));
+        writer.writeFile(csv);
+    }
+
 }

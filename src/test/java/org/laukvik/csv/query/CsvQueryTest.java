@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.laukvik.csv;
+package org.laukvik.csv.query;
 
 import org.junit.Test;
+import org.laukvik.csv.CSV;
+import org.laukvik.csv.ParseException;
+import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 

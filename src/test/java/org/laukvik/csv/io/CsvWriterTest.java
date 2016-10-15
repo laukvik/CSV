@@ -15,21 +15,64 @@
  */
 package org.laukvik.csv.io;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
+import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class CsvWriterTest {
 
+    public static File getResource(String filename) {
+        ClassLoader classLoader = CsvWriterTest.class.getClassLoader();
+        return new File(classLoader.getResource(filename).getFile());
+    }
+
     @Test
-    public void canWrite() throws Exception {
-        File file = File.createTempFile("tmp", ".csv");
+    public void writeAndRead() throws IOException {
+        File f = File.createTempFile("CsvWriter", ".csv");
         CSV csv = new CSV();
-        csv.addColumn("First");
-        csv.addColumn("Last");
-        csv.writeFile(file);
+        StringColumn first = csv.addStringColumn("First");
+        StringColumn last = csv.addStringColumn("Last");
+        try (CsvWriter w = new CsvWriter(f, csv)) {
+            w.writeRow(new Row().update(first, "Bill").update(last, "Gates"));
+            w.writeRow(new Row().update(first, "Steve").update(last, "Jobs"));
+        }
+        catch (IOException e) {
+            fail("Failed to writeFile CSV file!");
+        }
+
+        try {
+            CSV csv2 = new CSV();
+            csv2.readFile(f);
+            assertEquals("Correct row count", 2, csv2.getRowCount());
+            assertEquals("First", "First", csv2.getMetaData().getColumnName(0));
+            assertEquals("Last", "Last", csv2.getMetaData().getColumnName(1));
+            assertEquals("Find by row index and index", "Bill", csv2.getRow(0).getString(first));
+            assertEquals("Find by row index and column name", "Gates", csv2.getRow(0).getString(last));
+        }
+        catch (IOException ex) {
+            fail("Failed to readFile CSV file!");
+        }
+    }
+
+    @Test
+    public void shouldByDigitsOnly() {
+        Assert.assertEquals(true, CsvWriter.isDigitsOnly("123"));
+    }
+
+    @Test
+    public void shouldFail() {
+        Assert.assertEquals("Can't start with space", false, CsvWriter.isDigitsOnly(" 123"));
+        Assert.assertEquals("Can't end with space", false, CsvWriter.isDigitsOnly("123 "));
+        Assert.assertEquals("Can't have space on left and right", false, CsvWriter.isDigitsOnly("123 "));
     }
 
 }
