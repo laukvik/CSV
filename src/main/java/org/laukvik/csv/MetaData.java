@@ -21,6 +21,7 @@ import org.laukvik.csv.io.BOM;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -96,6 +97,11 @@ public class MetaData implements Serializable {
         columns.remove(column);
         csv.fireColumnRemoved(column);
         column.setMetaData(null);
+    }
+
+    public void moveColumn(int fromIndex, int toIndex){
+        Collections.swap(columns, fromIndex, toIndex);
+        csv.fireColumnMoved(fromIndex, toIndex);
     }
 
     public int indexOf(Column column) {

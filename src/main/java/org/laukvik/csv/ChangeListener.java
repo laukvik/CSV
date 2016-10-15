@@ -14,6 +14,7 @@ public interface ChangeListener {
     void columnCreated(final Column column);
     void columnUpdated(final Column column);
     void columnRemoved(final int columnIndex);
+    void columnMoved(int fromRowIndex, int toRowIndex);
 
     void rowUpdated(int rowIndex, final Row row);
     void rowRemoved(int rowIndex, final Row row);

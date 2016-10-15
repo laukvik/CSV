@@ -485,6 +485,12 @@ public final class CSV implements Serializable {
         }
     }
 
+    protected void fireColumnMoved(final int fromIndex, final int toIndex) {
+        for (ChangeListener l : changeListeners){
+            l.columnMoved(fromIndex, toIndex);
+        }
+    }
+
     /******************* File: Listeners ***************************************************/
 
     public void addFileListener(FileListener l) {
@@ -524,5 +530,6 @@ public final class CSV implements Serializable {
             l.finishRead(file);
         }
     }
+
 
 }

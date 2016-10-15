@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -213,8 +214,9 @@ public class Main extends Application implements ChangeListener, FileListener {
         dialog.getDialogPane().setContent(gridpane);
 
         // Set the button types.
-        ButtonType okButtonType = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        ButtonType okButtonType = ButtonType.OK;
+        ButtonType cancelButtonType = ButtonType.CANCEL;
         dialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
         dialog.showAndWait();
         ButtonType resultButtonType = (ButtonType) dialog.getResult();
@@ -288,6 +290,11 @@ public class Main extends Application implements ChangeListener, FileListener {
     public void columnRemoved(final int columnIndex) {
         buildResultsTable();
         updateToolbar();
+    }
+
+    @Override
+    public void columnMoved(final int fromIndex, final int toIndex) {
+        buildResultsTable();
     }
 
     @Override
@@ -420,11 +427,41 @@ public class Main extends Application implements ChangeListener, FileListener {
     }
 
     public void handlePrintAction(){
-        PrinterJob printerJob = PrinterJob.createPrinterJob();
-        if (printerJob.showPrintDialog(stage) && printerJob.printPage(resultsTableView)) {
-            printerJob.endJob();
-            alert(bundle.getString("dialog.print.finished"));
+        TextInputDialog dialog = new TextInputDialog("");
+        dialog.setTitle(bundle.getString("app.title"));
+        dialog.setHeaderText(bundle.getString("dialog.print"));
+        dialog.setGraphic(Builder.getImage());
+
+        final ChoiceBox printerChoiceBox = new ChoiceBox();
+        for (Printer p : Printer.getAllPrinters()){
+            printerChoiceBox.getItems().addAll(p);
         }
+
+        if (Printer.getAllPrinters().isEmpty()){
+            alert(bundle.getString("dialog.print.printers.empty"));
+            return;
+        } else {
+            dialog.getDialogPane().setContent(printerChoiceBox);
+            dialog.showAndWait();
+
+            final Printer printer = (Printer) printerChoiceBox.getSelectionModel().getSelectedItem();
+            if (printer != null){
+                PrinterJob printerJob = PrinterJob.createPrinterJob(printer);
+                if (printerJob.showPrintDialog(stage)){
+                    printerJob.printPage(resultsTableView);
+                    alert(bundle.getString("dialog.print.finished"));
+                }
+            }
+        }
+
+//        PrinterJob printerJob = PrinterJob.createPrinterJob();
+//        if (printerJob.showPrintDialog(stage)){
+//            Printer printer = printerJob.getPrinter();
+//            PageLayout pageLayout = printer.createPageLayout(Paper.A4, PageOrientation.PORTRAIT, Printer.MarginType.DEFAULT);
+//            printerJob.printPage(pageLayout, resultsTableView);
+//            printerJob.endJob();
+//            alert(bundle.getString("dialog.print.finished"));
+//        }
     }
 
     public void handleNewColumnAction() {
@@ -433,7 +470,6 @@ public class Main extends Application implements ChangeListener, FileListener {
         dialog.setHeaderText(bundle.getString("dialog.newcolumn"));
         dialog.setContentText(bundle.getString("dialog.newcolumn.columnname"));
         dialog.setGraphic(Builder.getImage());
-
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()){
             csv.addColumn(new StringColumn(result.get()));
@@ -495,18 +531,43 @@ public class Main extends Application implements ChangeListener, FileListener {
     }
 
     public void handleUpAction() {
-        int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
-        if (rowIndex > 0){
-            csv.moveRow(rowIndex, rowIndex-1);
-            resultsTableView.getSelectionModel().select(rowIndex-1);
+        Node owner = stage.getScene().getFocusOwner();
+        if (owner == resultsTableView){
+            int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
+            if (rowIndex > 0) {
+                moveRow(rowIndex, rowIndex-1);
+            }
+        } else if (owner == columnsTableView){
+            int rowIndex = columnsTableView.getSelectionModel().getSelectedIndex();
+            if (rowIndex > 0) {
+                moveColumn(rowIndex, rowIndex-1);
+            }
         }
     }
 
     public void handleDownAction() {
-        int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
-        if (rowIndex < csv.getRowCount()){
-            csv.moveRow(rowIndex, rowIndex+1);
-            resultsTableView.getSelectionModel().select(rowIndex+1);
+        Node owner = stage.getScene().getFocusOwner();
+        if (owner == resultsTableView){
+            int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
+            if (rowIndex < csv.getRowCount()-1){
+                moveRow(rowIndex, rowIndex+1);
+            }
+        } else if (owner == columnsTableView){
+            int rowIndex = columnsTableView.getSelectionModel().getSelectedIndex();
+            if (rowIndex < columnsTableView.getItems().size()-1) {
+                moveColumn(rowIndex, rowIndex+1);
+            }
         }
     }
+
+    public void moveRow( int fromIndex, int toIndex){
+        csv.moveRow(fromIndex, toIndex);
+        resultsTableView.getSelectionModel().select(toIndex);
+    }
+
+    public void moveColumn( int fromIndex, int toIndex){
+        csv.getMetaData().moveColumn(fromIndex, toIndex);
+        Collections.swap(columnsTableView.getItems(), fromIndex, toIndex );
+    }
+
 }
