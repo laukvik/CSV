@@ -41,7 +41,7 @@ public class Row implements Serializable {
 
     private CSV csv;
     private final Map<Column, Object> map;
-    private long timestamp;
+    private final long timestamp;
 
     public Row() {
         timestamp = System.nanoTime();

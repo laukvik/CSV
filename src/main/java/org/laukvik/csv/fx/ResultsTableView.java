@@ -15,7 +15,7 @@ import static org.laukvik.csv.fx.Builder.createResultsRows;
  *
  * @author Morten Laukvik
  */
-public class ResultsTableView extends TableView<ObservableRow> {
+class ResultsTableView extends TableView<ObservableRow> {
 
     public ResultsTableView() {
         super();

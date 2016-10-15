@@ -63,7 +63,7 @@ public class Query {
     public class Column {
 
         Where where;
-        org.laukvik.csv.columns.Column col;
+        final org.laukvik.csv.columns.Column col;
         RowMatcher matcher;
 
         public Column(org.laukvik.csv.columns.Column col) {
@@ -192,6 +192,14 @@ public class Query {
             query = null;
         }
 
+        public Column column(String columnName) {
+            org.laukvik.csv.columns.Column col = csv.getMetaData().getColumn(columnName);
+            Column c = new Column(col);
+            c.where = this;
+            columns.add(c);
+            return c;
+        }
+
         public Column column(org.laukvik.csv.columns.Column col) {
             Column c = new Column(col);
             c.where = this;
@@ -286,7 +294,7 @@ public class Query {
         return select;
     }
 
-    public List<Row> getResultList() {
+    private List<Row> getResultList() {
         List<Row> filteredRows = new ArrayList<>();
         int matchesRequired = where.columns.size();
         for (int rowIndex = 0; rowIndex < csv.getRowCount(); rowIndex++) {

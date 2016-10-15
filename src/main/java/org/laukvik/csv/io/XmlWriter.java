@@ -39,8 +39,8 @@ public class XmlWriter implements Writeable, AutoCloseable {
     private final static char TAB = '\t';
 
     private final OutputStream out;
-    private String rootElementName;
-    private String rowElementName;
+    private final String rootElementName;
+    private final String rowElementName;
 
     public XmlWriter(OutputStream out, String rootName, String rowName){
         this.out = out;

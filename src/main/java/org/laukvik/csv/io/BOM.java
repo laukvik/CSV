@@ -72,7 +72,7 @@ public enum BOM {
      * @param bytes
      * @return
      */
-    public static BOM parse(byte... bytes) {
+    private static BOM parse(byte... bytes) {
         for (BOM bom : values()) {
             if (bom.is(bytes)){
                 return bom;

@@ -18,7 +18,7 @@ package org.laukvik.csv;
 
 public class InvalidRowDataException extends ParseException {
 
-    Row row;
+    private final Row row;
 
     public InvalidRowDataException(int foundColumns, int requiredColumns, int rowIndex, Row row) {
         super("Invalid columns " + requiredColumns + " found " + foundColumns + " at row " + rowIndex);

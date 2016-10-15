@@ -27,7 +27,7 @@ class CsvMenuBar extends MenuBar {
         super();
         this.main = main;
         bundle = Builder.getBundle();
-        setUseSystemMenuBar(true);
+        setUseSystemMenuBar(Builder.isMac());
         // ----- File -----
         final Menu fileMenu = new Menu(bundle.getString("file"));
         MenuItem newItem = new MenuItem(bundle.getString("file.new"));
@@ -173,6 +173,13 @@ class CsvMenuBar extends MenuBar {
 
         // ----- Help ------
         final Menu help = new Menu(bundle.getString("help"));
+        MenuItem aboutMenuItem = new MenuItem(bundle.getString("help.about"));
+        aboutMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handleAboutAction();
+            }
+        });
+        help.getItems().addAll(aboutMenuItem);
 
         //
         getMenus().add(fileMenu);

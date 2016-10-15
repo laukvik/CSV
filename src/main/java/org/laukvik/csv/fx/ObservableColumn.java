@@ -9,11 +9,12 @@ import org.laukvik.csv.columns.Column;
 /**
  * @author Morten Laukvik
  */
-public class ObservableColumn{
+@SuppressWarnings("WeakerAccess")
+public final class ObservableColumn{
 
-    private SimpleBooleanProperty visible;
-    private SimpleStringProperty name;
-    private Column column;
+    private final SimpleBooleanProperty visible;
+    private final SimpleStringProperty name;
+    private final Column column;
     private Main main;
 
     public ObservableColumn(final Column column) {

@@ -20,6 +20,7 @@ import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -137,11 +138,11 @@ public class CSVTest {
             csv.readFile(getResource("acid.csv"));
             MetaData md = csv.getMetaData();
 
-            assertEquals("Year", "Year", md.getColumnName(0));
-            assertEquals("Make", "Make", md.getColumnName(1));
-            assertEquals("Model", "Model", md.getColumnName(2));
-            assertEquals("Description", "Description", md.getColumnName(3));
-            assertEquals("Price", "Price", md.getColumnName(4));
+            assertEquals("Year", "Year", md.getColumn(0).getName());
+            assertEquals("Make", "Make", md.getColumn(1).getName());
+            assertEquals("Model", "Model", md.getColumn(2).getName());
+            assertEquals("Description", "Description", md.getColumn(3).getName());
+            assertEquals("Price", "Price", md.getColumn(4).getName());
 
             assertSame("ColumnCount", 5, md.getColumnCount());
             assertSame("RowCount", 4, csv.getRowCount());
@@ -169,11 +170,11 @@ public class CSVTest {
             csv.readFile(getResource("quote_withcomma.csv"));
             MetaData md = csv.getMetaData();
 
-            assertEquals("Year", "Year", md.getColumnName(0));
-            assertEquals("Make", "Make", md.getColumnName(1));
-            assertEquals("Model", "Model", md.getColumnName(2));
-            assertEquals("Description", "Description", md.getColumnName(3));
-            assertEquals("Price", "Price", md.getColumnName(4));
+            assertEquals("Year", "Year", md.getColumn(0).getName());
+            assertEquals("Make", "Make", md.getColumn(1).getName());
+            assertEquals("Model", "Model", md.getColumn(2).getName());
+            assertEquals("Description", "Description", md.getColumn(3).getName());
+            assertEquals("Price", "Price", md.getColumn(4).getName());
 
             assertSame("ColumnCount", 5, md.getColumnCount());
             assertSame("RowCount", 1, csv.getRowCount());
@@ -223,11 +224,11 @@ public class CSVTest {
             CSV csv = new CSV();
             csv.readFile(getResource("quote_none.csv"));
             MetaData md = csv.getMetaData();
-            assertEquals("Name", "Name", md.getColumnName(0));
-            assertEquals("Class", "Class", md.getColumnName(1));
-            assertEquals("Dorm", "Dorm", md.getColumnName(2));
-            assertEquals("Room", "Room", md.getColumnName(3));
-            assertEquals("GPA", "GPA", md.getColumnName(4));
+            assertEquals("Name", "Name", md.getColumn(0).getName());
+            assertEquals("Class", "Class", md.getColumn(1).getName());
+            assertEquals("Dorm", "Dorm", md.getColumn(2).getName());
+            assertEquals("Room", "Room", md.getColumn(3).getName());
+            assertEquals("GPA", "GPA", md.getColumn(4).getName());
 
             assertSame("ColumnCount", 5, md.getColumnCount());
             assertSame("RowCount", 4, csv.getRowCount());
@@ -249,8 +250,8 @@ public class CSVTest {
             CSV csv = new CSV();
             csv.readFile(getResource("invalid.csv"));
             MetaData md = csv.getMetaData();
-            assertEquals("First", "First", md.getColumnName(0));
-            assertEquals("Last", "Last", md.getColumnName(1));
+            assertEquals("First", "First", md.getColumn(0).getName());
+            assertEquals("Last", "Last", md.getColumn(1).getName());
             assertSame("ColumnCount", 2, md.getColumnCount());
         }
         catch (Exception e) {
@@ -327,7 +328,7 @@ public class CSVTest {
         assertEquals(3,md.getColumnCount());
         assertEquals(2,csv.getRowCount());
         StringColumn sc = (StringColumn) md.getColumn(0);
-        assertEquals("Heading1",md.getColumnName(0));
+        assertEquals("Heading1",md.getColumn(0).getName());
         assertEquals("first", csv.getRow(0).getString(sc));
     }
 
@@ -339,9 +340,30 @@ public class CSVTest {
         assertEquals(3,md.getColumnCount());
         assertEquals(2,csv.getRowCount());
         StringColumn sc = (StringColumn) md.getColumn(0);
-        assertEquals("Heading1",md.getColumnName(0));
+        assertEquals("Heading1",md.getColumn(0).getName());
         assertEquals("first", csv.getRow(0).getString(sc));
     }
 
+    @Test
+    public void shouldFindByStringQuery() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile( getResource("presidents.csv") );
+        List<Row> rows = csv.findByQuery().where().column("Party").is("Whig").getResultList();
+        assertEquals(4, rows.size());
+
+        rows = csv.findByQuery().where().column("Home State").is("Ohio").getResultList();
+        assertEquals(7, rows.size());
+
+        rows = csv.findByQuery().where().column("Home State").is("Ohio").column("Party").is("Whig").getResultList();
+        assertEquals(1, rows.size());
+    }
+
+    @Test
+    public void shouldFindByIntQuery() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile( getResource("presidents.csv") );
+        List<Row> rows = csv.findByQuery().where().column("Presidency").in("29","30").getResultList();
+        assertEquals(2, rows.size());
+    }
 
 }

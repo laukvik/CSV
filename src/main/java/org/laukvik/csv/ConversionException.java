@@ -16,7 +16,7 @@
 package org.laukvik.csv;
 
 
-public class ConversionException extends RuntimeException {
+class ConversionException extends RuntimeException {
 
     public ConversionException(String value, String expected) {
         super("Failed to convert to " + expected + ": " + value);

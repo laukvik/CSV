@@ -25,9 +25,9 @@ import org.laukvik.csv.columns.DateColumn;
 
 public class YearIs extends RowMatcher {
 
-    int value;
-    DateFormat format;
-    DateColumn column;
+    private final int value;
+    private final DateFormat format;
+    private final DateColumn column;
 
     public YearIs(DateColumn column, int value, DateFormat format) {
         super();

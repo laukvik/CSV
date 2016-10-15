@@ -16,9 +16,9 @@
 package org.laukvik.csv;
 
 
-public class AddRowException extends IllegalArgumentException {
+class AddRowException extends IllegalArgumentException {
 
-    public AddRowException(int provided, int columnCount) {
+    AddRowException(int provided, int columnCount) {
         super("Cannot add row with " + provided + " columns. Required " + columnCount);
     }
 

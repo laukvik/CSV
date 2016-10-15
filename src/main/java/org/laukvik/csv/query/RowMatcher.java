@@ -17,7 +17,7 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
 
-public abstract class RowMatcher {
+abstract class RowMatcher {
 
     public abstract boolean mathes(Row row);
 

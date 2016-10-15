@@ -16,7 +16,7 @@
 package org.laukvik.csv;
 
 
-public class ColumnNotFoundException extends IllegalArgumentException {
+class ColumnNotFoundException extends IllegalArgumentException {
 
     public ColumnNotFoundException(int index, int required) {
         super("Column with index " + index + " was not found. Required: " + required);

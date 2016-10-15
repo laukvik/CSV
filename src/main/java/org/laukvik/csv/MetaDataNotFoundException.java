@@ -16,7 +16,7 @@
 package org.laukvik.csv;
 
 
-public class MetaDataNotFoundException extends IllegalArgumentException {
+class MetaDataNotFoundException extends IllegalArgumentException {
 
     public MetaDataNotFoundException() {
         super("MetaData not available!");

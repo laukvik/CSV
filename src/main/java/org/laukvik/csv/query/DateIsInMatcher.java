@@ -15,17 +15,18 @@
  */
 package org.laukvik.csv.query;
 
-import java.text.DateFormat;
-import java.util.Date;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 
 public class DateIsInMatcher extends RowMatcher {
 
-    Date[] values;
-    DateFormat format;
-    DateColumn column;
+    private final Date[] values;
+    private final DateFormat format;
+    private final DateColumn column;
 
     public DateIsInMatcher(DateColumn column, Date[] values, DateFormat format) {
         super();

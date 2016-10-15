@@ -82,7 +82,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         launch(args);
     }
 
-    public static String toClipboardString(final int rowIndex, final CSV csv) {
+    private static String toClipboardString(final int rowIndex, final CSV csv) {
         StringBuilder b = new StringBuilder();
         for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
             if (x > 0) {
@@ -170,7 +170,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         newFile();
     }
 
-    public void setSelectedColumnIndex(int selectedColumnIndex){
+    private void setSelectedColumnIndex(int selectedColumnIndex){
         if (selectedColumnIndex > -1){
             uniqueTableView.setItems(createUniqueObservableList(selectedColumnIndex, csv));
         }
@@ -200,7 +200,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         final ChoiceBox separatorBox = new ChoiceBox();
         List<String> items = new ArrayList<>();
         items.add(bundle.getString("metadata.separator.autodetect"));
-        for (char c : CSV.getSupportedSeparatorChars()){
+        for (char c : CSV.listSupportedSeparatorChars()){
             items.add(Builder.getSeparatorString(c));
         }
         separatorBox.getItems().addAll(items);
@@ -271,7 +271,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         }
     }
 
-    public void updateToolbar(){
+    private void updateToolbar(){
         rowsLabel.setText(csv.getRowCount() + "");
         colsLabel.setText(csv.getMetaData().getColumnCount() + "");
         encodingLabel.setText(csv.getMetaData().getCharset() == null ? bundle.getString("metadata.encoding.na") : csv.getMetaData().getCharset().name());
@@ -280,7 +280,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         stage.setTitle(csv.getFile() == null ? "" : csv.getFile().getName() + "");
     }
 
-    public void alert(String message){
+    private void alert(String message){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(bundle.getString("app.title"));
         alert.setHeaderText(message);
@@ -311,10 +311,6 @@ public class Main extends Application implements ChangeListener, FileListener {
     }
 
     @Override
-    public void rowUpdated(final int rowIndex, final Row row) {
-    }
-
-    @Override
     public void rowRemoved(final int rowIndex, final Row row) {
         resultsTableView.getItems().remove(rowIndex);
         updateToolbar();
@@ -333,6 +329,11 @@ public class Main extends Application implements ChangeListener, FileListener {
     @Override
     public void rowMoved(final int fromRowIndex, final int toRowIndex) {
         Collections.swap(resultsTableView.getItems(), fromRowIndex, toRowIndex);
+    }
+
+    @Override
+    public void rowsRemoved(final int fromRowIndex, final int toRowIndex) {
+        resultsTableView.getItems().remove(fromRowIndex, toRowIndex);
     }
 
     @Override
@@ -384,11 +385,11 @@ public class Main extends Application implements ChangeListener, FileListener {
         }
     }
 
-    public void handleDeleteUnique(int columnIndex){
+    private void handleDeleteUnique(int columnIndex){
         ObservableUnique u = uniqueTableView.getItems().get(columnIndex);
     }
 
-    public void handleDeleteColumn(int columnIndex){
+    private void handleDeleteColumn(int columnIndex){
         MessageFormat format = new MessageFormat(bundle.getString("dialog.deletecolumn.confirm"));
         Object[] messageArguments = {
                 csv.getMetaData().getColumn(columnIndex).getName()
@@ -403,7 +404,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         }
     }
 
-    public void buildResultsTable(){
+    private void buildResultsTable(){
         resultsTableView.columnsChanged(csv);
     }
 
@@ -417,7 +418,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         createResultsRows(resultsTableView, csv);
     }
 
-    public void deleteColumn(final int columnIndex){
+    private void deleteColumn(final int columnIndex){
         csv.removeColumn(csv.getMetaData().getColumn(columnIndex));
         updateColumns();
         updateRows();
@@ -434,7 +435,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         }
     }
 
-    public void handleDeleteRow(int rowIndex){
+    private void handleDeleteRow(int rowIndex){
         csv.removeRow(rowIndex);
         resultsTableView.getSelectionModel().select(rowIndex);
     }
@@ -452,7 +453,6 @@ public class Main extends Application implements ChangeListener, FileListener {
 
         if (Printer.getAllPrinters().isEmpty()){
             alert(bundle.getString("dialog.print.printers.empty"));
-            return;
         } else {
             dialog.getDialogPane().setContent(printerChoiceBox);
             dialog.showAndWait();
@@ -573,12 +573,12 @@ public class Main extends Application implements ChangeListener, FileListener {
         }
     }
 
-    public void moveRow( int fromIndex, int toIndex){
+    private void moveRow(int fromIndex, int toIndex){
         csv.moveRow(fromIndex, toIndex);
         resultsTableView.getSelectionModel().select(toIndex);
     }
 
-    public void moveColumn( int fromIndex, int toIndex){
+    private void moveColumn(int fromIndex, int toIndex){
         csv.getMetaData().moveColumn(fromIndex, toIndex);
         Collections.swap(columnsTableView.getItems(), fromIndex, toIndex );
     }
@@ -620,5 +620,14 @@ public class Main extends Application implements ChangeListener, FileListener {
                 alert(bundle.getString("file.export.html.failed"));
             }
         }
+    }
+
+    public void handleAboutAction() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setGraphic(Builder.getImage());
+        alert.setTitle(bundle.getString("app.title"));
+        alert.setHeaderText(bundle.getString("app.title") + " v1.0");
+        alert.setContentText(bundle.getString("help.about.description"));
+        alert.showAndWait();
     }
 }

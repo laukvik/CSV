@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * An abstract class for Columns
  *
  * @author Morten Laukvik
  * @param <T>
@@ -37,7 +38,7 @@ public abstract class Column<T> implements Comparable {
     private boolean visible;
     private int width;
 
-    public Column(String name) {
+    Column(String name) {
         this.name = name;
         this.visible = true;
     }
@@ -91,11 +92,11 @@ public abstract class Column<T> implements Comparable {
         return defaultValue;
     }
 
-    public void setDefaultValue(String defaultValue) {
+    void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
     }
 
-    public void setForeignKey(ForeignKey foreignKey) {
+    void setForeignKey(ForeignKey foreignKey) {
         this.foreignKey = foreignKey;
     }
 
@@ -103,7 +104,7 @@ public abstract class Column<T> implements Comparable {
         return allowNulls;
     }
 
-    public void setAllowNulls(boolean allowNulls) {
+    void setAllowNulls(boolean allowNulls) {
         this.allowNulls = allowNulls;
     }
 
@@ -111,7 +112,7 @@ public abstract class Column<T> implements Comparable {
         return primaryKey;
     }
 
-    public void setPrimaryKey(boolean primaryKey) {
+    void setPrimaryKey(boolean primaryKey) {
         this.primaryKey = primaryKey;
     }
 

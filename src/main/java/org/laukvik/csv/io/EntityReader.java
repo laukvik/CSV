@@ -10,7 +10,7 @@ import java.io.File;
  */
 public class EntityReader implements AbstractReader{
 
-    private File file;
+    private final File file;
     private CsvReader reader;
 
     public EntityReader(final File file) {

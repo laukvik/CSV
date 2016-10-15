@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
  *
  * @author Morten Laukvik
  */
-public class UniqueTableView extends TableView<ObservableUnique> {
+class UniqueTableView extends TableView<ObservableUnique> {
 
     public UniqueTableView() {
         super();

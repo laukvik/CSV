@@ -34,13 +34,6 @@ public class ByteColumn extends Column<byte[]> {
         return value.getBytes();
     }
 
-    /**
-     * @todo implement sorting for bytecolumn
-     *
-     * @param one
-     * @param another
-     * @return
-     */
     public int compare(byte[] one, byte[] another) {
         if (Arrays.equals(one, another)) {
             return 0;

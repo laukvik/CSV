@@ -16,7 +16,7 @@
 package org.laukvik.csv;
 
 
-public class RowNotFoundException extends IllegalArgumentException {
+class RowNotFoundException extends IllegalArgumentException {
 
     public RowNotFoundException(int index, int required) {
         super("Row with index " + index + " was not found. Required: " + required);

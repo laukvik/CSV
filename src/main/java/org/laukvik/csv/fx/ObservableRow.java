@@ -28,9 +28,9 @@ import java.util.List;
  *
  * @author Morten Laukvik <morten@laukvik.no>
  */
-public class ObservableRow {
+class ObservableRow {
 
-    private List<SimpleStringProperty> items;
+    private final List<SimpleStringProperty> items;
 
     public ObservableRow(Row row) {
         items = FXCollections.observableArrayList();

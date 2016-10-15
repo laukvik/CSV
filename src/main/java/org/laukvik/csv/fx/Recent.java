@@ -18,7 +18,7 @@ public final class Recent {
 
     final private CSV csv;
     final private File file;
-    private int limit;
+    private final int limit;
 
     public Recent(final File file, final int limit) {
         this.csv = new CSV();
@@ -93,13 +93,13 @@ public final class Recent {
         csv.addRow().update(c, file.getAbsolutePath());
         if (csv.getRowCount() > limit) {
             int extra = csv.getRowCount() - limit;
-            csv.removeRows(0, extra);
+            csv.removeRowsBetween(0, extra);
         }
         save();
     }
 
     public void clear() {
-        csv.clear();
+        csv.removeRowsBetween();
     }
 
 }

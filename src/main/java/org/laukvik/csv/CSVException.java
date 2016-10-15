@@ -16,7 +16,7 @@
 package org.laukvik.csv;
 
 
-public class CSVException extends Exception {
+class CSVException extends Exception {
 
     public CSVException() {
         super();

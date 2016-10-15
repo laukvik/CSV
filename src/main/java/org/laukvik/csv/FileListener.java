@@ -3,7 +3,7 @@ package org.laukvik.csv;
 import java.io.File;
 
 /**
- *
+ * Listens when data is being written or read.
  *
  * @author Morten Laukvik
  */

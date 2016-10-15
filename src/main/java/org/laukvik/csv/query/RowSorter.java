@@ -25,10 +25,10 @@ import org.laukvik.csv.columns.DateColumn;
 import org.laukvik.csv.columns.StringColumn;
 
 
-public class RowSorter implements Comparator<Row> {
+class RowSorter implements Comparator<Row> {
 
-    List<SortOrder> sortOrders;
-    MetaData metaData;
+    private final List<SortOrder> sortOrders;
+    private final MetaData metaData;
 
     public RowSorter(List<SortOrder> sortOrders, MetaData metaData) {
         this.sortOrders = sortOrders;

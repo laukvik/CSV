@@ -21,8 +21,8 @@ import org.laukvik.csv.columns.IntegerColumn;
 
 public class IntGreaterThanMatcher extends RowMatcher {
 
-    int value;
-    IntegerColumn column;
+    private final int value;
+    private final IntegerColumn column;
 
     public IntGreaterThanMatcher(IntegerColumn column, int value) {
         super();

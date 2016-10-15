@@ -34,7 +34,6 @@ import java.util.List;
 public final class CsvWriter implements Writeable {
 
     private final OutputStream out;
-    private CSV csv;
 
     public CsvWriter(final OutputStream out) throws IOException {
         this.out = out;
@@ -42,7 +41,6 @@ public final class CsvWriter implements Writeable {
 
     @Override
     public void writeFile(final CSV csv) throws IOException {
-        this.csv = csv;
         BOM bom = csv.getMetaData().getBOM();
         if (bom != null){
             out.write(bom.getBytes());

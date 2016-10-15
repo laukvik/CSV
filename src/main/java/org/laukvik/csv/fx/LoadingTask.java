@@ -7,10 +7,10 @@ import java.io.File;
 /**
  * @author Morten Laukvik
  */
-public class LoadingTask extends Dialog{
+class LoadingTask extends Dialog{
 
-    Main main;
-    File file;
+    private final Main main;
+    private final File file;
 
     public LoadingTask(Main main, File file) {
         this.main = main;

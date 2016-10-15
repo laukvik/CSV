@@ -21,8 +21,8 @@ import org.laukvik.csv.columns.IntegerColumn;
 
 public class IntLessThan extends RowMatcher {
 
-    int value;
-    IntegerColumn column;
+    private final int value;
+    private final IntegerColumn column;
 
     public IntLessThan(IntegerColumn column, int value) {
         super();
@@ -33,10 +33,7 @@ public class IntLessThan extends RowMatcher {
     @Override
     public boolean mathes(Row row) {
         Integer i = row.getInteger(column);
-        if (i == null) {
-            return false;
-        }
-        return i < value;
+        return i != null && i < value;
     }
 
 }

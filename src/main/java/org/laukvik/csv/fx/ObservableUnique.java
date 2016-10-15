@@ -7,11 +7,12 @@ import javafx.beans.property.SimpleStringProperty;
 /**
  * @author Morten Laukvik
  */
-public class ObservableUnique {
+@SuppressWarnings("WeakerAccess")
+public final class ObservableUnique {
 
-    private SimpleBooleanProperty selected;
-    private SimpleStringProperty value;
-    private SimpleIntegerProperty count;
+    private final SimpleBooleanProperty selected;
+    private final SimpleStringProperty value;
+    private final SimpleIntegerProperty count;
 
 
     public ObservableUnique(boolean selected, String value, int count) {

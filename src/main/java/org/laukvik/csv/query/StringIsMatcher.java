@@ -22,7 +22,7 @@ import org.laukvik.csv.columns.StringColumn;
 public class StringIsMatcher extends RowMatcher {
 
     private final String[] value;
-    private StringColumn column;
+    private final StringColumn column;
 
     public StringIsMatcher(StringColumn column, String... value) {
         super();

@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.DistinctColumnValues;
+import org.laukvik.csv.FrequencyDistribution;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.columns.Column;
 
@@ -23,15 +23,14 @@ import java.util.ResourceBundle;
  *
  * @author Morten Laukvik
  */
-public class Builder {
+class Builder {
 
     public static ResourceBundle getBundle(){
         return ResourceBundle.getBundle("messages");
     }
 
     public static ImageView getImage(){
-        ImageView v =  new ImageView(new Image("feather.png", 48, 200, true, true));
-        return v;
+        return  new ImageView(new Image("feather.png", 48, 200, true, true));
     }
 
     public static java.awt.Dimension getPercentSize(float w, float h){
@@ -39,17 +38,6 @@ public class Builder {
         Float width = size.width * w;
         Float height = size.height * h;
         return new java.awt.Dimension( width.intValue(), height.intValue());
-    }
-
-    public static ObservableList<ObservableColumn> createVisibleColumnsObservableList(final MetaData md){
-        List<ObservableColumn> list = new ArrayList<>();
-        for (int x=0; x<md.getColumnCount(); x++){
-            Column c = md.getColumn(x);
-            if (c.isVisible()){
-                list.add( new ObservableColumn(c) );
-            }
-        }
-        return FXCollections.observableArrayList( list );
     }
 
     public static ObservableList<ObservableColumn> createAllObservableList(final MetaData md){
@@ -63,7 +51,7 @@ public class Builder {
 
     public static ObservableList<ObservableUnique> createUniqueObservableList(int columnIndex, CSV csv){
         List<ObservableUnique> list = new ArrayList<>();
-        DistinctColumnValues d = csv.getDistinctColumnValues(columnIndex);
+        FrequencyDistribution d = csv.buildFrequencyDistribution(columnIndex);
         for (String key :d.getKeys()){
             list.add(new ObservableUnique(false,key,d.getCount(key)));
         }
@@ -134,4 +122,7 @@ public class Builder {
         }
     }
 
+    public static boolean isMac() {
+        return System.getProperty("os.name").toLowerCase().contains("mac");
+    }
 }

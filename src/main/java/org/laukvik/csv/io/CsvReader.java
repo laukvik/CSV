@@ -27,23 +27,20 @@ import java.util.List;
  */
 public class CsvReader implements AbstractReader {
 
-    private BufferedReader reader;
+    private final BufferedReader reader;
     private boolean autoDetectColumnSeparator;
-    private boolean autoDetectQuoteChar;
-
     private int bytesRead;
     private int lineCounter;
-    private MetaData metaData;
+    private final MetaData metaData;
     private Row row;
     private Character columnSeparatorChar;
-    private Character quoteChar;
+    private final Character quoteChar;
 
     public CsvReader(final BufferedReader reader, final Character separator, final Character quote) throws IOException {
         this.autoDetectColumnSeparator = (separator == null);
         if (separator != null) {
             this.columnSeparatorChar = separator;
         }
-        this.autoDetectQuoteChar = quote == null;
         this.reader = reader;
         this.quoteChar = quote == null ? CSV.DOUBLE_QUOTE : quote;
         this.metaData = new MetaData();

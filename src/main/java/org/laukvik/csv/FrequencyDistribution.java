@@ -22,17 +22,23 @@ import java.util.Set;
 import java.util.TreeMap;
 
 
-public class DistinctColumnValues {
+/**
+ * Frequency distribution is a table that shows the frequency of values found in a
+ * column. Each entry contains the value and the count of occurrences of that value.
+ *
+ *
+ */
+public class FrequencyDistribution {
 
     private final Column column;
     private final Map<String, Integer> map;
 
-    public DistinctColumnValues(Column column) {
+    public FrequencyDistribution(Column column) {
         this.column = column;
         this.map = new TreeMap<>();
     }
 
-    public DistinctColumnValues() {
+    public FrequencyDistribution() {
         this.column = null;
         this.map = new TreeMap<>();
     }

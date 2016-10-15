@@ -24,9 +24,9 @@ import java.util.Date;
 
 public class DateLessThan extends RowMatcher {
 
-    Date value;
-    SimpleDateFormat format;
-    DateColumn column;
+    private final Date value;
+    private final SimpleDateFormat format;
+    private final DateColumn column;
 
     public DateLessThan(DateColumn column, Date value, SimpleDateFormat format) {
         super();

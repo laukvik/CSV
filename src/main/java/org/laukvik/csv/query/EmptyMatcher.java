@@ -21,7 +21,7 @@ import org.laukvik.csv.columns.Column;
 
 public class EmptyMatcher extends RowMatcher {
 
-    private Column column;
+    private final Column column;
 
     public EmptyMatcher(Column column) {
         super();

@@ -56,8 +56,8 @@ public class CsvWriterTest {
             CSV csv2 = new CSV();
             csv2.readFile(f);
             assertEquals("Correct row count", 2, csv2.getRowCount());
-            assertEquals("First", "First", csv2.getMetaData().getColumnName(0));
-            assertEquals("Last", "Last", csv2.getMetaData().getColumnName(1));
+            assertEquals("First", "First", csv2.getMetaData().getColumn(0).getName());
+            assertEquals("Last", "Last", csv2.getMetaData().getColumn(1).getName());
             assertEquals("Find by row index and index", "Bill", csv2.getRow(0).getString(first));
             assertEquals("Find by row index and column name", "Gates", csv2.getRow(0).getString(last));
         }

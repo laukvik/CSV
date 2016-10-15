@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
  *
  * @author Morten Laukvik
  */
-public class ColumnsTableView extends TableView<ObservableColumn>{
+class ColumnsTableView extends TableView<ObservableColumn>{
 
     public ColumnsTableView() {
         super();

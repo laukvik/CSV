@@ -21,8 +21,8 @@ import org.laukvik.csv.columns.IntegerColumn;
 
 public class IntBetween extends RowMatcher {
 
-    int min;
-    int max;
+    private final int min;
+    private final int max;
     private final IntegerColumn column;
 
     public IntBetween(IntegerColumn column, int min, int max) {
