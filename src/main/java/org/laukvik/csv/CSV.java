@@ -25,7 +25,10 @@ import org.laukvik.csv.io.AbstractReader;
 import org.laukvik.csv.io.BOM;
 import org.laukvik.csv.io.CsvReader;
 import org.laukvik.csv.io.CsvWriter;
+import org.laukvik.csv.io.HtmlWriter;
+import org.laukvik.csv.io.JsonWriter;
 import org.laukvik.csv.io.Writeable;
+import org.laukvik.csv.io.XmlWriter;
 import org.laukvik.csv.query.Query;
 
 import java.io.BufferedReader;
@@ -348,6 +351,18 @@ public final class CSV implements Serializable {
 
     public void writeFile(final File file) throws Exception {
         write(new CsvWriter(new FileOutputStream(file)));
+    }
+
+    public void writeXML(final File file) throws Exception {
+        write(new XmlWriter(new FileOutputStream(file)));
+    }
+
+    public void writeJSON(final File file) throws Exception {
+        write(new JsonWriter(new FileOutputStream(file)));
+    }
+
+    public void writeHtml(final File file) throws Exception {
+        write(new HtmlWriter(new FileOutputStream(file)));
     }
 
     /**

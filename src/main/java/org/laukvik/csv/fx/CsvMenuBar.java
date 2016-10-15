@@ -62,8 +62,29 @@ class CsvMenuBar extends MenuBar {
             }
         });
 
-        MenuItem exportItem = new MenuItem(bundle.getString("file.export"));
-        exportItem.setAccelerator(KeyCombination.keyCombination("Meta+e"));
+
+        final Menu exportMenu = new Menu(bundle.getString("file.export"));
+
+        MenuItem exportJsonItem = new MenuItem(bundle.getString("file.export.json"));
+        MenuItem exportXmlItem = new MenuItem(bundle.getString("file.export.xml"));
+        MenuItem exportCsvItem = new MenuItem(bundle.getString("file.export.html"));
+        exportJsonItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handleExportJsonAction();
+            }
+        });
+        exportXmlItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handleExportXmlAction();
+            }
+        });
+        exportCsvItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handleExportHtmlAction();
+            }
+        });
+
+        exportMenu.getItems().addAll(exportJsonItem,exportXmlItem,exportCsvItem);
 
         MenuItem printItem = new MenuItem(bundle.getString("file.print"));
         printItem.setAccelerator(KeyCombination.keyCombination("Meta+p"));
@@ -73,7 +94,7 @@ class CsvMenuBar extends MenuBar {
             }
         });
         fileMenu.getItems().addAll(newItem, openItem, openRecentMenu, saveItem, saveAsItem, new SeparatorMenuItem(),
-                importItem, exportItem, new SeparatorMenuItem(), printItem);
+                importItem, exportMenu, new SeparatorMenuItem(), printItem);
 
 
 

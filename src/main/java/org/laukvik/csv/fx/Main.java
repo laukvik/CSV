@@ -583,4 +583,42 @@ public class Main extends Application implements ChangeListener, FileListener {
         Collections.swap(columnsTableView.getItems(), fromIndex, toIndex );
     }
 
+    public void handleExportJsonAction() {
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(bundle.getString("dialog.file.export.json"));
+        final File selectedFile = fileChooser.showSaveDialog(stage);
+        if (selectedFile != null){
+            try {
+                csv.writeJSON( selectedFile );
+            } catch (Exception e) {
+                alert(bundle.getString("file.export.json.failed"));
+            }
+        }
+    }
+
+    public void handleExportXmlAction() {
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(bundle.getString("dialog.file.export.xml"));
+        final File selectedFile = fileChooser.showSaveDialog(stage);
+        if (selectedFile != null){
+            try {
+                csv.writeXML( selectedFile );
+            } catch (Exception e) {
+                alert(bundle.getString("file.export.xml.failed"));
+            }
+        }
+    }
+
+    public void handleExportHtmlAction() {
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(bundle.getString("dialog.file.export.html"));
+        final File selectedFile = fileChooser.showSaveDialog(stage);
+        if (selectedFile != null){
+            try {
+                csv.writeHtml( selectedFile );
+            } catch (Exception e) {
+                alert(bundle.getString("file.export.html.failed"));
+            }
+        }
+    }
 }
