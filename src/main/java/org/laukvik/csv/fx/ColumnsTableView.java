@@ -8,6 +8,8 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 
+import java.util.ResourceBundle;
+
 /**
  * JavaFX table component with the available columns in CSV.
  *
@@ -17,6 +19,8 @@ public class ColumnsTableView extends TableView<ObservableColumn>{
 
     public ColumnsTableView() {
         super();
+        ResourceBundle bundle = Builder.getBundle();
+
         setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         setEditable(true);
 
@@ -27,7 +31,7 @@ public class ColumnsTableView extends TableView<ObservableColumn>{
         checkboxColumn.setCellValueFactory(new PropertyValueFactory<>("visible"));
         checkboxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(checkboxColumn));
 
-        final TableColumn columnNameColumn = new TableColumn("Columns");
+        final TableColumn columnNameColumn = new TableColumn(bundle.getString("table.columns"));
         columnNameColumn.setCellValueFactory(
                 new PropertyValueFactory<ObservableColumn,String>("name")
         );
@@ -43,7 +47,7 @@ public class ColumnsTableView extends TableView<ObservableColumn>{
         );
 
         /* Resizing */
-        setPlaceholder(new Label("No columns available"));
+        setPlaceholder(new Label(bundle.getString("table.columns.empty")));
         checkboxColumn.prefWidthProperty().bind(widthProperty().multiply(0.2));
         columnNameColumn.prefWidthProperty().bind(widthProperty().multiply(0.8));
     }

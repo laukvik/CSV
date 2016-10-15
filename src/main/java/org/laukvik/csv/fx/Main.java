@@ -40,6 +40,7 @@ import org.laukvik.csv.io.BOM;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,7 +62,7 @@ import static org.laukvik.csv.fx.Builder.toKb;
  */
 public class Main extends Application implements ChangeListener, FileListener {
 
-    private ResourceBundle bundle = Builder.getBundle();
+    private final ResourceBundle bundle = Builder.getBundle();
     private CSV csv;
     private Stage stage;
     private ColumnsTableView columnsTableView;
@@ -127,19 +128,20 @@ public class Main extends Application implements ChangeListener, FileListener {
         topContainer.getChildren().add(new CsvMenuBar(this));
 
         final ToolBar bar = new ToolBar();
-        Label rows = new Label("Rows: ");
+        Label rows = new Label(bundle.getString("status.rows"));
+
         rows.setDisable(true);
         rowsLabel = new Label("-");
-        Label cols = new Label("Cols: ");
+        Label cols = new Label(bundle.getString("status.columns"));
         cols.setDisable(true);
         colsLabel = new Label("-");
-        Label encoding = new Label("Encoding: ");
+        Label encoding = new Label(bundle.getString("status.encoding"));
         encoding.setDisable(true);
         encodingLabel = new Label("-");
-        Label size = new Label("Size: ");
+        Label size = new Label(bundle.getString("status.size"));
         size.setDisable(true);
         sizeLabel = new Label("-");
-        Label separator = new Label("Separator: ");
+        Label separator = new Label(bundle.getString("status.separator"));
         separator.setDisable(true);
         separatorLabel = new Label("-");
         progressBar = new ProgressBar(100);
@@ -167,7 +169,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     public void openFileDialog(){
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open .CSV file");
+        fileChooser.setTitle(bundle.getString("dialog.file.open"));
         final File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null){
             loadFile(selectedFile, null, null);
@@ -177,18 +179,18 @@ public class Main extends Application implements ChangeListener, FileListener {
     public void openFileDialogWithOptions() {
         final Dialog dialog = new Dialog( );
         dialog.setTitle(bundle.getString("app.title"));
-        dialog.setHeaderText("Open file");
+        dialog.setHeaderText(bundle.getString("dialog.file.open"));
 
         final GridPane gridpane = new GridPane();
         gridpane.setPadding(new Insets(10,20,10,20));
         gridpane.setHgap(20);
         gridpane.setVgap(10);
 
-        final Label separatorLabel = new Label("Separator");
+        final Label separatorLabel = new Label(bundle.getString("metadata.separator"));
         gridpane.add(separatorLabel, 0, 1);
         final ChoiceBox separatorBox = new ChoiceBox();
         List<String> items = new ArrayList<>();
-        items.add("auto");
+        items.add(bundle.getString("metadata.separator.autodetect"));
         for (char c : CSV.getSupportedSeparatorChars()){
             items.add(Builder.getSeparatorString(c));
         }
@@ -196,10 +198,10 @@ public class Main extends Application implements ChangeListener, FileListener {
         gridpane.add(separatorBox, 1, 1);
         separatorBox.getSelectionModel().select(0);
 
-        final Label charsetLabel = new Label("Encoding");
+        final Label charsetLabel = new Label(bundle.getString("metadata.encoding"));
         gridpane.add(charsetLabel, 0, 2);
         final ChoiceBox charsetBox = new ChoiceBox();
-        charsetBox.getItems().add("auto");
+        charsetBox.getItems().add(bundle.getString("metadata.encoding.autodetect"));
         for (BOM b : BOM.values()){
             charsetBox.getItems().add(b.name());
         }
@@ -218,13 +220,10 @@ public class Main extends Application implements ChangeListener, FileListener {
         ButtonType resultButtonType = (ButtonType) dialog.getResult();
 
         if (resultButtonType.getButtonData().equals(ButtonBar.ButtonData.OK_DONE)){
-            String separatorString =  (String)separatorBox.getSelectionModel().getSelectedItem();
-            Character separator = separatorString.equals("auto") ? null : getSeparatorCharByString(separatorString);
-            String encoding =  (String)charsetBox.getSelectionModel().getSelectedItem();
-            Charset charset = encoding.equals("auto") ? null : Charset.forName(encoding);
-
+            Character separator = separatorBox.getSelectionModel().getSelectedIndex() == 0 ? null : getSeparatorCharByString((String)separatorBox.getSelectionModel().getSelectedItem());
+            Charset charset = charsetBox.getSelectionModel().getSelectedIndex() == 0 ? null : Charset.forName((String)charsetBox.getSelectionModel().getSelectedItem());
             final FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Open file");
+            fileChooser.setTitle(bundle.getString("dialog.file.open"));
             final File selectedFile = fileChooser.showOpenDialog(stage);
             if (selectedFile != null){
                 loadFile(selectedFile, separator, charset);
@@ -238,8 +237,6 @@ public class Main extends Application implements ChangeListener, FileListener {
         csv.addFileListener(this);
         columnsTableView.setItems(FXCollections.observableArrayList());
         uniqueTableView.setItems(FXCollections.observableArrayList());
-//        resultsTableView.setItems(FXCollections.observableArrayList());
-//        resultsTableView.getColumns().clear();
         resultsTableView.clearRows();
         updateToolbar();
     }
@@ -262,7 +259,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     public void updateToolbar(){
         rowsLabel.setText(csv.getRowCount() + "");
         colsLabel.setText(csv.getMetaData().getColumnCount() + "");
-        encodingLabel.setText(csv.getMetaData().getCharset() == null ? "N/A" : csv.getMetaData().getCharset().name());
+        encodingLabel.setText(csv.getMetaData().getCharset() == null ? bundle.getString("metadata.encoding.na") : csv.getMetaData().getCharset().name());
         sizeLabel.setText(toKb(csv.getFile() == null ? 0 : csv.getFile().length()) + "");
         separatorLabel.setText(csv.getMetaData().getSeparatorChar() == null ? "" : getSeparatorString(csv.getMetaData().getSeparatorChar()));
         stage.setTitle(csv.getFile() == null ? "" : csv.getFile().getName() + "");
@@ -283,39 +280,28 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     @Override
     public void columnUpdated(final Column column) {
-//        resultsTableView.getColumns().get(column.indexOf()).setText(column.getName());
-//        resultsTableView.updateColumn(column.indexOf());
-//        updateColumns();
         buildResultsTable();
         updateToolbar();
     }
 
     @Override
     public void columnRemoved(final int columnIndex) {
-//        updateRows();
-//        updateToolbar();
         buildResultsTable();
         updateToolbar();
     }
 
     @Override
     public void rowUpdated(final int rowIndex, final Row row) {
-//        updateColumns();
-//        updateRows();
-//        alert("rowUpdated: " + row);
     }
 
     @Override
     public void rowRemoved(final int rowIndex, final Row row) {
         resultsTableView.getItems().remove(rowIndex);
-//        updateRows();
-//        alert("rowRemoved: " + row);
         updateToolbar();
     }
 
     @Override
     public void rowCreated(final int rowIndex, final Row row) {
-//        alert("rowCreated: " + rowIndex);
         if (rowIndex == resultsTableView.getItems().size()+1){
             resultsTableView.getItems().add(new ObservableRow(row));
         } else {
@@ -343,7 +329,6 @@ public class Main extends Application implements ChangeListener, FileListener {
     @Override
     public void beginRead(final File file) {
         progressBar.setVisible(true);
-//        alert("beginRead: " + file.getName());
     }
 
     @Override
@@ -351,7 +336,6 @@ public class Main extends Application implements ChangeListener, FileListener {
         progressBar.setVisible(false);
         stage.setTitle(file.getAbsolutePath());
         setSelectedColumnIndex(0);
-//        alert("finishRead: " + file.getName());
     }
 
     @Override
@@ -382,14 +366,17 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     public void handleDeleteUnique(int columnIndex){
         ObservableUnique u = uniqueTableView.getItems().get(columnIndex);
-        alert("handleUnique: " + u.getValue());
     }
 
     public void handleDeleteColumn(int columnIndex){
+        MessageFormat format = new MessageFormat(bundle.getString("dialog.deletecolumn.confirm"));
+        Object[] messageArguments = {
+                csv.getMetaData().getColumn(columnIndex).getName()
+        };
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(bundle.getString("app.title"));
-        alert.setHeaderText("Slett kolonne");
-        alert.setContentText("Er du sikker på at du vil slette kolonnen " + csv.getMetaData().getColumn(columnIndex).getName() + "?");
+        alert.setHeaderText(bundle.getString("dialog.deletecolumn"));
+        alert.setContentText(format.format(messageArguments));
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK){
             deleteColumn(columnIndex);
@@ -436,15 +423,15 @@ public class Main extends Application implements ChangeListener, FileListener {
         PrinterJob printerJob = PrinterJob.createPrinterJob();
         if (printerJob.showPrintDialog(stage) && printerJob.printPage(resultsTableView)) {
             printerJob.endJob();
-            alert("Finished printing.");
+            alert(bundle.getString("dialog.print.finished"));
         }
     }
 
     public void handleNewColumnAction() {
         TextInputDialog dialog = new TextInputDialog("");
         dialog.setTitle(bundle.getString("app.title"));
-        dialog.setHeaderText("Ny kolonne");
-        dialog.setContentText("Navn på ny kolonne:");
+        dialog.setHeaderText(bundle.getString("dialog.newcolumn"));
+        dialog.setContentText(bundle.getString("dialog.newcolumn.columnname"));
         dialog.setGraphic(Builder.getImage());
 
         Optional<String> result = dialog.showAndWait();
@@ -502,7 +489,6 @@ public class Main extends Application implements ChangeListener, FileListener {
         if (rowIndex > -1) {
             handleCopyAction();
             csv.removeRow(rowIndex);
-//            updateRows();
             resultsTableView.getItems().remove(rowIndex);
             resultsTableView.getSelectionModel().select(rowIndex);
         }

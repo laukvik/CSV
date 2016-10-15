@@ -6,6 +6,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.util.ResourceBundle;
+
 /**
  * JavaFX table which contains a unique list of values and the amount of instance pr item in the list.
  *
@@ -15,9 +17,10 @@ public class UniqueTableView extends TableView<ObservableUnique> {
 
     public UniqueTableView() {
         super();
+        ResourceBundle bundle = Builder.getBundle();
         setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         setEditable(true);
-        setPlaceholder(new Label("No values to show"));
+        setPlaceholder(new Label(bundle.getString("table.unique.empty")));
 
         final TableColumn selectUniqueColumn = new TableColumn("");
         selectUniqueColumn.setSortable(false);
@@ -29,7 +32,7 @@ public class UniqueTableView extends TableView<ObservableUnique> {
         selectUniqueColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectUniqueColumn));
         selectUniqueColumn.setEditable(true);
         getColumns().add(selectUniqueColumn);
-        final TableColumn valueUniqueColumn = new TableColumn("Values");
+        final TableColumn valueUniqueColumn = new TableColumn(bundle.getString("table.unique.values"));
         valueUniqueColumn.setCellValueFactory(
                 new PropertyValueFactory<ObservableUnique,String>("value")
         );

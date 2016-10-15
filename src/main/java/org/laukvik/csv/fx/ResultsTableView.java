@@ -5,6 +5,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import org.laukvik.csv.CSV;
 
+import java.util.ResourceBundle;
+
 import static org.laukvik.csv.fx.Builder.createResultsColumns;
 import static org.laukvik.csv.fx.Builder.createResultsRows;
 
@@ -16,8 +18,10 @@ import static org.laukvik.csv.fx.Builder.createResultsRows;
 public class ResultsTableView extends TableView<ObservableRow> {
 
     public ResultsTableView() {
+        super();
+        ResourceBundle bundle = Builder.getBundle();
         setEditable(true);
-        Label l = new Label("No rows available");
+        Label l = new Label(bundle.getString("table.results.empty"));
         setPlaceholder(l);
     }
 

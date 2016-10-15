@@ -23,6 +23,7 @@ import org.laukvik.csv.columns.DoubleColumn;
 import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.fx.Builder;
 import org.laukvik.csv.io.JsonWriter;
 import org.laukvik.csv.query.Query;
 
@@ -1000,7 +1001,7 @@ public class Viewer extends javax.swing.JFrame implements ListSelectionListener,
      */
     public static void main(final String args[]) {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "CSV");
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", Builder.getBundle().getString("app.title"));
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
