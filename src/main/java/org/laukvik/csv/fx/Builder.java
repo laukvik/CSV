@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 public class Builder {
 
     public static ResourceBundle getBundle(){
-        return ResourceBundle.getBundle("fx");
+        return ResourceBundle.getBundle("messages");
     }
 
     public static ImageView getImage(){
