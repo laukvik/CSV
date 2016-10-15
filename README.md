@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/laukvik/LaukvikCSV.svg?branch=master)](https://travis-ci.org/laukvik/LaukvikCSV) [![Code Climate](https://codeclimate.com/github/laukvik/LaukvikCSV/badges/gpa.svg)](https://codeclimate.com/github/laukvik/LaukvikCSV)
-
+[![Build Status](https://travis-ci.org/laukvik/LaukvikCSV.svg?branch=master)](https://travis-ci.org/laukvik/LaukvikCSV) [![Code Climate](https://codeclimate.com/github/laukvik/LaukvikCSV/badges/gpa.svg)](https://codeclimate.com/github/laukvik/LaukvikCSV) [![Test Coverage](https://codeclimate.com/github/laukvik/LaukvikCSV/badges/coverage.svg)](https://codeclimate.com/github/laukvik/LaukvikCSV/coverage) [![Issue Count](https://codeclimate.com/github/laukvik/LaukvikCSV/badges/issue_count.svg)](https://codeclimate.com/github/laukvik/LaukvikCSV)
 
 An easy to use API for reading and writing to CSV files.
 
