@@ -15,6 +15,7 @@
  */
 package org.laukvik.csv;
 
+import org.laukvik.csv.columns.BigDecimalColumn;
 import org.laukvik.csv.columns.BooleanColumn;
 import org.laukvik.csv.columns.ByteColumn;
 import org.laukvik.csv.columns.Column;
@@ -26,6 +27,7 @@ import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
 import java.util.Map;
@@ -44,7 +46,7 @@ public class Row implements Serializable {
     private CSV csv;
 
     /**
-     * Creates
+     * Creates a new Row
      */
     public Row() {
         timestamp = System.nanoTime();
@@ -80,6 +82,11 @@ public class Row implements Serializable {
     }
 
     public Row update(ByteColumn column, Byte value) {
+        map.put(column, value);
+        return this;
+    }
+
+    public Row update(BigDecimalColumn column, BigDecimal value) {
         map.put(column, value);
         return this;
     }

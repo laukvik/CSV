@@ -26,6 +26,7 @@ import org.laukvik.csv.io.ClosableReader;
 import org.laukvik.csv.io.CsvReader;
 import org.laukvik.csv.io.CsvWriter;
 import org.laukvik.csv.io.HtmlWriter;
+import org.laukvik.csv.io.JavaReader;
 import org.laukvik.csv.io.JsonWriter;
 import org.laukvik.csv.io.Writeable;
 import org.laukvik.csv.io.XmlWriter;
@@ -462,6 +463,18 @@ public final class CSV implements Serializable {
         CsvReader reader = new CsvReader( buffered, separator, CSV.DOUBLE_QUOTE );
         readFile(file, findCharsetByBOM(file), reader);
     }
+
+    public void readJava(List<Class> list){
+        JavaReader<Class> reader = new JavaReader<>(this, list);
+        rows.clear();
+        metaData = reader.getMetaData();
+        while (reader.hasNext()){
+            Row row = reader.next();
+            addRow(row);
+        };
+    }
+
+
 
     /**
      * Writes the contents to a file using the specified Writer.

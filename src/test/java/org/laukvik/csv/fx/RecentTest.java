@@ -37,7 +37,6 @@ public class RecentTest {
         r = null;
         Recent r2 = new Recent(file);
         for (File f : r2.getList()){
-            System.out.println(f.getName());
         }
         assertEquals(3, r2.getList().size());
     }

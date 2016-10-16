@@ -41,6 +41,12 @@ public class DateColumn extends Column<Date> {
         this.dateFormat = new SimpleDateFormat(format);
     }
 
+    public DateColumn(String name) {
+        super(name);
+        this.format = "yyyy.MM.dd HH:mm:ss";
+        this.dateFormat = new SimpleDateFormat(format);
+    }
+
     public String getFormat() {
         return format;
     }
