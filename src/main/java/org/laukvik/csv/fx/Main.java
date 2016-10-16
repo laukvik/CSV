@@ -132,6 +132,8 @@ public class Main extends Application implements ChangeListener, FileListener {
                 int rowIndex = frequencyDistributionTableView.getSelectionModel().getSelectedIndex();
                 if (viewMode == 2) {
                     handleViewPreviewAction();
+                } else if (viewMode == 3) {
+                    handleViewWikipediaAction();
                 }
             }
         });
@@ -702,20 +704,17 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     public void handleViewPreviewAction() {
         ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
-        if (ofd == null) {
-
-        } else {
+        if (ofd != null || ofd.getValue() != null || !ofd.getValue().isEmpty()) {
             String filename = ofd.getValue();
             if (filename == null || filename.trim().isEmpty()) {
-                resultsScroll.setContent(new Label("empty"));
+                resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
             } else if (filename.startsWith("http")) {
-
                 WebView v = new WebView();
                 WebEngine webEngine = v.getEngine();
                 resultsScroll.setContent(v);
                 webEngine.load(filename);
 
-            } else {
+            } else if (filename.endsWith(".gif") || filename.endsWith(".jpg") || filename.endsWith(".png")) {
                 if (filename.indexOf('\\') > -1) {
                     filename = filename.replace('\\', '/');
                 }
@@ -724,10 +723,24 @@ public class Main extends Application implements ChangeListener, FileListener {
                 if (f.exists()) {
                     resultsScroll.setContent(new ImageView(new Image(f.toURI().toString())));
                 }
+            } else {
+                resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
             }
         }
         viewMode = 2;
     }
 
-
+    public void handleViewWikipediaAction() {
+        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
+        if (ofd != null || ofd.getValue() != null || !ofd.getValue().isEmpty()) {
+            String value = ofd.getValue();
+            WebView v = new WebView();
+            WebEngine webEngine = v.getEngine();
+            resultsScroll.setContent(v);
+            webEngine.load("https://en.wikipedia.org/wiki/" + value);
+        } else {
+            resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
+        }
+        viewMode = 3;
+    }
 }

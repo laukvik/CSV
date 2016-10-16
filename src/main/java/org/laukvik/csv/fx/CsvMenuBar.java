@@ -210,7 +210,17 @@ class CsvMenuBar extends MenuBar {
             }
         });
 
-        viewMenu.getItems().addAll(viewResultsMenuItem, viewChartMenuItem, previewChartMenuItem);
+        CheckMenuItem wikipediaMenuItem = new CheckMenuItem(bundle.getString("view.wikipedia"));
+        wikipediaMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+4"));
+        wikipediaMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                setSelectedMode(3);
+                main.handleViewWikipediaAction();
+
+            }
+        });
+
+        viewMenu.getItems().addAll(viewResultsMenuItem, viewChartMenuItem, previewChartMenuItem, wikipediaMenuItem);
 
         // ----- Help ------
         final Menu help = new Menu(bundle.getString("help"));
