@@ -4,12 +4,14 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -21,12 +23,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToolBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.laukvik.csv.CSV;
@@ -41,6 +47,8 @@ import org.laukvik.csv.io.BOM;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +56,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static javafx.collections.FXCollections.observableArrayList;
 import static org.laukvik.csv.fx.Builder.createAllObservableList;
 import static org.laukvik.csv.fx.Builder.createFrequencyDistributionObservableList;
 import static org.laukvik.csv.fx.Builder.createResultsColumns;
@@ -78,6 +87,8 @@ public class Main extends Application implements ChangeListener, FileListener {
     private ProgressBar progressBar;
     private Recent recent;
     private CsvMenuBar menuBar;
+    private ScrollPane resultsScroll;
+    private int viewMode = 0;
 
     public static void main(String[] args) {
         launch(args);
@@ -95,11 +106,36 @@ public class Main extends Application implements ChangeListener, FileListener {
         return b.toString();
     }
 
+    public static PieChart buildPieChart(FrequencyDistributionTableView frequencyDistributionTableView) {
+        List<PieChart.Data> dataset = new ArrayList<>();
+        int max = 50;
+        int x = 0;
+        for (ObservableFrequencyDistribution fd : frequencyDistributionTableView.getItems()) {
+            if (x < 50) {
+                dataset.add(new PieChart.Data(fd.getValue(), fd.getCount()));
+            }
+            x++;
+        }
+        ObservableList<PieChart.Data> data = FXCollections.observableArrayList(dataset);
+        final PieChart chart = new PieChart(data);
+        return chart;
+    }
+
     @Override
     public void start(final Stage primaryStage ) throws Exception {
         this.stage = primaryStage;
         columnsTableView = new ColumnsTableView();
         frequencyDistributionTableView = new FrequencyDistributionTableView();
+        frequencyDistributionTableView.getSelectionModel().getSelectedIndices().addListener(new ListChangeListener<Integer>() {
+            @Override
+            public void onChanged(final Change<? extends Integer> c) {
+                int rowIndex = frequencyDistributionTableView.getSelectionModel().getSelectedIndex();
+                if (viewMode == 2) {
+                    handleViewPreviewAction();
+                }
+            }
+        });
+
         resultsTableView = new ResultsTableView();
 
         final ScrollPane columnsScroll = new ScrollPane(columnsTableView);
@@ -118,7 +154,7 @@ public class Main extends Application implements ChangeListener, FileListener {
             }
         });
 
-        final ScrollPane resultsScroll = new ScrollPane(resultsTableView);
+        resultsScroll = new ScrollPane(resultsTableView);
         resultsScroll.setFitToHeight(true);
         resultsScroll.setFitToWidth(true);
 
@@ -174,6 +210,14 @@ public class Main extends Application implements ChangeListener, FileListener {
     private void setSelectedColumnIndex(int selectedColumnIndex){
         if (selectedColumnIndex > -1){
             frequencyDistributionTableView.setItems(createFrequencyDistributionObservableList(selectedColumnIndex, csv));
+            if (viewMode == 0) {
+                handleViewResultsAction();
+            } else if (viewMode == 1) {
+                handleViewChartAction();
+            } else if (viewMode == 2) {
+                handleViewPreviewAction();
+            } else {
+            }
         }
     }
 
@@ -246,8 +290,8 @@ public class Main extends Application implements ChangeListener, FileListener {
         csv = new CSV();
         csv.addChangeListener(this);
         csv.addFileListener(this);
-        columnsTableView.setItems(FXCollections.observableArrayList());
-        frequencyDistributionTableView.setItems(FXCollections.observableArrayList());
+        columnsTableView.setItems(observableArrayList());
+        frequencyDistributionTableView.setItems(observableArrayList());
         resultsTableView.clearRows();
         updateToolbar();
     }
@@ -644,4 +688,46 @@ public class Main extends Application implements ChangeListener, FileListener {
             }
         }
     }
+
+    public void handleViewChartAction() {
+        final PieChart chart = buildPieChart(frequencyDistributionTableView);
+        resultsScroll.setContent(chart);
+        viewMode = 1;
+    }
+
+    public void handleViewResultsAction() {
+        resultsScroll.setContent(resultsTableView);
+        viewMode = 0;
+    }
+
+    public void handleViewPreviewAction() {
+        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
+        if (ofd == null) {
+
+        } else {
+            String filename = ofd.getValue();
+            if (filename == null || filename.trim().isEmpty()) {
+                resultsScroll.setContent(new Label("empty"));
+            } else if (filename.startsWith("http")) {
+
+                WebView v = new WebView();
+                WebEngine webEngine = v.getEngine();
+                resultsScroll.setContent(v);
+                webEngine.load(filename);
+
+            } else {
+                if (filename.indexOf('\\') > -1) {
+                    filename = filename.replace('\\', '/');
+                }
+                Path p = Paths.get(csv.getFile().getParent(), filename);
+                File f = p.toFile();
+                if (f.exists()) {
+                    resultsScroll.setContent(new ImageView(new Image(f.toURI().toString())));
+                }
+            }
+        }
+        viewMode = 2;
+    }
+
+
 }

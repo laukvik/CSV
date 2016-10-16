@@ -2,6 +2,7 @@ package org.laukvik.csv.fx;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -19,6 +20,7 @@ import java.util.ResourceBundle;
  */
 class CsvMenuBar extends MenuBar {
 
+    final Menu viewMenu;
     private final Main main;
     private final Menu openRecentMenu;
     private final ResourceBundle bundle;
@@ -176,6 +178,40 @@ class CsvMenuBar extends MenuBar {
         });
         insert.getItems().addAll(newColumnItem,newRowItem,headersRowItem);
 
+        // ----- View ------
+        viewMenu = new Menu(bundle.getString("view"));
+        CheckMenuItem viewResultsMenuItem = new CheckMenuItem(bundle.getString("view.results"));
+        viewResultsMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+1"));
+        viewResultsMenuItem.setSelected(true);
+        viewResultsMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                setSelectedMode(0);
+                main.handleViewResultsAction();
+            }
+        });
+
+        CheckMenuItem viewChartMenuItem = new CheckMenuItem(bundle.getString("view.piechart"));
+        viewChartMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+2"));
+        viewChartMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                setSelectedMode(1);
+                main.handleViewChartAction();
+
+            }
+        });
+
+        CheckMenuItem previewChartMenuItem = new CheckMenuItem(bundle.getString("view.preview"));
+        previewChartMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+3"));
+        previewChartMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                setSelectedMode(2);
+                main.handleViewPreviewAction();
+
+            }
+        });
+
+        viewMenu.getItems().addAll(viewResultsMenuItem, viewChartMenuItem, previewChartMenuItem);
+
         // ----- Help ------
         final Menu help = new Menu(bundle.getString("help"));
         MenuItem aboutMenuItem = new MenuItem(bundle.getString("help.about"));
@@ -190,6 +226,7 @@ class CsvMenuBar extends MenuBar {
         getMenus().add(fileMenu);
         getMenus().add(edit);
         getMenus().add(insert);
+        getMenus().addAll(viewMenu);
         getMenus().add(help);
     }
 
@@ -215,5 +252,13 @@ class CsvMenuBar extends MenuBar {
         openRecentMenu.getItems().add(openRecentItem);
     }
 
+    public void setSelectedMode(int index) {
+        int x = 0;
+        for (MenuItem item : viewMenu.getItems()) {
+            CheckMenuItem i = (CheckMenuItem) item;
+            i.setSelected(x == index);
+            x++;
+        }
+    }
 
 }
