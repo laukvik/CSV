@@ -4,11 +4,11 @@
 
     <groupId>org.laukvik</groupId>
     <artifactId>laukvik-csv</artifactId>
-    <version>1.0</version>
+    <version>0.9</version>
     <packaging>jar</packaging>
 
     <name>CSV</name>
-    <description>A Java API for reading, writing, filtering and exporting datasets in CSV format.</description>
+    <description>A Java API for reading, writing, filtering and exporting data sets.</description>
 
     <developers>
         <developer>

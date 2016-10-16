@@ -21,7 +21,9 @@ import org.laukvik.csv.columns.DateColumn;
 import java.text.DateFormat;
 import java.util.Date;
 
-
+/**
+ * Compares a DateColumn to an array of Dates
+ */
 public class DateIsInMatcher extends RowMatcher {
 
     private final Date[] values;
@@ -36,7 +38,7 @@ public class DateIsInMatcher extends RowMatcher {
     }
 
     @Override
-    public boolean mathes(Row row) {
+    public boolean matches(Row row) {
         Date value = row.getDate(column);
         for (Date d : values) {
             if (value.equals(d)) {

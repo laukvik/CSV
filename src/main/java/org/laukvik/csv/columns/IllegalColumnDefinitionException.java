@@ -15,9 +15,16 @@
  */
 package org.laukvik.csv.columns;
 
-
+/**
+ * Indicates that the metadata definition of a column is invalid.
+ */
 public class IllegalColumnDefinitionException extends RuntimeException {
 
+    /**
+     * Indicates that the metadata definition of a column is invalid.
+     *
+     * @param message
+     */
     public IllegalColumnDefinitionException(String message) {
         super(message);
     }

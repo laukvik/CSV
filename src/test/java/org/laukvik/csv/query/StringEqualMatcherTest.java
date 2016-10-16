@@ -15,33 +15,16 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
-import org.laukvik.csv.columns.StringColumn;
+import org.junit.Test;
 
 
-public class StringIsMatcher extends RowMatcher {
+public class StringEqualMatcherTest {
 
-    private final String[] value;
-    private final StringColumn column;
-
-    public StringIsMatcher(StringColumn column, String... value) {
-        super();
-        this.column = column;
-        this.value = value;
+    public StringEqualMatcherTest() {
     }
 
-    @Override
-    public boolean mathes(Row row) {
-        String val = row.getString(column);
-        if (val == null) {
-            return false;
-        }
-        for (String v : value) {
-            if (val.equalsIgnoreCase(v)) {
-                return true;
-            }
-        }
-        return false;
+    @Test
+    public void testSomeMethod() {
     }
 
 }

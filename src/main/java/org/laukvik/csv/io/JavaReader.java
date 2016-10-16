@@ -3,18 +3,22 @@ package org.laukvik.csv.io;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 
-import java.io.File;
+import java.util.List;
 
 /**
+ * Reads a data set by a list of objects.
+ *
  * @author Morten Laukvik
  */
-public class EntityReader implements AbstractReader{
+public class JavaReader<T> implements ClosableReader {
 
-    private final File file;
     private CsvReader reader;
 
-    public EntityReader(final File file) {
-        this.file = file;
+    /**
+     * @param values
+     */
+    public JavaReader(List<T> values) {
+
     }
 
     @Override

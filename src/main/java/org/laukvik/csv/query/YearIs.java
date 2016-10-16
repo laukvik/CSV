@@ -15,14 +15,17 @@
  */
 package org.laukvik.csv.query;
 
+import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.DateColumn;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import org.laukvik.csv.Row;
-import org.laukvik.csv.columns.DateColumn;
 
-
+/**
+ * Compares a DateColumn to have the year to be the specified value
+ */
 public class YearIs extends RowMatcher {
 
     private final int value;
@@ -37,7 +40,7 @@ public class YearIs extends RowMatcher {
     }
 
     @Override
-    public boolean mathes(Row row) {
+    public boolean matches(Row row) {
         Date v = row.getDate(column);
         if (v == null) {
             return false;

@@ -17,12 +17,18 @@ package org.laukvik.csv.columns;
 
 import java.util.Objects;
 
-
+/**
+ * Represents a link to another column.
+ */
 public class ForeignKey {
 
     private String table;
     private String column;
 
+    /**
+     * @param table
+     * @param column
+     */
     public ForeignKey(String table, String column) {
         if (table == null || table.trim().isEmpty()) {
             throw new IllegalForeignKeyException("Illegal foreignKey value ");

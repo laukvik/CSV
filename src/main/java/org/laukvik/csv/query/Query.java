@@ -31,50 +31,84 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * The query contains the criteria to be used when filtering the data set.
  *
- * <code>
- * .select()
- * .where()
- * .column("BookID").is(5);
- * </code>
- *
- * <code>
- * .select()
- * .where();
- * </code>
- *
- * <code>
- * .where
- * .column("BookID").is(5)
- * .column("Chapter").isGreaterThan(3)
- * .column("Verse").isBetween(10,20)
- *
- * .orderBy
- * .asc("BookID").desc("");
- *
- * .findResults(1,10);
- *
- * </code>
- *
- * @author Morten Laukvik
  */
 public class Query {
 
+    private final MetaData metaData;
+    private final CSV csv;
+    private Where where;
+    private Select select;
+
+    public Query(MetaData metaData, CSV csv) {
+        this.metaData = metaData;
+        this.csv = csv;
+        this.select = new Select();
+        this.select.where = this.where();
+    }
+
+    public OrderBy orderBy() {
+        return this.where().orderBy();
+    }
+
+    public Where where() {
+        where = new Where();
+        where.query = this;
+        return where;
+    }
+
+    public Select select() {
+        select = new Select();
+        select.where = where;
+        return select;
+    }
+
+    public Select select(org.laukvik.csv.columns.Column... columns) {
+//        select.setColumns(columns);
+        return select;
+    }
+
+    private List<Row> getResultList() {
+        List<Row> filteredRows = new ArrayList<>();
+        int matchesRequired = where.columns.size();
+        for (int rowIndex = 0; rowIndex < csv.getRowCount(); rowIndex++) {
+            Row r = csv.getRow(rowIndex);
+            if (matchesRequired == 0) {
+                /* Dont use filters - add all */
+                filteredRows.add(r);
+            } else {
+                /* Use filtering */
+                int matchCount = 0;
+                for (Column c : where.columns) {
+                    if (c.matcher.matches(r)) {
+                        matchCount++;
+                    }
+                }
+                if (matchCount == matchesRequired) {
+                    filteredRows.add(r);
+                }
+            }
+        }
+        if (!where.orderBy.sortOrders.isEmpty()) {
+            Collections.sort(filteredRows, new RowSorter(where.orderBy.sortOrders, metaData));
+        }
+        return filteredRows;
+    }
+
+    /**
+     *
+     */
     public class Column {
 
-        Where where;
         final org.laukvik.csv.columns.Column col;
+        Where where;
         RowMatcher matcher;
 
         public Column(org.laukvik.csv.columns.Column col) {
             this.col = col;
         }
 
-//        private int getColumnIndex() {
-//            return where.query.metaData.getColumnIndex(name);
-//        }
-
-        /* Common */
         public Where isNotEmpty() {
             matcher = new NotEmptyMatcher(col);
             return where;
@@ -87,12 +121,12 @@ public class Query {
 
         /* String */
         public Where is(String value) {
-            matcher = new StringIsMatcher((StringColumn) col, value);
+            matcher = new StringInMatcher((StringColumn) col, value);
             return where;
         }
 
         public Where isIn(String[] value) {
-            matcher = new StringIsMatcher((StringColumn) col, value);
+            matcher = new StringInMatcher((StringColumn) col, value);
             return where;
         }
 
@@ -164,7 +198,7 @@ public class Query {
         }
 
         public Where in(String... selection) {
-            matcher = new StringIsMatcher((StringColumn) col, selection);
+            matcher = new StringInMatcher((StringColumn) col, selection);
             return where;
         }
 
@@ -249,8 +283,8 @@ public class Query {
 
     public class Select {
 
-        private Where where;
         private final org.laukvik.csv.columns.Column[] columns;
+        private Where where;
 
         public Select(org.laukvik.csv.columns.Column... columns) {
             this.columns = columns;
@@ -259,66 +293,6 @@ public class Query {
         public Where where() {
             return where;
         }
-    }
-
-    private Where where;
-    private Select select;
-    private final MetaData metaData;
-    private final CSV csv;
-
-    public Query(MetaData metaData, CSV csv) {
-        this.metaData = metaData;
-        this.csv = csv;
-        this.select = new Select();
-        this.select.where = this.where();
-    }
-
-    public OrderBy orderBy() {
-        return this.where().orderBy();
-    }
-
-    public Where where() {
-        where = new Where();
-        where.query = this;
-        return where;
-    }
-
-    public Select select() {
-        select = new Select();
-        select.where = where;
-        return select;
-    }
-
-    public Select select(org.laukvik.csv.columns.Column... columns) {
-//        select.setColumns(columns);
-        return select;
-    }
-
-    private List<Row> getResultList() {
-        List<Row> filteredRows = new ArrayList<>();
-        int matchesRequired = where.columns.size();
-        for (int rowIndex = 0; rowIndex < csv.getRowCount(); rowIndex++) {
-            Row r = csv.getRow(rowIndex);
-            if (matchesRequired == 0) {
-                /* Dont use filters - add all */
-                filteredRows.add(r);
-            } else {
-                /* Use filtering */
-                int matchCount = 0;
-                for (Column c : where.columns) {
-                    if (c.matcher.mathes(r)) {
-                        matchCount++;
-                    }
-                }
-                if (matchCount == matchesRequired) {
-                    filteredRows.add(r);
-                }
-            }
-        }
-        if (!where.orderBy.sortOrders.isEmpty()) {
-            Collections.sort(filteredRows, new RowSorter(where.orderBy.sortOrders, metaData));
-        }
-        return filteredRows;
     }
 
 }

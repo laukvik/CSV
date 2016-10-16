@@ -7,6 +7,8 @@ import javafx.beans.value.ObservableValue;
 import org.laukvik.csv.columns.Column;
 
 /**
+ * Represents a column that is observable for JavaFX components.
+ *
  * @author Morten Laukvik
  */
 @SuppressWarnings("WeakerAccess")
@@ -17,6 +19,11 @@ public final class ObservableColumn{
     private final Column column;
     private Main main;
 
+    /**
+     * Represents a column that is observable.
+     *
+     * @param column the column
+     */
     public ObservableColumn(final Column column) {
         visible = new SimpleBooleanProperty(column.isVisible());
         name = new SimpleStringProperty(column.getName());
@@ -29,11 +36,6 @@ public final class ObservableColumn{
         });
     }
 
-    public void setName(String name) {
-        this.name.setValue(name);
-        column.setName(name);
-    }
-
     public SimpleBooleanProperty visibleProperty() {
         return visible;
     }
@@ -44,6 +46,11 @@ public final class ObservableColumn{
 
     public String getName() {
         return column.getName();
+    }
+
+    public void setName(String name) {
+        this.name.setValue(name);
+        column.setName(name);
     }
 
 }

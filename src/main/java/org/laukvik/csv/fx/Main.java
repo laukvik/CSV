@@ -49,16 +49,17 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static org.laukvik.csv.fx.Builder.createAllObservableList;
+import static org.laukvik.csv.fx.Builder.createFrequencyDistributionObservableList;
 import static org.laukvik.csv.fx.Builder.createResultsColumns;
 import static org.laukvik.csv.fx.Builder.createResultsRows;
-import static org.laukvik.csv.fx.Builder.createUniqueObservableList;
 import static org.laukvik.csv.fx.Builder.getPercentSize;
 import static org.laukvik.csv.fx.Builder.getSeparatorCharByString;
 import static org.laukvik.csv.fx.Builder.getSeparatorString;
 import static org.laukvik.csv.fx.Builder.toKb;
 
-
 /**
+ * The JavaFX desktop application for opening and displaying the data sets.
+ *
  * @author Morten Laukvik
  */
 public class Main extends Application implements ChangeListener, FileListener {
@@ -67,7 +68,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     private CSV csv;
     private Stage stage;
     private ColumnsTableView columnsTableView;
-    private UniqueTableView uniqueTableView;
+    private FrequencyDistributionTableView frequencyDistributionTableView;
     private ResultsTableView resultsTableView;
     private Label rowsLabel;
     private Label colsLabel;
@@ -98,14 +99,14 @@ public class Main extends Application implements ChangeListener, FileListener {
     public void start(final Stage primaryStage ) throws Exception {
         this.stage = primaryStage;
         columnsTableView = new ColumnsTableView();
-        uniqueTableView = new UniqueTableView();
+        frequencyDistributionTableView = new FrequencyDistributionTableView();
         resultsTableView = new ResultsTableView();
 
         final ScrollPane columnsScroll = new ScrollPane(columnsTableView);
         columnsScroll.setFitToHeight(true);
         columnsScroll.setFitToWidth(true);
 
-        final ScrollPane uniqueScroll = new ScrollPane(uniqueTableView);
+        final ScrollPane uniqueScroll = new ScrollPane(frequencyDistributionTableView);
         uniqueScroll.setFitToHeight(true);
         uniqueScroll.setFitToWidth(true);
 
@@ -172,7 +173,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     private void setSelectedColumnIndex(int selectedColumnIndex){
         if (selectedColumnIndex > -1){
-            uniqueTableView.setItems(createUniqueObservableList(selectedColumnIndex, csv));
+            frequencyDistributionTableView.setItems(createFrequencyDistributionObservableList(selectedColumnIndex, csv));
         }
     }
 
@@ -246,7 +247,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         csv.addChangeListener(this);
         csv.addFileListener(this);
         columnsTableView.setItems(FXCollections.observableArrayList());
-        uniqueTableView.setItems(FXCollections.observableArrayList());
+        frequencyDistributionTableView.setItems(FXCollections.observableArrayList());
         resultsTableView.clearRows();
         updateToolbar();
     }
@@ -380,13 +381,13 @@ public class Main extends Application implements ChangeListener, FileListener {
             handleDeleteRow(resultsTableView.getSelectionModel().getSelectedIndex());
         } else if (owner == columnsTableView){
             handleDeleteColumn(columnsTableView.getSelectionModel().getSelectedIndex());
-        } else if (owner == uniqueTableView){
-            handleDeleteUnique(uniqueTableView.getSelectionModel().getSelectedIndex());
+        } else if (owner == frequencyDistributionTableView) {
+            handleDeleteUnique(frequencyDistributionTableView.getSelectionModel().getSelectedIndex());
         }
     }
 
     private void handleDeleteUnique(int columnIndex){
-        ObservableUnique u = uniqueTableView.getItems().get(columnIndex);
+        ObservableFrequencyDistribution u = frequencyDistributionTableView.getItems().get(columnIndex);
     }
 
     private void handleDeleteColumn(int columnIndex){

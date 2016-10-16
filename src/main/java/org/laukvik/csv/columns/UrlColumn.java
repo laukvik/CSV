@@ -18,9 +18,16 @@ package org.laukvik.csv.columns;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-
+/**
+ * Column with URL as the data type
+ */
 public class UrlColumn extends Column<URL> {
 
+    /**
+     * Column with URL as the data type
+     *
+     * @param name the name of the column
+     */
     public UrlColumn(String name) {
         super(name);
     }

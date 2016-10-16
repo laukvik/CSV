@@ -26,17 +26,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * OutputStream for writing CSV data
+ * Writes the data set in the CSV format.
  *
- *
- * @author Morten Laukvik
+ * @see <a href="https://tools.ietf.org/html/rfc4180">Common Format and MIME Type for Comma-Separated Values (CSV) Files</a>
+ * @see <a href="https://en.wikipedia.org/wiki/Comma-separated_values">Comma Separated Values (wikipedia)</a>
  */
 public final class CsvWriter implements Writeable, AutoCloseable {
 
     private final OutputStream out;
 
-    public CsvWriter(final OutputStream out) throws IOException {
-        this.out = out;
+    /**
+     * Writes the data set in the CSV format to the outputStream
+     *
+     * @param outputStream the outputstream
+     * @throws IOException when the data could not be written
+     */
+    public CsvWriter(final OutputStream outputStream) throws IOException {
+        this.out = outputStream;
     }
 
     public static boolean isDigitsOnly(String value) {
@@ -53,7 +59,7 @@ public final class CsvWriter implements Writeable, AutoCloseable {
     }
 
     @Override
-    public void writeFile(final CSV csv) throws IOException {
+    public void writeCSV(final CSV csv) throws IOException {
         BOM bom = csv.getMetaData().getBOM();
         if (bom != null){
             out.write(bom.getBytes());
@@ -111,7 +117,7 @@ public final class CsvWriter implements Writeable, AutoCloseable {
                 for (int n = 0; n < column.length(); n++) {
                     char ch = column.charAt(n);
                     if (ch == CSV.DOUBLE_QUOTE) {
-                        /* Encode quotes - writeFile an extra quote */
+                        /* Encode quotes - writeCSV an extra quote */
                         out.write(CSV.DOUBLE_QUOTE);
                     }
                     out.write(ch);

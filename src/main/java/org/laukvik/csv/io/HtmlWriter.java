@@ -23,17 +23,24 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
-
+/**
+ * Writes the data set in the HTML format.
+ *
+ * @see <a href="https://en.wikipedia.org/wiki/HTML">HTML (wikipedia)</a>
+ */
 public class HtmlWriter implements Writeable, AutoCloseable {
 
     private final OutputStream out;
 
-    public HtmlWriter(OutputStream out){
-        this.out = out;
+    /**
+     * @param outputStream
+     */
+    public HtmlWriter(OutputStream outputStream) {
+        this.out = outputStream;
     }
 
     @Override
-    public void writeFile(CSV csv) throws IOException {
+    public void writeCSV(CSV csv) throws IOException {
         Charset charset = csv.getMetaData().getCharset();
 
         out.write("<html>\n".getBytes());

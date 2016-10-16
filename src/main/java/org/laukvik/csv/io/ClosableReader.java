@@ -4,11 +4,11 @@ import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 
 /**
- * An interface for reading data sets into the CSV format
+ * An interface for reading data sets which is autoClosable.
  *
  * @author Morten Laukvik
  */
-public interface AbstractReader extends AutoCloseable, Readable{
+public interface ClosableReader extends AutoCloseable, Readable {
 
     MetaData getMetaData();
     boolean hasNext();

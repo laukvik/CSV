@@ -9,13 +9,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.util.ResourceBundle;
 
 /**
- * JavaFX table which contains a unique list of values and the amount of instance pr item in the list.
+ * JavaFX table which contains a Frequency distribution table of values and the amount of instance pr item in the list.
  *
  * @author Morten Laukvik
  */
-class UniqueTableView extends TableView<ObservableUnique> {
+class FrequencyDistributionTableView extends TableView<ObservableFrequencyDistribution> {
 
-    public UniqueTableView() {
+    public FrequencyDistributionTableView() {
         super();
         ResourceBundle bundle = Builder.getBundle();
         setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -27,19 +27,19 @@ class UniqueTableView extends TableView<ObservableUnique> {
         selectUniqueColumn.setMinWidth(32);
         selectUniqueColumn.setMaxWidth(32);
         selectUniqueColumn.setCellValueFactory(
-                new PropertyValueFactory<ObservableUnique,Boolean>("selected")
+                new PropertyValueFactory<ObservableFrequencyDistribution, Boolean>("selected")
         );
         selectUniqueColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectUniqueColumn));
         selectUniqueColumn.setEditable(true);
         getColumns().add(selectUniqueColumn);
         final TableColumn valueUniqueColumn = new TableColumn(bundle.getString("table.unique.values"));
         valueUniqueColumn.setCellValueFactory(
-                new PropertyValueFactory<ObservableUnique,String>("value")
+                new PropertyValueFactory<ObservableFrequencyDistribution, String>("value")
         );
         getColumns().add(valueUniqueColumn);
         final TableColumn countUniqueColumn = new TableColumn("");
         countUniqueColumn.setCellValueFactory(
-                new PropertyValueFactory<ObservableUnique,Integer>("count")
+                new PropertyValueFactory<ObservableFrequencyDistribution, Integer>("count")
         );
         countUniqueColumn.setStyle("-fx-alignment: CENTER_RIGHT");
         countUniqueColumn.setMinWidth(32);

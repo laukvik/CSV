@@ -21,8 +21,8 @@ import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.io.AbstractReader;
 import org.laukvik.csv.io.BOM;
+import org.laukvik.csv.io.ClosableReader;
 import org.laukvik.csv.io.CsvReader;
 import org.laukvik.csv.io.CsvWriter;
 import org.laukvik.csv.io.HtmlWriter;
@@ -380,7 +380,7 @@ public final class CSV implements Serializable {
      * @param charset
      * @param reader
      */
-    private void readFile(final File file, final Charset charset, final AbstractReader reader) {
+    private void readFile(final File file, final Charset charset, final ClosableReader reader) {
         this.file = file;
         this.query = null;
         this.rows = new ArrayList<>();
@@ -470,7 +470,7 @@ public final class CSV implements Serializable {
      * @throws Exception
      */
     private void write(final Writeable writer) throws Exception {
-        writer.writeFile(this);
+        writer.writeCSV(this);
     }
 
     /**

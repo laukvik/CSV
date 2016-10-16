@@ -21,21 +21,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Reads a data set in the CSV format
  *
  * @author Morten Laukvik
  */
-public class CsvReader implements AbstractReader {
+public class CsvReader implements ClosableReader {
 
     private final BufferedReader reader;
+    private final MetaData metaData;
+    private final Character quoteChar;
     private boolean autoDetectColumnSeparator;
     private int bytesRead;
     private int lineCounter;
-    private final MetaData metaData;
     private Row row;
     private Character columnSeparatorChar;
-    private final Character quoteChar;
 
+    /**
+     * Reads CSV from the specified reader using the separator and quote characters.
+     *
+     * @param reader    the reader
+     * @param separator the separator character
+     * @param quote     the quote character
+     * @throws IOException when the CSV could not be fully read
+     */
     public CsvReader(final BufferedReader reader, final Character separator, final Character quote) throws IOException {
         this.autoDetectColumnSeparator = (separator == null);
         if (separator != null) {
@@ -54,15 +62,21 @@ public class CsvReader implements AbstractReader {
         this.metaData.setQuoteChar(this.quoteChar);
     }
 
+    /**
+     * Reads CSV from the specified reader using default settings
+     *
+     * @param reader the reader
+     * @throws IOException when the CSV could not be fully read
+     */
     public CsvReader(final BufferedReader reader) throws IOException {
         this(reader, null, null);
     }
 
     /**
-     * Parses one row of data
+     * Parses one row of CSV data
      *
-     * @return
-     * @throws IOException
+     * @return a list of strings
+     * @throws IOException when the row could not be read
      */
     private List<String> parseRow() throws IOException {
         List<String> values = new ArrayList<>();

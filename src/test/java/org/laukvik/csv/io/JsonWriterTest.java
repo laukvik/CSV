@@ -39,7 +39,7 @@ public class JsonWriterTest {
         csv.addRow().update(first, " ");
 
         JsonWriter writer = new JsonWriter(new FileOutputStream(file));
-        writer.writeFile(csv);
+        writer.writeCSV(csv);
 
 //        JSONParser parser = new JSONParser( csv );
 //
@@ -59,7 +59,7 @@ public class JsonWriterTest {
         csv.addColumn("Last");
 
         JsonWriter writer = new JsonWriter(new FileOutputStream(file));
-        writer.writeFile(csv);
+        writer.writeCSV(csv);
 
     }
 
@@ -75,7 +75,7 @@ public class JsonWriterTest {
         csv.addRow().update(first, "Morten").update(last, "Laukvik");
 
         JsonWriter writer = new JsonWriter(new FileOutputStream(file));
-        writer.writeFile(csv);
+        writer.writeCSV(csv);
     }
 
 }

@@ -20,7 +20,7 @@ import org.laukvik.csv.CSV;
 import java.io.IOException;
 
 /**
- * An interface for writing CSV
+ * An interface for writing data sets
  *
  */
 public interface Writeable {
@@ -31,6 +31,6 @@ public interface Writeable {
      * @param csv the CSV to write
      * @throws IOException when the CSV could not be written
      */
-    void writeFile(CSV csv) throws IOException;
+    void writeCSV(CSV csv) throws IOException;
 
 }

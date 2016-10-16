@@ -24,10 +24,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Writes CSV using the JSON format.
+ * Writes the data set in the JSON format.
  *
- * @link https://en.wikipedia.org/wiki/JSON
- * @author Morten Laukvik
+ * @see <a href="https://en.wikipedia.org/wiki/JSON">JSON (wikipedia)</a>
  */
 public final class JsonWriter implements Writeable {
 
@@ -49,7 +48,7 @@ public final class JsonWriter implements Writeable {
     }
 
     @Override
-    public void writeFile(final CSV csv) throws IOException {
+    public void writeCSV(final CSV csv) throws IOException {
         MetaData md = csv.getMetaData();
         out.write(BRACKET_LEFT);
         out.write(LINEFEED);

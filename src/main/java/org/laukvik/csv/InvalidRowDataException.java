@@ -15,20 +15,32 @@
  */
 package org.laukvik.csv;
 
-
+/**
+ * Indicates that the row does not have the required amount of columns.
+ */
 public class InvalidRowDataException extends ParseException {
 
     private final Row row;
 
-    public InvalidRowDataException(int foundColumns, int requiredColumns, int rowIndex, Row row) {
-        super("Invalid columns " + requiredColumns + " found " + foundColumns + " at row " + rowIndex);
+    /**
+     * Indicates that the row does not have the required amount of columns.
+     *
+     * @param columns  the amount of columns
+     * @param required the required amount of columns
+     * @param rowIndex the index for the row
+     * @param row      the row
+     */
+    public InvalidRowDataException(int columns, int required, int rowIndex, Row row) {
+        super("Invalid columns " + required + " found " + columns + " at row " + rowIndex);
         this.row = row;
     }
 
+    /**
+     * Returns the row
+     * @return the row
+     */
     public Row getRow() {
         return row;
     }
-
-
 
 }

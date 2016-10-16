@@ -17,20 +17,16 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.columns.Column;
 
-
+/**
+ * Sorts a data set using the specified column and sort order
+ */
 public class SortOrder {
-
-    private final Column column;
-    private final Type type;
-
-    public enum Type {
-
-        ASC, DESC, NONE
-    }
 
     public final static Type ASC = Type.ASC;
     public final static Type DESC = Type.DESC;
     public final static Type NONE = Type.NONE;
+    private final Column column;
+    private final Type type;
 
     public SortOrder(Column column, Type type) {
         this.column = column;
@@ -43,6 +39,11 @@ public class SortOrder {
 
     public Type getType() {
         return type;
+    }
+
+    public enum Type {
+
+        ASC, DESC, NONE
     }
 
 }

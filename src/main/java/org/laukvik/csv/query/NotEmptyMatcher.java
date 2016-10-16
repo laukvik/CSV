@@ -18,7 +18,9 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
-
+/**
+ * Compares a Column to be not empty
+ */
 public class NotEmptyMatcher extends RowMatcher {
 
     private final Column column;
@@ -29,7 +31,7 @@ public class NotEmptyMatcher extends RowMatcher {
     }
 
     @Override
-    public boolean mathes(Row row) {
+    public boolean matches(Row row) {
         return !row.isNull(column);
     }
 

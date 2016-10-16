@@ -22,12 +22,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-
+/**
+ * Column with Date as the data type
+ */
 public class DateColumn extends Column<Date> {
 
     private final DateFormat dateFormat;
     private final String format;
 
+    /**
+     * Column with Date as the data type
+     *
+     * @param name the name of the column
+     */
     public DateColumn(String name, String format) {
         super(name);
         this.format = format;

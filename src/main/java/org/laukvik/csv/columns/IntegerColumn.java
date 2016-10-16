@@ -15,9 +15,16 @@
  */
 package org.laukvik.csv.columns;
 
-
+/**
+ * Column with Integer as the data type
+ */
 public class IntegerColumn extends Column<Integer> {
 
+    /**
+     * Column with Integer as the data type
+     *
+     * @param name the name of the column
+     */
     public IntegerColumn(String name) {
         super(name);
     }

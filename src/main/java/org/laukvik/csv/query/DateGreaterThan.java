@@ -21,13 +21,22 @@ import org.laukvik.csv.columns.DateColumn;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+/**
+ * Compares a DateColumn to be greater than a date
+ */
 public class DateGreaterThan extends RowMatcher {
 
     private final Date value;
     private final SimpleDateFormat format;
     private final DateColumn column;
 
+    /**
+     * Compares a DateColumn to specified Date
+     *
+     * @param column
+     * @param value
+     * @param format
+     */
     public DateGreaterThan(DateColumn column, Date value, SimpleDateFormat format) {
         super();
         this.column = column;
@@ -36,7 +45,7 @@ public class DateGreaterThan extends RowMatcher {
     }
 
     @Override
-    public boolean mathes(Row row) {
+    public boolean matches(Row row) {
         Date d = row.getDate(column);
         return d != null && d.compareTo(value) > 0;
 

@@ -18,22 +18,32 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 
-
+/**
+ * Compares a StringColumn to have one or more of the specified values
+ */
 public class StringInMatcher extends RowMatcher {
 
-    private final String value;
+    private final String[] value;
     private final StringColumn column;
 
-    public StringInMatcher(StringColumn column, String value) {
+    public StringInMatcher(StringColumn column, String... value) {
         super();
         this.column = column;
         this.value = value;
     }
 
     @Override
-    public boolean mathes(Row row) {
-        String v = row.getString(column);
-        return v != null && v.equalsIgnoreCase(value);
+    public boolean matches(Row row) {
+        String val = row.getString(column);
+        if (val == null) {
+            return false;
+        }
+        for (String v : value) {
+            if (val.equalsIgnoreCase(v)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

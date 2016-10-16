@@ -25,7 +25,7 @@ import java.util.Arrays;
 /**
  * Constants indicating encoding used in text file.
  *
- * @link https://en.wikipedia.org/wiki/Byte_order_mark
+ * @see <a href="https://en.wikipedia.org/wiki/Byte_order_mark">Byte Order Mark (wikipedia)</a>
  * @author Morten Laukvik
  */
 public enum BOM {

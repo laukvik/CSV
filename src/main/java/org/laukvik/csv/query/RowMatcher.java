@@ -17,8 +17,11 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
 
+/**
+ * An interface for excluding rows that doesn't matches the criteria.
+ */
 abstract class RowMatcher {
 
-    public abstract boolean mathes(Row row);
+    public abstract boolean matches(Row row);
 
 }

@@ -5,17 +5,23 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
+ * A JavaFX data model for FrequencyDistribution.
+ *
  * @author Morten Laukvik
  */
 @SuppressWarnings("WeakerAccess")
-public final class ObservableUnique {
+public final class ObservableFrequencyDistribution {
 
     private final SimpleBooleanProperty selected;
     private final SimpleStringProperty value;
     private final SimpleIntegerProperty count;
 
-
-    public ObservableUnique(boolean selected, String value, int count) {
+    /**
+     * @param selected
+     * @param value
+     * @param count
+     */
+    public ObservableFrequencyDistribution(boolean selected, String value, int count) {
         this.selected = new SimpleBooleanProperty(selected);
         this.value = new SimpleStringProperty(value);
         this.count = new SimpleIntegerProperty(count);

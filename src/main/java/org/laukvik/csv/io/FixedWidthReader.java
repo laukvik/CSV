@@ -7,14 +7,22 @@ import org.laukvik.csv.columns.StringColumn;
 import java.io.BufferedReader;
 
 /**
+ * Reads a data set using fixed width columns.
+ *
  * @author Morten Laukvik
  */
-public class DataReader implements AbstractReader {
+public class FixedWidthReader implements ClosableReader {
 
     private final int[] columnWidths;
     private final MetaData metaData;
 
-    public DataReader(final BufferedReader reader, int... columnWidths) {
+    /**
+     * Reads CSV data from the reader with the specified columns
+     *
+     * @param reader       the reader
+     * @param columnWidths the width of each column
+     */
+    public FixedWidthReader(final BufferedReader reader, int... columnWidths) {
         this.columnWidths = columnWidths;
         this.metaData = new MetaData();
         for (int x = 0; x < columnWidths.length; x++) {

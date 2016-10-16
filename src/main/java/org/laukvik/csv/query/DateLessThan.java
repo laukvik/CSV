@@ -21,7 +21,9 @@ import org.laukvik.csv.columns.DateColumn;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+/**
+ * Compares a DateColumn to be less than a date
+ */
 public class DateLessThan extends RowMatcher {
 
     private final Date value;
@@ -36,7 +38,7 @@ public class DateLessThan extends RowMatcher {
     }
 
     @Override
-    public boolean mathes(Row row) {
+    public boolean matches(Row row) {
         Date d = row.getDate(column);
         return d != null && d.compareTo(value) < 0;
 //        Date d = row.getDate(columnIndex, format);

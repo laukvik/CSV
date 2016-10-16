@@ -15,13 +15,16 @@
  */
 package org.laukvik.csv.query;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
+/**
+ * Compares a DateColumn to specified Date
+ */
 public class DateIsMatcher extends RowMatcher {
 
     private final Date value;
@@ -34,7 +37,7 @@ public class DateIsMatcher extends RowMatcher {
     }
 
     @Override
-    public boolean mathes(Row row) {
+    public boolean matches(Row row) {
         Date d = row.getDate(column);
         if (d == null) {
             return false;

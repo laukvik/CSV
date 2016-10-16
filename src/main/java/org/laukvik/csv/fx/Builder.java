@@ -49,11 +49,11 @@ class Builder {
         return FXCollections.observableArrayList( list );
     }
 
-    public static ObservableList<ObservableUnique> createUniqueObservableList(int columnIndex, CSV csv){
-        List<ObservableUnique> list = new ArrayList<>();
+    public static ObservableList<ObservableFrequencyDistribution> createFrequencyDistributionObservableList(int columnIndex, CSV csv) {
+        List<ObservableFrequencyDistribution> list = new ArrayList<>();
         FrequencyDistribution d = csv.buildFrequencyDistribution(columnIndex);
         for (String key :d.getKeys()){
-            list.add(new ObservableUnique(false,key,d.getCount(key)));
+            list.add(new ObservableFrequencyDistribution(false, key, d.getCount(key)));
         }
         return FXCollections.observableArrayList( list );
     }

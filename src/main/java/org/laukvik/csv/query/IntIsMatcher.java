@@ -18,7 +18,9 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
 
-
+/**
+ * Compares a IntegerColumn to be equal to a value
+ */
 public class IntIsMatcher extends RowMatcher {
 
     private final int value;
@@ -31,7 +33,7 @@ public class IntIsMatcher extends RowMatcher {
     }
 
     @Override
-    public boolean mathes(Row row) {
+    public boolean matches(Row row) {
         Integer i = row.getInteger(column);
         return i != null && value == i;
     }

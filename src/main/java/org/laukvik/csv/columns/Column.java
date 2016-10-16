@@ -25,7 +25,7 @@ import java.util.List;
  * An abstract class for Columns
  *
  * @author Morten Laukvik
- * @param <T>
+ * @param <T> the data type of Column
  */
 public abstract class Column<T> implements Comparable {
 

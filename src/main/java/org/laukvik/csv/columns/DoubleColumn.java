@@ -15,8 +15,16 @@
  */
 package org.laukvik.csv.columns;
 
+/**
+ * Column with Double as the data type
+ */
 public class DoubleColumn extends Column<Double> {
 
+    /**
+     * Column with Double as the data type
+     *
+     * @param name the name of the column
+     */
     public DoubleColumn(String name) {
         super(name);
     }

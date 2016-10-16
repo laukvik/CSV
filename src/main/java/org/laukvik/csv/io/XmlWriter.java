@@ -23,7 +23,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
-
+/**
+ * Writes the data set in the XML format.
+ *
+ * @see <a href="https://en.wikipedia.org/wiki/XML">XML (wikipedia)</a>
+ */
 public class XmlWriter implements Writeable {
 
     private final static char OPEN = '<';
@@ -42,18 +46,29 @@ public class XmlWriter implements Writeable {
     private final String rootElementName;
     private final String rowElementName;
 
-    public XmlWriter(OutputStream out, String rootName, String rowName){
-        this.out = out;
-        this.rootElementName = rootName;
-        this.rowElementName = rowName;
+    /**
+     * Writes the CSV to the outputStream using the specified rootElementName and rowElementName
+     *
+     * @param outputStream    the outputStream
+     * @param rootElementName the name of the root element in XML
+     * @param rowElementName  the name of the element representing a row
+     */
+    public XmlWriter(OutputStream outputStream, String rootElementName, String rowElementName) {
+        this.out = outputStream;
+        this.rootElementName = rootElementName;
+        this.rowElementName = rowElementName;
     }
 
+    /**
+     * Writes the CSV to the outputStream using the default values for rootElementName and rowElementName
+     *
+     */
     public XmlWriter(OutputStream out){
         this(out, "rows", "row");
     }
 
     @Override
-    public void writeFile(CSV csv) throws IOException {
+    public void writeCSV(CSV csv) throws IOException {
         Charset charset = csv.getMetaData().getCharset();
         out.write(("<?xml version=\"1.0\" encoding=\"" + charset.name() + "\"?>").getBytes());
 

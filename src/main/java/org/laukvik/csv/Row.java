@@ -33,16 +33,19 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 /**
- *
+ * Represents a single Row in a CSV data set.
  *
  * @author Morten Laukvik
  */
 public class Row implements Serializable {
 
-    private CSV csv;
     private final Map<Column, Object> map;
     private final long timestamp;
+    private CSV csv;
 
+    /**
+     * Creates
+     */
     public Row() {
         timestamp = System.nanoTime();
         this.map = new TreeMap<>();

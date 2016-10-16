@@ -21,9 +21,9 @@ import org.laukvik.csv.Row;
 import java.util.Iterator;
 
 /**
- * An iterator for reading data sets.
+ * An interface for reading data sets
  */
-interface Readable extends Iterator<Row> {
+public interface Readable extends Iterator<Row> {
 
     /**
      * Returns the MetaData

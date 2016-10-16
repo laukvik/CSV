@@ -17,9 +17,16 @@ package org.laukvik.csv.columns;
 
 import java.util.Arrays;
 
-
+/**
+ * Column with byte array as the data type
+ */
 public class ByteColumn extends Column<byte[]> {
 
+    /**
+     * Column with byte array as the data type
+     *
+     * @param name the name of the column
+     */
     public ByteColumn(String name) {
         super(name);
     }

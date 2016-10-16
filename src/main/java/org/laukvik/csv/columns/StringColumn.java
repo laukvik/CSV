@@ -15,10 +15,18 @@
  */
 package org.laukvik.csv.columns;
 
+/**
+ * Column with String as the data type
+ */
 public class StringColumn extends Column<String> {
 
     private int size;
 
+    /**
+     * Column with String as the data type
+     *
+     * @param name the name of the column
+     */
     public StringColumn(String name) {
         super(name);
     }

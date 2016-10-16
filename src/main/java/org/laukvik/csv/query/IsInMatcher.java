@@ -19,10 +19,9 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
 /**
+ * Compares a Column to be in an array of objects
  *
- *
- * @author Morten Laukvik
- * @param <T>
+ * @param <T> the type of object
  */
 public class IsInMatcher<T> extends RowMatcher {
 
@@ -39,7 +38,7 @@ public class IsInMatcher<T> extends RowMatcher {
     }
 
     @Override
-    public boolean mathes(Row row) {
+    public boolean matches(Row row) {
 
 //        Object o = row.get(column);
 //        if (o == null) {

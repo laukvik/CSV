@@ -15,9 +15,16 @@
  */
 package org.laukvik.csv.columns;
 
-
+/**
+ * Column with Float as the data type
+ */
 public class FloatColumn extends Column<Float> {
 
+    /**
+     * Column with Float as the data type
+     *
+     * @param name the name of the column
+     */
     public FloatColumn(String name) {
         super(name);
     }

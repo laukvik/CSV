@@ -18,7 +18,9 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
 
-
+/**
+ * Compares a IntegerColumn to be between to values
+ */
 public class IntBetween extends RowMatcher {
 
     private final int min;
@@ -33,7 +35,7 @@ public class IntBetween extends RowMatcher {
     }
 
     @Override
-    public boolean mathes(Row row) {
+    public boolean matches(Row row) {
         Integer value = row.getInteger(column);
         return value != null && value >= min && value <= max;
     }

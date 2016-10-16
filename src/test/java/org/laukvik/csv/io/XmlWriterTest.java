@@ -46,7 +46,7 @@ public class XmlWriterTest {
         csv.addRow().update(first, "'");
 
         XmlWriter writer = new XmlWriter(new FileOutputStream(file));
-        writer.writeFile(csv);
+        writer.writeCSV(csv);
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -65,7 +65,7 @@ public class XmlWriterTest {
         csv.addRow().update(first, "Dylan");
 
         XmlWriter writer = new XmlWriter(new FileOutputStream(file), "people", "person");
-        writer.writeFile(csv);
+        writer.writeCSV(csv);
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
