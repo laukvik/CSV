@@ -630,4 +630,17 @@ public class Main extends Application implements ChangeListener, FileListener {
         alert.setContentText(bundle.getString("help.about.description"));
         alert.showAndWait();
     }
+
+    public void handleSaveAsAction() {
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(bundle.getString("dialog.file.saveas"));
+        final File selectedFile = fileChooser.showSaveDialog(stage);
+        if (selectedFile != null){
+            try {
+                csv.writeFile( selectedFile );
+            } catch (Exception e) {
+                alert(bundle.getString("file.export.html.failed"));
+            }
+        }
+    }
 }

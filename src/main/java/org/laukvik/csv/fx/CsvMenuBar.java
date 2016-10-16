@@ -53,6 +53,11 @@ class CsvMenuBar extends MenuBar {
         saveItem.setAccelerator(KeyCombination.keyCombination("Meta+s"));
         MenuItem saveAsItem = new MenuItem(bundle.getString("file.saveas"));
         saveAsItem.setAccelerator(KeyCombination.keyCombination("Meta+s+shift"));
+        saveAsItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handleSaveAsAction();
+            }
+        });
 
         MenuItem importItem = new MenuItem(bundle.getString("file.import"));
         importItem.setAccelerator(KeyCombination.keyCombination("Meta+i"));
