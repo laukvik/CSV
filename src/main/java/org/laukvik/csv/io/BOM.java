@@ -18,15 +18,14 @@ package org.laukvik.csv.io;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
 /**
- * Constants indicating encoding used in text file
+ * Constants indicating encoding used in text file.
  *
+ * @link https://en.wikipedia.org/wiki/Byte_order_mark
  * @author Morten Laukvik
  */
 public enum BOM {
@@ -45,15 +44,11 @@ public enum BOM {
         this.bytes = chars;
     }
 
-    public Charset getCharset() {
-        return Charset.forName(charset);
-    }
-
     /**
      * Detects any encoding from file using BOM
      *
-     * @param file
-     * @return
+     * @param file the file
+     * @return the BOM
      */
     public static BOM findBom(File file) {
         try (InputStream is = new FileInputStream(file)) {
@@ -81,6 +76,21 @@ public enum BOM {
         return null;
     }
 
+    /**
+     * Returns the Charset
+     *
+     * @return the Charset
+     */
+    public Charset getCharset() {
+        return Charset.forName(charset);
+    }
+
+    /**
+     * Returns whether the bytes matches the current
+     *
+     * @param bytes the bytes
+     * @return true if it matches
+     */
     public boolean is(final byte... bytes) {
         if (bytes.length < this.bytes.length){
             return false;
@@ -89,10 +99,11 @@ public enum BOM {
         return Arrays.equals( sameBytes, this.bytes);
     }
 
-    public void write(final OutputStream out) throws IOException {
-        out.write(getBytes());
-    }
-
+    /**
+     * Returns the bytes for this BOM
+     *
+     * @return the bytes
+     */
     public byte[] getBytes() {
         return bytes;
     }

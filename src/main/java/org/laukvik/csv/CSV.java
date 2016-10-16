@@ -72,16 +72,15 @@ public final class CSV implements Serializable {
 
     public final static char DOUBLE_QUOTE = 34;
     public final static char SINGLE_QUOTE = 39;
-
+    private final List<ChangeListener> changeListeners;
+    private final List<FileListener> fileListeners;
     private MetaData metaData;
     private List<Row> rows;
     private Query query;
-    private final List<ChangeListener> changeListeners;
-    private final List<FileListener> fileListeners;
     private File file;
 
     /**
-     *
+     * Opens an empty file.
      */
     public CSV() {
         metaData = new MetaData();
@@ -92,7 +91,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Opens the specified CSV file
+     * Opens the specified CSV file and parses it
      *
      * @param file the file to open
      * @throws IOException when the file could not be read
@@ -109,6 +108,18 @@ public final class CSV implements Serializable {
      */
     public static char[] listSupportedSeparatorChars() {
         return new char []{COMMA,SEMICOLON,PIPE,TAB};
+    }
+
+    /**
+     * Looks for a BOM in a file and returns its Charsets or returns the
+     * System charset.
+     *
+     * @param file the file to analyze
+     * @return the Charset
+     */
+    private static Charset findCharsetByBOM(final File file) {
+        BOM bom = BOM.findBom(file);
+        return bom == null ? Charset.defaultCharset() : bom.getCharset();
     }
 
     /**
@@ -350,7 +361,6 @@ public final class CSV implements Serializable {
         getMetaData().removeColumn(column);
     }
 
-
     /**
      * Removes all rows within the specified range
      *
@@ -385,18 +395,6 @@ public final class CSV implements Serializable {
             addRow(reader.getRow());
         }
         fireFinishRead(file);
-    }
-
-    /**
-     * Looks for a BOM in a file and returns its Charsets or returns the
-     * System charset.
-     *
-     * @param file the file to analyze
-     * @return the Charset
-     */
-    private static Charset findCharsetByBOM(final File file){
-            BOM bom = BOM.findBom(file);
-        return bom == null ? Charset.defaultCharset() : bom.getCharset();
     }
 
     /**
@@ -473,7 +471,6 @@ public final class CSV implements Serializable {
      */
     private void write(final Writeable writer) throws Exception {
         writer.writeFile(this);
-        writer.close();
     }
 
     /**

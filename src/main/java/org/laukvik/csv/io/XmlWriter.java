@@ -24,7 +24,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 
-public class XmlWriter implements Writeable, AutoCloseable {
+public class XmlWriter implements Writeable {
 
     private final static char OPEN = '<';
     private final static char CLOSE = '>';
@@ -111,12 +111,6 @@ public class XmlWriter implements Writeable, AutoCloseable {
         out.write(SLASH);
         out.write(this.rootElementName.getBytes());
         out.write(CLOSE);
-        out.flush();
-
-    }
-
-    @Override
-    public void close() throws Exception {
         out.flush();
         out.close();
     }

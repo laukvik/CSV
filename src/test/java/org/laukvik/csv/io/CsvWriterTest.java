@@ -47,8 +47,7 @@ public class CsvWriterTest {
             w.writeMetaData(csv.getMetaData());
             w.writeRow(new Row().update(first, "Bill").update(last, "Gates"), csv.getMetaData());
             w.writeRow(new Row().update(first, "Steve").update(last, "Jobs"), csv.getMetaData());
-        }
-        catch (IOException e) {
+        } catch (Exception e) {
             fail("Failed to writeFile CSV file!");
         }
 

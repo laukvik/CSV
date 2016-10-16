@@ -31,12 +31,25 @@ import java.util.List;
  *
  * @author Morten Laukvik
  */
-public final class CsvWriter implements Writeable {
+public final class CsvWriter implements Writeable, AutoCloseable {
 
     private final OutputStream out;
 
     public CsvWriter(final OutputStream out) throws IOException {
         this.out = out;
+    }
+
+    public static boolean isDigitsOnly(String value) {
+        if (value == null) {
+            return false;
+        }
+        for (int x = 0; x < value.length(); x++) {
+            char c = value.charAt(x);
+            if (c < '0' || c > '9') {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -68,19 +81,6 @@ public final class CsvWriter implements Writeable {
             values.add(row.getAsString(c));
         }
         writeValues(values);
-    }
-
-    public static boolean isDigitsOnly(String value) {
-        if (value == null) {
-            return false;
-        }
-        for (int x = 0; x < value.length(); x++) {
-            char c = value.charAt(x);
-            if (c < '0' || c > '9') {
-                return false;
-            }
-        }
-        return true;
     }
 
     public void writeMetaData(MetaData metaData) throws IOException {
@@ -124,9 +124,7 @@ public final class CsvWriter implements Writeable {
     }
 
     @Override
-    public void close() throws IOException {
-        out.flush();
+    public void close() throws Exception {
         out.close();
     }
-
 }

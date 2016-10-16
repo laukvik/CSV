@@ -20,6 +20,7 @@ import org.laukvik.csv.columns.Column;
 
 /**
  *
+ *
  * @author Morten Laukvik
  * @param <T>
  */

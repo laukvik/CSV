@@ -20,16 +20,16 @@ import org.laukvik.csv.CSV;
 import java.io.IOException;
 
 /**
- *
+ * An interface for writing CSV
  *
  */
-public interface Writeable extends AutoCloseable {
+public interface Writeable {
 
     /**
-     * Writes the contents to the specified File.
+     * Writes the contents of the CSV using a writer.
      *
-     * @param csv
-     * @throws IOException
+     * @param csv the CSV to write
+     * @throws IOException when the CSV could not be written
      */
     void writeFile(CSV csv) throws IOException;
 

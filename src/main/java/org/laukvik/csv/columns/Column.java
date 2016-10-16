@@ -43,121 +43,36 @@ public abstract class Column<T> implements Comparable {
         this.visible = true;
     }
 
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(final boolean visible) {
-        this.visible = visible;
-        fireColumnChanged();
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(final int width) {
-        this.width = width;
-        fireColumnChanged();
-    }
-
-    public abstract String asString(T value);
-
-    public abstract T parse(String value);
-
-    public abstract int compare(T one, T another);
-
-    public final void setName(String name) {
-        this.name = name;
-        fireColumnChanged();
-    }
-
-    public final String getName() {
-        return name;
-    }
-
-    public MetaData getMetaData() {
-        return metaData;
-    }
-
-    public void setMetaData(MetaData metaData) {
-        this.metaData = metaData;
-    }
-
-    public ForeignKey getForeignKey() {
-        return foreignKey;
-    }
-
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    void setForeignKey(ForeignKey foreignKey) {
-        this.foreignKey = foreignKey;
-    }
-
-    public boolean isAllowNulls() {
-        return allowNulls;
-    }
-
-    void setAllowNulls(boolean allowNulls) {
-        this.allowNulls = allowNulls;
-    }
-
-    public boolean isPrimaryKey() {
-        return primaryKey;
-    }
-
-    void setPrimaryKey(boolean primaryKey) {
-        this.primaryKey = primaryKey;
-    }
-
-    public int indexOf() {
-        return metaData.indexOf(this);
-    }
-
-    private void fireColumnChanged(){
-        metaData.fireColumnChanged( this );
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        if (o instanceof Column) {
-            Column c = (Column) o;
-            return getName().compareTo(c.getName());
-        }
-        return -1;
-    }
-
     /**
-     * "President(type=VARCHAR,primaryKey=true,increment=true,foreignKey=null)"
+     * Parses a column name with support for optional metadata about the column. The supported format of metadata is
+     * like this:
      *
-     * @param columnNameWithOptionalMetaData
-     * @return
+     * <pre>
+     * "President(type=VARCHAR,primaryKey=true,increment=true,foreignKey=null)"
+     * </pre>
+     *
+     * @param name the name
+     * @return the column
      */
-    public static Column parseName(String columnNameWithOptionalMetaData) {
+    public static Column parseName(String name) {
         /* Extract extra information about the column*/
         String columnName = null;
         // Variables for meta values
         List<String> keys = new ArrayList<>();
         List<String> values = new ArrayList<>();
         // Look for metadata in column headers
-        int firstIndex = columnNameWithOptionalMetaData.indexOf("(");
+        int firstIndex = name.indexOf("(");
         if (firstIndex == -1) {
             // No extra information
-            columnName = columnNameWithOptionalMetaData;
+            columnName = name;
         } else {
             // Found extra information
-            int lastIndex = columnNameWithOptionalMetaData.indexOf(")", firstIndex);
-            columnName = columnNameWithOptionalMetaData.substring(0, firstIndex);
+            int lastIndex = name.indexOf(")", firstIndex);
+            columnName = name.substring(0, firstIndex);
             if (lastIndex == -1) {
             } else {
                 // String with metadata
-                String extraDetails = columnNameWithOptionalMetaData.substring(firstIndex + 1, lastIndex);
+                String extraDetails = name.substring(firstIndex + 1, lastIndex);
 
                 String[] keyValues;
                 if (extraDetails.contains(",")) {
@@ -324,6 +239,116 @@ public abstract class Column<T> implements Comparable {
             }
         }
         return null;
+    }
+
+    /**
+     * Returns whether the column is visible
+     *
+     * @return the column is visible
+     */
+    public boolean isVisible() {
+        return visible;
+    }
+
+    /**
+     * Sets the visibility of the column
+     *
+     * @param visible the visibility
+     */
+    public void setVisible(final boolean visible) {
+        this.visible = visible;
+        fireColumnChanged();
+    }
+
+    /**
+     * Returns the width of the column in characters
+     *
+     * @return the width
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * Sets the width of the column
+     *
+     * @param width the width
+     */
+    public void setWidth(final int width) {
+        this.width = width;
+        fireColumnChanged();
+    }
+
+    public abstract String asString(T value);
+
+    public abstract T parse(String value);
+
+    public abstract int compare(T one, T another);
+
+    public final String getName() {
+        return name;
+    }
+
+    public final void setName(String name) {
+        this.name = name;
+        fireColumnChanged();
+    }
+
+    public MetaData getMetaData() {
+        return metaData;
+    }
+
+    public void setMetaData(MetaData metaData) {
+        this.metaData = metaData;
+    }
+
+    public ForeignKey getForeignKey() {
+        return foreignKey;
+    }
+
+    void setForeignKey(ForeignKey foreignKey) {
+        this.foreignKey = foreignKey;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public boolean isAllowNulls() {
+        return allowNulls;
+    }
+
+    void setAllowNulls(boolean allowNulls) {
+        this.allowNulls = allowNulls;
+    }
+
+    public boolean isPrimaryKey() {
+        return primaryKey;
+    }
+
+    void setPrimaryKey(boolean primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+
+    public int indexOf() {
+        return metaData.indexOf(this);
+    }
+
+    private void fireColumnChanged() {
+        metaData.fireColumnChanged(this);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof Column) {
+            Column c = (Column) o;
+            return getName().compareTo(c.getName());
+        }
+        return -1;
     }
 
 }

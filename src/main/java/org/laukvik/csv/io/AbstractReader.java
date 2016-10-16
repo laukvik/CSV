@@ -4,6 +4,7 @@ import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 
 /**
+ * An interface for reading data sets into the CSV format
  *
  * @author Morten Laukvik
  */

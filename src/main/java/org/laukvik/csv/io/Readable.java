@@ -20,10 +20,23 @@ import org.laukvik.csv.Row;
 
 import java.util.Iterator;
 
+/**
+ * An iterator for reading data sets.
+ */
 interface Readable extends Iterator<Row> {
 
+    /**
+     * Returns the MetaData
+     *
+     * @return the MetaData
+     */
     MetaData getMetaData();
 
+    /**
+     * The current row
+     *
+     * @return the row
+     */
     Row getRow();
 
 }

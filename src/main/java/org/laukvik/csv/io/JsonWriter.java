@@ -22,18 +22,14 @@ import org.laukvik.csv.columns.Column;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
+ * Writes CSV using the JSON format.
  *
- *
+ * @link https://en.wikipedia.org/wiki/JSON
  * @author Morten Laukvik
  */
 public final class JsonWriter implements Writeable {
-
-    private final static Logger LOG = Logger.getLogger(JsonWriter.class.getName());
 
     private final static char CURLY_LEFT = '{';
     private final static char CURLY_RIGHT = '}';
@@ -54,13 +50,10 @@ public final class JsonWriter implements Writeable {
 
     @Override
     public void writeFile(final CSV csv) throws IOException {
-        Charset charset = csv.getMetaData().getCharset();
-        LOG.fine("Writing CSV to JSON.");
         MetaData md = csv.getMetaData();
         out.write(BRACKET_LEFT);
         out.write(LINEFEED);
         for (int y = 0; y < csv.getRowCount(); y++) {
-            LOG.log(Level.FINE, "Writing {0}/{1}", new Object[]{y + 1, csv.getRowCount()});
             if (y > 0) {
                 out.write(COMMA);
                 out.write(LINEFEED);
@@ -83,9 +76,7 @@ public final class JsonWriter implements Writeable {
                 out.write(SEMICOLON);
                 out.write(DOUBLE_QUOTE);
                 String s2 = row.getAsString(c);
-
                 writeString(s2, out);
-                //out.writeFile(row.getAsString(x).getBytes(charset));
                 out.write(DOUBLE_QUOTE);
             }
             out.write(LINEFEED);
@@ -95,8 +86,6 @@ public final class JsonWriter implements Writeable {
         out.write(LINEFEED);
         out.write(BRACKET_RIGHT);
         out.flush();
-
-        LOG.fine("Finished writing CSV to JSON.");
     }
 
     private void writeString(String s, OutputStream out) throws IOException {
@@ -105,7 +94,7 @@ public final class JsonWriter implements Writeable {
         } else {
             for (int z = 0; z < s.length(); z++) {
                 char c = s.charAt(z);
-                if (c == '"') {
+                if (c == DOUBLE_QUOTE) {
                     out.write('\\');
                     out.write(c);
                 } else {
@@ -114,12 +103,6 @@ public final class JsonWriter implements Writeable {
 
             }
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-        out.flush();
-        out.close();
     }
 
 }
