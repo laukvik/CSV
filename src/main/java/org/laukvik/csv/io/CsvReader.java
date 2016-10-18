@@ -16,6 +16,7 @@ import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -271,6 +272,11 @@ public class CsvReader implements ClosableReader {
     @Override
     public Row getRow() {
         return row;
+    }
+
+    @Override
+    public void readFile(final File file) {
+
     }
 
     @Override

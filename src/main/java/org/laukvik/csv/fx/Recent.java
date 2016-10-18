@@ -99,7 +99,7 @@ public final class Recent {
     }
 
     public void clear() {
-        csv.removeRowsBetween();
+        csv.removeRows();
     }
 
 }

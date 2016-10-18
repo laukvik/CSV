@@ -28,12 +28,15 @@ import org.laukvik.csv.io.CsvWriter;
 import org.laukvik.csv.io.HtmlWriter;
 import org.laukvik.csv.io.JavaReader;
 import org.laukvik.csv.io.JsonWriter;
+import org.laukvik.csv.io.Readable;
+import org.laukvik.csv.io.WordCountReader;
 import org.laukvik.csv.io.Writeable;
 import org.laukvik.csv.io.XmlWriter;
 import org.laukvik.csv.query.Query;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -246,11 +249,21 @@ public final class CSV implements Serializable {
      * Removes all rows.
      *
      */
-    public void removeRowsBetween() {
+    public void removeRows() {
         int count = rows.size();
         rows.clear();
         fireRowsRemoved(0, count);
     }
+
+    /**
+     * Removes all rows and columns.
+     *
+     */
+    public void clear(){
+        metaData = new MetaData();
+        rows.clear();
+    }
+
 
     /**
      * Adds the column
@@ -471,10 +484,33 @@ public final class CSV implements Serializable {
         while (reader.hasNext()){
             Row row = reader.next();
             addRow(row);
-        };
+        }
     }
 
+    public void readWordCountFile(final File file) throws FileNotFoundException {
+        readFile(new WordCountReader(), file);
+    }
 
+    /**
+     * Reads a data set using the specified Readable
+     *
+     * @param readable the readable
+     * @param file the file to read
+     * @throws FileNotFoundException when the file can't be found
+     */
+    public void readFile(final Readable readable, final File file ) throws FileNotFoundException{
+        fireBeginRead(file);
+        this.file = file;
+        rows.clear();
+        readable.readFile(file);
+        setMetaData(readable.getMetaData());
+        fireMetaDataRead();
+        while (readable.hasNext()){
+            Row row = readable.next();
+            addRow(row);
+        }
+        fireFinishRead(file);
+    }
 
     /**
      * Writes the contents to a file using the specified Writer.

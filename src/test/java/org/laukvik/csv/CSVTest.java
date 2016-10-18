@@ -366,4 +366,12 @@ public class CSVTest {
         assertEquals(2, rows.size());
     }
 
+    @Test
+    public void shouldReadWords() throws IOException {
+        CSV csv = new CSV();
+        csv.readWordCountFile( getResource("words.txt") );
+        assertEquals(2, csv.getMetaData().getColumnCount());
+        assertEquals(8, csv.getRowCount());
+    }
+
 }

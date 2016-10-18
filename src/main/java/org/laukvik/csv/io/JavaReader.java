@@ -14,6 +14,7 @@ import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -43,6 +44,7 @@ public class JavaReader<T> implements Readable {
         this.list = list;
         this.index = 0;
     }
+
 
     /**
      * Returns the appropriate column for the specified Field
@@ -142,6 +144,11 @@ public class JavaReader<T> implements Readable {
         return metaData;
     }
 
+
+    @Override
+    public void readFile(final File file) {
+
+    }
 
     @Override
     public MetaData getMetaData() {

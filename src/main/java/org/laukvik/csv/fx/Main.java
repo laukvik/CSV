@@ -45,6 +45,7 @@ import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.BOM;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -228,7 +229,12 @@ public class Main extends Application implements ChangeListener, FileListener {
         fileChooser.setTitle(bundle.getString("dialog.file.open"));
         final File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null){
-            loadFile(selectedFile, null, null);
+            System.out.println(selectedFile.getName() + " " + selectedFile.getName().endsWith(".txt"));
+            if (selectedFile.getName().endsWith(".txt")){
+                loadWordCountFile(selectedFile);
+            } else {
+                loadFile(selectedFile, null, null);
+            }
         }
     }
 
@@ -314,6 +320,19 @@ public class Main extends Application implements ChangeListener, FileListener {
                 menuBar.buildRecentList(recent);
             }
         } catch (IOException e) {
+            alert(e.getMessage());
+        }
+    }
+
+    public void loadWordCountFile(final File file) {
+        newFile();
+        try {
+            csv.readWordCountFile(file);
+            if (csv.getFile() != null){
+                recent.open(file);
+                menuBar.buildRecentList(recent);
+            }
+        } catch (FileNotFoundException e) {
             alert(e.getMessage());
         }
     }

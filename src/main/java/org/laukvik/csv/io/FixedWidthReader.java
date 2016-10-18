@@ -4,7 +4,7 @@ import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 
-import java.io.BufferedReader;
+import java.io.File;
 
 /**
  * Reads a data set using fixed width columns.
@@ -19,10 +19,9 @@ public class FixedWidthReader implements ClosableReader {
     /**
      * Reads CSV data from the reader with the specified columns
      *
-     * @param reader       the reader
      * @param columnWidths the width of each column
      */
-    public FixedWidthReader(final BufferedReader reader, int... columnWidths) {
+    public FixedWidthReader(int... columnWidths) {
         this.columnWidths = columnWidths;
         this.metaData = new MetaData();
         for (int x = 0; x < columnWidths.length; x++) {
@@ -30,6 +29,11 @@ public class FixedWidthReader implements ClosableReader {
             s.setSize(columnWidths[x]);
             this.metaData.addColumn(s);
         }
+    }
+
+    @Override
+    public void readFile(final File file) {
+
     }
 
     @Override
