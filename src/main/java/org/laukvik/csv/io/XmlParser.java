@@ -31,71 +31,40 @@ public class XmlParser {
     private final static char SPACE_SYMBOL = ' ';
     private StringBuilder text, tag, attr, value, close;
     private Mode mode;
-    private int index;
     private Tag root;
     private Tag current;
 
-    private void foundTag(StringBuilder value) {
-        if (value.charAt(0) == '/') {
-//            foundCloseTag(value);
+    private void foundTag(String value) {
+        if (!value.isEmpty() && value.charAt(0) == '/') {
             current = current.getParent();
-            index--;
         } else {
-            index++;
-            current = current.addTag(value.toString());
-//            found(value, "Tag");
+            current = current.addTag(value);
         }
     }
 
-    private void foundAttr(StringBuilder value) {
-        current.addAttribute(value.toString());
-//        found(value, "Attribute");
+    private void foundAttr(String value) {
+        current.addAttribute(value);
     }
 
-    private void foundValue(StringBuilder value) {
-        if (value.toString().trim().length() > 0) {
-            current.getAttributes().get(current.getAttributes().size() - 1).setValue(value.toString());
-
+    private void foundValue(String value) {
+        if (value.trim().length() > 0) {
+            current.getAttributes().get(current.getAttributes().size() - 1).setValue(value);
         }
-
-//        System.out.println(value.toString());
-//        found(value, "Value");
     }
 
-    private void foundText(StringBuilder value) {
-        if (value.toString().trim().length() > 0) {
-//            current.setText(value.toString());
+    private void foundText(String value) {
+        if (value.trim().length() > 0) {
             Tag t = new Tag("text");
-            t.setText(value.toString());
+            t.setText(value);
             current.addTag(t);
-//            found(value, "Text");
         }
     }
 
-    private void found(StringBuilder value, String type) {
-        for (int x = 0; x < index; x++) {
-            System.out.print("\t");
-        }
-//        System.out.format( "\t\t\t\tFound: %s  (%s) %n", value, type);
-        System.out.println(value);
-    }
-
-    private void log(char c) {
-//        System.out.format( "%s %s %n", mode, c);
-    }
-
-    private void print(int level, String value) {
-        for (int x = 0; x < index; x++) {
-            System.out.print("\t");
-        }
-        System.out.println(value);
-    }
 
     public void parseFile(final File file) throws IOException {
         FileReader reader = new FileReader(file);
         root = new Tag("document");
         current = root;
-        index = -1;
         mode = EMPTY;
         text = new StringBuilder();
         tag = new StringBuilder();
@@ -115,7 +84,7 @@ public class XmlParser {
                     case TEXT:
                         mode = TAG;
                         if (text.length() > 0) {
-                            foundText(text);
+                            foundText(text.toString());
                         }
                         text = new StringBuilder();
                         break;
@@ -145,12 +114,12 @@ public class XmlParser {
                         break; // Syntax error.
                     case TAG:
                         mode = EMPTY;
-                        foundTag(tag);
+                        foundTag(tag.toString());
                         tag = new StringBuilder();
                         break;
                     case BODY:
                         mode = EMPTY;
-                        foundTag(tag);
+                        foundTag(tag.toString());
                         tag = new StringBuilder();
                         break;
                     case ATTR:
@@ -163,11 +132,11 @@ public class XmlParser {
                         break;
                     case VALUE:
                         mode = TEXT;
-                        foundValue(value);
+                        foundValue(value.toString());
                         value = new StringBuilder();
                         break;
                     case QUOTE_STOP:
-                        foundValue(value);
+                        foundValue(value.toString());
                         value = new StringBuilder();
                         mode = EMPTY;
                         break;
@@ -192,7 +161,7 @@ public class XmlParser {
                         break;
                     case ATTR:
                         mode = EQ;
-                        foundAttr(attr);
+                        foundAttr(attr.toString());
                         attr = new StringBuilder();
                         break; // Not allowed in attribute name
                     case EQ:
@@ -237,7 +206,7 @@ public class XmlParser {
                         break;
                     case VALUE:
                         mode = QUOTE_STOP;
-                        foundValue(value);
+                        foundValue(value.toString());
                         value = new StringBuilder();
                         break;
                     case QUOTE_STOP:
@@ -259,14 +228,14 @@ public class XmlParser {
                         break;
                     case TAG:
                         mode = BODY;
-                        foundTag(tag);
+                        foundTag(tag.toString());
                         tag = new StringBuilder();
                         break; // tag name ends
                     case BODY:
                         break; // ignore white space
                     case ATTR:
                         mode = BODY;
-                        foundAttr(attr);
+                        foundAttr(attr.toString());
                         attr = new StringBuilder();
                         break; // attribute without value e.g <input checked>
                     case EQ:
@@ -278,7 +247,7 @@ public class XmlParser {
                         break;
                     case QUOTE_STOP:
                         mode = BODY;
-                        foundValue(value);
+                        foundValue(value.toString());
                         break;
                     case CLOSE:
                         break;
@@ -319,7 +288,6 @@ public class XmlParser {
                         break;
                 }
             }
-            log(c);
         }
         System.out.println(root.toHtml());
 
@@ -421,11 +389,16 @@ public class XmlParser {
                 return b.toString();
 
             } else {
-                b.append("<" + name);
-                for (Attribute a : attributeList) {
-                    b.append(" " + a.toHtml());
+                if (parent == null) {
+
+                } else {
+                    b.append("<" + name);
+                    for (Attribute a : attributeList) {
+                        b.append(" " + a.toHtml());
+                    }
+                    b.append(">");
                 }
-                b.append(">");
+
 
                 if (text == null) {
                     for (Tag t : children) {
@@ -436,8 +409,12 @@ public class XmlParser {
                 }
 
 
-                b.append("</" + name + ">");
-                return b.toString() + "\n";
+                if (parent == null) {
+
+                } else {
+                    b.append("</" + name + ">");
+                }
+                return b.toString();
             }
         }
     }
