@@ -3,6 +3,8 @@ package org.laukvik.csv.io;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.laukvik.csv.io.XmlParser.Mode.ATTR;
 import static org.laukvik.csv.io.XmlParser.Mode.BODY;
@@ -23,43 +25,57 @@ public class XmlParser {
     private final static char CLOSE_SYMBOL = '>';
     private final static char EQUAL_SYMBOL = '=';
     private final static char QUOTE_SYMBOL = '"';
-
     private final static char TAB_SYMBOL = '\t';
     private final static char NEWLINE_SYMBOL = '\n';
     private final static char RETURN_SYMBOL = '\r';
     private final static char SPACE_SYMBOL = ' ';
-
     private StringBuilder text, tag, attr, value, close;
     private Mode mode;
+    private int index;
+    private Tag root;
+    private Tag current;
 
     private void foundTag(StringBuilder value) {
         if (value.charAt(0) == '/') {
-            foundCloseTag(value);
+//            foundCloseTag(value);
+            current = current.getParent();
+            index--;
         } else {
-            found(value, "Tag");
+            index++;
+            current = current.addTag(value.toString());
+//            found(value, "Tag");
         }
     }
 
-    private void foundCloseTag(StringBuilder value) {
-        found(value, "TagClose");
-    }
-
-
     private void foundAttr(StringBuilder value) {
-        found(value, "Attribute");
+        current.addAttribute(value.toString());
+//        found(value, "Attribute");
     }
 
     private void foundValue(StringBuilder value) {
-        found(value, "Value");
+        if (value.toString().trim().length() > 0) {
+            current.getAttributes().get(current.getAttributes().size() - 1).setValue(value.toString());
+
+        }
+
+//        System.out.println(value.toString());
+//        found(value, "Value");
     }
 
     private void foundText(StringBuilder value) {
-        if (value.length() > 0) {
-            found(value, "Text");
+        if (value.toString().trim().length() > 0) {
+//            current.setText(value.toString());
+            Tag t = new Tag("text");
+            t.setText(value.toString());
+            current.addTag(t);
+//            found(value, "Text");
         }
     }
 
     private void found(StringBuilder value, String type) {
+        for (int x = 0; x < index; x++) {
+            System.out.print("\t");
+        }
 //        System.out.format( "\t\t\t\tFound: %s  (%s) %n", value, type);
         System.out.println(value);
     }
@@ -68,8 +84,18 @@ public class XmlParser {
 //        System.out.format( "%s %s %n", mode, c);
     }
 
+    private void print(int level, String value) {
+        for (int x = 0; x < index; x++) {
+            System.out.print("\t");
+        }
+        System.out.println(value);
+    }
+
     public void parseFile(final File file) throws IOException {
         FileReader reader = new FileReader(file);
+        root = new Tag("document");
+        current = root;
+        index = -1;
         mode = EMPTY;
         text = new StringBuilder();
         tag = new StringBuilder();
@@ -77,6 +103,7 @@ public class XmlParser {
         value = new StringBuilder();
         close = new StringBuilder();
         while (reader.ready()) {
+
             char c = (char) reader.read();
             if (c == START_SYMBOL) {
                 // Tag start
@@ -294,6 +321,7 @@ public class XmlParser {
             }
             log(c);
         }
+        System.out.println(root.toHtml());
 
     }
 
@@ -308,6 +336,110 @@ public class XmlParser {
         VALUE,
         QUOTE_STOP,
         CLOSE
+    }
+
+    static class Attribute {
+
+        private String name;
+        private String value;
+
+        public Attribute(String name) {
+            this.name = name;
+        }
+
+        public Attribute(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        public void setValue(final String value) {
+            this.value = value;
+        }
+
+        public String toHtml() {
+//            return value == null ? name : name + "=\"" + value + "\"";
+            return name + "=\"" + value + "\"";
+        }
+    }
+
+    static class Tag {
+
+        private Tag parent;
+        private String name;
+        private List<Tag> children;
+        private List<Attribute> attributeList;
+        private String text;
+
+        public Tag(String name) {
+            this.name = name;
+            this.attributeList = new ArrayList<>();
+            this.children = new ArrayList<>();
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(final String text) {
+            this.text = text;
+        }
+
+        public Tag getParent() {
+            return parent;
+        }
+
+        public Tag addTag(String name) {
+            return addTag(new Tag(name));
+        }
+
+        public Tag addTag(Tag tag) {
+            tag.parent = this;
+            children.add(tag);
+            return tag;
+        }
+
+        public List<Attribute> getAttributes() {
+            return attributeList;
+        }
+
+        public Attribute addAttribute(String name) {
+            return addAttribute(new Attribute(name));
+        }
+
+        public Attribute addAttribute(Attribute attribute) {
+            attributeList.add(attribute);
+            return attribute;
+        }
+
+        public String toHtml() {
+            StringBuilder b = new StringBuilder();
+            if (name.equalsIgnoreCase("text")) {
+                b.append(text);
+                for (Tag t : children) {
+                    b.append("\n" + t.toHtml());
+                }
+                return b.toString();
+
+            } else {
+                b.append("<" + name);
+                for (Attribute a : attributeList) {
+                    b.append(" " + a.toHtml());
+                }
+                b.append(">");
+
+                if (text == null) {
+                    for (Tag t : children) {
+                        b.append("\n" + t.toHtml());
+                    }
+                } else {
+                    b.append(text);
+                }
+
+
+                b.append("</" + name + ">");
+                return b.toString() + "\n";
+            }
+        }
     }
 
 
