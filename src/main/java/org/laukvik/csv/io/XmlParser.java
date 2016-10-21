@@ -34,20 +34,45 @@ public class XmlParser {
     private Tag root;
     private Tag current;
 
+    private List<XmlListener> listeners;
+
+    public XmlParser() {
+        listeners = new ArrayList<>();
+    }
+
+    public void addListener(XmlListener listener) {
+        listeners.add(listener);
+    }
+
+    private void fireFoundTag(Tag tag) {
+        for (XmlListener l : listeners) {
+            l.foundTag(tag);
+        }
+    }
+
+    private void fireAttributeTag(Attribute attribute) {
+        for (XmlListener l : listeners) {
+            l.foundAttribute(attribute);
+        }
+    }
+
     private void foundTag(String value) {
         if (!value.isEmpty() && value.charAt(0) == '/') {
             current = current.getParent();
         } else {
             current = current.addTag(value);
         }
+        fireFoundTag(current);
     }
 
     private void foundAttr(String value) {
-        current.addAttribute(value);
+        Attribute attr = current.addAttribute(value);
+        fireAttributeTag(attr);
     }
 
     private void foundValue(String value) {
         if (value.trim().length() > 0) {
+//            System.out.println("foundValue: " + value );
             current.getAttributes().get(current.getAttributes().size() - 1).setValue(value);
         }
     }
@@ -61,7 +86,7 @@ public class XmlParser {
     }
 
 
-    public void parseFile(final File file) throws IOException {
+    public Tag parseFile(final File file) throws IOException {
         FileReader reader = new FileReader(file);
         root = new Tag("document");
         current = root;
@@ -289,8 +314,7 @@ public class XmlParser {
                 }
             }
         }
-        System.out.println(root.toHtml());
-
+        return root;
     }
 
     enum Mode {
@@ -304,6 +328,12 @@ public class XmlParser {
         VALUE,
         QUOTE_STOP,
         CLOSE
+    }
+
+    public interface XmlListener {
+        void foundTag(Tag tag);
+
+        void foundAttribute(Attribute attribute);
     }
 
     static class Attribute {
@@ -325,13 +355,22 @@ public class XmlParser {
         }
 
         public String toHtml() {
-//            return value == null ? name : name + "=\"" + value + "\"";
+//            if (value == null){
+//                return name;
+//            } else {
             return name + "=\"" + value + "\"";
+//            }
+        }
+
+        @Override
+        public String toString() {
+            return toHtml();
         }
     }
 
-    static class Tag {
+    public static class Tag {
 
+        private static String[] SINGLE_TAGS = {"IMG", "BR", "INPUT"};
         private Tag parent;
         private String name;
         private List<Tag> children;
@@ -346,10 +385,6 @@ public class XmlParser {
 
         public String getText() {
             return text;
-        }
-
-        public void setText(final String text) {
-            this.text = text;
         }
 
         public Tag getParent() {
@@ -379,19 +414,53 @@ public class XmlParser {
             return attribute;
         }
 
+        public boolean isText() {
+            return text != null;
+        }
+
+        public void setText(final String text) {
+            this.text = text;
+        }
+
+        public boolean isSingle() {
+            for (int x = 0; x < SINGLE_TAGS.length; x++) {
+                if (SINGLE_TAGS[x].equalsIgnoreCase(name)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+
         public String toHtml() {
             StringBuilder b = new StringBuilder();
-            if (name.equalsIgnoreCase("text")) {
+            if (isText()) {
                 b.append(text);
-                for (Tag t : children) {
-                    b.append("\n" + t.toHtml());
+                return b.toString();
+
+            } else if (isSingle()) {
+
+                b.append("<" + name);
+                for (Attribute a : attributeList) {
+                    b.append(" " + a.toHtml());
                 }
+
+                if (text == null) {
+                    for (Tag t : children) {
+                        b.append(t.toHtml());
+                    }
+                } else {
+                    b.append(text);
+                }
+                b.append("---/>");
                 return b.toString();
 
             } else {
-                if (parent == null) {
-
-                } else {
+                if (parent != null) {
                     b.append("<" + name);
                     for (Attribute a : attributeList) {
                         b.append(" " + a.toHtml());
@@ -399,20 +468,16 @@ public class XmlParser {
                     b.append(">");
                 }
 
-
                 if (text == null) {
                     for (Tag t : children) {
-                        b.append("\n" + t.toHtml());
+                        b.append(t.toHtml());
                     }
                 } else {
                     b.append(text);
                 }
 
-
-                if (parent == null) {
-
-                } else {
-                    b.append("</" + name + ">");
+                if (parent != null) {
+                    b.append("\n</" + name + ">");
                 }
                 return b.toString();
             }
