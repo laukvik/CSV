@@ -18,31 +18,22 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Compares a DateColumn to be less than a date
  */
-public class DateLessThan extends RowMatcher {
+public class DateLessThan extends AbstractDateMatcher {
 
-    private final Date value;
-    private final SimpleDateFormat format;
-    private final DateColumn column;
 
-    public DateLessThan(DateColumn column, Date value, SimpleDateFormat format) {
-        super();
-        this.column = column;
-        this.value = value;
-        this.format = format;
+    public DateLessThan(DateColumn column, Date value) {
+        super(column, value);
     }
 
     @Override
     public boolean matches(Row row) {
         Date d = row.getDate(column);
-        return d != null && d.compareTo(value) < 0;
-//        Date d = row.getDate(columnIndex, format);
-//        return d.compareTo(value) < 0;
+        return isLessThan(d, value);
     }
 
 }

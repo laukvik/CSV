@@ -12,7 +12,9 @@ import javafx.util.Callback;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.FrequencyDistribution;
 import org.laukvik.csv.MetaData;
+import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +51,12 @@ class Builder {
         return FXCollections.observableArrayList( list );
     }
 
-    public static ObservableList<ObservableFrequencyDistribution> createFrequencyDistributionObservableList(int columnIndex, CSV csv) {
+    public static ObservableList<ObservableFrequencyDistribution> createFrequencyDistributionObservableList(int columnIndex, CSV csv, Main main) {
         List<ObservableFrequencyDistribution> list = new ArrayList<>();
         FrequencyDistribution d = csv.buildFrequencyDistribution(columnIndex);
+        Column c = csv.getMetaData().getColumn(columnIndex);
         for (String key :d.getKeys()){
-            list.add(new ObservableFrequencyDistribution(false, key, d.getCount(key)));
+            list.add(new ObservableFrequencyDistribution(false, key, d.getCount(key), c, main));
         }
         return FXCollections.observableArrayList( list );
     }
@@ -66,8 +69,18 @@ class Builder {
      */
     public static void createResultsRows(final TableView<ObservableRow> resultsTableView, final CSV csv){
         resultsTableView.getItems().clear();
-        for (int y=0; y<csv.getRowCount(); y++){
-            resultsTableView.getItems().add(new ObservableRow(csv.getRow(y)));
+        if (csv.hasQuery()) {
+            Query query = csv.getQuery();
+            List<Row> rows = query.where().getResultList();
+            for (int y = 0; y < rows.size(); y++) {
+                resultsTableView.getItems().add(new ObservableRow(rows.get(y)));
+            }
+            System.out.println("createResultsRows: query: " + rows.size());
+        } else {
+            for (int y = 0; y < csv.getRowCount(); y++) {
+                resultsTableView.getItems().add(new ObservableRow(csv.getRow(y)));
+            }
+            System.out.println("createResultsRows: " + csv.getRowCount());
         }
     }
 

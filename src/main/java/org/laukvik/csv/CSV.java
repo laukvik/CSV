@@ -587,8 +587,24 @@ public final class CSV implements Serializable {
      * @return the query being created
      */
     public Query findByQuery() {
-        this.query = new Query(metaData, this);
+        this.query = new Query(this);
         return this.query;
+    }
+
+    /**
+     * Returns true if there is already a query
+     *
+     * @return
+     */
+    public boolean hasQuery() {
+        return this.query != null;
+    }
+
+    /**
+     * Removes any query
+     */
+    public void clearQuery() {
+        this.query = null;
     }
 
     /**

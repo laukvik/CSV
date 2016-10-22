@@ -18,45 +18,27 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Compares a DateColumn to be greater than a date
  */
-public class DateGreaterThan extends RowMatcher {
-
-    private final Date value;
-    private final SimpleDateFormat format;
-    private final DateColumn column;
+public class DateGreaterThan extends AbstractDateMatcher {
 
     /**
      * Compares a DateColumn to specified Date
      *
      * @param column
      * @param value
-     * @param format
      */
-    public DateGreaterThan(DateColumn column, Date value, SimpleDateFormat format) {
-        super();
-        this.column = column;
-        this.value = value;
-        this.format = format;
+    public DateGreaterThan(DateColumn column, Date value) {
+        super(column, value);
     }
 
     @Override
     public boolean matches(Row row) {
         Date d = row.getDate(column);
-        return d != null && d.compareTo(value) > 0;
-
-//        if (c instanceof DateColumn){
-//            DateColumn dc = (DateColumn)c;
-//            String value = row.getDate(columnIndex);
-//            Date d = dc.parse(value);
-//        }
-//
-//        Date d = row.getDate(columnIndex, format);
-//        return d.compareTo(value) > 0;
+        return isGreaterThan(d, value);
     }
 
 }

@@ -36,7 +36,6 @@ public class IntGreaterThanMatcher extends RowMatcher {
     public boolean matches(Row row) {
         Integer value = row.getInteger(column);
         return value != null && value > this.value;
-//return row.getInteger(columnIndex) > value;
     }
 
 }

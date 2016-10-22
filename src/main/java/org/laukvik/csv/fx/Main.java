@@ -43,6 +43,7 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.BOM;
+import org.laukvik.csv.query.Query;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -90,6 +91,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     private CsvMenuBar menuBar;
     private ScrollPane resultsScroll;
     private int viewMode = 0;
+    private List<Selection> selections;
 
     public static void main(String[] args) {
         launch(args);
@@ -138,6 +140,7 @@ public class Main extends Application implements ChangeListener, FileListener {
                 }
             }
         });
+
 
         resultsTableView = new ResultsTableView();
 
@@ -212,7 +215,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     private void setSelectedColumnIndex(int selectedColumnIndex){
         if (selectedColumnIndex > -1){
-            frequencyDistributionTableView.setItems(createFrequencyDistributionObservableList(selectedColumnIndex, csv));
+            frequencyDistributionTableView.setItems(createFrequencyDistributionObservableList(selectedColumnIndex, csv, this));
             if (viewMode == 0) {
                 handleViewResultsAction();
             } else if (viewMode == 1) {
@@ -310,6 +313,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         csv = new CSV();
         csv.addChangeListener(this);
         csv.addFileListener(this);
+        selections = new ArrayList<>();
         columnsTableView.setItems(observableArrayList());
         frequencyDistributionTableView.setItems(observableArrayList());
         resultsTableView.clearRows();
@@ -732,6 +736,33 @@ public class Main extends Application implements ChangeListener, FileListener {
             } catch (Exception e) {
                 alert(bundle.getString("file.export.html.failed"));
             }
+        }
+    }
+
+    public void handleSelected(Column column, String value) {
+        selections.add(new Selection(column, value));
+        buildSelectionQuery();
+        updateRows();
+    }
+
+    public void handleUnselected(Column column, String value) {
+        selections.remove(new Selection(column, value));
+        buildSelectionQuery();
+        updateRows();
+    }
+
+    private void buildSelectionQuery() {
+        if (selections.isEmpty()) {
+            System.out.println("Query: empty");
+            csv.clearQuery();
+        } else {
+            System.out.print("Building query: ");
+            Query.Where where = csv.findByQuery().select().where();
+            for (Selection s : selections) {
+                System.out.print(s.getValue() + " ");
+                where = where.column(s.getColumn()).is(s.getValue());
+            }
+            System.out.println("Found rows: " + csv.getQuery().getResultList().size());
         }
     }
 
