@@ -18,12 +18,22 @@ package org.laukvik.csv.io;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Iterator;
 
 /**
  * An interface for reading data sets
  */
 public interface Readable extends Iterator<Row> {
+
+    /**
+     * Reads the specified file
+     *
+     * @param file the file
+     * @throws FileNotFoundException when the file cant be found
+     */
+    void readFile( File file ) throws FileNotFoundException;
 
     /**
      * Returns the MetaData
