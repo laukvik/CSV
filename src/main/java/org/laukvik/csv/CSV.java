@@ -28,6 +28,7 @@ import org.laukvik.csv.io.CsvWriter;
 import org.laukvik.csv.io.HtmlWriter;
 import org.laukvik.csv.io.JavaReader;
 import org.laukvik.csv.io.JsonWriter;
+import org.laukvik.csv.io.PropertiesReader;
 import org.laukvik.csv.io.Readable;
 import org.laukvik.csv.io.WordCountReader;
 import org.laukvik.csv.io.Writeable;
@@ -477,6 +478,11 @@ public final class CSV implements Serializable {
         readFile(file, findCharsetByBOM(file), reader);
     }
 
+    /**
+     * Imports Java beans property values from the list
+     *
+     * @param list the list of Java beans
+     */
     public void readJava(List<Class> list){
         JavaReader<Class> reader = new JavaReader<>(this, list);
         rows.clear();
@@ -489,6 +495,10 @@ public final class CSV implements Serializable {
 
     public void readWordCountFile(final File file) throws FileNotFoundException {
         readFile(new WordCountReader(), file);
+    }
+
+    public void readPropertiesFile(final File file) throws FileNotFoundException {
+        readFile(new PropertiesReader(), file);
     }
 
     /**

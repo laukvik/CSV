@@ -229,11 +229,23 @@ public class Main extends Application implements ChangeListener, FileListener {
         fileChooser.setTitle(bundle.getString("dialog.file.open"));
         final File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null){
-            System.out.println(selectedFile.getName() + " " + selectedFile.getName().endsWith(".txt"));
-            if (selectedFile.getName().endsWith(".txt")){
-                loadWordCountFile(selectedFile);
+            loadFile(selectedFile);
+        }
+    }
+
+    /**
+     * Loads a file without dialogs
+     *
+     * @param file
+     */
+    public void loadFile(File file) {
+        if (file != null) {
+            if (file.getName().endsWith(".properties")) {
+                loadPropertiesFile(file);
+            } else if (file.getName().endsWith(".txt")) {
+                loadWordCountFile(file);
             } else {
-                loadFile(selectedFile, null, null);
+                loadFile(file, null, null);
             }
         }
     }
@@ -320,6 +332,19 @@ public class Main extends Application implements ChangeListener, FileListener {
                 menuBar.buildRecentList(recent);
             }
         } catch (IOException e) {
+            alert(e.getMessage());
+        }
+    }
+
+    public void loadPropertiesFile(final File file) {
+        newFile();
+        try {
+            csv.readPropertiesFile(file);
+            if (csv.getFile() != null) {
+                recent.open(file);
+                menuBar.buildRecentList(recent);
+            }
+        } catch (FileNotFoundException e) {
             alert(e.getMessage());
         }
     }
@@ -723,7 +748,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     public void handleViewPreviewAction() {
         ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
-        if (ofd != null || ofd.getValue() != null || !ofd.getValue().isEmpty()) {
+        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
             String filename = ofd.getValue();
             if (filename == null || filename.trim().isEmpty()) {
                 resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
@@ -751,7 +776,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     public void handleViewWikipediaAction() {
         ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
-        if (ofd != null || ofd.getValue() != null || !ofd.getValue().isEmpty()) {
+        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
             String value = ofd.getValue();
             WebView v = new WebView();
             WebEngine webEngine = v.getEngine();

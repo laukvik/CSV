@@ -246,7 +246,7 @@ class CsvMenuBar extends MenuBar {
             MenuItem openRecentItem = new MenuItem(file.getAbsolutePath());
             openRecentItem.setOnAction(new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent t) {
-                    main.loadFile(file, null, null);
+                    main.loadFile(file);
                 }
             });
             openRecentMenu.getItems().add(openRecentItem);
