@@ -742,27 +742,38 @@ public class Main extends Application implements ChangeListener, FileListener {
     public void handleSelected(Column column, String value) {
         selections.add(new Selection(column, value));
         buildSelectionQuery();
-        updateRows();
     }
 
     public void handleUnselected(Column column, String value) {
         selections.remove(new Selection(column, value));
         buildSelectionQuery();
-        updateRows();
     }
 
     private void buildSelectionQuery() {
         if (selections.isEmpty()) {
             System.out.println("Query: empty");
             csv.clearQuery();
+            List<ObservableRow> list = new ArrayList<>();
+            for (int y = 0; y < csv.getRowCount(); y++) {
+                list.add(new ObservableRow(csv.getRow(y)));
+            }
+            resultsTableView.getItems().clear();
+            resultsTableView.getItems().addAll(list);
         } else {
             System.out.print("Building query: ");
             Query.Where where = csv.findByQuery().select().where();
+            List<String> values = new ArrayList<>();
             for (Selection s : selections) {
                 System.out.print(s.getValue() + " ");
-                where = where.column(s.getColumn()).is(s.getValue());
+                where = where.column(s.getColumn()).isIn(s.getValue());
             }
-            System.out.println("Found rows: " + csv.getQuery().getResultList().size());
+
+            List<ObservableRow> list = new ArrayList<>();
+            for (Row r : csv.getQuery().getResultList()) {
+                list.add(new ObservableRow(r));
+            }
+            resultsTableView.getItems().clear();
+            resultsTableView.getItems().addAll(list);
         }
     }
 
