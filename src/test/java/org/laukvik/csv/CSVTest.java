@@ -180,7 +180,6 @@ public class CSVTest {
             assertSame("RowCount", 1, csv.getRowCount());
 
             Row r = csv.getRow(0);
-            System.out.println(r.toString());
             StringColumn desc = (StringColumn) md.getColumn("Description");
 
             assertEquals("ac, abs, moon", "ac, abs, moon", r.getString(desc));

@@ -37,9 +37,11 @@ public final class ObservableFrequencyDistribution {
             public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
                 if (main != null) {
                     if (newValue) {
+//                        main.getQueryModel().addValue(column, value);
                         main.handleSelected(column, value);
                     } else {
                         main.handleUnselected(column, value);
+//                        main.getQueryModel().removeValue(column, value);
                     }
                 }
             }

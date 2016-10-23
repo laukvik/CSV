@@ -32,9 +32,6 @@ public class JavaReaderTest {
     @Test
     public void shouldBuildMetaData(){
         MetaData md = JavaReader.buildMetaData(Employee.class);
-        for (int x=0; x<md.getColumnCount(); x++){
-//            System.out.println(x + "\t" + md.getColumn(x).getName());
-        }
         assertEquals(9, md.getColumnCount());
     }
 

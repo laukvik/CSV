@@ -31,8 +31,10 @@ import java.util.List;
 class ObservableRow {
 
     private final List<SimpleStringProperty> items;
+    private Row row;
 
     public ObservableRow(Row row) {
+        this.row = row;
         items = FXCollections.observableArrayList();
         CSV csv = row.getCSV();
         MetaData md = csv.getMetaData();
@@ -44,6 +46,12 @@ class ObservableRow {
 
     public SimpleStringProperty getValue(int columnIndex) {
         return items.get(columnIndex);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        ObservableRow or = (ObservableRow)o;
+        return row.equals( or.row );
     }
 
 }

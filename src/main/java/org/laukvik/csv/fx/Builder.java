@@ -55,8 +55,9 @@ class Builder {
         List<ObservableFrequencyDistribution> list = new ArrayList<>();
         FrequencyDistribution d = csv.buildFrequencyDistribution(columnIndex);
         Column c = csv.getMetaData().getColumn(columnIndex);
-        for (String key :d.getKeys()){
-            list.add(new ObservableFrequencyDistribution(false, key, d.getCount(key), c, main));
+        for (String key : d.getKeys()){
+            boolean selected = main.getQueryModel().isSelected(c, key);
+            list.add(new ObservableFrequencyDistribution(selected, key, d.getCount(key), c, main));
         }
         return FXCollections.observableArrayList( list );
     }
@@ -75,12 +76,10 @@ class Builder {
             for (int y = 0; y < rows.size(); y++) {
                 resultsTableView.getItems().add(new ObservableRow(rows.get(y)));
             }
-            System.out.println("createResultsRows: query: " + rows.size());
         } else {
             for (int y = 0; y < csv.getRowCount(); y++) {
                 resultsTableView.getItems().add(new ObservableRow(csv.getRow(y)));
             }
-            System.out.println("createResultsRows: " + csv.getRowCount());
         }
     }
 

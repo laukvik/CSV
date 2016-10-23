@@ -79,9 +79,6 @@ public class QueryTest {
     public void between() {
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isBetween(10, 19).getResultList();
-//        for (Row r : rows) {
-//            System.out.println(r);
-//        }
         Assert.assertEquals("Should be 10", 10, rows.size());
     }
 
@@ -89,9 +86,6 @@ public class QueryTest {
     public void isGreaterThan() {
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isGreaterThan(40).getResultList();
-//        for (Row r : rows) {
-//            System.out.println(r);
-//        }
         Assert.assertEquals("Should be 4", 4, rows.size());
     }
 
@@ -99,9 +93,6 @@ public class QueryTest {
     public void isLessThan() {
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isLessThan(41).getResultList();
-//        for (Row r : rows) {
-//            System.out.println(r);
-//        }
         Assert.assertEquals("Should be 40", 40, rows.size());
     }
 
@@ -181,5 +172,24 @@ public class QueryTest {
         List<Row> rows = csv.findByQuery().where().column(leftOffice).isYear(1809).getResultList();
         Assert.assertEquals("Should find 1", 1, rows.size());
     }
+
+    @Test
+    public void findWithQueries() throws IOException, ParseException {
+        StringColumn homeState = (StringColumn) csv.getMetaData().getColumn("Home State");
+        StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
+
+        List<Row> rows;
+
+        rows = csv.findByQuery().where().column(homeState).is("New York").getResultList();
+        Assert.assertEquals(7, rows.size());
+
+        rows = csv.findByQuery().where().column(party).is("Democratic").getResultList();
+        Assert.assertEquals(15, rows.size());
+
+        rows = csv.findByQuery().where().column(homeState).is("New York").column(party).is("Democratic").getResultList();
+        Assert.assertEquals(4, rows.size());
+
+    }
+
 
 }

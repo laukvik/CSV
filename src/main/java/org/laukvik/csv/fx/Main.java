@@ -91,7 +91,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     private CsvMenuBar menuBar;
     private ScrollPane resultsScroll;
     private int viewMode = 0;
-    private List<Selection> selections;
+    private QueryModel queryModel;
 
     public static void main(String[] args) {
         launch(args);
@@ -114,11 +114,21 @@ public class Main extends Application implements ChangeListener, FileListener {
         int max = 50;
         int x = 0;
         for (ObservableFrequencyDistribution fd : frequencyDistributionTableView.getItems()) {
-            if (x < 50) {
+            if (fd.isSelected()) {
                 dataset.add(new PieChart.Data(fd.getValue(), fd.getCount()));
             }
-            x++;
         }
+
+        if (dataset.isEmpty()){
+            for (ObservableFrequencyDistribution fd : frequencyDistributionTableView.getItems()) {
+                if (x < max) {
+                    dataset.add(new PieChart.Data(fd.getValue(), fd.getCount()));
+                }
+                x++;
+            }
+        }
+
+
         ObservableList<PieChart.Data> data = FXCollections.observableArrayList(dataset);
         final PieChart chart = new PieChart(data);
         return chart;
@@ -137,6 +147,10 @@ public class Main extends Application implements ChangeListener, FileListener {
                     handleViewPreviewAction();
                 } else if (viewMode == 3) {
                     handleViewWikipediaAction();
+                } else if (viewMode == 4) {
+                    handleViewGoogleMapsAction();
+                } else if (viewMode == 5) {
+                    handleViewGoogleSearchAction();
                 }
             }
         });
@@ -211,6 +225,10 @@ public class Main extends Application implements ChangeListener, FileListener {
         recent = new Recent(Recent.getConfigurationFile(), 10);
         menuBar.buildRecentList(recent);
         newFile();
+    }
+
+    public QueryModel getQueryModel(){
+        return queryModel;
     }
 
     private void setSelectedColumnIndex(int selectedColumnIndex){
@@ -311,6 +329,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     public void newFile() {
         csv = new CSV();
+        queryModel = new QueryModel(csv);
         csv.addChangeListener(this);
         csv.addFileListener(this);
         selections = new ArrayList<>();
@@ -330,6 +349,8 @@ public class Main extends Application implements ChangeListener, FileListener {
             } else if (separatorChar != null){
                 csv.readFile(file, separatorChar);
             }
+
+            queryModel = new QueryModel(csv);
 
             if (csv.getFile() != null){
                 recent.open(file);
@@ -740,44 +761,41 @@ public class Main extends Application implements ChangeListener, FileListener {
     }
 
     public void handleSelected(Column column, String value) {
-        selections.add(new Selection(column, value));
-        buildSelectionQuery();
+        getQueryModel().addSelection(column, value);
+        List<ObservableRow> list = getQueryModel().buildObservableRows();
+        resultsTableView.getItems().clear();
+        resultsTableView.getItems().addAll(list);
+        if (viewMode == 1){
+            handleViewChartAction();
+        }
     }
 
     public void handleUnselected(Column column, String value) {
-        selections.remove(new Selection(column, value));
-        buildSelectionQuery();
+        getQueryModel().removeSelection(column, value);
+        List<ObservableRow> list = getQueryModel().buildObservableRows();
+        resultsTableView.getItems().clear();
+        resultsTableView.getItems().addAll(list);
+        if (viewMode == 1){
+            handleViewChartAction();
+        }
     }
 
-    private void buildSelectionQuery() {
-        if (selections.isEmpty()) {
-            System.out.println("Query: empty");
-            csv.clearQuery();
-            List<ObservableRow> list = new ArrayList<>();
-            for (int y = 0; y < csv.getRowCount(); y++) {
-                list.add(new ObservableRow(csv.getRow(y)));
-            }
-            resultsTableView.getItems().clear();
-            resultsTableView.getItems().addAll(list);
-        } else {
-            System.out.print("Building query: ");
-            Query.Where where = csv.findByQuery().select().where();
-            List<String> values = new ArrayList<>();
-            for (Selection s : selections) {
-                System.out.print(s.getValue() + " ");
-                where = where.column(s.getColumn()).isIn(s.getValue());
-            }
-
-            List<ObservableRow> list = new ArrayList<>();
-            for (Row r : csv.getQuery().getResultList()) {
-                list.add(new ObservableRow(r));
-            }
-            resultsTableView.getItems().clear();
-            resultsTableView.getItems().addAll(list);
+    /**
+     *
+     */
+    public void handleNewQuery() {
+        getQueryModel().clearSelections();
+        List<ObservableRow> list = getQueryModel().buildObservableRows();
+        resultsTableView.getItems().clear();
+        resultsTableView.getItems().addAll(list);
+        int selectedColumnIndex = columnsTableView.getSelectionModel().getSelectedIndex();
+        if (selectedColumnIndex > -1){
+            frequencyDistributionTableView.setItems(createFrequencyDistributionObservableList(selectedColumnIndex, csv, this));
         }
     }
 
     public void handleViewChartAction() {
+
         final PieChart chart = buildPieChart(frequencyDistributionTableView);
         resultsScroll.setContent(chart);
         viewMode = 1;
@@ -829,4 +847,34 @@ public class Main extends Application implements ChangeListener, FileListener {
         }
         viewMode = 3;
     }
+
+    public void handleViewGoogleMapsAction() {
+        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
+        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
+            String value = ofd.getValue();
+            WebView v = new WebView();
+            WebEngine webEngine = v.getEngine();
+            resultsScroll.setContent(v);
+            webEngine.load("https://www.google.com/maps?q=" + value);
+        } else {
+            resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
+        }
+        viewMode = 4;
+
+    }
+
+    public void handleViewGoogleSearchAction() {
+        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
+        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
+            String value = ofd.getValue();
+            WebView v = new WebView();
+            WebEngine webEngine = v.getEngine();
+            resultsScroll.setContent(v);
+            webEngine.load("https://www.google.no/?q=" + value);
+        } else {
+            resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
+        }
+        viewMode = 5;
+    }
+
 }

@@ -42,7 +42,7 @@ import java.util.TreeMap;
 public class Row implements Serializable {
 
     private final Map<Column, Object> map;
-    private final long timestamp;
+    protected final long timestamp;
     private CSV csv;
 
     /**
