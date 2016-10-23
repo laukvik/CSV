@@ -33,7 +33,9 @@ public class HtmlWriter implements Writeable, AutoCloseable {
     private final OutputStream out;
 
     /**
-     * @param outputStream
+     * Writes the CSV to the outputStream
+     *
+     * @param outputStream the outputStream
      */
     public HtmlWriter(OutputStream outputStream) {
         this.out = outputStream;

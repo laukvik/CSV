@@ -53,16 +53,70 @@ import java.util.TreeSet;
  * An API for reading and writing to Viewer. The implementation is based on the
  * specficiations from http://tools.ietf.org/rfc/rfc4180.txt
  *
- * <code>
- *     CSV csv = new CSV( new File("presidents.csv") );
- * </code>
  *
- * <code>
- *     CSV csv = new CSV( new File("presidents.csv") );
- *     List&lt;Row&gt; rows = csv.findByQuery().where().column("Party").is("Whig").getResultList();
- * </code>
+ * <h2>Reading files</h2>
  *
- * @author Morten Laukvik
+ *
+ * <h3>Auto detection</h3>
+ *
+ * <p>The easiest way to read a CSV file is to call the default constructor. This method will try to auto detect separator character and encoding.</p>
+ *
+ * <pre>
+ * CSV csv = new CSV(new File("presidents.csv"));
+ * </pre>
+ *
+ *
+ *
+ * <h3>Manually specify separator character</h3>
+ *
+ * <p>To read files using a SEMI COLON as separator character</p>
+ * <pre>
+ *     CSV csv = new CSV();
+ *     csv.readFile( new File("presidents.csv"), CSV.SEMICOLON );
+ * </pre>
+ *
+ * <p>To read files using a semi colon as PIPE character</p>
+ * <pre>
+ * CSV csv = new CSV();
+ * csv.readFile( new File("presidents.csv"), CSV.PIPE );
+ * </pre>
+ *
+ * <p>To read files using a semi colon as TAB character</p>
+ *
+ * <pre>
+ * CSV csv = new CSV();
+ * csv.readFile( new File("presidents.csv"), CSV.TAB );
+ * </pre>
+ *
+ * <h3>Reading values from Java objects</h3>
+ * <pre>
+ * class Employee{
+ *   String name;
+ *   int age;
+ *   boolean isWoman;
+ *
+ *   public Employee(final String name, final int age, final boolean isWoman) {
+ *     this.name = name;
+ *     this.age = age;
+ *     this.isWoman = isWoman;
+ *   }
+ * }
+ * List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();
+ *
+ * CSV csv = new CSV();
+ * csv.readJava(employees);
+ * </pre>
+ *
+ *
+ * <h3>Working with queries</h3>
+ *
+ * <pre>
+ * CSV csv = new CSV( new File("presidents.csv") );
+ * List&lt;Row&gt; rows = csv.findByQuery().where().column("Party").is("Whig").getResultList();
+ * </pre>
+ *
+ *
+ *
  */
 public final class CSV implements Serializable {
 
@@ -275,6 +329,7 @@ public final class CSV implements Serializable {
     public Column addColumn(Column column) {
         metaData.addColumn(column);
         fireColumnCreated(column);
+        removeRows();
         return column;
     }
 
@@ -285,6 +340,11 @@ public final class CSV implements Serializable {
      * @param toRowIndex the destination index
      */
     public void moveRow(final int fromRowIndex, final int toRowIndex) {
+        Collections.swap(rows, fromRowIndex, toRowIndex);
+        fireRowMoved(fromRowIndex, toRowIndex);
+    }
+
+    public void swapRows(final int fromRowIndex, final int toRowIndex) {
         Collections.swap(rows, fromRowIndex, toRowIndex);
         fireRowMoved(fromRowIndex, toRowIndex);
     }
@@ -420,7 +480,7 @@ public final class CSV implements Serializable {
      */
     public void readFile(final File file) throws IOException {
         Charset charset = findCharsetByBOM(file);
-        CsvReader reader = new CsvReader(  Files.newBufferedReader(file.toPath(), charset), null, CSV.DOUBLE_QUOTE );
+        CsvReader reader = new CsvReader(Files.newBufferedReader(file.toPath(), charset), null, CSV.DOUBLE_QUOTE);
         readFile(file, charset, reader );
     }
 
@@ -484,12 +544,15 @@ public final class CSV implements Serializable {
      * @param list the list of Java beans
      */
     public void readJava(List<Class> list){
-        JavaReader<Class> reader = new JavaReader<>(this, list);
         rows.clear();
-        metaData = reader.getMetaData();
-        while (reader.hasNext()){
-            Row row = reader.next();
-            addRow(row);
+        metaData = new MetaData();
+        if (!list.isEmpty()) {
+            JavaReader<Class> reader = new JavaReader<Class>(this, list);
+            metaData = reader.getMetaData();
+            while (reader.hasNext()) {
+                Row row = reader.next();
+                addRow(row);
+            }
         }
     }
 
@@ -573,6 +636,18 @@ public final class CSV implements Serializable {
     }
 
     /**
+     * Writes the contents to multiple files
+     *
+     * todo - Implement this method
+     *
+     * @param file the file
+     * @throws Exception when the file could not be written
+     */
+    public void writeResourceBundle(final File file) throws Exception {
+
+    }
+
+    /**
      * Returns the query
      *
      * @return the query
@@ -594,7 +669,7 @@ public final class CSV implements Serializable {
     /**
      * Returns true if there is already a query
      *
-     * @return
+     * @return true when a query has been started
      */
     public boolean hasQuery() {
         return this.query != null;
@@ -631,6 +706,18 @@ public final class CSV implements Serializable {
         }
         return cv;
     }
+
+    /**
+     * Builds a set of unique values for the specified columnIndex.
+     *
+     * @param columnIndex the column index
+     * @return a set of distinct values
+     */
+    public Set<String> buildDistinctValues(int columnIndex) {
+        Column c = getMetaData().getColumn(columnIndex);
+        return buildDistinctValues(c);
+    }
+
 
     /**
      * Builds a set of unique values for the specified column.

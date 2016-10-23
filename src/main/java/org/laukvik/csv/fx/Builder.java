@@ -65,8 +65,9 @@ class Builder {
     /**
      * Creates the Rows
      *
-     * @param resultsTableView
-     * @param csv
+     * @param resultsTableView the TableView
+     * @param csv the csv file
+     * @param main the Main
      */
     public static void createResultsRows(final TableView<ObservableRow> resultsTableView, final CSV csv, final Main main){
         resultsTableView.getItems().clear();

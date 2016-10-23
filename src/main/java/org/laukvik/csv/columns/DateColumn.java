@@ -34,6 +34,7 @@ public class DateColumn extends Column<Date> {
      * Column with Date as the data type
      *
      * @param name the name of the column
+     * @param format the data format
      */
     public DateColumn(String name, String format) {
         super(name);

@@ -256,7 +256,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     /**
      * Loads a file without dialogs
      *
-     * @param file
+     * @param file the file to open
      */
     public void loadFile(File file) {
         if (file != null) {

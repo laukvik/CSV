@@ -28,8 +28,8 @@ public class DateGreaterThan extends AbstractDateMatcher {
     /**
      * Compares a DateColumn to specified Date
      *
-     * @param column
-     * @param value
+     * @param column the dataColumn
+     * @param value the value to compare
      */
     public DateGreaterThan(DateColumn column, Date value) {
         super(column, value);

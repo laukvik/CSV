@@ -22,9 +22,13 @@ public final class ObservableFrequencyDistribution {
     private Column column;
 
     /**
-     * @param selected
-     * @param value
-     * @param count
+     * Builds a new instance with the specified values
+     *
+     * @param selected whether the value is selected
+     * @param value the value
+     * @param count how many times its used
+     * @param column the column
+     * @param main the main
      */
     public ObservableFrequencyDistribution(boolean selected, String value, int count, Column column, Main main) {
         this.selected = new SimpleBooleanProperty(selected);
@@ -37,11 +41,9 @@ public final class ObservableFrequencyDistribution {
             public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
                 if (main != null) {
                     if (newValue) {
-//                        main.getQueryModel().addValue(column, value);
                         main.handleSelected(column, value);
                     } else {
                         main.handleUnselected(column, value);
-//                        main.getQueryModel().removeValue(column, value);
                     }
                 }
             }

@@ -23,7 +23,7 @@ public class IllegalColumnDefinitionException extends RuntimeException {
     /**
      * Indicates that the metadata definition of a column is invalid.
      *
-     * @param message
+     * @param message the reason
      */
     public IllegalColumnDefinitionException(String message) {
         super(message);

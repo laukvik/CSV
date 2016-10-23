@@ -28,15 +28,22 @@ import org.laukvik.csv.columns.StringColumn;
 import java.util.List;
 
 /**
+ * Represents a row in JavaFX.
  *
- * @author Morten Laukvik <morten@laukvik.no>
+ *
  */
 class ObservableRow implements javafx.beans.value.ChangeListener<String>{
 
     private final List<SimpleStringProperty> items;
-    private Row row;
     ChangeListener listener;
+    private Row row;
 
+    /**
+     * Builds a new ObservableRow from the Row
+     *
+     * @param row      the row
+     * @param listener the listener
+     */
     public ObservableRow(Row row, ChangeListener listener) {
         this.row = row;
         this.listener = listener;
