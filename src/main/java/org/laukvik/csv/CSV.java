@@ -767,5 +767,7 @@ public final class CSV implements Serializable {
         }
     }
 
-
+    public int indexOf(final Row row) {
+        return rows.indexOf(row);
+    }
 }

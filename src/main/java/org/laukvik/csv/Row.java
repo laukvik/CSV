@@ -173,4 +173,7 @@ public class Row implements Serializable {
         map.remove(column);
     }
 
+    public int indexOf() {
+        return csv.indexOf(this);
+    }
 }

@@ -30,7 +30,7 @@ public class QueryModelTest {
         CSV csv = findCSV();
         StringColumn homeState = (StringColumn) csv.getMetaData().getColumn("Home State");
         StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
-        QueryModel model = new QueryModel(csv);
+        QueryModel model = new QueryModel(csv, null);
         model.addSelection(homeState, "New York");
         Assert.assertNotNull(model.findSelectionByColumn(homeState));
         model.removeSelection(homeState, "New York");

@@ -43,7 +43,6 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.BOM;
-import org.laukvik.csv.query.Query;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -329,10 +328,9 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     public void newFile() {
         csv = new CSV();
-        queryModel = new QueryModel(csv);
+        queryModel = new QueryModel(csv, this);
         csv.addChangeListener(this);
         csv.addFileListener(this);
-        selections = new ArrayList<>();
         columnsTableView.setItems(observableArrayList());
         frequencyDistributionTableView.setItems(observableArrayList());
         resultsTableView.clearRows();
@@ -350,7 +348,7 @@ public class Main extends Application implements ChangeListener, FileListener {
                 csv.readFile(file, separatorChar);
             }
 
-            queryModel = new QueryModel(csv);
+            queryModel = new QueryModel(csv, this);
 
             if (csv.getFile() != null){
                 recent.open(file);
@@ -435,9 +433,9 @@ public class Main extends Application implements ChangeListener, FileListener {
     @Override
     public void rowCreated(final int rowIndex, final Row row) {
         if (rowIndex == resultsTableView.getItems().size()+1){
-            resultsTableView.getItems().add(new ObservableRow(row));
+            resultsTableView.getItems().add(new ObservableRow(row, this));
         } else {
-            resultsTableView.getItems().add(rowIndex, new ObservableRow(row));
+            resultsTableView.getItems().add(rowIndex, new ObservableRow(row, this));
         }
         updateToolbar();
     }
@@ -460,7 +458,17 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     @Override
     public void cellUpdated(final int columnIndex, final int rowIndex) {
-        alert("cellUpdated: " + columnIndex + "x" + rowIndex );
+        if (columnIndex == columnsTableView.getSelectionModel().getSelectedIndex()){
+            setSelectedColumnIndex(columnIndex);
+        }
+    }
+
+    public void buildFrequencyDistribution(){
+        int selectedColumnIndex = frequencyDistributionTableView.getSelectionModel().getSelectedIndex();
+        if (selectedColumnIndex > -1){
+            frequencyDistributionTableView.getItems().clear();
+            frequencyDistributionTableView.setItems(createFrequencyDistributionObservableList(selectedColumnIndex, csv, this));
+        }
     }
 
     @Override
@@ -521,7 +529,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     }
 
     private void buildResultsTable(){
-        resultsTableView.columnsChanged(csv);
+        resultsTableView.columnsChanged(csv, this);
     }
 
     private void updateColumns(){
@@ -531,7 +539,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     private void updateRows(){
         createResultsColumns(resultsTableView, csv.getMetaData());
-        createResultsRows(resultsTableView, csv);
+        createResultsRows(resultsTableView, csv, this);
     }
 
     private void deleteColumn(final int columnIndex){
@@ -788,10 +796,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         List<ObservableRow> list = getQueryModel().buildObservableRows();
         resultsTableView.getItems().clear();
         resultsTableView.getItems().addAll(list);
-        int selectedColumnIndex = columnsTableView.getSelectionModel().getSelectedIndex();
-        if (selectedColumnIndex > -1){
-            frequencyDistributionTableView.setItems(createFrequencyDistributionObservableList(selectedColumnIndex, csv, this));
-        }
+        buildFrequencyDistribution();
     }
 
     public void handleViewChartAction() {

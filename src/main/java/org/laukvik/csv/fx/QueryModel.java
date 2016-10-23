@@ -17,9 +17,11 @@ public class QueryModel {
 
     private final CSV csv;
     private List<Selection> selections;
+    final Main main;
 
-    public QueryModel(final CSV csv){
+    public QueryModel(final CSV csv, final Main main){
         this.csv = csv;
+        this.main = main;
         this.selections = new ArrayList<>();
     }
 
@@ -32,12 +34,12 @@ public class QueryModel {
         if (this.isEmpty()){
             csv.clearQuery();
             for (int y = 0; y < csv.getRowCount(); y++) {
-                list.add(new ObservableRow(csv.getRow(y)));
+                list.add(new ObservableRow(csv.getRow(y), main));
             }
         } else {
             buildQuery();
             for (Row r : csv.getQuery().getResultList()) {
-                list.add(new ObservableRow(r));
+                list.add(new ObservableRow(r, main));
             }
         }
         return list;

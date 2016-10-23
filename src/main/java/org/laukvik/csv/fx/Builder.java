@@ -68,17 +68,17 @@ class Builder {
      * @param resultsTableView
      * @param csv
      */
-    public static void createResultsRows(final TableView<ObservableRow> resultsTableView, final CSV csv){
+    public static void createResultsRows(final TableView<ObservableRow> resultsTableView, final CSV csv, final Main main){
         resultsTableView.getItems().clear();
         if (csv.hasQuery()) {
             Query query = csv.getQuery();
             List<Row> rows = query.where().getResultList();
             for (int y = 0; y < rows.size(); y++) {
-                resultsTableView.getItems().add(new ObservableRow(rows.get(y)));
+                resultsTableView.getItems().add(new ObservableRow(rows.get(y), main));
             }
         } else {
             for (int y = 0; y < csv.getRowCount(); y++) {
-                resultsTableView.getItems().add(new ObservableRow(csv.getRow(y)));
+                resultsTableView.getItems().add(new ObservableRow(csv.getRow(y), main));
             }
         }
     }
