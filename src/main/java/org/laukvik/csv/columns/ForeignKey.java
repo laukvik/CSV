@@ -26,8 +26,10 @@ public class ForeignKey {
     private String column;
 
     /**
-     * @param table
-     * @param column
+     * Creates a new ForeignKey
+     *
+     * @param table the table
+     * @param column the column
      */
     public ForeignKey(String table, String column) {
         if (table == null || table.trim().isEmpty()) {

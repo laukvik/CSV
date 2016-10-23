@@ -17,12 +17,40 @@ import org.laukvik.csv.columns.UrlColumn;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Reads a data set in the CSV format
+ * Reads a data set in the CSV format.
+ *
+ * <h3>Reading a file with auto detect on:</h3>
+ *
+ * <pre>
+ * try (CsvReader r = new CsvReader( new File("presidents.csv"), Charset.forName(charset)) )) {
+ *   while (r.hasNext()) {
+ *     Row row = r.next();
+ *   }
+ *   }
+ *   catch (IOException e) {
+ *     e.printStacktrace();
+ * }
+ * </pre>
+ *
+ * <h3>Reading a file with specifying separator character and encoding:</h3>
+ *
+ * <pre>
+ * try (CsvReader r = new CsvReader( new File("presidents.csv"), Charset.forName(charset)) )) {
+ *   while (r.hasNext()) {
+ *     Row row = r.next();
+ *   }
+ *   }
+ *   catch (IOException e) {
+ *     e.printStacktrace();
+ * }
+ * </pre>
+ *
  *
  * @author Morten Laukvik
  */
@@ -61,6 +89,14 @@ public class CsvReader implements ClosableReader {
         }
         this.metaData.setSeparator(columnSeparatorChar);
         this.metaData.setQuoteChar(this.quoteChar);
+    }
+
+    public CsvReader(final File file, final Character separator, final Character quote) throws IOException {
+        this(new BufferedReader(new FileReader(file)), separator, quote);
+    }
+
+    public CsvReader(final File file) throws IOException {
+        this(new BufferedReader(new FileReader(file)));
     }
 
     /**

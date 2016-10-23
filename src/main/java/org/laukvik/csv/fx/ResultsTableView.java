@@ -30,8 +30,8 @@ class ResultsTableView extends TableView<ObservableRow> {
         getColumns().clear();
     }
 
-    public void columnsChanged(CSV csv) {
+    public void columnsChanged(CSV csv, Main main) {
         createResultsColumns(this, csv.getMetaData());
-        createResultsRows(this, csv);
+        createResultsRows(this, csv, main);
     }
 }

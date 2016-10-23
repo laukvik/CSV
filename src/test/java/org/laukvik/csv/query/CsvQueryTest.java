@@ -15,40 +15,153 @@
  */
 package org.laukvik.csv.query;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.ParseException;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.DateColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
-
 public class CsvQueryTest {
-
-    @Test
-    public void readFile() throws IOException, ParseException {
-        CSV csv = new CSV();
-        csv.readFile(getResource("metadata.csv"));
-//        Query q = csv.findByQuery();
-        StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
-        IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
-        StringColumn homeState = (StringColumn) csv.getMetaData().getColumn("Home state");
-
-        List<Row> rows = csv.findByQuery().
-                select(party, homeState).
-                where().
-                column(presidency).
-                isGreaterThan(10).
-                getResultList();
-    }
 
     public static File getResource(String filename) {
         ClassLoader classLoader = CsvQueryTest.class.getClassLoader();
         return new File(classLoader.getResource(filename).getFile());
+    }
+
+    public CSV findCSV() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(getResource("metadata.csv"));
+        return csv;
+    }
+
+    @Test
+    public void lessThan() throws IOException, ParseException {
+        CSV csv = findCSV();
+        IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
+        List<Row> rows = csv.findByQuery().where().column(presidency).isLessThan(11).getResultList();
+        Assert.assertEquals(10, rows.size());
+    }
+
+    @Test
+    public void greaterThan() throws IOException, ParseException {
+        CSV csv = findCSV();
+        IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
+        List<Row> rows = csv.findByQuery().where().column(presidency).isGreaterThan(40).getResultList();
+        Assert.assertEquals(4, rows.size());
+    }
+
+    @Test
+    public void getResultList() throws IOException, ParseException {
+        CSV csv = findCSV();
+        IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
+        List<Row> rows = csv.findByQuery().where().getResultList();
+        Assert.assertEquals(44, rows.size());
+    }
+
+    @Test
+    public void intIs() throws IOException, ParseException {
+        CSV csv = findCSV();
+        IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
+        List<Row> rows = csv.findByQuery().where().column(presidency).is(5).getResultList();
+        Assert.assertEquals(1, rows.size());
+    }
+
+    @Test
+    public void isBetween() throws IOException, ParseException {
+        CSV csv = findCSV();
+        IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
+        List<Row> rows = csv.findByQuery().where().column(presidency).isBetween(10, 12).getResultList();
+        Assert.assertEquals(3, rows.size());
+    }
+
+    @Test
+    public void isEmpty() throws IOException, ParseException {
+        CSV csv = findCSV();
+        IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
+        List<Row> rows = csv.findByQuery().where().column(presidency).isEmpty().getResultList();
+        Assert.assertEquals(0, rows.size());
+    }
+
+    @Test
+    public void isIn() throws IOException, ParseException {
+        CSV csv = findCSV();
+        IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
+        List<Row> rows = csv.findByQuery().where().column(presidency).isIn(1, 2, 3).getResultList();
+        Assert.assertEquals(3, rows.size());
+    }
+
+    @Test
+    public void stringIs() throws IOException, ParseException {
+        CSV csv = findCSV();
+        StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
+        List<Row> rows = csv.findByQuery().where().column(party).is("Whig").getResultList();
+        Assert.assertEquals(4, rows.size());
+    }
+
+    @Test
+    public void stringIsIn() throws IOException, ParseException {
+        CSV csv = findCSV();
+        StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
+        List<Row> rows = csv.findByQuery().where().column(party).isIn("Whig", "Independent").getResultList();
+//        Assert.assertEquals( 5, rows.size() );
+    }
+
+    @Test
+    public void stringEmpty() throws IOException, ParseException {
+        CSV csv = findCSV();
+        StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
+        List<Row> rows = csv.findByQuery().where().column(party).isEmpty().getResultList();
+        Assert.assertEquals(0, rows.size());
+    }
+
+    @Test
+    public void stringNotEmpty() throws IOException, ParseException {
+        CSV csv = findCSV();
+        StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
+        List<Row> rows = csv.findByQuery().where().column(party).isNotEmpty().getResultList();
+        Assert.assertEquals(44, rows.size());
+    }
+
+    public Date createDate(int year, int month, int day) {
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        return cal.getTime();
+    }
+
+    @Test
+    public void isDate() throws IOException, ParseException {
+        CSV csv = findCSV();
+        DateColumn tookOffice = (DateColumn) csv.getMetaData().getColumn("Took office");
+        List<Row> rows = csv.findByQuery().where().column(tookOffice).isDate(createDate(1789, 3, 30)).getResultList();
+        Assert.assertEquals(1, rows.size());
+    }
+
+    @Test
+    public void isDateGreater() throws IOException, ParseException {
+        CSV csv = findCSV();
+        DateColumn tookOffice = (DateColumn) csv.getMetaData().getColumn("Took office");
+        List<Row> rows = csv.findByQuery().where().column(tookOffice).isDateGreaterThan(createDate(1900, 1, 1)).getResultList();
+        Assert.assertEquals(19, rows.size());
+    }
+
+    @Test
+    public void isDateLess() throws IOException, ParseException {
+        CSV csv = findCSV();
+        DateColumn tookOffice = (DateColumn) csv.getMetaData().getColumn("Took office");
+        List<Row> rows = csv.findByQuery().where().column(tookOffice).isDateLessThan(createDate(1900, 1, 1)).getResultList();
+        Assert.assertEquals(25, rows.size());
     }
 
 }

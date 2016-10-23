@@ -183,7 +183,6 @@ public class CsvReaderTest {
 //        assertEquals(Charset.forName("utf-8"),r.getMetaData().getCharset());
 
         InputStreamReader r = new InputStreamReader(new FileInputStream(getResource("charset_utf_8.csv")));
-        System.out.println(r.getEncoding());
     }
 
     public BufferedReader getReaderByResource(String resourceName) throws FileNotFoundException {

@@ -33,7 +33,7 @@ class ColumnsTableView extends TableView<ObservableColumn>{
 
         final TableColumn columnNameColumn = new TableColumn(bundle.getString("table.columns"));
         columnNameColumn.setCellValueFactory(
-                new PropertyValueFactory<ObservableColumn,String>("name")
+                new PropertyValueFactory<ObservableColumn, String>("name")
         );
         columnNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         getColumns().addAll(checkboxColumn, columnNameColumn);
@@ -41,8 +41,8 @@ class ColumnsTableView extends TableView<ObservableColumn>{
                 new EventHandler<TableColumn.CellEditEvent<ObservableColumn, String>>() {
                     @Override
                     public void handle(TableColumn.CellEditEvent<ObservableColumn, String> t) {
-                        ((ObservableColumn) t.getTableView().getItems().get( t.getTablePosition().getRow() )).setName(t.getNewValue());
-                    }
+                        t.getTableView().getItems().get(t.getTablePosition().getRow()).setName(t.getNewValue());
+                }
                 }
         );
 

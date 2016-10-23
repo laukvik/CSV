@@ -12,7 +12,9 @@ import javafx.util.Callback;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.FrequencyDistribution;
 import org.laukvik.csv.MetaData;
+import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +51,13 @@ class Builder {
         return FXCollections.observableArrayList( list );
     }
 
-    public static ObservableList<ObservableFrequencyDistribution> createFrequencyDistributionObservableList(int columnIndex, CSV csv) {
+    public static ObservableList<ObservableFrequencyDistribution> createFrequencyDistributionObservableList(int columnIndex, CSV csv, Main main) {
         List<ObservableFrequencyDistribution> list = new ArrayList<>();
         FrequencyDistribution d = csv.buildFrequencyDistribution(columnIndex);
-        for (String key :d.getKeys()){
-            list.add(new ObservableFrequencyDistribution(false, key, d.getCount(key)));
+        Column c = csv.getMetaData().getColumn(columnIndex);
+        for (String key : d.getKeys()){
+            boolean selected = main.getQueryModel().isSelected(c, key);
+            list.add(new ObservableFrequencyDistribution(selected, key, d.getCount(key), c, main));
         }
         return FXCollections.observableArrayList( list );
     }
@@ -61,13 +65,22 @@ class Builder {
     /**
      * Creates the Rows
      *
-     * @param resultsTableView
-     * @param csv
+     * @param resultsTableView the TableView
+     * @param csv the csv file
+     * @param main the Main
      */
-    public static void createResultsRows(final TableView<ObservableRow> resultsTableView, final CSV csv){
+    public static void createResultsRows(final TableView<ObservableRow> resultsTableView, final CSV csv, final Main main){
         resultsTableView.getItems().clear();
-        for (int y=0; y<csv.getRowCount(); y++){
-            resultsTableView.getItems().add(new ObservableRow(csv.getRow(y)));
+        if (csv.hasQuery()) {
+            Query query = csv.getQuery();
+            List<Row> rows = query.where().getResultList();
+            for (int y = 0; y < rows.size(); y++) {
+                resultsTableView.getItems().add(new ObservableRow(rows.get(y), main));
+            }
+        } else {
+            for (int y = 0; y < csv.getRowCount(); y++) {
+                resultsTableView.getItems().add(new ObservableRow(csv.getRow(y), main));
+            }
         }
     }
 

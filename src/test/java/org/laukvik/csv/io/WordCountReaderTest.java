@@ -31,7 +31,6 @@ public class WordCountReaderTest {
         StringColumn countColumn = (StringColumn) metaData.getColumn(1);
         while (reader.hasNext()){
             Row row = reader.next();
-            System.out.println( row.getString(wordColumn) + "=" + row.getString(countColumn) );
         }
     }
 

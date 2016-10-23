@@ -178,6 +178,19 @@ class CsvMenuBar extends MenuBar {
         });
         insert.getItems().addAll(newColumnItem,newRowItem,headersRowItem);
 
+
+
+        // ----- Query ------
+        final Menu queryMenu = new Menu(bundle.getString("query"));  // Clear query
+        MenuItem newQueryMenuItem = new MenuItem(bundle.getString("query.new"));
+        newQueryMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handleNewQuery();
+            }
+        });
+
+        queryMenu.getItems().addAll(newQueryMenuItem);
+
         // ----- View ------
         viewMenu = new Menu(bundle.getString("view"));
         CheckMenuItem viewResultsMenuItem = new CheckMenuItem(bundle.getString("view.results"));
@@ -220,7 +233,27 @@ class CsvMenuBar extends MenuBar {
             }
         });
 
-        viewMenu.getItems().addAll(viewResultsMenuItem, viewChartMenuItem, previewChartMenuItem, wikipediaMenuItem);
+        CheckMenuItem googleMapsMenuItem = new CheckMenuItem(bundle.getString("view.googlemaps"));
+        googleMapsMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+5"));
+        googleMapsMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                setSelectedMode(4);
+                main.handleViewGoogleMapsAction();
+
+            }
+        });
+
+        CheckMenuItem googleSearchMenuItem = new CheckMenuItem(bundle.getString("view.google"));
+        googleSearchMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+6"));
+        googleSearchMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                setSelectedMode(5);
+                main.handleViewGoogleSearchAction();
+
+            }
+        });
+
+        viewMenu.getItems().addAll(viewResultsMenuItem, viewChartMenuItem, previewChartMenuItem, wikipediaMenuItem, googleMapsMenuItem, googleSearchMenuItem);
 
         // ----- Help ------
         final Menu help = new Menu(bundle.getString("help"));
@@ -235,6 +268,7 @@ class CsvMenuBar extends MenuBar {
         //
         getMenus().add(fileMenu);
         getMenus().add(edit);
+        getMenus().add(queryMenu);
         getMenus().add(insert);
         getMenus().addAll(viewMenu);
         getMenus().add(help);

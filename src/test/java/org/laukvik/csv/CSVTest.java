@@ -20,7 +20,9 @@ import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -30,12 +32,72 @@ import static org.junit.Assert.fail;
 
 public class CSVTest {
 
+    // ------ Rows ------
+
+    public static File getResource(String filename) {
+        ClassLoader classLoader = CSVTest.class.getClassLoader();
+        return new File(classLoader.getResource(filename).getFile());
+    }
+
+    // ------ Rows ------
+
+    @Test
+    public void shouldBuildDistinctSet() throws IOException {
+        CSV csv = new CSV();
+        Set<String> values = csv.buildDistinctValues(1);
+    }
+
+    @Test
+    public void shouldInsertRow() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(getResource("presidents.csv"));
+        StringColumn president = csv.addStringColumn("President");
+        csv.addRow(0).update(president, "Barak Obama");
+    }
+
+    @Test
+    public void shouldSwapRows() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(getResource("presidents.csv"));
+    }
+
+    @Test
+    public void shouldMoveRows() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(getResource("presidents.csv"));
+        Row r0 = csv.getRow(0);
+        Row r9 = csv.getRow(9);
+
+
+//        csv.moveRow( 0, 9 );
+        assertEquals(0, r0.indexOf());
+    }
+
+    @Test
+    public void shouldRemoveRow() throws IOException {
+    }
+
+    @Test
+    public void shouldRemoveRowsBetween() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(getResource("presidents.csv"));
+    }
+
+    @Test
+    public void shouldFindIndexOf() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(getResource("presidents.csv"));
+        assertEquals(0, csv.getRow(0).indexOf());
+    }
+
     @Test
     public void findRows() throws IOException, ParseException {
         CSV csv = new CSV();
         csv.readFile(getResource("countries.csv"));
         assertEquals(249, csv.getRowCount());
     }
+
+    // ------ Reading ------
 
     @Test
     public void iterator() throws IOException, ParseException {
@@ -86,11 +148,6 @@ public class CSVTest {
 
         assertEquals(2, csv2.getRowCount());
 
-    }
-
-    public static File getResource(String filename) {
-        ClassLoader classLoader = CSVTest.class.getClassLoader();
-        return new File(classLoader.getResource(filename).getFile());
     }
 
     @Test
@@ -180,7 +237,6 @@ public class CSVTest {
             assertSame("RowCount", 1, csv.getRowCount());
 
             Row r = csv.getRow(0);
-            System.out.println(r.toString());
             StringColumn desc = (StringColumn) md.getColumn("Description");
 
             assertEquals("ac, abs, moon", "ac, abs, moon", r.getString(desc));
@@ -258,22 +314,6 @@ public class CSVTest {
             assertTrue("Found invalid data", (e instanceof InvalidRowDataException));
         }
     }
-
-//    @Test
-//    public void readEntities() {
-//        try {
-//            CSV csv = new CSV();
-//            csv.readFile(getResource("person.csv"));
-//            List<Person> items = CSV.findByClass(Person.class);
-//            int x = 1;
-//            for (Person p : items) {
-//                x++;
-//            }
-//        }
-//        catch (Exception e) {
-//            fail(e.getMessage());
-//        }
-//    }
 
     @Test
     public void readWithoutSeparator() throws IOException {
@@ -372,6 +412,33 @@ public class CSVTest {
         csv.readWordCountFile( getResource("words.txt") );
         assertEquals(2, csv.getMetaData().getColumnCount());
         assertEquals(8, csv.getRowCount());
+    }
+
+
+    // ------ Read Java -----
+
+    @Test
+    public void shouldReadPojo() {
+        List<Employee> employees = new ArrayList<>();
+        employees.add(new Employee("Bob", 25, false));
+        employees.add(new Employee("Jane", 24, true));
+        employees.add(new Employee("Yay", 32, false));
+        CSV csv = new CSV();
+//        csv.readJava(employees);
+//        assertEquals(3, csv.getRowCount());
+//        csv.addRow().update(president, "");
+    }
+
+    static class Employee {
+        public String name;
+        public int age;
+        public boolean isWoman;
+
+        public Employee(final String name, final int age, final boolean isWoman) {
+            this.name = name;
+            this.age = age;
+            this.isWoman = isWoman;
+        }
     }
 
 }

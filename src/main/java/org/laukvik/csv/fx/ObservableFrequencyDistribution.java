@@ -3,6 +3,9 @@ package org.laukvik.csv.fx;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import org.laukvik.csv.columns.Column;
 
 /**
  * A JavaFX data model for FrequencyDistribution.
@@ -15,16 +18,36 @@ public final class ObservableFrequencyDistribution {
     private final SimpleBooleanProperty selected;
     private final SimpleStringProperty value;
     private final SimpleIntegerProperty count;
+    private Main main;
+    private Column column;
 
     /**
-     * @param selected
-     * @param value
-     * @param count
+     * Builds a new instance with the specified values
+     *
+     * @param selected whether the value is selected
+     * @param value the value
+     * @param count how many times its used
+     * @param column the column
+     * @param main the main
      */
-    public ObservableFrequencyDistribution(boolean selected, String value, int count) {
+    public ObservableFrequencyDistribution(boolean selected, String value, int count, Column column, Main main) {
         this.selected = new SimpleBooleanProperty(selected);
         this.value = new SimpleStringProperty(value);
         this.count = new SimpleIntegerProperty(count);
+        this.column = column;
+        this.main = main;
+        this.selected.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
+                if (main != null) {
+                    if (newValue) {
+                        main.handleSelected(column, value);
+                    } else {
+                        main.handleUnselected(column, value);
+                    }
+                }
+            }
+        });
     }
 
     public boolean isSelected() {

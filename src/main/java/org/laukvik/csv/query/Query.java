@@ -24,7 +24,6 @@ import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -41,21 +40,11 @@ public class Query {
     private Where where;
     private Select select;
 
-    public Query(MetaData metaData, CSV csv) {
-        this.metaData = metaData;
+    public Query(CSV csv) {
+        this.metaData = csv.getMetaData();
         this.csv = csv;
         this.select = new Select();
         this.select.where = this.where();
-    }
-
-    public OrderBy orderBy() {
-        return this.where().orderBy();
-    }
-
-    public Where where() {
-        where = new Where();
-        where.query = this;
-        return where;
     }
 
     public Select select() {
@@ -65,14 +54,25 @@ public class Query {
     }
 
     public Select select(org.laukvik.csv.columns.Column... columns) {
-//        select.setColumns(columns);
+        select.columns = columns;
         return select;
     }
 
-    private List<Row> getResultList() {
+    public Where where() {
+        where = new Where();
+        where.query = this;
+        return where;
+    }
+
+    public OrderBy orderBy() {
+        return this.where().orderBy();
+    }
+
+    public List<Row> getResultList() {
         List<Row> filteredRows = new ArrayList<>();
         int matchesRequired = where.columns.size();
         for (int rowIndex = 0; rowIndex < csv.getRowCount(); rowIndex++) {
+
             Row r = csv.getRow(rowIndex);
             if (matchesRequired == 0) {
                 /* Dont use filters - add all */
@@ -125,7 +125,7 @@ public class Query {
             return where;
         }
 
-        public Where isIn(String[] value) {
+        public Where isIn(String... value) {
             matcher = new StringInMatcher((StringColumn) col, value);
             return where;
         }
@@ -177,20 +177,22 @@ public class Query {
             return where;
         }
 
-        public Where isDateGreaterThan(Date value, SimpleDateFormat format) {
-            matcher = new DateGreaterThan((DateColumn) col, value, format);
+        public Where isDateGreaterThan(Date value) {
+            if (!(col instanceof DateColumn)) {
+                throw new IllegalArgumentException("Column " + col + " is not a date column!");
+            }
+            matcher = new DateGreaterThan((DateColumn) col, value);
             return where;
         }
 
-        public Where isDateLessThan(Date value, SimpleDateFormat format) {
-            matcher = new DateLessThan((DateColumn) col, value, format);
+        public Where isDateLessThan(Date value) {
+            matcher = new DateLessThan((DateColumn) col, value);
             return where;
         }
 
         public Where isYear(int value) {
             if (col instanceof DateColumn) {
-                DateColumn dc = (DateColumn) col;
-                matcher = new YearIs((DateColumn) col, value, dc.getDateFormat());
+                matcher = new YearIs((DateColumn) col, value);
             } else {
                 throw new IllegalArgumentException("Column " + col + " is not dateformat!");
             }
@@ -205,7 +207,7 @@ public class Query {
         public Where isIn(Date[] arr) {
             if (col instanceof DateColumn) {
                 DateColumn dc = (DateColumn) col;
-                matcher = new DateIsInMatcher(dc, arr, dc.getDateFormat());
+                matcher = new DateIsInMatcher(dc, arr);
             } else {
                 throw new IllegalArgumentException("Column " + col + " is not dateformat!");
             }
@@ -283,7 +285,7 @@ public class Query {
 
     public class Select {
 
-        private final org.laukvik.csv.columns.Column[] columns;
+        private org.laukvik.csv.columns.Column[] columns;
         private Where where;
 
         public Select(org.laukvik.csv.columns.Column... columns) {

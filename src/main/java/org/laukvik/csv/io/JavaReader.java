@@ -36,6 +36,7 @@ public class JavaReader<T> implements Readable {
     /**
      * Reads the list of Java objects into a data set
      *
+     * @param csv the csv
      * @param list the list
      */
     public JavaReader(CSV csv, List<T> list) {
@@ -88,11 +89,13 @@ public class JavaReader<T> implements Readable {
     /**
      * Updates the instance with the properties from the specified instance
      *
+     * @param row the row
      * @param column the column
      * @param instance the object to
+     * @throws NoSuchFieldException when the field cant be found
+     * @throws IllegalAccessException when the field cant be accessed
      */
     public static void updateByColumn( Row row, Column column, Object instance) throws NoSuchFieldException, IllegalAccessException {
-
         Field f = instance.getClass().getField(column.getName());
         if (column instanceof StringColumn){
             StringColumn c = (StringColumn) column;

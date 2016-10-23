@@ -33,13 +33,14 @@ public class FrequencyDistribution {
     private final Column column;
     private final Map<String, Integer> map;
 
+    /**
+     * Creates a new FrequencyDistribution with empty values for the
+     * specified column
+     *
+     * @param column the column
+     */
     public FrequencyDistribution(Column column) {
         this.column = column;
-        this.map = new TreeMap<>();
-    }
-
-    public FrequencyDistribution() {
-        this.column = null;
         this.map = new TreeMap<>();
     }
 

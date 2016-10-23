@@ -62,6 +62,7 @@ public class XmlWriter implements Writeable {
     /**
      * Writes the CSV to the outputStream using the default values for rootElementName and rowElementName
      *
+     * @param out the outputStream
      */
     public XmlWriter(OutputStream out){
         this(out, "rows", "row");

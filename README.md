@@ -1,47 +1,160 @@
-[![Build Status](https://travis-ci.org/laukvik/LaukvikCSV.svg?branch=master)](https://travis-ci.org/laukvik/LaukvikCSV) [![Code Climate](https://codeclimate.com/github/laukvik/LaukvikCSV/badges/gpa.svg)](https://codeclimate.com/github/laukvik/LaukvikCSV) [![Test Coverage](https://codeclimate.com/github/laukvik/LaukvikCSV/badges/coverage.svg)](https://codeclimate.com/github/laukvik/LaukvikCSV/coverage) [![Issue Count](https://codeclimate.com/github/laukvik/LaukvikCSV/badges/issue_count.svg)](https://codeclimate.com/github/laukvik/LaukvikCSV)
+    [![Build Status](https://travis-ci.org/laukvik/LaukvikCSV.svg?branch=master)](https://travis-ci.org/laukvik/LaukvikCSV) [![Code Climate](https://codeclimate.com/github/laukvik/LaukvikCSV/badges/gpa.svg)](https://codeclimate.com/github/laukvik/LaukvikCSV) [![Test Coverage](https://codeclimate.com/github/laukvik/LaukvikCSV/badges/coverage.svg)](https://codeclimate.com/github/laukvik/LaukvikCSV/coverage) [![Issue Count](https://codeclimate.com/github/laukvik/LaukvikCSV/badges/issue_count.svg)](https://codeclimate.com/github/laukvik/LaukvikCSV)
 
-An easy to use API for reading and writing to CSV files.
 
-Create an empty CSV
---------------------------------------------------------------------------------
+An easy to use API for reading, writing, querying and exporting data.
+
+
+
+
+## Reading files
+
+The easiest way to read a CSV file is to call the default constructor. This method will try to auto detect separator character and encoding.
+
+    CSV csv = new CSV(new File("presidents.csv"));
+    
+To read files using a SEMI COLON as separator character
 
     CSV csv = new CSV();
+    csv.readFile( new File("presidents.csv"), CSV.SEMICOLON );
+
+To read files using a semi colon as PIPE character
+
+    CSV csv = new CSV();
+    csv.readFile( new File("presidents.csv"), CSV.PIPE );
+
+To read files using a semi colon as TAB character
+
+    CSV csv = new CSV();
+    csv.readFile( new File("presidents.csv"), CSV.TAB );
+
+
+
+## Reading file with very large data sets
+
+    try (CsvReader r = new CsvReader( new File("presidents"), Charset.forName(charset)) )) {
+        while (r.hasNext()) {
+            Row row = r.next();
+        }
+    }
+    catch (IOException e) {
+        e.printStacktrace();
+    }
+
+
+## Reading POJO
+
+    List<Employee> employees = new ArrayList<>();
+    employees.add( new Employee("Bob",25,false) );
+    employees.add( new Employee("Jane",24,true) );
+    employees.add( new Employee("Yay",32,false) );
+    CSV csv = new CSV();
+    csv.readJava(employees);
+
+
+## Writing files
+
+    csv.write( new File("presidents.csv") );
+
+
+
+## Export files
+
+To write the contents to a CSV file
+
+    csv.writeFile( new File("presidents.csv") );
+
+To write the contents to a XML file
+
+    csv.writeXML( new File("presidents.xml") );
+
+To write the contents to a JSON file
+
+    csv.writeXML( new File("presidents.json") );
     
-Add two columns
---------------------------------------------------------------------------------
+To write the contents to a HTML file
 
-    csv.addColumn("First");
-    csv.addColumn("Last");
+    csv.writeXML( new File("presidents.html") );
     
-Add a new row
---------------------------------------------------------------------------------
+To write the contents to ResourceBundle(s)
 
-    csv.addRow("Bill","Gates");
+    csv.writeXML( new File("presidents.properties") );
 
-Write to file
---------------------------------------------------------------------------------
 
-    csv.write( new File("contacts.csv") );
+
+## Working with columns
+
+Creating a CSV with two columns
+
+    CSV csv = new CSV();
+    csv.addColumn("President");
+    csv.addColumn("Party");
     
-Reading an existing file
---------------------------------------------------------------------------------
+Reordering columns. The following example moves the column "Party" from index 1 to index 0 
 
-    CSV csv = new CSV( new File("contacts.csv") );
+    csv.getMetaData().moveColumn(1,0);
+    
+Removes the first column (President).
 
-Getting a specific row/column
---------------------------------------------------------------------------------
+    csv.getMetaData().removeColumn(0);
 
-    System.out.println( csv.getRow(2).getString(3) );
+    
+    
+    
+
+## Working with rows
+
+Adding a new row with data
+
+    CSV csv = new CSV();
+    StringColumn president = csv.addColumn("President");
+    StringColumn party = csv.addColumn("Party");
+    
+    csv.addRow().update(president, "Barack Obama").update(party, "Democratic");
+
+Moving a row up or down
+
+    csv.moveRow( 1, 2 );
+    
+Swapping two rows
+
+    csv.swapRows( 1, 2 );
+    
+Removing rows
+
+    csv.removeRow( 5 );
+    
+Removing rows between range
+
+    csv.removeRows( 5, 10 );
+    
+Finding the index
+
+    csv.indexOf( row );
+
+Inserting row at a specific index
+
+    CSV csv = new CSV();
+    StringColumn president = csv.addStringColumn("President");
+    csv.addRow(0).update(president, "Barak Obama");
+
+
+
+## Iterating rows
 
 Iterating all rows
---------------------------------------------------------------------------------
 
+    CSV csv = new CSV();
     for (int y=0; y<csv.getRowCount(); y++){
         Row row = csv.getRow(y);
     }
 
-Using queries
---------------------------------------------------------------------------------
+
+
+
+
+
+## Using queries 
+
 The API supports fluent queries similar to SQL. The first example finds all rows where President is Barack Obama
 
     List<Row> rows = csv.findByQuery().where().column("President").is("Barack Obama").getResultList();
@@ -52,21 +165,16 @@ The second example uses sorting for the results
 
 
 
-Using annotations
---------------------------------------------------------------------------------
-You can add CSV annotations to easily persist instances of the entities to
-a CSV file. The CSV file will act similar to a single table in a SQL database.
+## FrequencyDistribution
+
+Builds a FrequencyDistribution for column with index 2;
+
+    FrequencyDistribution fd = csv.buildFrequencyDistribution( 2 );
 
 
-    @Entity
-    public class RecentFile {
-        @Column
-        private String path;
-    }
+## Distinct Values
 
-    /* Read all entries */
-    List<RecentFile> recentFiles = CSV.findByClass(RecentFile.class);
-
+    Set<String> values = csv.buildDistinctValues(1);
 
 
 

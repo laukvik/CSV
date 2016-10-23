@@ -90,6 +90,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     private CsvMenuBar menuBar;
     private ScrollPane resultsScroll;
     private int viewMode = 0;
+    private QueryModel queryModel;
 
     public static void main(String[] args) {
         launch(args);
@@ -112,11 +113,21 @@ public class Main extends Application implements ChangeListener, FileListener {
         int max = 50;
         int x = 0;
         for (ObservableFrequencyDistribution fd : frequencyDistributionTableView.getItems()) {
-            if (x < 50) {
+            if (fd.isSelected()) {
                 dataset.add(new PieChart.Data(fd.getValue(), fd.getCount()));
             }
-            x++;
         }
+
+        if (dataset.isEmpty()){
+            for (ObservableFrequencyDistribution fd : frequencyDistributionTableView.getItems()) {
+                if (x < max) {
+                    dataset.add(new PieChart.Data(fd.getValue(), fd.getCount()));
+                }
+                x++;
+            }
+        }
+
+
         ObservableList<PieChart.Data> data = FXCollections.observableArrayList(dataset);
         final PieChart chart = new PieChart(data);
         return chart;
@@ -135,9 +146,14 @@ public class Main extends Application implements ChangeListener, FileListener {
                     handleViewPreviewAction();
                 } else if (viewMode == 3) {
                     handleViewWikipediaAction();
+                } else if (viewMode == 4) {
+                    handleViewGoogleMapsAction();
+                } else if (viewMode == 5) {
+                    handleViewGoogleSearchAction();
                 }
             }
         });
+
 
         resultsTableView = new ResultsTableView();
 
@@ -210,9 +226,13 @@ public class Main extends Application implements ChangeListener, FileListener {
         newFile();
     }
 
+    public QueryModel getQueryModel(){
+        return queryModel;
+    }
+
     private void setSelectedColumnIndex(int selectedColumnIndex){
         if (selectedColumnIndex > -1){
-            frequencyDistributionTableView.setItems(createFrequencyDistributionObservableList(selectedColumnIndex, csv));
+            frequencyDistributionTableView.setItems(createFrequencyDistributionObservableList(selectedColumnIndex, csv, this));
             if (viewMode == 0) {
                 handleViewResultsAction();
             } else if (viewMode == 1) {
@@ -236,7 +256,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     /**
      * Loads a file without dialogs
      *
-     * @param file
+     * @param file the file to open
      */
     public void loadFile(File file) {
         if (file != null) {
@@ -308,6 +328,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     public void newFile() {
         csv = new CSV();
+        queryModel = new QueryModel(csv, this);
         csv.addChangeListener(this);
         csv.addFileListener(this);
         columnsTableView.setItems(observableArrayList());
@@ -326,6 +347,8 @@ public class Main extends Application implements ChangeListener, FileListener {
             } else if (separatorChar != null){
                 csv.readFile(file, separatorChar);
             }
+
+            queryModel = new QueryModel(csv, this);
 
             if (csv.getFile() != null){
                 recent.open(file);
@@ -410,9 +433,9 @@ public class Main extends Application implements ChangeListener, FileListener {
     @Override
     public void rowCreated(final int rowIndex, final Row row) {
         if (rowIndex == resultsTableView.getItems().size()+1){
-            resultsTableView.getItems().add(new ObservableRow(row));
+            resultsTableView.getItems().add(new ObservableRow(row, this));
         } else {
-            resultsTableView.getItems().add(rowIndex, new ObservableRow(row));
+            resultsTableView.getItems().add(rowIndex, new ObservableRow(row, this));
         }
         updateToolbar();
     }
@@ -435,7 +458,17 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     @Override
     public void cellUpdated(final int columnIndex, final int rowIndex) {
-        alert("cellUpdated: " + columnIndex + "x" + rowIndex );
+        if (columnIndex == columnsTableView.getSelectionModel().getSelectedIndex()){
+            setSelectedColumnIndex(columnIndex);
+        }
+    }
+
+    public void buildFrequencyDistribution(){
+        int selectedColumnIndex = frequencyDistributionTableView.getSelectionModel().getSelectedIndex();
+        if (selectedColumnIndex > -1){
+            frequencyDistributionTableView.getItems().clear();
+            frequencyDistributionTableView.setItems(createFrequencyDistributionObservableList(selectedColumnIndex, csv, this));
+        }
     }
 
     @Override
@@ -496,7 +529,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     }
 
     private void buildResultsTable(){
-        resultsTableView.columnsChanged(csv);
+        resultsTableView.columnsChanged(csv, this);
     }
 
     private void updateColumns(){
@@ -506,7 +539,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     private void updateRows(){
         createResultsColumns(resultsTableView, csv.getMetaData());
-        createResultsRows(resultsTableView, csv);
+        createResultsRows(resultsTableView, csv, this);
     }
 
     private void deleteColumn(final int columnIndex){
@@ -735,7 +768,39 @@ public class Main extends Application implements ChangeListener, FileListener {
         }
     }
 
+    public void handleSelected(Column column, String value) {
+        getQueryModel().addSelection(column, value);
+        List<ObservableRow> list = getQueryModel().buildObservableRows();
+        resultsTableView.getItems().clear();
+        resultsTableView.getItems().addAll(list);
+        if (viewMode == 1){
+            handleViewChartAction();
+        }
+    }
+
+    public void handleUnselected(Column column, String value) {
+        getQueryModel().removeSelection(column, value);
+        List<ObservableRow> list = getQueryModel().buildObservableRows();
+        resultsTableView.getItems().clear();
+        resultsTableView.getItems().addAll(list);
+        if (viewMode == 1){
+            handleViewChartAction();
+        }
+    }
+
+    /**
+     *
+     */
+    public void handleNewQuery() {
+        getQueryModel().clearSelections();
+        List<ObservableRow> list = getQueryModel().buildObservableRows();
+        resultsTableView.getItems().clear();
+        resultsTableView.getItems().addAll(list);
+        buildFrequencyDistribution();
+    }
+
     public void handleViewChartAction() {
+
         final PieChart chart = buildPieChart(frequencyDistributionTableView);
         resultsScroll.setContent(chart);
         viewMode = 1;
@@ -787,4 +852,34 @@ public class Main extends Application implements ChangeListener, FileListener {
         }
         viewMode = 3;
     }
+
+    public void handleViewGoogleMapsAction() {
+        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
+        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
+            String value = ofd.getValue();
+            WebView v = new WebView();
+            WebEngine webEngine = v.getEngine();
+            resultsScroll.setContent(v);
+            webEngine.load("https://www.google.com/maps?q=" + value);
+        } else {
+            resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
+        }
+        viewMode = 4;
+
+    }
+
+    public void handleViewGoogleSearchAction() {
+        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
+        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
+            String value = ofd.getValue();
+            WebView v = new WebView();
+            WebEngine webEngine = v.getEngine();
+            resultsScroll.setContent(v);
+            webEngine.load("https://www.google.no/?q=" + value);
+        } else {
+            resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
+        }
+        viewMode = 5;
+    }
+
 }

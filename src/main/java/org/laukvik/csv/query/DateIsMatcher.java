@@ -18,35 +18,24 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  * Compares a DateColumn to specified Date
  */
-public class DateIsMatcher extends RowMatcher {
-
-    private final Date value;
-    private final DateColumn column;
+public class DateIsMatcher extends AbstractDateMatcher {
 
     public DateIsMatcher(DateColumn column, Date value) {
-        super();
-        this.column = column;
-        this.value = value;
+        super(column, value);
     }
 
     @Override
     public boolean matches(Row row) {
         Date d = row.getDate(column);
-        if (d == null) {
+        if (d == null || value == null) {
             return false;
         }
-        GregorianCalendar c1 = new GregorianCalendar();
-        c1.setTime(value);
-        GregorianCalendar c2 = new GregorianCalendar();
-        c2.setTime(d);
-        return c1.get(Calendar.DATE) == c2.get(Calendar.DATE) && c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) && c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR);
+        return isEqualDate(value, d);
     }
 
 }

@@ -32,6 +32,19 @@ public class StringInMatcher extends RowMatcher {
         this.value = value;
     }
 
+    public static boolean isAny(String v1, String... value) {
+        for (String v : value) {
+            if (isAny(v1, v)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isAny(String v1, String v2) {
+        return v1.equals(v2);
+    }
+
     @Override
     public boolean matches(Row row) {
         String val = row.getString(column);
@@ -39,7 +52,7 @@ public class StringInMatcher extends RowMatcher {
             return false;
         }
         for (String v : value) {
-            if (val.equalsIgnoreCase(v)) {
+            if (isAny(val, v)) {
                 return true;
             }
         }

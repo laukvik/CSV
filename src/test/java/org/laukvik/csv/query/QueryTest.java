@@ -79,9 +79,6 @@ public class QueryTest {
     public void between() {
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isBetween(10, 19).getResultList();
-//        for (Row r : rows) {
-//            System.out.println(r);
-//        }
         Assert.assertEquals("Should be 10", 10, rows.size());
     }
 
@@ -89,9 +86,6 @@ public class QueryTest {
     public void isGreaterThan() {
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isGreaterThan(40).getResultList();
-//        for (Row r : rows) {
-//            System.out.println(r);
-//        }
         Assert.assertEquals("Should be 4", 4, rows.size());
     }
 
@@ -99,9 +93,6 @@ public class QueryTest {
     public void isLessThan() {
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isLessThan(41).getResultList();
-//        for (Row r : rows) {
-//            System.out.println(r);
-//        }
         Assert.assertEquals("Should be 40", 40, rows.size());
     }
 
@@ -109,9 +100,6 @@ public class QueryTest {
     public void isIn() {
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isIn(1, 3, 5).getResultList();
-//        for (Row r : rows) {
-//            System.out.println(r);
-//        }
         Assert.assertEquals("Should be 3", 3, rows.size());
     }
 
@@ -120,9 +108,6 @@ public class QueryTest {
         DateColumn tookOffice = (DateColumn) csv.getMetaData().getColumn("Took office");
         Date date = tookOffice.getDateFormat().parse("20/01/2009");
         List<Row> rows = csv.findByQuery().where().column(tookOffice).isDate(date).getResultList();
-//        for (Row r : rows) {
-//            System.out.println(r);
-//        }
         Assert.assertEquals("Should be 1", 1, rows.size());
     }
 
@@ -130,20 +115,16 @@ public class QueryTest {
     public void isDateGreater() throws ParseException {
         Date date = new GregorianCalendar(2000, 1, 1).getTime();
         DateColumn tookOffice = (DateColumn) csv.getMetaData().getColumn("Took office");
-        List<Row> rows = csv.findByQuery().where().column(tookOffice).isDateGreaterThan(date, format).getResultList();
+        List<Row> rows = csv.findByQuery().where().column(tookOffice).isDateGreaterThan(date).getResultList();
         Assert.assertEquals("Should be 2", 2, rows.size());
     }
 
     @Test
     public void isDateLess() throws ParseException {
         String to = "1/1/1800";
-        Date date = format.parse(to);
         DateColumn tookOffice = (DateColumn) csv.getMetaData().getColumn("Took office");
-
-        List<Row> rows = csv.findByQuery().where().column(tookOffice).isDateLessThan(date, format).getResultList();
-//        for (Row r : rows) {
-//            System.out.println(r);
-//        }
+        Date date = tookOffice.parse(to);
+        List<Row> rows = csv.findByQuery().where().column(tookOffice).isDateLessThan(date).getResultList();
         Assert.assertEquals("Should be 2", 2, rows.size());
     }
 
@@ -151,9 +132,6 @@ public class QueryTest {
     public void sortDesc() throws ParseException {
         StringColumn president = (StringColumn) csv.getMetaData().getColumn("President");
         List<Row> rows = csv.findByQuery().orderBy().desc(president).getResultList();
-//        for (Row r : rows) {
-//            System.out.println(r.getAsString("President"));
-//        }
         Assert.assertEquals("Should be Zachary Taylor", "Zachary Taylor", rows.get(0).getString(president));
     }
 
@@ -162,9 +140,6 @@ public class QueryTest {
         csv.readFile(getResource("presidents.csv"));
         StringColumn president = (StringColumn) csv.getMetaData().getColumn("President");
         List<Row> rows = csv.findByQuery().orderBy().asc(president).getResultList();
-//        for (Row r : rows) {
-        //System.out.println(r.getAsString(president));
-//        }
         Assert.assertEquals("Should be Abraham Lincoln", "Abraham Lincoln", rows.get(0).getString(president));
     }
 
@@ -173,9 +148,6 @@ public class QueryTest {
         StringColumn president = (StringColumn) csv.getMetaData().getColumn("President");
         DateColumn tookOffice = (DateColumn) csv.getMetaData().getColumn("Took office");
         List<Row> rows = csv.findByQuery().orderBy().desc(tookOffice).getResultList();
-        for (Row r : rows) {
-//            System.out.println(r.getValue("Took office") + " " + r.getAsString("President"));
-        }
         Assert.assertEquals("Should be Barack Obama", "Barack Obama", rows.get(0).getString(president));
     }
 
@@ -184,9 +156,6 @@ public class QueryTest {
         StringColumn homeState = (StringColumn) csv.getMetaData().getColumn("Home State");
         StringColumn president = (StringColumn) csv.getMetaData().getColumn("President");
         List<Row> rows = csv.findByQuery().where().column(homeState).is("Virginia").orderBy().asc(president).getResultList();
-        for (Row r : rows) {
-//            System.out.println(r.getAsString("President") + " " + r.getAsString("Home State"));
-        }
         Assert.assertEquals("Should find 5", 5, rows.size());
     }
 
@@ -203,5 +172,24 @@ public class QueryTest {
         List<Row> rows = csv.findByQuery().where().column(leftOffice).isYear(1809).getResultList();
         Assert.assertEquals("Should find 1", 1, rows.size());
     }
+
+    @Test
+    public void findWithQueries() throws IOException, ParseException {
+        StringColumn homeState = (StringColumn) csv.getMetaData().getColumn("Home State");
+        StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
+
+        List<Row> rows;
+
+        rows = csv.findByQuery().where().column(homeState).is("New York").getResultList();
+        Assert.assertEquals(7, rows.size());
+
+        rows = csv.findByQuery().where().column(party).is("Democratic").getResultList();
+        Assert.assertEquals(15, rows.size());
+
+        rows = csv.findByQuery().where().column(homeState).is("New York").column(party).is("Democratic").getResultList();
+        Assert.assertEquals(4, rows.size());
+
+    }
+
 
 }
