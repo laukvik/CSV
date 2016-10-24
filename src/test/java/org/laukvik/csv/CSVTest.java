@@ -15,6 +15,7 @@
  */
 package org.laukvik.csv;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.columns.StringColumn;
 
@@ -44,7 +45,14 @@ public class CSVTest {
     @Test
     public void shouldBuildDistinctSet() throws IOException {
         CSV csv = new CSV();
-        Set<String> values = csv.buildDistinctValues(1);
+        StringColumn president = csv.addStringColumn("President");
+        csv.addRow().update(president, "Hillary");
+        csv.addRow().update(president, "Barak");
+        csv.addRow().update(president, "Hillary");
+        csv.addRow().update(president, "Clinton");
+        Set<String> values = csv.buildDistinctValues(0);
+        Assert.assertEquals(3, values.size());
+
     }
 
     @Test
