@@ -72,7 +72,6 @@ public class XmlParser {
 
     private void foundValue(String value) {
         if (value.trim().length() > 0) {
-//            System.out.println("foundValue: " + value );
             current.getAttributes().get(current.getAttributes().size() - 1).setValue(value);
         }
     }

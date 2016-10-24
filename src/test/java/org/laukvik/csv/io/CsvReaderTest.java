@@ -59,8 +59,6 @@ public class CsvReaderTest {
             while (reader.hasNext()) {
                 rows++;
                 Row r = reader.getRow();
-                System.out.println( rows + " " );
-
             }
             assertEquals("Row count", 44, rows);
             assertEquals("Column count", 9, reader.getMetaData().getColumnCount());
@@ -75,7 +73,6 @@ public class CsvReaderTest {
             int rows = 0;
             while (reader.hasNext()) {
                 Row r = reader.getRow();
-//                assertSame("Column count for row " + (rows + 1) + ": ", requiredColumns, r.getValues().size());
                 rows++;
             }
             assertEquals("Row count", rows, requiredRows);

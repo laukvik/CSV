@@ -30,13 +30,8 @@ public class ColumnTest {
     @Test
     public void foreignKey() {
         IntegerColumn c = (IntegerColumn) Column.parseName("Presidency(type=int,foreignKey=Employee[id])");
-
         ForeignKey fk1 = new ForeignKey("Employee", "id");
         ForeignKey fk2 = c.getForeignKey();
-
-//        System.out.println("fk1: " + fk1);
-//        System.out.println("fk2: " + fk2);
-
         Assert.assertEquals("foreignKey", fk1, fk2);
     }
 

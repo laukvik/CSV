@@ -6,7 +6,6 @@ import org.laukvik.csv.CSV;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 
 /**
@@ -29,16 +28,8 @@ public class ResourceBundleWriterTest {
     }
 
     @Test
-    public void readBundle() throws FileNotFoundException {
-        CSV csv = new CSV();
-        File file = new File("/Users/morten/Desktop/bundle.properties");
-        csv.readResourceBundle( file );
-    }
-
-    @Test
     public void writeAndReadBundle() throws Exception {
-        File file = new File("/Users/morten/Desktop/bundle.properties");
-
+        File file = new File(System.getProperty("user.home"), "writebundle.properties");
         CSV csv = new CSV();
         StringColumn keyColumn     = csv.addStringColumn("key");
         StringColumn defaultColumn = csv.addStringColumn("default");
@@ -50,7 +41,14 @@ public class ResourceBundleWriterTest {
         csv.writeResourceBundle( file );
 
         csv = new CSV();
-        csv.readResourceBundle(file);
+        try {
+            csv.readResourceBundle(file);
+        } catch (Exception e) {
+
+        } finally {
+            file.delete();
+        }
+
         Assert.assertEquals(4,csv.getMetaData().getColumnCount());
         Assert.assertEquals(2, csv.getRowCount());
 

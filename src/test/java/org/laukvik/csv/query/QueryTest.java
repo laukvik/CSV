@@ -52,7 +52,6 @@ public class QueryTest {
             csv = new CSV();
             csv.readFile(getResource("metadata.csv"));
             for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
-                System.out.println(csv.getMetaData().getColumn(x).getName());
             }
         }
         catch (Exception ex) {

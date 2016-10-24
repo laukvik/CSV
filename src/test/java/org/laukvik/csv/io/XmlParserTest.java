@@ -20,16 +20,13 @@ public class XmlParserTest {
         parser.addListener(new XmlParser.XmlListener() {
             @Override
             public void foundTag(final XmlParser.Tag tag) {
-                System.out.println("Found.tag: " + tag);
             }
 
             @Override
             public void foundAttribute(final XmlParser.Attribute attribute) {
-                System.out.println("Found.attribute: " + attribute);
             }
         });
         XmlParser.Tag root = parser.parseFile(getResource("lorem.html"));
-//        System.out.println(root.toHtml());
     }
 
 }
