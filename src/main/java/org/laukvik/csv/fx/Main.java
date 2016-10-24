@@ -244,9 +244,11 @@ public class Main extends Application implements ChangeListener, FileListener {
         }
     }
 
-    public void openFileDialog(){
+    public void handleFileOpen(){
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(bundle.getString("dialog.file.open"));
+        fileChooser.getExtensionFilters().clear();
+        fileChooser.getExtensionFilters().addAll(FileChooserExtensions.buildCSV());
         final File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null){
             loadFile(selectedFile);
@@ -319,6 +321,7 @@ public class Main extends Application implements ChangeListener, FileListener {
             Charset charset = charsetBox.getSelectionModel().getSelectedIndex() == 0 ? null : Charset.forName((String)charsetBox.getSelectionModel().getSelectedItem());
             final FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle(bundle.getString("dialog.file.open"));
+            fileChooser.setSelectedExtensionFilter(FileChooserExtensions.buildCSV());
             final File selectedFile = fileChooser.showOpenDialog(stage);
             if (selectedFile != null){
                 loadFile(selectedFile, separator, charset);
@@ -362,7 +365,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     public void loadPropertiesFile(final File file) {
         newFile();
         try {
-            csv.readPropertiesFile(file);
+            csv.readResourceBundle(file);
             if (csv.getFile() != null) {
                 recent.open(file);
                 menuBar.buildRecentList(recent);
@@ -710,6 +713,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     public void handleExportJsonAction() {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(bundle.getString("dialog.file.export.json"));
+        fileChooser.getExtensionFilters().addAll(FileChooserExtensions.buildJsonFile());
         final File selectedFile = fileChooser.showSaveDialog(stage);
         if (selectedFile != null){
             try {
@@ -723,6 +727,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     public void handleExportXmlAction() {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(bundle.getString("dialog.file.export.xml"));
+        fileChooser.getExtensionFilters().addAll(FileChooserExtensions.buildXmlFile());
         final File selectedFile = fileChooser.showSaveDialog(stage);
         if (selectedFile != null){
             try {
@@ -736,12 +741,28 @@ public class Main extends Application implements ChangeListener, FileListener {
     public void handleExportHtmlAction() {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(bundle.getString("dialog.file.export.html"));
+        fileChooser.getExtensionFilters().addAll(FileChooserExtensions.buildHtmlFile());
         final File selectedFile = fileChooser.showSaveDialog(stage);
         if (selectedFile != null){
             try {
                 csv.writeHtml( selectedFile );
             } catch (Exception e) {
                 alert(bundle.getString("file.export.html.failed"));
+            }
+        }
+    }
+
+    public void handleResourceBundleAction() {
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(bundle.getString("dialog.file.export.resourcebundle"));
+        fileChooser.getExtensionFilters().clear();
+        fileChooser.getExtensionFilters().addAll(FileChooserExtensions.buildResourceBundle());
+        final File selectedFile = fileChooser.showSaveDialog(stage);
+        if (selectedFile != null){
+            try {
+                csv.writeResourceBundle( selectedFile );
+            } catch (Exception e) {
+                alert(bundle.getString("file.export.resourcebundle.failed"));
             }
         }
     }
@@ -881,5 +902,6 @@ public class Main extends Application implements ChangeListener, FileListener {
         }
         viewMode = 5;
     }
+
 
 }

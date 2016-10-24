@@ -44,7 +44,7 @@ class CsvMenuBar extends MenuBar {
         openItem.setAccelerator(KeyCombination.keyCombination("Meta+o"));
         openItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
-                main.openFileDialog();
+                main.handleFileOpen();
             }
         });
 
@@ -74,7 +74,8 @@ class CsvMenuBar extends MenuBar {
 
         MenuItem exportJsonItem = new MenuItem(bundle.getString("file.export.json"));
         MenuItem exportXmlItem = new MenuItem(bundle.getString("file.export.xml"));
-        MenuItem exportCsvItem = new MenuItem(bundle.getString("file.export.html"));
+        MenuItem exportHtmlItem = new MenuItem(bundle.getString("file.export.html"));
+        MenuItem resourceBundleItem = new MenuItem(bundle.getString("file.export.resourcebundle"));
         exportJsonItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
                 main.handleExportJsonAction();
@@ -85,13 +86,18 @@ class CsvMenuBar extends MenuBar {
                 main.handleExportXmlAction();
             }
         });
-        exportCsvItem.setOnAction(new EventHandler<ActionEvent>() {
+        exportHtmlItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
                 main.handleExportHtmlAction();
             }
         });
+        resourceBundleItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                main.handleResourceBundleAction();
+            }
+        });
 
-        exportMenu.getItems().addAll(exportJsonItem,exportXmlItem,exportCsvItem);
+        exportMenu.getItems().addAll(exportJsonItem,exportXmlItem,exportHtmlItem, resourceBundleItem);
 
         MenuItem printItem = new MenuItem(bundle.getString("file.print"));
         printItem.setAccelerator(KeyCombination.keyCombination("Meta+p"));

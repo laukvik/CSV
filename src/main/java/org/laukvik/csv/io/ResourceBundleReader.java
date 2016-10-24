@@ -5,7 +5,6 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,7 +17,7 @@ import java.util.Set;
 /**
  * @author Morten Laukvik
  */
-public class PropertiesReader implements Readable {
+public class ResourceBundleReader extends AbstractResourceBundle implements Readable {
 
     private MetaData metaData;
     private Row row;
@@ -29,24 +28,24 @@ public class PropertiesReader implements Readable {
     @Override
     public void readFile(final File file) throws FileNotFoundException {
         String filename = file.getName();
-        String base = filename.substring(0, filename.lastIndexOf(".properties"));
+        String base = filename.substring(0, filename.lastIndexOf(EXTENSION));
         File home = new File(file.getParent());
-        BundleFilter bf = new BundleFilter(base);
+        ResourceBundleFileFilter bf = new ResourceBundleFileFilter(base);
         File[] files = home.listFiles(bf);
         if (files != null) {
             try {
                 propertiesList = new ArrayList<>();
                 // Build files list
                 metaData = new MetaData();
-                metaData.addColumn("key");
+                metaData.addColumn(ResourceBundleWriter.COLUMN_PROPERTY);
                 final Set<String> keySet = new HashSet<>();
 
                 // Add default
-                propertiesList.add(addFile(file, "default", keySet));
+                propertiesList.add(addFile(file, ResourceBundleWriter.COLUMN_DEFAULT, keySet));
 
                 // Add others
                 for (File f : files) {
-                    String lang = BundleFilter.getLanguage(f.getName(), base);
+                    String lang = getLocale(f.getName(), base);
                     propertiesList.add(addFile(f, lang, keySet));
                 }
                 keys = new ArrayList<>();
@@ -99,33 +98,6 @@ public class PropertiesReader implements Readable {
         return row;
     }
 
-    public static class BundleFilter implements FileFilter {
 
-        private String basename;
-
-        public BundleFilter(final String basename) {
-            this.basename = basename;
-        }
-
-        public static String getLanguage(String filename, String basename) {
-            if (filename.startsWith(basename) && filename.endsWith(".properties")) {
-                if (filename.length() == (basename.length() + ".properties".length())) {
-                    return null;
-                }
-                int index = filename.lastIndexOf(".properties"); // lang_no.properties
-                return filename.substring(basename.length(), index);
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        public boolean accept(final File file) {
-            if (file == null || file.isDirectory()) {
-                return false;
-            }
-            return getLanguage(file.getName(), basename) != null;
-        }
-    }
 
 }

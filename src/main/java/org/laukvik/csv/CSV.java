@@ -28,8 +28,9 @@ import org.laukvik.csv.io.CsvWriter;
 import org.laukvik.csv.io.HtmlWriter;
 import org.laukvik.csv.io.JavaReader;
 import org.laukvik.csv.io.JsonWriter;
-import org.laukvik.csv.io.PropertiesReader;
+import org.laukvik.csv.io.ResourceBundleReader;
 import org.laukvik.csv.io.Readable;
+import org.laukvik.csv.io.ResourceBundleWriter;
 import org.laukvik.csv.io.WordCountReader;
 import org.laukvik.csv.io.Writeable;
 import org.laukvik.csv.io.XmlWriter;
@@ -560,8 +561,8 @@ public final class CSV implements Serializable {
         readFile(new WordCountReader(), file);
     }
 
-    public void readPropertiesFile(final File file) throws FileNotFoundException {
-        readFile(new PropertiesReader(), file);
+    public void readResourceBundle(final File file) throws FileNotFoundException {
+        readFile(new ResourceBundleReader(), file);
     }
 
     /**
@@ -638,13 +639,11 @@ public final class CSV implements Serializable {
     /**
      * Writes the contents to multiple files
      *
-     * todo - Implement this method
-     *
      * @param file the file
      * @throws Exception when the file could not be written
      */
     public void writeResourceBundle(final File file) throws Exception {
-
+        write(new ResourceBundleWriter(file));
     }
 
     /**
