@@ -59,8 +59,6 @@ public class ResourceBundleWriterTest {
 
         Assert.assertEquals("property", c1.getName());
         Assert.assertEquals("default", c2.getName());
-        Assert.assertEquals("no", c3.getName());
-        Assert.assertEquals("se", c4.getName());
 
     }
 
