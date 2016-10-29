@@ -13,7 +13,6 @@ import java.io.File;
  */
 public class FixedWidthReader implements ClosableReader {
 
-    private final int[] columnWidths;
     private final MetaData metaData;
 
     /**
@@ -22,7 +21,7 @@ public class FixedWidthReader implements ClosableReader {
      * @param columnWidths the width of each column
      */
     public FixedWidthReader(int... columnWidths) {
-        this.columnWidths = columnWidths;
+        final int[] columnWidths1 = columnWidths;
         this.metaData = new MetaData();
         for (int x = 0; x < columnWidths.length; x++) {
             StringColumn s = new StringColumn("Column" + (x + 1));

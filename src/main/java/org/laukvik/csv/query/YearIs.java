@@ -21,19 +21,34 @@ import org.laukvik.csv.columns.DateColumn;
 import java.util.Date;
 
 /**
- * Compares a DateColumn to have the year to be the specified value
+ * Compares a DateColumn to have the year to be the specified value.
+ *
  */
 public class YearIs extends AbstractDateMatcher {
 
+    /**
+     * The year.
+     */
     private final int year;
 
-    public YearIs(DateColumn column, int year) {
-        super(column, null);
+    /**
+     * Matches the value of the dateColumn to have the specified year.
+     *
+     * @param dateColumn the dateColumn
+     * @param year       the year
+     */
+    public YearIs(final DateColumn dateColumn, final int year) {
+        super(dateColumn, null);
         this.year = year;
     }
 
-    @Override
-    public boolean matches(Row row) {
+    /**
+     * Matches the row.
+     *
+     * @param row the row to compare
+     * @return true if it matches
+     */
+    public boolean matches(final Row row) {
         Date v = row.getDate(column);
         return isYear(v, year);
     }

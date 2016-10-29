@@ -91,7 +91,7 @@ public class Query {
             }
         }
         if (!where.orderBy.sortOrders.isEmpty()) {
-            Collections.sort(filteredRows, new RowSorter(where.orderBy.sortOrders, metaData));
+            Collections.sort(filteredRows, new RowSorter(where.orderBy.sortOrders));
         }
         return filteredRows;
     }

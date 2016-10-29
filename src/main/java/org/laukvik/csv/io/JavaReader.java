@@ -53,7 +53,7 @@ public class JavaReader<T> implements Readable {
      * @param field the reflection field
      * @return the column
      */
-    public static Column findColumnByField(Field field){
+    public static Column findColumnByField(final Field field) {
         String fieldName = field.getName();
         if (field.getType() == String.class) {
             return new StringColumn(fieldName);
@@ -95,7 +95,7 @@ public class JavaReader<T> implements Readable {
      * @throws NoSuchFieldException when the field cant be found
      * @throws IllegalAccessException when the field cant be accessed
      */
-    public static void updateByColumn( Row row, Column column, Object instance) throws NoSuchFieldException, IllegalAccessException {
+    public static void updateByColumn(final Row row, final Column column, final Object instance) throws NoSuchFieldException, IllegalAccessException {
         Field f = instance.getClass().getField(column.getName());
         if (column instanceof StringColumn){
             StringColumn c = (StringColumn) column;

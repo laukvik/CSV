@@ -108,7 +108,8 @@ public class Main extends Application implements ChangeListener, FileListener {
         return b.toString();
     }
 
-    public static PieChart buildPieChart(FrequencyDistributionTableView frequencyDistributionTableView) {
+
+    public static PieChart buildPieChart(final FrequencyDistributionTableView frequencyDistributionTableView) {
         List<PieChart.Data> dataset = new ArrayList<>();
         int max = 50;
         int x = 0;

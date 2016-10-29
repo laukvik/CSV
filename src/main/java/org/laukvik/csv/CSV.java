@@ -52,43 +52,44 @@ import java.util.TreeSet;
 
 /**
  * An API for reading and writing to Viewer. The implementation is based on the
- * specficiations from http://tools.ietf.org/rfc/rfc4180.txt
- *
- *
+ * specification from http://tools.ietf.org/rfc/rfc4180.txt
+ * <p>
+ * <p>
  * <h2>Reading files</h2>
- *
- *
+ * <p>
+ * <p>
  * <h3>Auto detection</h3>
- *
- * <p>The easiest way to read a CSV file is to call the default constructor. This method will try to auto detect separator character and encoding.</p>
- *
+ * <p>
+ * <p>The easiest way to read a CSV file is to call the default constructor.
+ * This method will try to auto detect separator character and encoding.</p>
+ * <p>
  * <pre>
  * CSV csv = new CSV(new File("presidents.csv"));
  * </pre>
- *
- *
- *
+ * <p>
+ * <p>
+ * <p>
  * <h3>Manually specify separator character</h3>
- *
+ * <p>
  * <p>To read files using a SEMI COLON as separator character</p>
  * <pre>
  *     CSV csv = new CSV();
  *     csv.readFile( new File("presidents.csv"), CSV.SEMICOLON );
  * </pre>
- *
+ * <p>
  * <p>To read files using a semi colon as PIPE character</p>
  * <pre>
  * CSV csv = new CSV();
  * csv.readFile( new File("presidents.csv"), CSV.PIPE );
  * </pre>
- *
+ * <p>
  * <p>To read files using a semi colon as TAB character</p>
- *
+ * <p>
  * <pre>
  * CSV csv = new CSV();
  * csv.readFile( new File("presidents.csv"), CSV.TAB );
  * </pre>
- *
+ * <p>
  * <h3>Reading values from Java objects</h3>
  * <pre>
  * class Employee{
@@ -107,36 +108,80 @@ import java.util.TreeSet;
  * CSV csv = new CSV();
  * csv.readJava(employees);
  * </pre>
- *
- *
+ * <p>
+ * <p>
  * <h3>Working with queries</h3>
- *
+ * <p>
  * <pre>
  * CSV csv = new CSV( new File("presidents.csv") );
  * List&lt;Row&gt; rows = csv.findByQuery().where().column("Party").is("Whig").getResultList();
  * </pre>
- *
- *
- *
  */
 public final class CSV implements Serializable {
 
+    /**
+     * The character representing LF.
+     */
+    public static final char LINEFEED = 10;
 
-    public final static char LINEFEED = 10;
-    public final static char RETURN = 13;
+    /**
+     * The character representing RETURN.
+     */
+    public static final char RETURN = 13;
 
-    public final static char COMMA = 44;
-    public final static char SEMICOLON = 59;
-    public final static char PIPE = 124;
-    public final static char TAB = 9;
+    /**
+     * The character representing COMMA.
+     */
+    public static final char COMMA = 44;
 
-    public final static char DOUBLE_QUOTE = 34;
-    public final static char SINGLE_QUOTE = 39;
+    /**
+     * The character representing SEMICOLON.
+     */
+    public static final char SEMICOLON = 59;
+
+    /**
+     * The character representing PIPE.
+     */
+    public static final char PIPE = 124;
+
+    /**
+     * The character representing TAB.
+     */
+    public static final char TAB = 9;
+
+    /**
+     * The character representing DOUBLE QUOTE.
+     */
+    public static final char DOUBLE_QUOTE = 34;
+
+    /**
+     * The character representing SINGLE QUOTE.
+     */
+    public static final char SINGLE_QUOTE = 39;
+
+    /**
+     * The List of all ChangeListeners.
+     */
     private final List<ChangeListener> changeListeners;
+    /**
+     * The List of all FileListeners.
+     */
     private final List<FileListener> fileListeners;
+    /**
+     * The MetaData used.
+     */
     private MetaData metaData;
+    /**
+     * The list of Rows.
+     */
     private List<Row> rows;
+    /**
+     * The Query to use.
+     */
     private Query query;
+    /**
+     * The file opened.
+     */
     private File file;
 
     /**
@@ -151,12 +196,12 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Opens the specified CSV file and parses it
+     * Opens the specified CSV file and parses it.
      *
      * @param file the file to open
      * @throws IOException when the file could not be read
      */
-    public CSV(File file) throws IOException {
+    public CSV(final File file) throws IOException {
         this();
         readFile(file);
     }
@@ -167,7 +212,7 @@ public final class CSV implements Serializable {
      * @return separator characters
      */
     public static char[] listSupportedSeparatorChars() {
-        return new char []{COMMA,SEMICOLON,PIPE,TAB};
+        return new char[]{COMMA, SEMICOLON, PIPE, TAB};
     }
 
     /**
@@ -183,9 +228,9 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Returns the opened file
+     * Returns the opened file.
      *
-     * @return the opened file
+     * @return the file
      */
     public File getFile() {
         return file;
@@ -193,20 +238,19 @@ public final class CSV implements Serializable {
 
     /**
      * Moves all rows down and inserts new columns.
-     *
      */
-    public void insertHeaders(){
+    public void insertHeaders() {
         Row r = addRow(0);
-        for (int x=0; x<getMetaData().getColumnCount(); x++){
+        for (int x = 0; x < getMetaData().getColumnCount(); x++) {
             StringColumn c = (StringColumn) getMetaData().getColumn(x);
             r.update(c, c.getName());
-            c.setName("Column" + (x+1));
+            c.setName("Column" + (x + 1));
         }
         fireRowCreated(0, r);
     }
 
     /**
-     * Returns the rows
+     * Returns the rows.
      *
      * @return the rows
      */
@@ -215,7 +259,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Returns the MetaData
+     * Returns the MetaData.
      *
      * @return the MetaData
      */
@@ -224,15 +268,16 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Sets the MetaData
+     * Sets the MetaData.
+     *
      * @param metaData the MetaData to set
      */
-    public void setMetaData(MetaData metaData) {
+    public void setMetaData(final MetaData metaData) {
         this.metaData = metaData;
     }
 
     /**
-     * Returns the amount of rows
+     * Returns the amount of rows.
      *
      * @return the amount of rows
      */
@@ -241,12 +286,12 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Returns the row with the specified index
+     * Returns the row with the specified index.
      *
      * @param rowIndex the index
      * @return the row
      */
-    public Row getRow(int rowIndex) {
+    public Row getRow(final int rowIndex) {
         if (rowIndex > getRowCount()) {
             throw new RowNotFoundException(rowIndex, getRowCount());
         }
@@ -254,7 +299,17 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Creates a new empty row
+     * Returns the index of the Row.
+     *
+     * @param row the row
+     * @return the index
+     */
+    public int indexOf(final Row row) {
+        return rows.indexOf(row);
+    }
+
+    /**
+     * Creates a new empty row.
      *
      * @return the newly created row
      */
@@ -265,12 +320,12 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Creates a new empty row at the specified index
+     * Creates a new empty row at the specified index.
      *
      * @param rowIndex the index to insert at
      * @return the newly created row
      */
-    public Row addRow(int rowIndex) {
+    public Row addRow(final int rowIndex) {
         Row r = new Row();
         r.setCSV(this);
         rows.add(rowIndex, r);
@@ -279,12 +334,12 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Adds a new row
+     * Adds a new row.
      *
      * @param row the row to add
      * @return the row being added
      */
-    private Row addRow(Row row) {
+    private Row addRow(final Row row) {
         row.setCSV(this);
         rows.add(row);
         fireRowCreated(rows.size(), row);
@@ -292,18 +347,17 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Removes the row at the specified index
+     * Removes the row at the specified index.
      *
      * @param index the index to remove
      */
-    public void removeRow(int index) {
+    public void removeRow(final int index) {
         Row row = rows.remove(index);
-        fireRowRemoved(index, row );
+        fireRowRemoved(index, row);
     }
 
     /**
      * Removes all rows.
-     *
      */
     public void removeRows() {
         int count = rows.size();
@@ -313,21 +367,20 @@ public final class CSV implements Serializable {
 
     /**
      * Removes all rows and columns.
-     *
      */
-    public void clear(){
+    public void clear() {
         metaData = new MetaData();
         rows.clear();
     }
 
 
     /**
-     * Adds the column
+     * Adds the column.
      *
      * @param column the column
      * @return the newly added column
      */
-    public Column addColumn(Column column) {
+    public Column addColumn(final Column column) {
         metaData.addColumn(column);
         fireColumnCreated(column);
         removeRows();
@@ -335,102 +388,108 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Moves a row to another index
+     * Moves a row to another index.
      *
      * @param fromRowIndex the row to move
-     * @param toRowIndex the destination index
+     * @param toRowIndex   the destination index
      */
     public void moveRow(final int fromRowIndex, final int toRowIndex) {
         Collections.swap(rows, fromRowIndex, toRowIndex);
         fireRowMoved(fromRowIndex, toRowIndex);
     }
 
+    /**
+     * Swaps two rows.
+     *
+     * @param fromRowIndex the first index
+     * @param toRowIndex   the second index
+     */
     public void swapRows(final int fromRowIndex, final int toRowIndex) {
         Collections.swap(rows, fromRowIndex, toRowIndex);
         fireRowMoved(fromRowIndex, toRowIndex);
     }
 
     /**
-     * Adds a new text column with the specified name
+     * Adds a new text column with the specified name.
      *
      * @param name the name of the column
      * @return the newly create column
      */
-    public Column addColumn(String name) {
+    public Column addColumn(final String name) {
         return addStringColumn(name);
     }
 
     /**
-     * Adds a new StringColumn with the specified name
+     * Adds a new StringColumn with the specified name.
      *
      * @param name the name
      * @return the StringColumn being created
      */
-    public StringColumn addStringColumn(String name) {
+    public StringColumn addStringColumn(final String name) {
         return addStringColumn(new StringColumn(name));
     }
 
     /**
-     * Adds a new StringColumn with the specified name
+     * Adds a new StringColumn with the specified name.
      *
      * @param column the StringColumn
      * @return the StringColumn being created
      */
-    private StringColumn addStringColumn(StringColumn column) {
+    private StringColumn addStringColumn(final StringColumn column) {
         addColumn(column);
         return column;
     }
 
     /**
-     * Adds a new IntegerColumn
+     * Adds a new IntegerColumn.
      *
      * @param column the IntegerColumn
      * @return the IntegerColumn being created
      */
-    public IntegerColumn addIntegerColumn(IntegerColumn column) {
+    public IntegerColumn addIntegerColumn(final IntegerColumn column) {
         addColumn(column);
         return column;
     }
 
     /**
-     * Adds a new FloatColumn
+     * Adds a new FloatColumn.
      *
      * @param column the FloatColumn
      * @return the FloatColumn being created
      */
-    public FloatColumn addFloatColumn(FloatColumn column) {
+    public FloatColumn addFloatColumn(final FloatColumn column) {
         addColumn(column);
         return column;
     }
 
     /**
-     * Adds a new BooleanColumn
+     * Adds a new BooleanColumn.
      *
      * @param column the BooleanColumn
      * @return the BooleanColumn being created
      */
-    public BooleanColumn addBooleanColumn(BooleanColumn column) {
+    public BooleanColumn addBooleanColumn(final BooleanColumn column) {
         addColumn(column);
         return column;
     }
 
     /**
-     * Adds a new ByteColumn
+     * Adds a new ByteColumn.
      *
      * @param column the ByteColumn
      * @return the ByteColumn being created
      */
-    public ByteColumn addByteColumn(ByteColumn column) {
+    public ByteColumn addByteColumn(final ByteColumn column) {
         addColumn(column);
         return column;
     }
 
     /**
-     * Removes the column and all its data
+     * Removes the column and all its data.
      *
      * @param column the column
      */
-    public void removeColumn(Column column) {
+    public void removeColumn(final Column column) {
         for (Row r : rows) {
             r.remove(column);
         }
@@ -438,12 +497,12 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Removes all rows within the specified range
+     * Removes all rows within the specified range.
      *
      * @param fromRowIndex the start index
-     * @param endRowIndex the end index
+     * @param endRowIndex  the end index
      */
-    public void removeRowsBetween(int fromRowIndex, int endRowIndex) {
+    public void removeRowsBetween(final int fromRowIndex, final int endRowIndex) {
         rows.subList(fromRowIndex, endRowIndex + 1).clear();
         fireRowsRemoved(fromRowIndex, endRowIndex);
     }
@@ -452,9 +511,9 @@ public final class CSV implements Serializable {
      * Reads the File using the specified reader. System default charset is used when the charset is not
      * specified.
      *
-     * @param file the file to read
+     * @param file    the file to read
      * @param charset the charset used to read
-     * @param reader the reader to use
+     * @param reader  the reader to use
      */
     private void readFile(final File file, final Charset charset, final ClosableReader reader) {
         this.file = file;
@@ -474,7 +533,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Reads the CSV file
+     * Reads the CSV file.
      *
      * @param file the file to read
      * @throws IOException when the file could not be read
@@ -482,69 +541,69 @@ public final class CSV implements Serializable {
     public void readFile(final File file) throws IOException {
         Charset charset = findCharsetByBOM(file);
         CsvReader reader = new CsvReader(Files.newBufferedReader(file.toPath(), charset), null, CSV.DOUBLE_QUOTE);
-        readFile(file, charset, reader );
+        readFile(file, charset, reader);
     }
 
     /**
-     * Reads the CSV file with the specified charset
+     * Reads the CSV file with the specified charset.
      *
-     * @param file the file to read
+     * @param file    the file to read
      * @param charset the charset
      * @throws IOException when the file could not be read
      */
     public void readFile(final File file, final Charset charset) throws IOException {
         CsvReader reader = new CsvReader(Files.newBufferedReader(file.toPath(), charset), null, null);
-        readFile(file, charset, reader );
+        readFile(file, charset, reader);
     }
 
     /**
-     * Reads the CSV file with the specified separator and quote character
+     * Reads the CSV file with the specified separator and quote character.
      *
-     * @param file the file to read
+     * @param file      the file to read
      * @param separator the separator
-     * @param quote the quote
+     * @param quote     the quote
      * @throws IOException when the file could not be read
      */
     public void readFile(final File file, final Character separator, final Character quote) throws IOException {
         Charset charset = findCharsetByBOM(file);
         BufferedReader buffered = Files.newBufferedReader(file.toPath(), charset);
-        CsvReader reader = new CsvReader( buffered, separator, quote );
+        CsvReader reader = new CsvReader(buffered, separator, quote);
         readFile(file, charset, reader);
     }
 
     /**
-     * Reads the CSV file with the specified charset and separator
+     * Reads the CSV file with the specified charset and separator.
      *
-     * @param file the file to read
-     * @param charset the charset
+     * @param file      the file to read
+     * @param charset   the charset
      * @param separator the separator
      * @throws IOException when the file could not be read
      */
     public void readFile(final File file, final Charset charset, final Character separator) throws IOException {
         BufferedReader buffered = Files.newBufferedReader(file.toPath(), charset);
-        CsvReader reader = new CsvReader( buffered, separator, null );
+        CsvReader reader = new CsvReader(buffered, separator, null);
         readFile(file, charset, reader);
     }
 
     /**
-     * Reads the CSV file with the specified separator
+     * Reads the CSV file with the specified separator.
      *
-     * @param file the file to read
+     * @param file      the file to read
      * @param separator the separator
      * @throws IOException when the file could not be read
      */
     public void readFile(final File file, final Character separator) throws IOException {
         BufferedReader buffered = Files.newBufferedReader(file.toPath());
-        CsvReader reader = new CsvReader( buffered, separator, CSV.DOUBLE_QUOTE );
+        CsvReader reader = new CsvReader(buffered, separator, CSV.DOUBLE_QUOTE);
         readFile(file, findCharsetByBOM(file), reader);
     }
 
     /**
-     * Imports Java beans property values from the list
+     * Imports Java beans property values from the list.
      *
      * @param list the list of Java beans
      */
-    public void readJava(List<Class> list){
+    public void readJava(final List<Class> list) {
         rows.clear();
         metaData = new MetaData();
         if (!list.isEmpty()) {
@@ -557,19 +616,32 @@ public final class CSV implements Serializable {
         }
     }
 
+    /**
+     * Reads a text file and builds a Frequency Distribution table data
+     * of how many times each word has been used.
+     *
+     * @param file the file
+     * @throws FileNotFoundException when the file could not be found
+     */
     public void readWordCountFile(final File file) throws FileNotFoundException {
         readFile(new WordCountReader(), file);
     }
 
+    /**
+     * Reads a ResourceBundle file.
+     *
+     * @param file the file
+     * @throws FileNotFoundException when the file could not be found
+     */
     public void readResourceBundle(final File file) throws FileNotFoundException {
         readFile(new ResourceBundleReader(), file);
     }
 
     /**
-     * Reads a data set using the specified Readable
+     * Reads a data set using the specified Readable.
      *
      * @param readable the readable
-     * @param file the file to read
+     * @param file     the file to read
      * @throws FileNotFoundException when the file can't be found
      */
     private void readFile(final Readable readable, final File file) throws FileNotFoundException {
@@ -579,7 +651,7 @@ public final class CSV implements Serializable {
         readable.readFile(file);
         setMetaData(readable.getMetaData());
         fireMetaDataRead();
-        while (readable.hasNext()){
+        while (readable.hasNext()) {
             Row row = readable.next();
             addRow(row);
         }
@@ -599,15 +671,15 @@ public final class CSV implements Serializable {
     /**
      * Writes the contents to a file.
      *
-     * @param file the file
+     * @param csvFile the file
      * @throws Exception when the file could not be written
      */
-    public void writeFile(final File file) throws Exception {
-        write(new CsvWriter(new FileOutputStream(file)));
+    public void writeFile(final File csvFile) throws Exception {
+        write(new CsvWriter(new FileOutputStream(csvFile)));
     }
 
     /**
-     * Writes the contents to a file in XML format
+     * Writes the contents to a file in XML format.
      *
      * @param file the file
      * @throws Exception when the file could not be written
@@ -617,7 +689,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Writes the contents to a file in JSON format
+     * Writes the contents to a file in JSON format.
      *
      * @param file the file
      * @throws Exception when the file could not be written
@@ -627,7 +699,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Writes the contents to a file in HTML format
+     * Writes the contents to a file in HTML format.
      *
      * @param file the file
      * @throws Exception when the file could not be written
@@ -637,7 +709,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Writes the contents to multiple files
+     * Writes the contents to multiple files.
      *
      * @param file the file
      * @throws Exception when the file could not be written
@@ -647,7 +719,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Returns the query
+     * Returns the query.
      *
      * @return the query
      */
@@ -666,7 +738,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Returns true if there is already a query
+     * Returns true if there is already a query.
      *
      * @return true when a query has been started
      */
@@ -675,30 +747,30 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Removes any query
+     * Removes any query.
      */
     public void clearQuery() {
         this.query = null;
     }
 
     /**
-     * Builds a FrequencyDistribution table for the specified column index
+     * Builds a FrequencyDistribution table for the specified column index.
      *
      * @param columnIndex the column index
      * @return a FrequencyDistribution table
      */
-    public FrequencyDistribution buildFrequencyDistribution(int columnIndex) {
+    public FrequencyDistribution buildFrequencyDistribution(final int columnIndex) {
         Column c = metaData.getColumn(columnIndex);
         return buildFrequencyDistribution(c);
     }
 
     /**
-     * Builds a FrequencyDistribution table for the specified column
+     * Builds a FrequencyDistribution table for the specified column.
      *
      * @param column the column
      * @return a FrequencyDistribution table
      */
-    public FrequencyDistribution buildFrequencyDistribution(Column column) {
+    public FrequencyDistribution buildFrequencyDistribution(final Column column) {
         FrequencyDistribution cv = new FrequencyDistribution(column);
         for (Row r : rows) {
             cv.addValue(r.getAsString(column));
@@ -712,7 +784,7 @@ public final class CSV implements Serializable {
      * @param columnIndex the column index
      * @return a set of distinct values
      */
-    public Set<String> buildDistinctValues(int columnIndex) {
+    public Set<String> buildDistinctValues(final int columnIndex) {
         Column c = getMetaData().getColumn(columnIndex);
         return buildDistinctValues(c);
     }
@@ -724,7 +796,7 @@ public final class CSV implements Serializable {
      * @param column the column
      * @return a set of distinct values
      */
-    public Set<String> buildDistinctValues(Column column) {
+    public Set<String> buildDistinctValues(final Column column) {
         Set<String> values = new TreeSet<>();
         for (Row r : rows) {
             values.add(r.getAsString(column));
@@ -733,127 +805,199 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Adds a ChangeListener
+     * Adds the ChangeListener.
      *
      * @param changeListener the ChangeListener to add
      */
-    public void addChangeListener(ChangeListener changeListener) {
+    public void addChangeListener(final ChangeListener changeListener) {
         changeListeners.add(changeListener);
     }
 
     /**
-     * Removes a ChangeListener
+     * Removes the ChangeListener.
      *
      * @param changeListener the ChangeListener to remove
      */
-    public void removeChangeListener(ChangeListener changeListener) {
+    public void removeChangeListener(final ChangeListener changeListener) {
         changeListeners.remove(changeListener);
     }
 
-
-    private void fireMetaDataRead(){
-        for (ChangeListener l : changeListeners){
+    /**
+     * Informs all ChangeListeners that the MetaData has been read.
+     */
+    private void fireMetaDataRead() {
+        for (ChangeListener l : changeListeners) {
             l.metaDataRead(this.getMetaData());
         }
     }
 
-    private void fireRowCreated(int rowIndex, Row row){
-        for (ChangeListener l : changeListeners){
-            l.rowCreated(rowIndex,row);
+    /**
+     * Informs all ChangeListeners that the Row has been read.
+     *
+     * @param rowIndex the index of the row
+     * @param row      the row itself
+     */
+    private void fireRowCreated(final int rowIndex, final Row row) {
+        for (ChangeListener l : changeListeners) {
+            l.rowCreated(rowIndex, row);
         }
     }
 
-    private void fireRowRemoved(int rowIndex, Row row){
-        for (ChangeListener l : changeListeners){
-            l.rowRemoved(rowIndex,row);
+    /**
+     * Informs all ChangeListeners that the Row has been removed.
+     *
+     * @param rowIndex the index of the row
+     * @param row      the row itself
+     */
+    private void fireRowRemoved(final int rowIndex, final Row row) {
+        for (ChangeListener l : changeListeners) {
+            l.rowRemoved(rowIndex, row);
         }
     }
 
-    private void fireRowMoved(int fromRowIndex, int toRowIndex){
-        for (ChangeListener l : changeListeners){
+    /**
+     * Informs all ChangeListeners that the Row has been moved.
+     *
+     * @param fromRowIndex the index of the row
+     * @param toRowIndex   the row itself
+     */
+    private void fireRowMoved(final int fromRowIndex, final int toRowIndex) {
+        for (ChangeListener l : changeListeners) {
             l.rowMoved(fromRowIndex, toRowIndex);
         }
     }
 
-    private void fireRowsRemoved(int fromRowIndex, int toRowIndex){
-        for (ChangeListener l : changeListeners){
+    /**
+     * Informs all ChangeListeners that the rows has been removed.
+     *
+     * @param fromRowIndex from index
+     * @param toRowIndex   to index
+     */
+    private void fireRowsRemoved(final int fromRowIndex, final int toRowIndex) {
+        for (ChangeListener l : changeListeners) {
             l.rowsRemoved(fromRowIndex, toRowIndex);
         }
     }
 
-    void fireColumnCreated(Column column){
-        for (ChangeListener l : changeListeners){
+    /**
+     * Informs all ChangeListeners that the Column has been created.
+     *
+     * @param column the Column
+     */
+    void fireColumnCreated(final Column column) {
+        for (ChangeListener l : changeListeners) {
             l.columnCreated(column);
         }
     }
 
-    public void fireColumnUpdated(Column column){
-        for (ChangeListener l : changeListeners){
+    /**
+     * Informs all ChangeListeners that the Column has been updated.
+     *
+     * @param column the Column
+     */
+    public void fireColumnUpdated(final Column column) {
+        for (ChangeListener l : changeListeners) {
             l.columnUpdated(column);
         }
     }
 
-    void fireColumnRemoved(Column column){
-        for (ChangeListener l : changeListeners){
+    /**
+     * Informs all ChangeListeners that the Column has been removed.
+     *
+     * @param column the Column
+     */
+    void fireColumnRemoved(final Column column) {
+        for (ChangeListener l : changeListeners) {
             l.columnRemoved(column.indexOf());
         }
     }
 
+    /**
+     * Informs all ChangesListeners that the Column has been moved to a new
+     * index.
+     *
+     * @param fromIndex from index
+     * @param toIndex   to index
+     */
     void fireColumnMoved(final int fromIndex, final int toIndex) {
-        for (ChangeListener l : changeListeners){
+        for (ChangeListener l : changeListeners) {
             l.columnMoved(fromIndex, toIndex);
         }
     }
 
     /**
-     * Adds a FileListener
+     * Adds a FileListener.
      *
      * @param fileListener the ChangeListener to remove
      */
-    public void addFileListener(FileListener fileListener) {
+    public void addFileListener(final FileListener fileListener) {
         fileListeners.add(fileListener);
     }
 
     /**
-     * Removes a FileListener
+     * Removes a FileListener.
      *
      * @param fileListener the FileListener to remove
      */
-    public void removeFileListener(FileListener fileListener) {
+    public void removeFileListener(final FileListener fileListener) {
         fileListeners.remove(fileListener);
     }
 
-    private void fireBeginRead(File file){
-        for (FileListener l : fileListeners){
+    /**
+     * Informs all FileListeners that the reading process has been started.
+     *
+     * @param file the file
+     */
+    private void fireBeginRead(final File file) {
+        for (FileListener l : fileListeners) {
             l.beginRead(file);
         }
     }
 
-    private void fireFinishRead(File file){
-        for (FileListener l : fileListeners){
+    /**
+     * Informs all FileListeners that the reading process has been finished.
+     *
+     * @param file the file
+     */
+    private void fireFinishRead(final File file) {
+        for (FileListener l : fileListeners) {
             l.finishRead(file);
         }
     }
 
-    private void fireBytesRead(long read, long max){
-        for (FileListener l : fileListeners){
+    /**
+     * Informs all FileListeners how many bytes have been read.
+     *
+     * @param read how many bytes have been read
+     * @param max  the maximum number of bytes available
+     */
+    private void fireBytesRead(final long read, final long max) {
+        for (FileListener l : fileListeners) {
             l.readBytes(read, max);
         }
     }
 
-    private void fireBeginWrite(File file){
-        for (FileListener l : fileListeners){
+    /**
+     * Informs all FileListeners that writing process has been started.
+     *
+     * @param file the file
+     */
+    private void fireBeginWrite(final File file) {
+        for (FileListener l : fileListeners) {
             l.beginRead(file);
         }
     }
 
-    private void fireFinishWrite(File file){
-        for (FileListener l : fileListeners){
+    /**
+     * Informs all FileListeners that writing process has been finished.
+     *
+     * @param file the file
+     */
+    private void fireFinishWrite(final File file) {
+        for (FileListener l : fileListeners) {
             l.finishRead(file);
         }
     }
 
-    public int indexOf(final Row row) {
-        return rows.indexOf(row);
-    }
+
 }

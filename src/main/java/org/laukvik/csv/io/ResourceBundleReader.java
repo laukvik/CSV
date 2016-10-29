@@ -25,6 +25,7 @@ public class ResourceBundleReader extends AbstractResourceBundle implements Read
     private int index;
     private List<String> keys;
 
+
     @Override
     public void readFile(final File file) throws FileNotFoundException {
         String filename = file.getName();

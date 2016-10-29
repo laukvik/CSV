@@ -16,16 +16,16 @@
 package org.laukvik.csv.columns;
 
 /**
- * Column with Boolean as the data type
+ * Column with Boolean as the data type.
  */
 public class BooleanColumn extends Column<Boolean> {
 
     /**
-     * Column with Boolean as the data type
+     * Column with Boolean as the data type.
      *
      * @param name the name of the column
      */
-    public BooleanColumn(String name) {
+    public BooleanColumn(final String name) {
         super(name);
     }
 

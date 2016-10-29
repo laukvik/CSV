@@ -19,7 +19,7 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
 /**
- * Compares a Column to be empty
+ * Compares a Column to be empty.
  */
 public class EmptyMatcher extends RowMatcher {
 

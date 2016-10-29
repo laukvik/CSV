@@ -25,13 +25,10 @@ import org.laukvik.csv.columns.Column;
  */
 public class IsInMatcher<T> extends RowMatcher {
 
-    private final T[] values;
-    private final Column<T> column;
-
     public IsInMatcher(Column<T> column, T[] values) {
         super();
-        this.column = column;
-        this.values = values;
+        final Column<T> column1 = column;
+        final T[] values1 = values;
         if (values == null) {
             throw new IllegalArgumentException("isIn() value cant be null " + values);
         }

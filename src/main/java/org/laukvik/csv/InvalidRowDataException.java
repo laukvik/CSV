@@ -30,13 +30,14 @@ public class InvalidRowDataException extends ParseException {
      * @param rowIndex the index for the row
      * @param row      the row
      */
-    public InvalidRowDataException(int columns, int required, int rowIndex, Row row) {
+    public InvalidRowDataException(final int columns, final int required, final int rowIndex, final Row row) {
         super("Invalid columns " + required + " found " + columns + " at row " + rowIndex);
         this.row = row;
     }
 
     /**
-     * Returns the row
+     * Returns the row.
+     *
      * @return the row
      */
     public Row getRow() {

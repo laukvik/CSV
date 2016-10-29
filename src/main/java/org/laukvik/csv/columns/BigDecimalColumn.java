@@ -18,12 +18,12 @@ package org.laukvik.csv.columns;
 import java.math.BigDecimal;
 
 /**
- * Column with BigDecimal as the data type
+ * Column with BigDecimal as the data type.
  */
 public class BigDecimalColumn extends Column<BigDecimal> {
 
     /**
-     * Column with BigDecimal as the data type
+     * Column with BigDecimal as the data type.
      *
      * @param name the name of the column
      */

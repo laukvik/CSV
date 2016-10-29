@@ -22,6 +22,12 @@ import org.laukvik.csv.Row;
  */
 abstract class RowMatcher {
 
+    /**
+     * Returns true if the row matches.
+     *
+     * @param row the row
+     * @return true if it matches
+     */
     public abstract boolean matches(Row row);
 
 }

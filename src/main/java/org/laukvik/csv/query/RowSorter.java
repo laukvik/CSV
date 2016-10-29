@@ -15,7 +15,6 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DateColumn;
@@ -26,13 +25,23 @@ import java.util.Date;
 import java.util.List;
 
 
+/**
+ * Sorts Rows using the Comparator.
+ */
 class RowSorter implements Comparator<Row> {
 
+    /**
+     * List of SortOrder to use.
+     */
     private final List<SortOrder> sortOrders;
 
-    public RowSorter(List<SortOrder> sortOrders, MetaData metaData) {
+    /**
+     * Sorts Rows using the Comparator using the specified sortOrders
+     *
+     * @param sortOrders
+     */
+    public RowSorter(final List<SortOrder> sortOrders) {
         this.sortOrders = sortOrders;
-        final MetaData metaData1 = metaData;
     }
 
     @Override

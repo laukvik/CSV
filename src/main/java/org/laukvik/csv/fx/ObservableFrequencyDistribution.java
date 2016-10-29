@@ -28,12 +28,10 @@ public final class ObservableFrequencyDistribution {
      * @param column the column
      * @param main the main
      */
-    public ObservableFrequencyDistribution(boolean selected, String value, int count, Column column, Main main) {
+    public ObservableFrequencyDistribution(final boolean selected, final String value, final int count, final Column column, final Main main) {
         this.selected = new SimpleBooleanProperty(selected);
         this.value = new SimpleStringProperty(value);
         this.count = new SimpleIntegerProperty(count);
-        final Column column1 = column;
-        final Main main1 = main;
         this.selected.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {

@@ -7,52 +7,63 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * @author Morten Laukvik
+ * An abstract class that has all utility methods to be helpful.
+ *
  */
 public abstract class AbstractDateMatcher extends RowMatcher {
 
-    final Date value;
-    final DateColumn column;
+    /**
+     * The date.
+     */
+    protected final Date value;
+    /**
+     * The DateColumn
+     */
+    protected final DateColumn column;
 
-    AbstractDateMatcher(DateColumn column, Date value) {
+    /**
+     * @param dateColumn the dateColumn
+     * @param value      the date
+     */
+    AbstractDateMatcher(final DateColumn dateColumn, final Date value) {
         super();
-        this.column = column;
+        this.column = dateColumn;
         this.value = value;
     }
 
-    private static int compare(Date d1, Date d2) {
+    private static int compare(final Date d1, final Date d2) {
         return d1.compareTo(d2);
     }
 
-    public static boolean isLessThan(Date d1, Date d2) {
+    public static boolean isLessThan(final Date d1, final Date d2) {
         return compare(d1, d2) < 1;
     }
 
-    static boolean isGreaterThan(Date d1, Date d2) {
+    static boolean isGreaterThan(final Date d1, final Date d2) {
         return compare(d1, d2) > 0;
     }
 
-    public static boolean isEqualDate(Date d1, Date d2) {
+    public static boolean isEqualDate(final Date d1, final Date d2) {
         GregorianCalendar c1 = new GregorianCalendar();
         c1.setTime(d1);
         GregorianCalendar c2 = new GregorianCalendar();
         c2.setTime(d2);
-        return c1.get(Calendar.DATE) == c2.get(Calendar.DATE) &&
-                c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH) &&
-                c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR);
+        return c1.get(Calendar.DATE) == c2.get(Calendar.DATE)
+                && c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH)
+                && c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR);
     }
 
-    public static boolean isEqualTime(Date d1, Date d2) {
+    public static boolean isEqualTime(final Date d1, final Date d2) {
         GregorianCalendar c1 = new GregorianCalendar();
         c1.setTime(d1);
         GregorianCalendar c2 = new GregorianCalendar();
         c2.setTime(d2);
-        return c1.get(Calendar.HOUR_OF_DAY) == c2.get(Calendar.HOUR_OF_DAY) &&
-                c1.get(Calendar.MINUTE) == c2.get(Calendar.MINUTE)
+        return c1.get(Calendar.HOUR_OF_DAY) == c2.get(Calendar.HOUR_OF_DAY)
+                && c1.get(Calendar.MINUTE) == c2.get(Calendar.MINUTE)
                 && c1.get(Calendar.SECOND) == c2.get(Calendar.SECOND);
     }
 
-    static boolean isYear(Date v, int year) {
+    static boolean isYear(final Date v, final int year) {
         if (v == null) {
             return false;
         }
@@ -61,7 +72,7 @@ public abstract class AbstractDateMatcher extends RowMatcher {
         return c.get(GregorianCalendar.YEAR) == year;
     }
 
-    public static boolean isYearGreaterThan(Date v, int year) {
+    public static boolean isYearGreaterThan(final Date v, final int year) {
         if (v == null) {
             return false;
         }
@@ -70,7 +81,7 @@ public abstract class AbstractDateMatcher extends RowMatcher {
         return c.get(GregorianCalendar.YEAR) > year;
     }
 
-    public static boolean isYearLessThan(Date v, int year) {
+    public static boolean isYearLessThan(final Date v, final int year) {
         if (v == null) {
             return false;
         }
@@ -79,7 +90,7 @@ public abstract class AbstractDateMatcher extends RowMatcher {
         return c.get(GregorianCalendar.YEAR) < year;
     }
 
-    public static boolean isYearBetween(Date v, int year, int toYear) {
+    public static boolean isYearBetween(final Date v, final int year, final int toYear) {
         if (v == null) {
             return false;
         }
@@ -89,7 +100,7 @@ public abstract class AbstractDateMatcher extends RowMatcher {
         return thisYear >= year && thisYear <= toYear;
     }
 
-    public static boolean isMonth(Date v, int month) {
+    public static boolean isMonth(final Date v, final int month) {
         if (v == null) {
             return false;
         }
@@ -98,7 +109,7 @@ public abstract class AbstractDateMatcher extends RowMatcher {
         return c.get(GregorianCalendar.MONTH) == month;
     }
 
-    public static boolean isWeek(Date v, int week) {
+    public static boolean isWeek(final Date v, final int week) {
         if (v == null) {
             return false;
         }
@@ -107,7 +118,7 @@ public abstract class AbstractDateMatcher extends RowMatcher {
         return c.get(GregorianCalendar.WEEK_OF_YEAR) == week;
     }
 
-    public static boolean isDayOfWeek(Date v, int dayOfWeek) {
+    public static boolean isDayOfWeek(final Date v, final int dayOfWeek) {
         if (v == null) {
             return false;
         }
