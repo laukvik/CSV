@@ -1,0 +1,233 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Laukvikcsv by laukvik</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Laukvikcsv</h1>
+        <p>Java library to parse very large CSV files</p>
+
+        <p class="view"><a href="https://github.com/laukvik/LaukvikCSV">View the Project on GitHub <small>laukvik/LaukvikCSV</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/laukvik/LaukvikCSV/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/laukvik/LaukvikCSV/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/laukvik/LaukvikCSV">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="laukvikcsv" class="anchor" href="#laukvikcsv" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>LaukvikCSV</h1>
+
+<p><strong>Continuous Integration:</strong> <a href="https://travis-ci.org/laukvik/LaukvikCSV"><img src="https://travis-ci.org/laukvik/LaukvikCSV.svg?branch=master" alt="Build Status"></a> <br>
+<strong>License:</strong> <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache 2.0</a><br></p>
+
+<p>An easy to use API for reading, writing, querying and exporting data.</p>
+
+<h2>
+<a id="reading-files" class="anchor" href="#reading-files" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Reading files</h2>
+
+<p>The easiest way to read a CSV file is to call the default constructor. This method will try to auto detect separator character and encoding.</p>
+
+<pre><code>CSV csv = new CSV(new File("presidents.csv"));
+</code></pre>
+
+<p>To read files using a SEMI COLON as separator character</p>
+
+<pre><code>CSV csv = new CSV();
+csv.readFile( new File("presidents.csv"), CSV.SEMICOLON );
+</code></pre>
+
+<p>To read files using a semi colon as PIPE character</p>
+
+<pre><code>CSV csv = new CSV();
+csv.readFile( new File("presidents.csv"), CSV.PIPE );
+</code></pre>
+
+<p>To read files using a semi colon as TAB character</p>
+
+<pre><code>CSV csv = new CSV();
+csv.readFile( new File("presidents.csv"), CSV.TAB );
+</code></pre>
+
+<h2>
+<a id="reading-file-with-very-large-data-sets" class="anchor" href="#reading-file-with-very-large-data-sets" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Reading file with very large data sets</h2>
+
+<pre><code>try (CsvReader r = new CsvReader( new File("presidents"), Charset.forName(charset)) )) {
+    while (r.hasNext()) {
+        Row row = r.next();
+    }
+}
+catch (IOException e) {
+    e.printStacktrace();
+}
+</code></pre>
+
+<h2>
+<a id="reading-pojo" class="anchor" href="#reading-pojo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Reading POJO</h2>
+
+<pre><code>List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();
+employees.add( new Employee("Bob",25,false) );
+employees.add( new Employee("Jane",24,true) );
+employees.add( new Employee("Yay",32,false) );
+CSV csv = new CSV();
+csv.readJava(employees);
+</code></pre>
+
+<h2>
+<a id="writing-files" class="anchor" href="#writing-files" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Writing files</h2>
+
+<pre><code>csv.write( new File("presidents.csv") );
+</code></pre>
+
+<h2>
+<a id="export-files" class="anchor" href="#export-files" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Export files</h2>
+
+<p>To write the contents to a CSV file</p>
+
+<pre><code>csv.writeFile( new File("presidents.csv") );
+</code></pre>
+
+<p>To write the contents to a XML file</p>
+
+<pre><code>csv.writeXML( new File("presidents.xml") );
+</code></pre>
+
+<p>To write the contents to a JSON file</p>
+
+<pre><code>csv.writeXML( new File("presidents.json") );
+</code></pre>
+
+<p>To write the contents to a HTML file</p>
+
+<pre><code>csv.writeXML( new File("presidents.html") );
+</code></pre>
+
+<p>To write the contents to ResourceBundle(s)</p>
+
+<pre><code>csv.writeXML( new File("presidents.properties") );
+</code></pre>
+
+<h2>
+<a id="working-with-columns" class="anchor" href="#working-with-columns" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Working with columns</h2>
+
+<p>Creating a CSV with two columns</p>
+
+<pre><code>CSV csv = new CSV();
+csv.addColumn("President");
+csv.addColumn("Party");
+</code></pre>
+
+<p>Reordering columns. The following example moves the column "Party" from index 1 to index 0 </p>
+
+<pre><code>csv.getMetaData().moveColumn(1,0);
+</code></pre>
+
+<p>Removes the first column (President).</p>
+
+<pre><code>csv.getMetaData().removeColumn(0);
+</code></pre>
+
+<h2>
+<a id="working-with-rows" class="anchor" href="#working-with-rows" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Working with rows</h2>
+
+<p>Adding a new row with data</p>
+
+<pre><code>CSV csv = new CSV();
+StringColumn president = csv.addColumn("President");
+StringColumn party = csv.addColumn("Party");
+
+csv.addRow().update(president, "Barack Obama").update(party, "Democratic");
+</code></pre>
+
+<p>Moving a row up or down</p>
+
+<pre><code>csv.moveRow( 1, 2 );
+</code></pre>
+
+<p>Swapping two rows</p>
+
+<pre><code>csv.swapRows( 1, 2 );
+</code></pre>
+
+<p>Removing rows</p>
+
+<pre><code>csv.removeRow( 5 );
+</code></pre>
+
+<p>Removing rows between range</p>
+
+<pre><code>csv.removeRows( 5, 10 );
+</code></pre>
+
+<p>Finding the index</p>
+
+<pre><code>csv.indexOf( row );
+</code></pre>
+
+<p>Inserting row at a specific index</p>
+
+<pre><code>CSV csv = new CSV();
+StringColumn president = csv.addStringColumn("President");
+csv.addRow(0).update(president, "Barak Obama");
+</code></pre>
+
+<h2>
+<a id="iterating-rows" class="anchor" href="#iterating-rows" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Iterating rows</h2>
+
+<p>Iterating all rows</p>
+
+<pre><code>CSV csv = new CSV();
+for (int y=0; y&lt;csv.getRowCount(); y++){
+    Row row = csv.getRow(y);
+}
+</code></pre>
+
+<h2>
+<a id="using-queries" class="anchor" href="#using-queries" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using queries</h2>
+
+<p>The API supports fluent queries similar to SQL. The first example finds all rows where President is Barack Obama</p>
+
+<pre><code>List&lt;Row&gt; rows = csv.findByQuery().where().column("President").is("Barack Obama").getResultList();
+</code></pre>
+
+<p>The second example uses sorting for the results</p>
+
+<pre><code>List&lt;Row&gt; rows = csv.findByQuery().orderBy().asc("President").getResultList();
+</code></pre>
+
+<h2>
+<a id="frequencydistribution" class="anchor" href="#frequencydistribution" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FrequencyDistribution</h2>
+
+<p>Builds a FrequencyDistribution for column with index 2;</p>
+
+<pre><code>FrequencyDistribution fd = csv.buildFrequencyDistribution( 2 );
+</code></pre>
+
+<h2>
+<a id="distinct-values" class="anchor" href="#distinct-values" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Distinct Values</h2>
+
+<pre><code>Set&lt;String&gt; values = csv.buildDistinctValues(1);
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/laukvik">laukvik</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
