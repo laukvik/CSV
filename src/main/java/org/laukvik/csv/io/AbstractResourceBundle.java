@@ -10,19 +10,19 @@ import java.io.FileFilter;
  */
 public class AbstractResourceBundle {
 
-    public final static String COLUMN_PROPERTY = "property";
-    public final static String COLUMN_DEFAULT = "default";
-    public final static String EXTENSION = ".properties";
+    final static String COLUMN_PROPERTY = "property";
+    final static String COLUMN_DEFAULT = "default";
+    final static String EXTENSION = ".properties";
 
 
     /**
-     * Returns the locale for the
+     * Returns the locale for the filename
      *
      * @param filename the filename to extract the locale from
-     * @param basename
-     * @return
+     * @param basename the basename of the bundle
+     * @return the new filename
      */
-    public static String getLocale(String filename, String basename) {
+    public static String getLocale(final String filename, final String basename) {
         if (filename == null || !filename.endsWith(EXTENSION)){
             return null;
         } else {
@@ -57,7 +57,7 @@ public class AbstractResourceBundle {
      *
      * @param column the column
      * @param basename the basename
-     * @return
+     * @return the filename
      */
     public static String getFilename(StringColumn column, String basename ){
         String locale = column.getName();
@@ -72,11 +72,12 @@ public class AbstractResourceBundle {
 
     public static class ResourceBundleFileFilter implements FileFilter {
 
-        private String basename;
+        private final String basename;
 
         /**
+         * Creates a new instance which only accepts filename matching the specified basename
          *
-         * @param basename
+         * @param basename the basename
          */
         public ResourceBundleFileFilter(final String basename) {
             this.basename = basename;
@@ -84,10 +85,7 @@ public class AbstractResourceBundle {
 
         @Override
         public boolean accept(final File file) {
-            if (file == null || file.isDirectory()) {
-                return false;
-            }
-            return AbstractResourceBundle.getLocale(file.getName(), basename) != null;
+            return !(file == null || file.isDirectory()) && AbstractResourceBundle.getLocale(file.getName(), basename) != null;
         }
     }
 

@@ -30,9 +30,8 @@ import java.io.IOException;
 public class ResourceBundleWriter extends AbstractResourceBundle implements Writeable{
 
 
-    private File file;
-    private File folder;
-    private String basename;
+    private final File folder;
+    private final String basename;
 
     /**
      * Writes the data set to the ResourceBundle
@@ -42,7 +41,6 @@ public class ResourceBundleWriter extends AbstractResourceBundle implements Writ
      * @param file the file
      */
     public ResourceBundleWriter(File file) {
-        this.file = file;
         this.folder = file.getParentFile();
         this.basename = getBasename(file);
     }

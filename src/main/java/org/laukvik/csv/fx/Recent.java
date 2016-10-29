@@ -34,7 +34,7 @@ public final class Recent {
     /**
      * Returns the Library folder for the user.
      *
-     * @return
+     * @return the folder called Library in the users home folder
      */
     private static File getLibrary() {
         return new File(System.getProperty("user.home"), "Library");
@@ -43,7 +43,7 @@ public final class Recent {
     /**
      * Returns the folder where all configuration of CSV is.
      *
-     * @return
+     * @return the folder called org.laukvik.csv in the users library folder
      */
     private static File getHome() {
         File file = new File(getLibrary(), "org.laukvik.csv");

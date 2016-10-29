@@ -22,11 +22,12 @@ import java.util.TreeMap;
  */
 public class WordCountReader implements Readable{
 
-    private Map<String, Integer> map;
-    private MetaData metaData;
+    private final Map<String, Integer> map;
+    private final MetaData metaData;
+    private final StringColumn wordColumn;
+    private final StringColumn countColumn;
     private Row row;
     private int index;
-    private StringColumn wordColumn, countColumn;
     private List<String> list;
 
     public WordCountReader() {

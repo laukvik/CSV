@@ -11,7 +11,7 @@ import java.util.List;
 public class Selection {
 
     private final Column column;
-    private List<String> values;
+    private final List<String> values;
 
     public Selection(final Column column) {
         this.column = column;
@@ -42,12 +42,6 @@ public class Selection {
         this.values.remove(value);
     }
 
-//    @Override
-//    public boolean equals(final Object o) {
-//        return column.equals(o);
-//    }
-
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -55,9 +49,7 @@ public class Selection {
 
         final Selection selection = (Selection) o;
 
-        if (getColumn() != null ? !getColumn().equals(selection.getColumn()) : selection.getColumn() != null)
-            return false;
-        return getValues() != null ? getValues().equals(selection.getValues()) : selection.getValues() == null;
+        return getColumn() != null ? getColumn().equals(selection.getColumn()) : selection.getColumn() == null && (getValues() != null ? getValues().equals(selection.getValues()) : selection.getValues() == null);
 
     }
 

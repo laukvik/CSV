@@ -73,8 +73,8 @@ public final class CsvWriter implements Writeable, AutoCloseable {
     /**
      * Writes a single row of CSV data
      *
-     * @param row
-     * @throws IOException
+     * @param row the row to write
+     * @throws IOException when the row could not be written
      */
     private void writeRow(final Row row) throws IOException {
         writeRow(row, row.getCSV().getMetaData());

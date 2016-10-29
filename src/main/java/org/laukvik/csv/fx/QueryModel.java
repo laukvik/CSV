@@ -15,9 +15,9 @@ import java.util.List;
  */
 public class QueryModel {
 
-    private final CSV csv;
-    private List<Selection> selections;
     final Main main;
+    private final CSV csv;
+    private final List<Selection> selections;
 
     public QueryModel(final CSV csv, final Main main){
         this.csv = csv;

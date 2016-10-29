@@ -28,8 +28,8 @@ import org.laukvik.csv.io.CsvWriter;
 import org.laukvik.csv.io.HtmlWriter;
 import org.laukvik.csv.io.JavaReader;
 import org.laukvik.csv.io.JsonWriter;
-import org.laukvik.csv.io.ResourceBundleReader;
 import org.laukvik.csv.io.Readable;
+import org.laukvik.csv.io.ResourceBundleReader;
 import org.laukvik.csv.io.ResourceBundleWriter;
 import org.laukvik.csv.io.WordCountReader;
 import org.laukvik.csv.io.Writeable;
@@ -452,9 +452,9 @@ public final class CSV implements Serializable {
      * Reads the File using the specified reader. System default charset is used when the charset is not
      * specified.
      *
-     * @param file
-     * @param charset
-     * @param reader
+     * @param file the file to read
+     * @param charset the charset used to read
+     * @param reader the reader to use
      */
     private void readFile(final File file, final Charset charset, final ClosableReader reader) {
         this.file = file;
@@ -572,7 +572,7 @@ public final class CSV implements Serializable {
      * @param file the file to read
      * @throws FileNotFoundException when the file can't be found
      */
-    public void readFile(final Readable readable, final File file ) throws FileNotFoundException{
+    private void readFile(final Readable readable, final File file) throws FileNotFoundException {
         fireBeginRead(file);
         this.file = file;
         rows.clear();
@@ -590,7 +590,7 @@ public final class CSV implements Serializable {
      * Writes the contents to a file using the specified Writer.
      *
      * @param writer the Writer
-     * @throws Exception
+     * @throws Exception when the file could not be written
      */
     private void write(final Writeable writer) throws Exception {
         writer.writeCSV(this);

@@ -62,10 +62,10 @@ public enum BOM {
     }
 
     /**
-     * Parses and detects any encoding if present
+     * Parses and detects any BOM if present
      *
-     * @param bytes
-     * @return
+     * @param bytes the bytes to check
+     * @return the BOM found
      */
     private static BOM parse(byte... bytes) {
         for (BOM bom : values()) {

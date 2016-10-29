@@ -11,16 +11,16 @@ import java.util.GregorianCalendar;
  */
 public abstract class AbstractDateMatcher extends RowMatcher {
 
-    protected final Date value;
-    protected final DateColumn column;
+    final Date value;
+    final DateColumn column;
 
-    public AbstractDateMatcher(DateColumn column, Date value) {
+    AbstractDateMatcher(DateColumn column, Date value) {
         super();
         this.column = column;
         this.value = value;
     }
 
-    public static int compare(Date d1, Date d2) {
+    private static int compare(Date d1, Date d2) {
         return d1.compareTo(d2);
     }
 
@@ -28,7 +28,7 @@ public abstract class AbstractDateMatcher extends RowMatcher {
         return compare(d1, d2) < 1;
     }
 
-    public static boolean isGreaterThan(Date d1, Date d2) {
+    static boolean isGreaterThan(Date d1, Date d2) {
         return compare(d1, d2) > 0;
     }
 
@@ -52,7 +52,7 @@ public abstract class AbstractDateMatcher extends RowMatcher {
                 && c1.get(Calendar.SECOND) == c2.get(Calendar.SECOND);
     }
 
-    public static boolean isYear(Date v, int year) {
+    static boolean isYear(Date v, int year) {
         if (v == null) {
             return false;
         }

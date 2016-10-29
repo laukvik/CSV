@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
  */
 class CsvMenuBar extends MenuBar {
 
-    final Menu viewMenu;
+    private final Menu viewMenu;
     private final Main main;
     private final Menu openRecentMenu;
     private final ResourceBundle bundle;
@@ -302,7 +302,7 @@ class CsvMenuBar extends MenuBar {
         openRecentMenu.getItems().add(openRecentItem);
     }
 
-    public void setSelectedMode(int index) {
+    private void setSelectedMode(int index) {
         int x = 0;
         for (MenuItem item : viewMenu.getItems()) {
             CheckMenuItem i = (CheckMenuItem) item;

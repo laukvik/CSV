@@ -129,8 +129,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
 
         ObservableList<PieChart.Data> data = FXCollections.observableArrayList(dataset);
-        final PieChart chart = new PieChart(data);
-        return chart;
+        return new PieChart(data);
     }
 
     @Override
@@ -784,7 +783,7 @@ public class Main extends Application implements ChangeListener, FileListener {
             try {
                 csv.writeFile( selectedFile );
             } catch (Exception e) {
-                alert(bundle.getString("file.export.html.failed"));
+                alert(bundle.getString("dialog.file.saveas.failed"));
             }
         }
     }

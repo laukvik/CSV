@@ -18,8 +18,6 @@ public final class ObservableFrequencyDistribution {
     private final SimpleBooleanProperty selected;
     private final SimpleStringProperty value;
     private final SimpleIntegerProperty count;
-    private Main main;
-    private Column column;
 
     /**
      * Builds a new instance with the specified values
@@ -34,8 +32,8 @@ public final class ObservableFrequencyDistribution {
         this.selected = new SimpleBooleanProperty(selected);
         this.value = new SimpleStringProperty(value);
         this.count = new SimpleIntegerProperty(count);
-        this.column = column;
-        this.main = main;
+        final Column column1 = column;
+        final Main main1 = main;
         this.selected.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {

@@ -230,7 +230,7 @@ public class CsvReader implements ClosableReader {
      * Reads the next row
      *
      * @return a boolean whether a new row was found
-     * @throws IOException
+     * @throws IOException when the row could not be read
      */
     private boolean readRow() throws IOException {
         if (!reader.ready()) {

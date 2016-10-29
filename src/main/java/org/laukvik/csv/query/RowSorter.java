@@ -15,24 +15,24 @@
  */
 package org.laukvik.csv.query;
 
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DateColumn;
 import org.laukvik.csv.columns.StringColumn;
 
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+
 
 class RowSorter implements Comparator<Row> {
 
     private final List<SortOrder> sortOrders;
-    private final MetaData metaData;
 
     public RowSorter(List<SortOrder> sortOrders, MetaData metaData) {
         this.sortOrders = sortOrders;
-        this.metaData = metaData;
+        final MetaData metaData1 = metaData;
     }
 
     @Override

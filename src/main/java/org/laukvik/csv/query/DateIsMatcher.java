@@ -32,10 +32,7 @@ public class DateIsMatcher extends AbstractDateMatcher {
     @Override
     public boolean matches(Row row) {
         Date d = row.getDate(column);
-        if (d == null || value == null) {
-            return false;
-        }
-        return isEqualDate(value, d);
+        return !(d == null || value == null) && isEqualDate(value, d);
     }
 
 }

@@ -28,10 +28,10 @@ import java.util.List;
  */
 public class JavaReader<T> implements Readable {
 
-    private List<T> list;
+    private final List<T> list;
+    private final CSV csv;
     private int index;
     private Row row;
-    private CSV csv;
 
     /**
      * Reads the list of Java objects into a data set

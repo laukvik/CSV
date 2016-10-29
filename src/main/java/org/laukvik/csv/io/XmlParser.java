@@ -29,12 +29,8 @@ public class XmlParser {
     private final static char NEWLINE_SYMBOL = '\n';
     private final static char RETURN_SYMBOL = '\r';
     private final static char SPACE_SYMBOL = ' ';
-    private StringBuilder text, tag, attr, value, close;
-    private Mode mode;
-    private Tag root;
+    private final List<XmlListener> listeners;
     private Tag current;
-
-    private List<XmlListener> listeners;
 
     public XmlParser() {
         listeners = new ArrayList<>();
@@ -87,14 +83,14 @@ public class XmlParser {
 
     public Tag parseFile(final File file) throws IOException {
         FileReader reader = new FileReader(file);
-        root = new Tag("document");
+        final Tag root = new Tag("document");
         current = root;
-        mode = EMPTY;
-        text = new StringBuilder();
-        tag = new StringBuilder();
-        attr = new StringBuilder();
-        value = new StringBuilder();
-        close = new StringBuilder();
+        Mode mode = EMPTY;
+        StringBuilder text = new StringBuilder();
+        StringBuilder tag = new StringBuilder();
+        StringBuilder attr = new StringBuilder();
+        StringBuilder value = new StringBuilder();
+        final StringBuilder close = new StringBuilder();
         while (reader.ready()) {
 
             char c = (char) reader.read();
@@ -337,7 +333,7 @@ public class XmlParser {
 
     static class Attribute {
 
-        private String name;
+        private final String name;
         private String value;
 
         public Attribute(String name) {
@@ -369,11 +365,11 @@ public class XmlParser {
 
     public static class Tag {
 
-        private static String[] SINGLE_TAGS = {"IMG", "BR", "INPUT"};
+        private static final String[] SINGLE_TAGS = {"IMG", "BR", "INPUT"};
+        private final String name;
+        private final List<Tag> children;
+        private final List<Attribute> attributeList;
         private Tag parent;
-        private String name;
-        private List<Tag> children;
-        private List<Attribute> attributeList;
         private String text;
 
         public Tag(String name) {
@@ -443,9 +439,9 @@ public class XmlParser {
 
             } else if (isSingle()) {
 
-                b.append("<" + name);
+                b.append("<").append(name);
                 for (Attribute a : attributeList) {
-                    b.append(" " + a.toHtml());
+                    b.append(" ").append(a.toHtml());
                 }
 
                 if (text == null) {
@@ -460,9 +456,9 @@ public class XmlParser {
 
             } else {
                 if (parent != null) {
-                    b.append("<" + name);
+                    b.append("<").append(name);
                     for (Attribute a : attributeList) {
-                        b.append(" " + a.toHtml());
+                        b.append(" ").append(a.toHtml());
                     }
                     b.append(">");
                 }
@@ -476,7 +472,7 @@ public class XmlParser {
                 }
 
                 if (parent != null) {
-                    b.append("\n</" + name + ">");
+                    b.append("\n</").append(name).append(">");
                 }
                 return b.toString();
             }

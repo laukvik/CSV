@@ -34,9 +34,9 @@ import java.util.List;
  */
 class ObservableRow implements javafx.beans.value.ChangeListener<String>{
 
+    final ChangeListener listener;
     private final List<SimpleStringProperty> items;
-    ChangeListener listener;
-    private Row row;
+    private final Row row;
 
     /**
      * Builds a new ObservableRow from the Row
