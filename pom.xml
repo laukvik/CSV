@@ -3,12 +3,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.laukvik</groupId>
-    <artifactId>laukvik-csv</artifactId>
+    <artifactId>csv</artifactId>
     <version>0.9</version>
     <packaging>jar</packaging>
 
     <name>CSV</name>
     <description>A Java API for reading, writing, filtering and exporting data sets.</description>
+
+    <organization>
+        <name>Laukvik</name>
+        <url>http://www.laukvik.no</url>
+    </organization>
+
+    <inceptionYear>2004</inceptionYear>
 
     <developers>
         <developer>
@@ -58,18 +65,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -192,9 +187,26 @@
                     </execution>
                 </executions>
             </plugin>
+
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.10</version>
+                <configuration>
+                    <licenseName>apache_v2</licenseName>
+                    <licenseResolver>${project.baseUri}/src/license</licenseResolver>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-
-
 
         <resources>
             <resource>
@@ -206,6 +218,9 @@
                     <include>*.html</include>
                     <include>*.png</include>
                 </includes>
+                <excludes>
+                    <exclude>src/license/*</exclude>
+                </excludes>
             </resource>
         </resources>
     </build>
