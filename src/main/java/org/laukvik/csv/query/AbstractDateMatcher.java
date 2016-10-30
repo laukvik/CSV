@@ -15,22 +15,22 @@ public abstract class AbstractDateMatcher extends RowMatcher {
     /**
      * The date.
      */
-    protected final Date value;
+    protected Date value;
     /**
      * The DateColumn.
      */
-    protected final DateColumn column;
+    protected DateColumn column;
 
     /**
      * Creats a new matcher.
      *
      * @param dateColumn the dateColumn
-     * @param value      the date
+     * @param date      the date
      */
-    AbstractDateMatcher(final DateColumn dateColumn, final Date value) {
+    AbstractDateMatcher(final DateColumn dateColumn, final Date date) {
         super();
         this.column = dateColumn;
-        this.value = value;
+        this.value = date;
     }
 
     /**

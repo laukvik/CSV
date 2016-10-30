@@ -39,21 +39,31 @@ import java.util.TreeMap;
  *
  * @author Morten Laukvik
  */
-public class Row implements Serializable {
+public final class Row implements Serializable {
 
-    private final Map<Column, Object> map;
+    /**
+     * The timestamp it was created. Used only internally to separate rows.
+     */
     protected final long timestamp;
+    /**
+     * The Map containing the column data.
+     */
+    private final Map<Column, Object> map;
+    /** The CSV the row belongs to. */
     private CSV csv;
 
     /**
-     * Creates a new Row
+     * Creates a new Row.
      */
     public Row() {
         timestamp = System.nanoTime();
         this.map = new TreeMap<>();
     }
 
-    @Override
+    /**
+     * Returns the row formatted as a String.
+     * @return the row as STring
+     */
     public String toString() {
         StringBuilder b = new StringBuilder();
         int x = 0;
@@ -68,14 +78,30 @@ public class Row implements Serializable {
         return b.toString();
     }
 
+    /**
+     * Returns the CSV it belongs to.
+     * @return the CSV
+     */
     public CSV getCSV() {
         return csv;
     }
 
-    public void setCSV(CSV csv) {
+    /**
+     * Sets the CSV it belongs to.
+     *
+     * @param csv
+     */
+    public void setCSV(final CSV csv) {
         this.csv = csv;
     }
 
+    /**
+     * Updates the column with the value
+     *
+     * @param column the column to update
+     * @param value
+     * @return
+     */
     public Row updateColumn(Column column, String value) {
         map.put(column, column.parse(value));
         return this;
@@ -126,11 +152,23 @@ public class Row implements Serializable {
         return this;
     }
 
-    public boolean isNull(Column column) {
+    /**
+     * Returns true if the column is null.
+     *
+     * @param column the column
+     * @return true if column is null
+     */
+    public boolean isNull(final Column column) {
         return map.get(column) == null;
     }
 
-    public String getAsString(Column column) {
+    /**
+     * Returns the column as String
+     *
+     * @param column the column
+     * @return the column as a String
+     */
+    public String getAsString(final Column column) {
         return map.get(column) + "";
     }
 
@@ -150,15 +188,23 @@ public class Row implements Serializable {
         return (Integer) map.get(column);
     }
 
-    @Override
+    /**
+     * Returns the hashCode
+     * @return the hashCode
+     */
     public int hashCode() {
         int hash = 5;
         hash = 53 * hash + Objects.hashCode(this.csv);
         return hash;
     }
 
-    @Override
-    public boolean equals(Object obj) {
+    /**
+     * Returns true if the objects are equals
+     *
+     * @param obj the object
+     * @return true when equals
+     */
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -169,10 +215,19 @@ public class Row implements Serializable {
         return timestamp == otherRow.timestamp;
     }
 
-    public void remove(Column column) {
+    /**
+     * Removes the value for the column
+     *
+     * @param column the column
+     */
+    public void remove(final Column column) {
         map.remove(column);
     }
 
+    /**
+     * Returns the row index.
+     * @return the row index
+     */
     public int indexOf() {
         return csv.indexOf(this);
     }

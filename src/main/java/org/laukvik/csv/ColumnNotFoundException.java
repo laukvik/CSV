@@ -15,18 +15,26 @@
  */
 package org.laukvik.csv;
 
+/**
+ * Indicates that the column could not be found.
+ */
+final class ColumnNotFoundException extends IllegalArgumentException {
 
-class ColumnNotFoundException extends IllegalArgumentException {
-
-    public ColumnNotFoundException(int index, int required) {
-        super("Column with index " + index + " was not found. Required: " + required);
-    }
-
-    public ColumnNotFoundException(int index) {
+    /**
+     * Indicates that the column with the index cant be found.
+     *
+     * @param index the column index
+     */
+    ColumnNotFoundException(final int index) {
         super("Column with index " + index + " was not found");
     }
 
-    public ColumnNotFoundException(String name) {
+    /**
+     * Indicates that the column could not be found.
+     *
+     * @param name the column name
+     */
+    ColumnNotFoundException(final String name) {
         super("Column with name " + name + " was not found");
     }
 

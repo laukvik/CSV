@@ -406,7 +406,7 @@ public abstract class Column<T> implements Comparable {
     /**
      * Sets the default value.
      *
-     * @param value
+     * @param value the default value
      */
     public final void setDefaultValue(final String value) {
         this.defaultValue = value;

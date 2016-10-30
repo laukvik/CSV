@@ -50,33 +50,43 @@ import java.util.List;
  * }
  * </pre>
  *
- * @author Morten Laukvik
+ * TODO - Remove File from constructor. Should only be from readFile();
  */
-public class CsvReader implements ClosableReader {
+public final class CsvReader implements ClosableReader {
 
+    /**
+     * The bufferedReader.
+     */
     private final BufferedReader reader;
+    /** The MetaData. */
     private final MetaData metaData;
+    /** The quote character to use. */
     private final Character quoteChar;
+    /** Whether column separator should be automatically detected or not. */
     private boolean autoDetectColumnSeparator;
+    /** The number of bytes read. */
     private int bytesRead;
+    /** The number of lines read. */
     private int lineCounter;
+    /** The current row. */
     private Row row;
+    /** The column separator character. */
     private Character columnSeparatorChar;
 
     /**
      * Reads CSV from the specified reader using the separator and quote characters.
      *
-     * @param reader    the reader
+     * @param bufferedReader    the bufferedReader
      * @param separator the separator character
      * @param quote     the quote character
      * @throws IOException when the CSV could not be fully read
      */
-    public CsvReader(final BufferedReader reader, final Character separator, final Character quote) throws IOException {
+    public CsvReader(final BufferedReader bufferedReader, final Character separator, final Character quote) throws IOException {
         this.autoDetectColumnSeparator = (separator == null);
         if (separator != null) {
             this.columnSeparatorChar = separator;
         }
-        this.reader = reader;
+        this.reader = bufferedReader;
         this.quoteChar = quote == null ? CSV.DOUBLE_QUOTE : quote;
         this.metaData = new MetaData();
         this.lineCounter = 0;
@@ -89,10 +99,23 @@ public class CsvReader implements ClosableReader {
         this.metaData.setQuoteChar(this.quoteChar);
     }
 
+    /**
+     * Specifies the separator and quote character to use.
+     *
+     * @param file
+     * @param separator
+     * @param quote
+     * @throws IOException
+     */
     public CsvReader(final File file, final Character separator, final Character quote) throws IOException {
         this(new BufferedReader(new FileReader(file)), separator, quote);
     }
 
+    /**
+     *
+     * @param file
+     * @throws IOException
+     */
     public CsvReader(final File file) throws IOException {
         this(new BufferedReader(new FileReader(file)));
     }
@@ -100,11 +123,11 @@ public class CsvReader implements ClosableReader {
     /**
      * Reads CSV from the specified reader using default settings.
      *
-     * @param reader the reader
+     * @param bufferedReader the reader
      * @throws IOException when the CSV could not be fully read
      */
-    public CsvReader(final BufferedReader reader) throws IOException {
-        this(reader, null, null);
+    public CsvReader(final BufferedReader bufferedReader) throws IOException {
+        this(bufferedReader, null, null);
     }
 
     /**
@@ -245,14 +268,12 @@ public class CsvReader implements ClosableReader {
             if (x >= metaData.getColumnCount()) {
             } else {
                 Column c = metaData.getColumn(x);
-
-
                 if (c instanceof StringColumn) {
                     row.update((StringColumn) c, value);
 
                 } else if (c instanceof BigDecimalColumn) {
                     BigDecimalColumn bc = (BigDecimalColumn) c;
-//                    row.update( bc, bc.parse(value) );
+                    row.update(bc, bc.parse(value) );
 
                 } else if (c instanceof BooleanColumn) {
                     BooleanColumn bc = (BooleanColumn) c;
@@ -281,49 +302,72 @@ public class CsvReader implements ClosableReader {
                 } else if (c instanceof UrlColumn) {
                     UrlColumn ic = (UrlColumn) c;
                     row.update(ic, ic.parse(value));
-
-
                 }
-
-
             }
         }
         return true;
     }
 
+    /**
+     * Returns the column separator character.
+     * @return the column separator character.
+     */
     public char getColumnSeparatorChar() {
         return columnSeparatorChar;
     }
 
+    /**
+     * Returns the amount of bytes read.
+     * @return the amount of bytes read
+     */
     public int getBytesRead() {
         return bytesRead;
     }
 
+    /**
+     * Returns how many lines read.
+     * @return
+     */
     public int getLineCounter() {
         return lineCounter;
     }
 
-    @Override
+    /**
+     * Returns the current row.
+     * @return the row
+     */
     public Row getRow() {
         return row;
     }
 
-    @Override
+    /**
+     * Reads the file.
+     *
+     * @param file the file
+     */
     public void readFile(final File file) {
-
     }
 
-    @Override
+    /**
+     * Returns the MetaData found.
+     * @return the MetaData
+     */
     public MetaData getMetaData() {
         return metaData;
     }
 
-    @Override
+    /**
+     * Closes the bufferedReader.
+     * @throws IOException when an IOException occurs
+     */
     public void close() throws IOException {
         reader.close();
     }
 
-    @Override
+    /**
+     * Returns true if more rows are available.
+     * @return true if more rows
+     */
     public boolean hasNext() {
         try {
             return readRow();
@@ -332,7 +376,11 @@ public class CsvReader implements ClosableReader {
         }
     }
 
-    @Override
+    /**
+     * Returns the next row
+     *
+     * @return the next row
+     */
     public Row next() {
         return row;
     }

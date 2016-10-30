@@ -218,7 +218,7 @@ final class Builder {
      * @param separator the separator
      * @return the String representation
      */
-    public static Character getSeparatorCharByString(String separator) {
+    public static Character getSeparatorCharByString(final String separator) {
         switch (separator) {
             case "COMMA":
                 return CSV.COMMA;
@@ -233,6 +233,11 @@ final class Builder {
         }
     }
 
+    /**
+     * Returns true if operating system is Mac.
+     *
+     * @return true if Mac
+     */
     public static boolean isMac() {
         return System.getProperty("os.name").toLowerCase().contains("mac");
     }

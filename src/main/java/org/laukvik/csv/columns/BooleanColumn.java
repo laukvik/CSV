@@ -18,7 +18,7 @@ package org.laukvik.csv.columns;
 /**
  * Column with Boolean as the data type.
  */
-public class BooleanColumn extends Column<Boolean> {
+public final class BooleanColumn extends Column<Boolean> {
 
     /**
      * Column with Boolean as the data type.
@@ -29,21 +29,49 @@ public class BooleanColumn extends Column<Boolean> {
         super(name);
     }
 
-    @Override
-    public String asString(Boolean value) {
+    /**
+     * Returns the value as a String.
+     *
+     * @param value the value
+     * @return value as a String
+     */
+    public String asString(final Boolean value) {
+        if (value == null) {
+            return "";
+        }
         return value.toString();
     }
 
-    @Override
-    public Boolean parse(String value) {
+    /**
+     * Parses the value.
+     *
+     * @param value the string
+     * @return the value
+     */
+    public Boolean parse(final String value) {
         return Boolean.parseBoolean(value);
     }
 
-    public int compare(Boolean one, Boolean another) {
+    /**
+     * Compares two booleans.
+     *
+     * @param one     one column
+     * @param another another column
+     * @return the comparable value
+     */
+    public int compare(final Boolean one, final Boolean another) {
+        if (one == null && another != null) {
+            return 1;
+        } else if (one != null && another == null) {
+            return 0;
+        }
         return one.compareTo(another);
     }
 
-    @Override
+    /**
+     * Returns the column a String.
+     * @return the
+     */
     public String toString() {
         return getName() + "(Boolean)";
     }

@@ -18,7 +18,7 @@ package org.laukvik.csv.columns;
 /**
  * Column with String as the data type
  */
-public class StringColumn extends Column<String> {
+public final class StringColumn extends Column<String> {
 
     private int size;
 

@@ -18,37 +18,58 @@ package org.laukvik.csv.columns;
 import java.util.Arrays;
 
 /**
- * Column with byte array as the data type
+ * Column with byte array as the data type.
  */
-public class ByteColumn extends Column<byte[]> {
+public final class ByteColumn extends Column<byte[]> {
 
     /**
-     * Column with byte array as the data type
+     * Column with byte array as the data type.
      *
      * @param name the name of the column
      */
-    public ByteColumn(String name) {
+    public ByteColumn(final String name) {
         super(name);
     }
 
-    @Override
-    public String asString(byte[] value) {
+    /**
+     * Represents the value as a String.
+     *
+     * @param value the value
+     * @return the value as a String
+     */
+    public String asString(final byte[] value) {
         return value.toString();
     }
 
-    @Override
-    public byte[] parse(String value) {
+    /**
+     * Parses the string and returns a byte array.
+     *
+     * @param value the string
+     * @return byte array
+     */
+    public byte[] parse(final String value) {
         return value.getBytes();
     }
 
-    public int compare(byte[] one, byte[] another) {
+    /**
+     * Compares two byte arrays.
+     *
+     * @param one     one column
+     * @param another another column
+     * @return
+     */
+    public int compare(final byte[] one, final byte[] another) {
         if (Arrays.equals(one, another)) {
             return 0;
         }
         return 1;
     }
 
-    @Override
+    /**
+     * Returns the column definition.
+     *
+     * @return the column
+     */
     public String toString() {
         return getName() + "(Byte)";
     }

@@ -19,12 +19,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Column with URL as the data type
+ * Column with URL as the data type.
  */
-public class UrlColumn extends Column<URL> {
+public final class UrlColumn extends Column<URL> {
 
     /**
-     * Column with URL as the data type
+     * Column with URL as the data type.
      *
      * @param name the name of the column
      */
@@ -32,12 +32,11 @@ public class UrlColumn extends Column<URL> {
         super(name);
     }
 
-    @Override
+
     public String asString(URL value) {
         return value.toExternalForm();
     }
 
-    @Override
     public URL parse(String value) {
         try {
             return new URL(value);
@@ -51,17 +50,14 @@ public class UrlColumn extends Column<URL> {
         return one.toExternalForm().compareTo(another.toExternalForm());
     }
 
-    @Override
     public String toString() {
         return getName() + "(URL)";
     }
 
-    @Override
     public int hashCode() {
         return 3;
     }
 
-    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;

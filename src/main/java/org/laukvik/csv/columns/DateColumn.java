@@ -25,7 +25,7 @@ import java.util.GregorianCalendar;
 /**
  * Column with Date as the data type
  */
-public class DateColumn extends Column<Date> {
+public final class DateColumn extends Column<Date> {
 
     private final DateFormat dateFormat;
     private final String format;

@@ -23,27 +23,27 @@ import java.io.FileNotFoundException;
 import java.util.Iterator;
 
 /**
- * An interface for reading data sets
+ * An interface for reading data sets.
  */
 public interface Readable extends Iterator<Row> {
 
     /**
-     * Reads the specified file
+     * Reads the specified file.
      *
      * @param file the file
      * @throws FileNotFoundException when the file cant be found
      */
-    void readFile( File file ) throws FileNotFoundException;
+    void readFile(File file) throws FileNotFoundException;
 
     /**
-     * Returns the MetaData
+     * Returns the MetaData.
      *
      * @return the MetaData
      */
     MetaData getMetaData();
 
     /**
-     * The current row
+     * The current row.
      *
      * @return the row
      */

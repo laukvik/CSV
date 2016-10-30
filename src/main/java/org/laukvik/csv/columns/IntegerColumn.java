@@ -18,7 +18,7 @@ package org.laukvik.csv.columns;
 /**
  * Column with Integer as the data type
  */
-public class IntegerColumn extends Column<Integer> {
+public final class IntegerColumn extends Column<Integer> {
 
     /**
      * Column with Integer as the data type
@@ -29,12 +29,10 @@ public class IntegerColumn extends Column<Integer> {
         super(name);
     }
 
-    @Override
     public String asString(Integer value) {
         return value.toString();
     }
 
-    @Override
     public Integer parse(String value) {
         return Integer.parseInt(value);
     }
@@ -43,17 +41,14 @@ public class IntegerColumn extends Column<Integer> {
         return one.compareTo(another);
     }
 
-    @Override
     public String toString() {
         return getName() + "(Integer)";
     }
 
-    @Override
     public int hashCode() {
         return 7;
     }
 
-    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;

@@ -16,12 +16,12 @@
 package org.laukvik.csv.columns;
 
 /**
- * Column with Double as the data type
+ * Column with Double as the data type.
  */
-public class DoubleColumn extends Column<Double> {
+public final class DoubleColumn extends Column<Double> {
 
     /**
-     * Column with Double as the data type
+     * Column with Double as the data type.
      *
      * @param name the name of the column
      */
@@ -29,12 +29,10 @@ public class DoubleColumn extends Column<Double> {
         super(name);
     }
 
-    @Override
     public String asString(Double value) {
         return value.toString();
     }
 
-    @Override
     public Double parse(String value) {
         return Double.parseDouble(value);
     }
@@ -43,17 +41,14 @@ public class DoubleColumn extends Column<Double> {
         return one.compareTo(another);
     }
 
-    @Override
     public String toString() {
         return getName() + "(Double)";
     }
 
-    @Override
     public int hashCode() {
         return 7;
     }
 
-    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;

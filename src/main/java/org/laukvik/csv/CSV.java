@@ -224,7 +224,11 @@ public final class CSV implements Serializable {
      */
     private static Charset findCharsetByBOM(final File file) {
         BOM bom = BOM.findBom(file);
-        return bom == null ? Charset.defaultCharset() : bom.getCharset();
+        if (bom == null) {
+            return Charset.defaultCharset();
+        } else {
+            return bom.getCharset();
+        }
     }
 
     /**
@@ -522,7 +526,12 @@ public final class CSV implements Serializable {
         fireBeginRead();
         this.metaData = reader.getMetaData();
         this.metaData.setCSV(this);
-        this.metaData.setCharset(charset == null ? findCharsetByBOM(file) : charset);
+
+        if (charset == null) {
+            this.metaData.setCharset(findCharsetByBOM(file));
+        } else {
+            this.metaData.setCharset(charset);
+        }
         fireMetaDataRead();
         long max = file.length();
         while (reader.hasNext()) {

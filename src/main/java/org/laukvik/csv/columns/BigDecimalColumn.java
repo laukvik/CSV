@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 /**
  * Column with BigDecimal as the data type.
  */
-public class BigDecimalColumn extends Column<BigDecimal> {
+public final class BigDecimalColumn extends Column<BigDecimal> {
 
     /**
      * Column with BigDecimal as the data type.
@@ -37,7 +37,7 @@ public class BigDecimalColumn extends Column<BigDecimal> {
      * @param value the value
      * @return the String representation
      */
-    public final String asString(final BigDecimal value) {
+    public String asString(final BigDecimal value) {
         return value.toString();
     }
 
@@ -47,7 +47,7 @@ public class BigDecimalColumn extends Column<BigDecimal> {
      * @param value the string
      * @return BigDecimal
      */
-    public final BigDecimal parse(final String value) {
+    public BigDecimal parse(final String value) {
         return new BigDecimal(value);
     }
 
@@ -58,27 +58,27 @@ public class BigDecimalColumn extends Column<BigDecimal> {
      * @param another another column
      * @return the compare value
      */
-    public final int compare(final BigDecimal one, final BigDecimal another) {
+    public int compare(final BigDecimal one, final BigDecimal another) {
         return one.compareTo(another);
     }
 
     /**
+     * Returns the String representation of the column.
+     *
      * @return
      */
-    public final String toString() {
+    public String toString() {
         return getName() + "(Integer)";
     }
 
     /**
-     * Returns the hash code
+     * Returns the hash code.
      *
      * @return the hash code
      */
-    public final int hashCode() {
+    public int hashCode() {
         return 7;
     }
-
-
 
     /**
      * Returns true if the objects are equals.
@@ -86,7 +86,7 @@ public class BigDecimalColumn extends Column<BigDecimal> {
      * @param obj another BigDecimal column
      * @return true when equals
      */
-    public final boolean equals(final Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

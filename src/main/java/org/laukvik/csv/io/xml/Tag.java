@@ -4,62 +4,129 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Morten Laukvik
+ * Contains zero or more tags.
+ *
  */
 public class Tag {
 
+    /**
+     * All tags that doesn't have an ending tag.
+     */
     private static final String[] SINGLE_TAGS = {"IMG", "BR", "INPUT"};
+    /** The name. */
     private final String name;
+    /** All children tags. */
     private final List<Tag> children;
+    /** All attributes. */
     private final List<Attribute> attributeList;
+    /** The parent tag. */
     private Tag parent;
+    /** The text value. */
     private String text;
 
-    public Tag(String name) {
-        this.name = name;
+    /**
+     * Creates a new Tag with the name.
+     *
+     * @param tagName the tag name
+     */
+    public Tag(final String tagName) {
+        this.name = tagName;
         this.attributeList = new ArrayList<>();
         this.children = new ArrayList<>();
     }
 
-    public String getText() {
+    /**
+     * Returns the text value.
+     *
+     * @return the text
+     */
+    public final String getText() {
         return text;
     }
 
-    public Tag getParent() {
+    /**
+     * Returns the parent tag.
+     *
+     * @return the parent
+     */
+    public final Tag getParent() {
         return parent;
     }
 
-    public Tag addTag(String name) {
-        return addTag(new Tag(name));
+    /**
+     * Adds a tag with the name.
+     *
+     * @param tagName the name of the tag
+     * @return the new tag
+     */
+    public final Tag addTag(final String tagName) {
+        return addTag(new Tag(tagName));
     }
 
-    public Tag addTag(Tag tag) {
+    /**
+     * Adds the tag as a child.
+     *
+     * @param tag the tag
+     * @return the tag
+     */
+    public final Tag addTag(final Tag tag) {
         tag.parent = this;
         children.add(tag);
         return tag;
     }
 
-    public List<Attribute> getAttributes() {
+    /**
+     * Returns all attributes.
+     *
+     * @return all attributes
+     */
+    public final List<Attribute> getAttributes() {
         return attributeList;
     }
 
-    public Attribute addAttribute(final String name) {
-        return addAttribute(new Attribute(name));
+    /**
+     * Creates and adds an attribute.
+     *
+     * @param attributeName the name of the attribute
+     * @return the added attribute
+     */
+    public final Attribute addAttribute(final String attributeName) {
+        return addAttribute(new Attribute(attributeName));
     }
 
-    public Attribute addAttribute(final Attribute attribute) {
+    /**
+     * Adds the attribute.
+     *
+     * @param attribute the attribute
+     * @return the added attribute
+     */
+    public final Attribute addAttribute(final Attribute attribute) {
         attributeList.add(attribute);
         return attribute;
     }
 
+    /**
+     * Returns true if the tag is a text node.
+     * @return true if text node
+     */
     public final boolean isText() {
         return text != null;
     }
 
-    public final void setText(final String text) {
-        this.text = text;
+    /**
+     * Sets the text value.
+     *
+     * @param value the text value
+     */
+    public final void setText(final String value) {
+        this.text = value;
     }
 
+    /**
+     * Returns true if the tag is a single tag.
+     *
+     * @return true if the tag is a single tag
+     */
     public final boolean isSingle() {
         for (int x = 0; x < SINGLE_TAGS.length; x++) {
             if (SINGLE_TAGS[x].equalsIgnoreCase(name)) {
@@ -69,11 +136,19 @@ public class Tag {
         return false;
     }
 
-    @Override
+    /**
+     * Returns the name of the tag.
+     * @return the name
+     */
     public final String toString() {
         return name;
     }
 
+    /**
+     * Returns the tag and all its children as HTML.
+     *
+     * @return HTML
+     */
     public final String toHtml() {
         StringBuilder b = new StringBuilder();
         if (isText()) {
