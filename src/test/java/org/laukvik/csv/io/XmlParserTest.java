@@ -1,6 +1,10 @@
 package org.laukvik.csv.io;
 
 import org.junit.Test;
+import org.laukvik.csv.io.xml.Attribute;
+import org.laukvik.csv.io.xml.Tag;
+import org.laukvik.csv.io.xml.XmlListener;
+import org.laukvik.csv.io.xml.XmlParser;
 
 import java.io.File;
 
@@ -17,16 +21,16 @@ public class XmlParserTest {
     @Test
     public void parseFile() throws Exception {
         XmlParser parser = new XmlParser();
-        parser.addListener(new XmlParser.XmlListener() {
+        parser.addListener(new XmlListener() {
             @Override
-            public void foundTag(final XmlParser.Tag tag) {
+            public void foundTag(final Tag tag) {
             }
 
             @Override
-            public void foundAttribute(final XmlParser.Attribute attribute) {
+            public void foundAttribute(final Attribute attribute) {
             }
         });
-        XmlParser.Tag root = parser.parseFile(getResource("lorem.html"));
+        Tag root = parser.parseFile(getResource("lorem.html"));
     }
 
 }
