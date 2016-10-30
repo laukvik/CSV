@@ -102,19 +102,21 @@ public final class CsvReader implements ClosableReader {
     /**
      * Specifies the separator and quote character to use.
      *
-     * @param file
-     * @param separator
-     * @param quote
-     * @throws IOException
+     * @param file the file to read
+     * @param separator the separator char
+     * @param quote the quote char
+     * @throws IOException when the file could not be read
+     * TODO - Remove file from constructor
      */
     public CsvReader(final File file, final Character separator, final Character quote) throws IOException {
         this(new BufferedReader(new FileReader(file)), separator, quote);
     }
 
     /**
-     *
-     * @param file
-     * @throws IOException
+     * Reads the file.
+     * @param file the file
+     * @throws IOException when the file could not be read
+     * TODO - Remove file from constructor
      */
     public CsvReader(final File file) throws IOException {
         this(new BufferedReader(new FileReader(file)));
@@ -248,7 +250,7 @@ public final class CsvReader implements ClosableReader {
     }
 
     /**
-     * Reads the next row
+     * Reads the next row.
      *
      * @return a boolean whether a new row was found
      * @throws IOException when the row could not be read
@@ -273,7 +275,7 @@ public final class CsvReader implements ClosableReader {
 
                 } else if (c instanceof BigDecimalColumn) {
                     BigDecimalColumn bc = (BigDecimalColumn) c;
-                    row.update(bc, bc.parse(value) );
+                    row.update(bc, bc.parse(value));
 
                 } else if (c instanceof BooleanColumn) {
                     BooleanColumn bc = (BooleanColumn) c;
@@ -326,7 +328,7 @@ public final class CsvReader implements ClosableReader {
 
     /**
      * Returns how many lines read.
-     * @return
+     * @return the number of lines read
      */
     public int getLineCounter() {
         return lineCounter;
@@ -377,7 +379,7 @@ public final class CsvReader implements ClosableReader {
     }
 
     /**
-     * Returns the next row
+     * Returns the next row.
      *
      * @return the next row
      */

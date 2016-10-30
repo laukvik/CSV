@@ -65,7 +65,7 @@ public final class BigDecimalColumn extends Column<BigDecimal> {
     /**
      * Returns the String representation of the column.
      *
-     * @return
+     * @return thre String representation
      */
     public String toString() {
         return getName() + "(Integer)";

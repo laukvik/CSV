@@ -56,7 +56,7 @@ public final class ByteColumn extends Column<byte[]> {
      *
      * @param one     one column
      * @param another another column
-     * @return
+     * @return the comparable value
      */
     public int compare(final byte[] one, final byte[] another) {
         if (Arrays.equals(one, another)) {

@@ -33,6 +33,9 @@ import java.util.List;
  */
 public final class CsvWriter implements Writeable, AutoCloseable {
 
+    /**
+     * The outputStream to write to.
+     */
     private final OutputStream out;
 
     /**
@@ -45,7 +48,13 @@ public final class CsvWriter implements Writeable, AutoCloseable {
         this.out = outputStream;
     }
 
-    public static boolean isDigitsOnly(String value) {
+    /**
+     * Returns true if value only contains digits.
+     *
+     * @param value the value
+     * @return true if digits only
+     */
+    public static boolean isDigitsOnly(final String value) {
         if (value == null) {
             return false;
         }
@@ -58,7 +67,12 @@ public final class CsvWriter implements Writeable, AutoCloseable {
         return true;
     }
 
-    @Override
+    /**
+     * Writes the CSV to the file
+     *
+     * @param csv the CSV to write
+     * @throws IOException the file could not be written
+     */
     public void writeCSV(final CSV csv) throws IOException {
         BOM bom = csv.getMetaData().getBOM();
         if (bom != null){
@@ -129,7 +143,11 @@ public final class CsvWriter implements Writeable, AutoCloseable {
         out.write(CSV.LINEFEED);
     }
 
-    @Override
+    /**
+     * Closes the outputStream.
+     *
+     * @throws Exception when the outputStream could not be closed
+     */
     public void close() throws Exception {
         out.close();
     }

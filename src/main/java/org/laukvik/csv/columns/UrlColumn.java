@@ -28,16 +28,27 @@ public final class UrlColumn extends Column<URL> {
      *
      * @param name the name of the column
      */
-    public UrlColumn(String name) {
+    public UrlColumn(final String name) {
         super(name);
     }
 
-
-    public String asString(URL value) {
+    /**
+     * Returns the value as String.
+     *
+     * @param value the value
+     * @return the value as String
+     */
+    public String asString(final URL value) {
         return value.toExternalForm();
     }
 
-    public URL parse(String value) {
+    /**
+     * Parses the value and returns an URL.
+     *
+     * @param value the string
+     * @return null if empty or if URL could not be parsed
+     */
+    public URL parse(final String value) {
         try {
             return new URL(value);
         }
@@ -46,19 +57,40 @@ public final class UrlColumn extends Column<URL> {
         }
     }
 
-    public int compare(URL one, URL another) {
+    /**
+     * Compares two URLs.
+     *
+     * @param one     one column
+     * @param another another column
+     * @return
+     */
+    public int compare(final URL one, final URL another) {
         return one.toExternalForm().compareTo(another.toExternalForm());
     }
 
+    /**
+     * Returns the URL as string.
+     * @return the string
+     */
     public String toString() {
         return getName() + "(URL)";
     }
 
+    /**
+     * Returns the hashCode.
+     * @return the hashCode
+     */
     public int hashCode() {
         return 3;
     }
 
-    public boolean equals(Object obj) {
+    /**
+     * Returns true if equals obj.
+     *
+     * @param obj the object to compare with
+     * @return true if equals
+     */
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

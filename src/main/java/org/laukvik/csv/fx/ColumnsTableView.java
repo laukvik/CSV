@@ -43,7 +43,7 @@ class ColumnsTableView extends TableView<ObservableColumn> {
         columnNameColumn.setOnEditCommit(
                 new EventHandler<TableColumn.CellEditEvent<ObservableColumn, String>>() {
                     @Override
-                    public void handle(TableColumn.CellEditEvent<ObservableColumn, String> t) {
+                    public void handle(final TableColumn.CellEditEvent<ObservableColumn, String> t) {
                         t.getTableView().getItems().get(t.getTablePosition().getRow()).setName(t.getNewValue());
                 }
                 }
