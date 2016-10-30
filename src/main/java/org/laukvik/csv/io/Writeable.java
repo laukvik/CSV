@@ -22,6 +22,9 @@ import java.io.IOException;
 /**
  * An interface for writing data sets.
  *
+ * TODO - writeMetaData( MetaData metaData, OutputStream outputStream );
+ * TODO - writeRow( Row row );
+ *
  */
 public interface Writeable {
 
@@ -32,5 +35,21 @@ public interface Writeable {
      * @throws IOException when the CSV could not be written
      */
     void writeCSV(CSV csv) throws IOException;
+
+//    /**
+//     * Writes the MetaData to the outputStream.
+//     *
+//     * @param metaData the metaData
+//     * @param outputStream the outputStream
+//     */
+//    void writeMetaData(MetaData metaData, OutputStream outputStream);
+//
+//    /**
+//     * Writes the row to the outputStream.
+//     *
+//     * @param row the row
+//     * @param outputStream the outputStream
+//     */
+//    void writeMetaData(Row row, OutputStream outputStream);
 
 }

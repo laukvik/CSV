@@ -18,90 +18,128 @@ package org.laukvik.csv.columns;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
- * Column with Date as the data type
+ * Column with Date as the data type.
  */
 public final class DateColumn extends Column<Date> {
 
+    /**
+     * The default date format.
+     */
+    public static final String DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
+
+    /**
+     * The DateFormat to use when reading and writing.
+     */
     private final DateFormat dateFormat;
+    /**
+     * The dateFormat as a String.
+     */
     private final String format;
 
     /**
-     * Column with Date as the data type
+     * Creates a new column with the columnName and dateFormat.
      *
-     * @param name the name of the column
-     * @param format the data format
+     * @param columnName   the name of the column
+     * @param dateFormat the data format
      */
-    public DateColumn(String name, String format) {
-        super(name);
-        this.format = format;
+    public DateColumn(final String columnName, final String dateFormat) {
+        super(columnName);
+        this.format = dateFormat;
         this.dateFormat = new SimpleDateFormat(format);
     }
 
-    public DateColumn(String name) {
-        super(name);
-        this.format = "yyyy.MM.dd HH:mm:ss";
-        this.dateFormat = new SimpleDateFormat(format);
+    /**
+     * Creates a new column with the columnName and default dateFormat.
+     *
+     * @param columnName the column name
+     */
+    public DateColumn(final String columnName) {
+        super(columnName);
+        this.format = DATE_FORMAT;
+        this.dateFormat = new SimpleDateFormat(DATE_FORMAT);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getFormat() {
         return format;
     }
 
+    /**
+     *
+     * @return
+     */
     public DateFormat getDateFormat() {
         return dateFormat;
     }
 
-    public boolean isYear(Date d, int year) {
-        GregorianCalendar c = new GregorianCalendar();
-        c.setTime(d);
-        return c.get(Calendar.YEAR) == year;
-    }
-
-    public boolean isMonth(Date d, int month) {
-        GregorianCalendar c = new GregorianCalendar();
-        c.setTime(d);
-        return c.get(Calendar.MONTH) == month;
-    }
-
-    public String asString(Date value) {
+    /**
+     * Returns the value as a String
+     *
+     * @param value the value
+     * @return the value as String
+     */
+    public String asString(final Date value) {
         return dateFormat.format(value);
     }
 
-    @Override
-    public Date parse(String value) {
+    /**
+     * Returns the Date by parsing the value
+     *
+     * @param value the string
+     * @return the date
+     */
+    public Date parse(final String value) {
         if (value == null || value.isEmpty()) {
             return null;
         }
         try {
             return dateFormat.parse(value);
-        }
-        catch (ParseException ex) {
+        } catch (ParseException ex) {
             ex.printStackTrace();
             return null;
         }
     }
 
-    public int compare(Date one, Date another) {
+    /**
+     * Compares date one and another.
+     *
+     * @param one     one column
+     * @param another another column
+     * @return the comparison
+     */
+    public int compare(final Date one, final Date another) {
         return one.compareTo(another);
     }
 
-    @Override
+    /**
+     * Returns the Column as String.
+     * @return the Column as String
+     */
     public String toString() {
         return getName() + "(Date)";
     }
 
-    @Override
+    /**
+     * Returns the HashCode.
+     * @return the HashCode
+     */
     public int hashCode() {
         return 3;
     }
 
-    @Override
-    public boolean equals(Object obj) {
+    /**
+     * Returns true if obj is the same.
+     *
+     * @param obj object to compare with
+     * @return
+     */
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

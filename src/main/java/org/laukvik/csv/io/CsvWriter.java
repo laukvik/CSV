@@ -39,7 +39,7 @@ public final class CsvWriter implements Writeable, AutoCloseable {
     private final OutputStream out;
 
     /**
-     * Writes the data set in the CSV format to the outputStream
+     * Writes the data set in the CSV format to the outputStream.
      *
      * @param outputStream the outputstream
      * @throws IOException when the data could not be written
@@ -68,14 +68,14 @@ public final class CsvWriter implements Writeable, AutoCloseable {
     }
 
     /**
-     * Writes the CSV to the file
+     * Writes the CSV to the file.
      *
      * @param csv the CSV to write
      * @throws IOException the file could not be written
      */
     public void writeCSV(final CSV csv) throws IOException {
         BOM bom = csv.getMetaData().getBOM();
-        if (bom != null){
+        if (bom != null) {
             out.write(bom.getBytes());
         }
         writeMetaData(csv.getMetaData());
@@ -85,7 +85,7 @@ public final class CsvWriter implements Writeable, AutoCloseable {
     }
 
     /**
-     * Writes a single row of CSV data
+     * Writes a single row of CSV data.
      *
      * @param row the row to write
      * @throws IOException when the row could not be written

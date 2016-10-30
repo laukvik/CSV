@@ -9,6 +9,7 @@ import java.util.GregorianCalendar;
 /**
  * An abstract class that has all utility methods to be helpful.
  *
+ * TODO - Move all date helper methods into DateColumn.
  */
 public abstract class AbstractDateMatcher extends RowMatcher {
 
