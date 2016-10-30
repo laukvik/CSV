@@ -17,11 +17,13 @@ public abstract class AbstractDateMatcher extends RowMatcher {
      */
     protected final Date value;
     /**
-     * The DateColumn
+     * The DateColumn.
      */
     protected final DateColumn column;
 
     /**
+     * Creats a new matcher.
+     *
      * @param dateColumn the dateColumn
      * @param value      the date
      */
@@ -31,6 +33,11 @@ public abstract class AbstractDateMatcher extends RowMatcher {
         this.value = value;
     }
 
+    /**
+     * @param d1
+     * @param d2
+     * @return
+     */
     private static int compare(final Date d1, final Date d2) {
         return d1.compareTo(d2);
     }

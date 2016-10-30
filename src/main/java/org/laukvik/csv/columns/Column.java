@@ -318,7 +318,7 @@ public abstract class Column<T> implements Comparable {
         this.defaultValue = defaultValue;
     }
 
-    public boolean isAllowNulls() {
+    public final boolean isAllowNulls() {
         return allowNulls;
     }
 

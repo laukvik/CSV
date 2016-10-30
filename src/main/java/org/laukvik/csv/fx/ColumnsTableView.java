@@ -15,9 +15,12 @@ import java.util.ResourceBundle;
  *
  * @author Morten Laukvik
  */
-class ColumnsTableView extends TableView<ObservableColumn>{
+class ColumnsTableView extends TableView<ObservableColumn> {
 
-    public ColumnsTableView() {
+    /**
+     * A TableView representing a Column in the CSV.
+     */
+    ColumnsTableView() {
         super();
         ResourceBundle bundle = Builder.getBundle();
 

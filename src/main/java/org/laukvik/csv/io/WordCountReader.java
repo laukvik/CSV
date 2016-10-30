@@ -17,10 +17,8 @@ import java.util.TreeMap;
 
 /**
  * Reads the words in a text file and creates a distribution table of them.
- *
- *
  */
-public class WordCountReader implements Readable{
+public class WordCountReader implements Readable {
 
     private final Map<String, Integer> map;
     private final MetaData metaData;
@@ -43,11 +41,11 @@ public class WordCountReader implements Readable{
         parse(file);
     }
 
-    private String cleaned(final String word){
+    private String cleaned(final String word) {
         if (word == null) {
             return null;
         } else {
-            return word.trim().toLowerCase().replaceAll( "\\d", "" ).replaceAll( "\\W", "" );
+            return word.trim().toLowerCase().replaceAll("\\d", "").replaceAll("\\W", "");
         }
     }
 
@@ -58,8 +56,8 @@ public class WordCountReader implements Readable{
                 String str = s.nextLine();
                 StringTokenizer t = new StringTokenizer(str);
                 while (t.hasMoreTokens()) {
-                    String word = cleaned( t.nextToken() );
-                    if (word != null && !word.isEmpty()){
+                    String word = cleaned(t.nextToken());
+                    if (word != null && !word.isEmpty()) {
                         if (map.containsKey(word)) {
                             Integer count = map.get(word) + 1;
                             map.put(word, count);
@@ -95,7 +93,7 @@ public class WordCountReader implements Readable{
     public Row next() {
         row = new Row();
         String key = list.get(index);
-        row.update(wordColumn, list.get(index) ).update(countColumn, map.get(key) + "");
+        row.update(wordColumn, list.get(index)).update(countColumn, map.get(key) + "");
         index++;
         return row;
     }

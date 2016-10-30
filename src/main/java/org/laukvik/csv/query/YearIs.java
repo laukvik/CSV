@@ -48,7 +48,7 @@ public class YearIs extends AbstractDateMatcher {
      * @param row the row to compare
      * @return true if it matches
      */
-    public boolean matches(final Row row) {
+    public final boolean matches(final Row row) {
         Date v = row.getDate(column);
         return isYear(v, year);
     }

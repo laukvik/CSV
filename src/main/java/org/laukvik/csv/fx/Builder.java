@@ -25,7 +25,24 @@ import java.util.ResourceBundle;
  *
  * @author Morten Laukvik
  */
-class Builder {
+final class Builder {
+
+    /**
+     * The width of the logo in pixels.
+     */
+    private static final int LOGO_WIDTH = 48;
+    /**
+     * The height of the logo in pixels.
+     */
+    private static final int LOGO_HEIGHT = 48;
+    /**
+     * The default width of columns in the result sets.
+     */
+    private static final int COLUMN_WIDTH_DEFAULT = 100;
+    /**
+     * The value of one kilobyte.
+     */
+    private static final int KILOBYTE = 1024;
 
     /**
      * Hides the constructor.
@@ -33,14 +50,36 @@ class Builder {
     private Builder() {
     }
 
+    /**
+     * Returns the ResourceBundle for the application.
+     *
+     * @return the ResourceBundle
+     */
     public static ResourceBundle getBundle() {
         return ResourceBundle.getBundle("messages");
     }
 
+
+    /**
+     * Returns the Image symobolizing the application.
+     *
+     * @return the Image
+     */
     public static ImageView getImage() {
-        return new ImageView(new Image("feather.png", 48, 200, true, true));
+        return new ImageView(new Image("feather.png", LOGO_WIDTH, LOGO_HEIGHT, true, true));
     }
 
+    /**
+     * Returns the dimension of the screen by specifying the percentage in float values.
+     * <br>
+     * <pre>
+     * Example: 1 = 100% and 0.5f = 50%.
+     * </pre>
+     *
+     * @param w the width in percent
+     * @param h the height in percent
+     * @return the Dimension
+     */
     public static java.awt.Dimension getPercentSize(final float w, final float h) {
         java.awt.Dimension size = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         Float width = size.width * w;
@@ -48,16 +87,31 @@ class Builder {
         return new java.awt.Dimension(width.intValue(), height.intValue());
     }
 
-    public static ObservableList<ObservableColumn> createAllObservableList(final MetaData md) {
+    /**
+     * Builds an ObservableList of all Columns found in the MetaData.
+     *
+     * @param metaData the metaData
+     * @return ObservableList of all Columns
+     */
+    public static ObservableList<ObservableColumn> createAllObservableList(final MetaData metaData) {
         List<ObservableColumn> list = new ArrayList<>();
-        for (int x = 0; x < md.getColumnCount(); x++) {
-            Column c = md.getColumn(x);
+        for (int x = 0; x < metaData.getColumnCount(); x++) {
+            Column c = metaData.getColumn(x);
             list.add(new ObservableColumn(c));
         }
         return FXCollections.observableArrayList(list);
     }
 
-    public static ObservableList<ObservableFrequencyDistribution> createFrequencyDistributionObservableList(int columnIndex, CSV csv, Main main) {
+    /**
+     * Builds an ObservableList of FrequencyDistribution.
+     *
+     * @param columnIndex the columnIndex
+     * @param csv         the CSV
+     * @param main        the Main
+     * @return ObservableList of FrequencyDistribution
+     */
+    public static ObservableList<ObservableFrequencyDistribution> createFrequencyDistributionObservableList(
+            final int columnIndex, final CSV csv, final Main main) {
         List<ObservableFrequencyDistribution> list = new ArrayList<>();
         FrequencyDistribution d = csv.buildFrequencyDistribution(columnIndex);
         Column c = csv.getMetaData().getColumn(columnIndex);
@@ -69,13 +123,15 @@ class Builder {
     }
 
     /**
-     * Creates the Rows
+     * Creates the Rows.
      *
      * @param resultsTableView the TableView
      * @param csv              the csv file
      * @param main             the Main
      */
-    public static void createResultsRows(final TableView<ObservableRow> resultsTableView, final CSV csv, final Main main) {
+    public static void createResultsRows(final TableView<ObservableRow> resultsTableView,
+                                         final CSV csv,
+                                         final Main main) {
         resultsTableView.getItems().clear();
         if (csv.hasQuery()) {
             Query query = csv.getQuery();
@@ -90,6 +146,12 @@ class Builder {
         }
     }
 
+    /**
+     * Removes all columns in the resultsTableView and populates it with all columns found in the MetaData.
+     *
+     * @param resultsTableView the resultsTableView
+     * @param md the MetaData
+     */
     public static void createResultsColumns(final TableView<ObservableRow> resultsTableView, final MetaData md) {
         resultsTableView.getColumns().clear();
         for (int x = 0; x < md.getColumnCount(); x++) {
@@ -102,26 +164,40 @@ class Builder {
                 tc.setCellValueFactory(
                         new Callback<TableColumn.CellDataFeatures<ObservableRow, String>, ObservableValue<String>>() {
                             @Override
-                            public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableRow, String> param) {
+                            public ObservableValue<String> call(
+                                    final TableColumn.CellDataFeatures<ObservableRow, String> param) {
                                 return param.getValue().getValue(colX);
                             }
                         }
                 );
                 tc.setCellFactory(TextFieldTableCell.forTableColumn());
-                tc.setMinWidth(100);
+                tc.setMinWidth(COLUMN_WIDTH_DEFAULT);
             }
         }
     }
 
-    public static String toKb(long value) {
-        if (value < 1000) {
+
+    /**
+     * Returns the value formatted in Kilobytes.
+     *
+     * @param value the value
+     * @return the formatted value in Kilobytes
+     */
+    public static String toKb(final long value) {
+        if (value < KILOBYTE) {
             return (value) + " bytes";
         } else {
-            return (value / 1024) + " KB";
+            return (value / KILOBYTE) + " KB";
         }
     }
 
-    public static String getSeparatorString(char separator) {
+    /**
+     * Returns the String representation of the seperator character.
+     *
+     * @param separator the separator
+     * @return the String representation
+     */
+    public static String getSeparatorString(final char separator) {
         switch (separator) {
             case CSV.COMMA:
                 return "COMMA";
@@ -136,6 +212,12 @@ class Builder {
         }
     }
 
+    /**
+     * Returns the char representation of the seperator character.
+     *
+     * @param separator the separator
+     * @return the String representation
+     */
     public static Character getSeparatorCharByString(String separator) {
         switch (separator) {
             case "COMMA":

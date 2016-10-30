@@ -27,16 +27,20 @@ public class BigDecimalColumn extends Column<BigDecimal> {
      *
      * @param name the name of the column
      */
-    public BigDecimalColumn(String name) {
+    public BigDecimalColumn(final String name) {
         super(name);
     }
 
-    @Override
-    public String asString(BigDecimal value) {
+    /**
+     * Returns the value as a String.
+     *
+     * @param value the value
+     * @return the String representation
+     */
+    public final String asString(final BigDecimal value) {
         return value.toString();
     }
 
-    @Override
     public BigDecimal parse(String value) {
         return new BigDecimal(value);
     }
@@ -45,17 +49,14 @@ public class BigDecimalColumn extends Column<BigDecimal> {
         return one.compareTo(another);
     }
 
-    @Override
     public String toString() {
         return getName() + "(Integer)";
     }
 
-    @Override
     public int hashCode() {
         return 7;
     }
 
-    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;

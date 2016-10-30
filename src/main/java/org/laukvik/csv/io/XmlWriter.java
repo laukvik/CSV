@@ -30,46 +30,90 @@ import java.nio.charset.Charset;
  */
 public class XmlWriter implements Writeable {
 
-    private final static char OPEN = '<';
-    private final static char CLOSE = '>';
-    private final static char LINEFEED = '\n';
-    private final static char CR = '\r';
-    private final static char SLASH = '/';
-    private final static char QUOTATION_MARK = '"';
-    private final static char APOSTROPHE = '\'';
-    private final static char AMPERSAND = '&';
-    private final static char SPACE = ' ';
-    private final static char EQUAL = '=';
-    private final static char TAB = '\t';
-
+    /**
+     * Character for beginning of a tag.
+     */
+    private static final char OPEN = '<';
+    /**
+     * Character for closing of a tag.
+     */
+    private static final char CLOSE = '>';
+    /**
+     * Character for linefeed.
+     */
+    private static final char LINEFEED = '\n';
+    /**
+     * Character for carriage return.
+     */
+    private static final char CR = '\r';
+    /**
+     * Character for starting a closing tag.
+     */
+    private static final char SLASH = '/';
+    /**
+     * Character for enclosing attributes.
+     */
+    private static final char QUOTATION_MARK = '"';
+    /**
+     * Character for apostrophe.
+     */
+    private static final char APOSTROPHE = '\'';
+    /**
+     * Character for ampersand.
+     */
+    private static final char AMPERSAND = '&';
+    /**
+     * Character for space.
+     */
+    private static final char SPACE = ' ';
+    /**
+     * Character for equal sign.
+     */
+    private static final char EQUAL = '=';
+    /**
+     * Character for tab.
+     */
+    private static final char TAB = '\t';
+    /**
+     * The OutputStream to write to.
+     */
     private final OutputStream out;
+    /** The name of the root element to write. */
     private final String rootElementName;
+    /**
+     * The name of the row element to write.
+     */
     private final String rowElementName;
 
     /**
-     * Writes the CSV to the outputStream using the specified rootElementName and rowElementName
+     * Writes the CSV to the outputStream using the specified rootElementName and rowElementName.
      *
-     * @param outputStream    the outputStream
-     * @param rootElementName the name of the root element in XML
-     * @param rowElementName  the name of the element representing a row
+     * @param outputStream the outputStream
+     * @param rootName the name of the root element in XML
+     * @param rowName  the name of the element representing a row
      */
-    public XmlWriter(OutputStream outputStream, String rootElementName, String rowElementName) {
+    public XmlWriter(final OutputStream outputStream, final String rootName, final String rowName) {
         this.out = outputStream;
-        this.rootElementName = rootElementName;
-        this.rowElementName = rowElementName;
+        this.rootElementName = rootName;
+        this.rowElementName = rowName;
     }
 
     /**
-     * Writes the CSV to the outputStream using the default values for rootElementName and rowElementName
+     * Writes the CSV to the outputStream using the default values for rootElementName and rowElementName.
      *
-     * @param out the outputStream
+     * @param outputStream the outputStream
      */
-    public XmlWriter(OutputStream out){
-        this(out, "rows", "row");
+    public XmlWriter(final OutputStream outputStream) {
+        this(outputStream, "rows", "row");
     }
 
-    @Override
-    public void writeCSV(CSV csv) throws IOException {
+    /**
+     * Writes the CSV.
+     *
+     * @param csv the CSV to write
+     * @throws IOException when the file cant be written
+     */
+    public final void writeCSV(final CSV csv) throws IOException {
         Charset charset = csv.getMetaData().getCharset();
         out.write(("<?xml version=\"1.0\" encoding=\"" + charset.name() + "\"?>").getBytes());
 
@@ -95,8 +139,7 @@ public class XmlWriter implements Writeable {
                 out.write(EQUAL);
                 out.write(QUOTATION_MARK);
                 String s = r.getAsString(col);
-                if (s == null) {
-                } else {
+                if (s != null) {
                     for (int n = 0; n < s.length(); n++) {
                         char c = s.charAt(n);
                         if (c == QUOTATION_MARK) {

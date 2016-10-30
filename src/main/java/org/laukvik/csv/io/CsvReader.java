@@ -1,4 +1,3 @@
-
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
@@ -24,9 +23,9 @@ import java.util.List;
 
 /**
  * Reads a data set in the CSV format.
- *
+ * <p>
  * <h3>Reading a file with auto detect on:</h3>
- *
+ * <p>
  * <pre>
  * try (CsvReader r = new CsvReader( new File("presidents.csv"), Charset.forName(charset)) )) {
  *   while (r.hasNext()) {
@@ -37,9 +36,9 @@ import java.util.List;
  *     e.printStacktrace();
  * }
  * </pre>
- *
+ * <p>
  * <h3>Reading a file with specifying separator character and encoding:</h3>
- *
+ * <p>
  * <pre>
  * try (CsvReader r = new CsvReader( new File("presidents.csv"), Charset.forName(charset)) )) {
  *   while (r.hasNext()) {
@@ -50,7 +49,6 @@ import java.util.List;
  *     e.printStacktrace();
  * }
  * </pre>
- *
  *
  * @author Morten Laukvik
  */
@@ -100,7 +98,7 @@ public class CsvReader implements ClosableReader {
     }
 
     /**
-     * Reads CSV from the specified reader using default settings
+     * Reads CSV from the specified reader using default settings.
      *
      * @param reader the reader
      * @throws IOException when the CSV could not be fully read
@@ -110,7 +108,7 @@ public class CsvReader implements ClosableReader {
     }
 
     /**
-     * Parses one row of CSV data
+     * Parses one row of CSV data.
      *
      * @return a list of strings
      * @throws IOException when the row could not be read
@@ -249,40 +247,40 @@ public class CsvReader implements ClosableReader {
                 Column c = metaData.getColumn(x);
 
 
-                if (c instanceof StringColumn){
-                    row.update(  (StringColumn)c, value );
+                if (c instanceof StringColumn) {
+                    row.update((StringColumn) c, value);
 
-                } else if (c instanceof BigDecimalColumn){
-                    BigDecimalColumn bc = (BigDecimalColumn)c;
+                } else if (c instanceof BigDecimalColumn) {
+                    BigDecimalColumn bc = (BigDecimalColumn) c;
 //                    row.update( bc, bc.parse(value) );
 
-                } else if (c instanceof BooleanColumn){
-                    BooleanColumn bc = (BooleanColumn)c;
-                    row.update(  (BooleanColumn)c, bc.parse(value) );
+                } else if (c instanceof BooleanColumn) {
+                    BooleanColumn bc = (BooleanColumn) c;
+                    row.update((BooleanColumn) c, bc.parse(value));
 
-                } else if (c instanceof ByteColumn){
-                    ByteColumn bc = (ByteColumn)c;
+                } else if (c instanceof ByteColumn) {
+                    ByteColumn bc = (ByteColumn) c;
 //                    row.update( bc, bc.parse(value) );
 
-                } else if (c instanceof DateColumn){
-                    DateColumn dc = (DateColumn)c;
-                    row.update( dc, dc.parse(value) );
+                } else if (c instanceof DateColumn) {
+                    DateColumn dc = (DateColumn) c;
+                    row.update(dc, dc.parse(value));
 
-                } else if (c instanceof DoubleColumn){
-                    DoubleColumn dc = (DoubleColumn)c;
-                    row.update( dc, dc.parse(value) );
+                } else if (c instanceof DoubleColumn) {
+                    DoubleColumn dc = (DoubleColumn) c;
+                    row.update(dc, dc.parse(value));
 
-                } else if (c instanceof FloatColumn){
-                    FloatColumn fc = (FloatColumn)c;
-                    row.update( fc, fc.parse(value) );
+                } else if (c instanceof FloatColumn) {
+                    FloatColumn fc = (FloatColumn) c;
+                    row.update(fc, fc.parse(value));
 
-                } else if (c instanceof IntegerColumn){
-                    IntegerColumn ic = (IntegerColumn)c;
-                    row.update(  (IntegerColumn)c, ic.parse(value) );
+                } else if (c instanceof IntegerColumn) {
+                    IntegerColumn ic = (IntegerColumn) c;
+                    row.update((IntegerColumn) c, ic.parse(value));
 
-                } else if (c instanceof UrlColumn){
-                    UrlColumn ic = (UrlColumn)c;
-                    row.update( ic, ic.parse(value) );
+                } else if (c instanceof UrlColumn) {
+                    UrlColumn ic = (UrlColumn) c;
+                    row.update(ic, ic.parse(value));
 
 
                 }
@@ -329,8 +327,7 @@ public class CsvReader implements ClosableReader {
     public boolean hasNext() {
         try {
             return readRow();
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             return false;
         }
     }

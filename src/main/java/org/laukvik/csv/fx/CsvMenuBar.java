@@ -20,9 +20,19 @@ import java.util.ResourceBundle;
  */
 class CsvMenuBar extends MenuBar {
 
+    /**
+     * The Menu for View
+     */
     private final Menu viewMenu;
+    /**
+     * The Application this MenuBar belongs to.
+     */
     private final Main main;
+    /**
+     * The Menu for recent files.
+     */
     private final Menu openRecentMenu;
+    /** The ResourceBundle. */
     private final ResourceBundle bundle;
 
     CsvMenuBar(final Main main) {
@@ -65,7 +75,7 @@ class CsvMenuBar extends MenuBar {
         importItem.setAccelerator(KeyCombination.keyCombination("Meta+i"));
         importItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
-                main.openFileDialogWithOptions();
+                main.handleOpenFileWithOptions();
             }
         });
 
@@ -93,7 +103,7 @@ class CsvMenuBar extends MenuBar {
         });
         resourceBundleItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
-                main.handleResourceBundleAction();
+                main.handleOpenResourceBundleAction();
             }
         });
 
@@ -147,14 +157,14 @@ class CsvMenuBar extends MenuBar {
         moveUpItem.setAccelerator(KeyCombination.keyCombination("Meta+"+ KeyCode.UP));
         moveUpItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
-                main.handleUpAction();
+                main.handleMoveUpAction();
             }
         });
         MenuItem moveDownItem = new MenuItem(bundle.getString("edit.movedown"));
         moveDownItem.setAccelerator(KeyCombination.keyCombination("Meta+"+ KeyCode.DOWN));
         moveDownItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
-                main.handleDownAction();
+                main.handleMoveDownAction();
             }
         });
         edit.getItems().addAll(cutItem, copyItem, pasteItem, deleteItem, new SeparatorMenuItem(), moveUpItem, moveDownItem);
@@ -182,7 +192,7 @@ class CsvMenuBar extends MenuBar {
                 main.handleNewHeaders();
             }
         });
-        insert.getItems().addAll(newColumnItem,newRowItem,headersRowItem);
+        insert.getItems().addAll(newColumnItem, newRowItem, headersRowItem);
 
 
 
