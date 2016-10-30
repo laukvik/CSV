@@ -24,7 +24,6 @@ import java.util.List;
 /**
  * Reads a data set by a list of objects.
  *
- * @author Morten Laukvik
  */
 public class JavaReader<T> implements Readable {
 
@@ -39,7 +38,7 @@ public class JavaReader<T> implements Readable {
      * @param csv the csv
      * @param list the list
      */
-    public JavaReader(CSV csv, List<T> list) {
+    public JavaReader(final CSV csv, final List<T> list) {
         this.csv = csv;
         this.csv.setMetaData(buildMetaData(list.get(0).getClass()));
         this.list = list;

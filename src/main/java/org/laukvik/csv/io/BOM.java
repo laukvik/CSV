@@ -42,6 +42,10 @@ public enum BOM {
     UTF16LE("utf-16le", (byte) 0xFF, (byte) 0xFE),
     /** BOM for UTF8. */
     UTF8("utf-8", (byte) 0xEF, (byte) 0xBB, (byte) 0xBF);
+    /**
+     * Maximum BOM size.
+     */
+    private static final int MAX_BOM_SIZE = 8;
     /** The bytes that recognizes the BOM. */
     private final byte[] bytes;
     /** The associated Charset for the BOM. */
@@ -66,13 +70,15 @@ public enum BOM {
      */
     public static BOM findBom(final File file) {
         try (InputStream is = new FileInputStream(file)) {
-            byte[] bytes = new byte[8];
-            is.read(bytes, 0, 8);
+            byte[] bytes = new byte[MAX_BOM_SIZE];
+            is.read(bytes, 0, MAX_BOM_SIZE);
             return BOM.parse(bytes);
         } catch (Exception e) {
             return null;
         }
     }
+
+
 
     /**
      * Parses and detects any BOM if present.

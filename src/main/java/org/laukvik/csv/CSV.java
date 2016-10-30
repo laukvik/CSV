@@ -198,12 +198,12 @@ public final class CSV implements Serializable {
     /**
      * Opens the specified CSV file and parses it.
      *
-     * @param file the file to open
+     * @param csvFile the file to open
      * @throws IOException when the file could not be read
      */
-    public CSV(final File file) throws IOException {
+    public CSV(final File csvFile) throws IOException {
         this();
-        readFile(file);
+        readFile(csvFile);
     }
 
     /**
@@ -511,15 +511,15 @@ public final class CSV implements Serializable {
      * Reads the File using the specified reader. System default charset is used when the charset is not
      * specified.
      *
-     * @param file    the file to read
+     * @param csvFile    the file to read
      * @param charset the charset used to read
      * @param reader  the reader to use
      */
-    private void readFile(final File file, final Charset charset, final ClosableReader reader) {
-        this.file = file;
+    private void readFile(final File csvFile, final Charset charset, final ClosableReader reader) {
+        this.file = csvFile;
         this.query = null;
         this.rows = new ArrayList<>();
-        fireBeginRead(file);
+        fireBeginRead();
         this.metaData = reader.getMetaData();
         this.metaData.setCSV(this);
         this.metaData.setCharset(charset == null ? findCharsetByBOM(file) : charset);
@@ -529,16 +529,17 @@ public final class CSV implements Serializable {
             fireBytesRead(reader.getBytesRead(), max);
             addRow(reader.getRow());
         }
-        fireFinishRead(file);
+        fireFinishRead();
     }
 
     /**
      * Reads the CSV file.
      *
-     * @param file the file to read
+     * @param csvFile the file to read
      * @throws IOException when the file could not be read
      */
-    public void readFile(final File file) throws IOException {
+    public void readFile(final File csvFile) throws IOException {
+        this.file = csvFile;
         Charset charset = findCharsetByBOM(file);
         CsvReader reader = new CsvReader(Files.newBufferedReader(file.toPath(), charset), null, CSV.DOUBLE_QUOTE);
         readFile(file, charset, reader);
@@ -547,11 +548,12 @@ public final class CSV implements Serializable {
     /**
      * Reads the CSV file with the specified charset.
      *
-     * @param file    the file to read
+     * @param csvFile    the file to read
      * @param charset the charset
      * @throws IOException when the file could not be read
      */
-    public void readFile(final File file, final Charset charset) throws IOException {
+    public void readFile(final File csvFile, final Charset charset) throws IOException {
+        this.file = csvFile;
         CsvReader reader = new CsvReader(Files.newBufferedReader(file.toPath(), charset), null, null);
         readFile(file, charset, reader);
     }
@@ -559,12 +561,13 @@ public final class CSV implements Serializable {
     /**
      * Reads the CSV file with the specified separator and quote character.
      *
-     * @param file      the file to read
+     * @param csvFile      the file to read
      * @param separator the separator
      * @param quote     the quote
      * @throws IOException when the file could not be read
      */
-    public void readFile(final File file, final Character separator, final Character quote) throws IOException {
+    public void readFile(final File csvFile, final Character separator, final Character quote) throws IOException {
+        this.file = csvFile;
         Charset charset = findCharsetByBOM(file);
         BufferedReader buffered = Files.newBufferedReader(file.toPath(), charset);
         CsvReader reader = new CsvReader(buffered, separator, quote);
@@ -574,12 +577,13 @@ public final class CSV implements Serializable {
     /**
      * Reads the CSV file with the specified charset and separator.
      *
-     * @param file      the file to read
+     * @param csvFile      the file to read
      * @param charset   the charset
      * @param separator the separator
      * @throws IOException when the file could not be read
      */
-    public void readFile(final File file, final Charset charset, final Character separator) throws IOException {
+    public void readFile(final File csvFile, final Charset charset, final Character separator) throws IOException {
+        this.file = csvFile;
         BufferedReader buffered = Files.newBufferedReader(file.toPath(), charset);
         CsvReader reader = new CsvReader(buffered, separator, null);
         readFile(file, charset, reader);
@@ -588,11 +592,12 @@ public final class CSV implements Serializable {
     /**
      * Reads the CSV file with the specified separator.
      *
-     * @param file      the file to read
+     * @param csvFile      the file to read
      * @param separator the separator
      * @throws IOException when the file could not be read
      */
-    public void readFile(final File file, final Character separator) throws IOException {
+    public void readFile(final File csvFile, final Character separator) throws IOException {
+        this.file = csvFile;
         BufferedReader buffered = Files.newBufferedReader(file.toPath());
         CsvReader reader = new CsvReader(buffered, separator, CSV.DOUBLE_QUOTE);
         readFile(file, findCharsetByBOM(file), reader);
@@ -620,33 +625,33 @@ public final class CSV implements Serializable {
      * Reads a text file and builds a Frequency Distribution table data
      * of how many times each word has been used.
      *
-     * @param file the file
+     * @param textFile the file
      * @throws FileNotFoundException when the file could not be found
      */
-    public void readWordCountFile(final File file) throws FileNotFoundException {
-        readFile(new WordCountReader(), file);
+    public void readWordCountFile(final File textFile) throws FileNotFoundException {
+        readFile(new WordCountReader(), textFile);
     }
 
     /**
      * Reads a ResourceBundle file.
      *
-     * @param file the file
+     * @param resourceBundleFile the file
      * @throws FileNotFoundException when the file could not be found
      */
-    public void readResourceBundle(final File file) throws FileNotFoundException {
-        readFile(new ResourceBundleReader(), file);
+    public void readResourceBundle(final File resourceBundleFile) throws FileNotFoundException {
+        readFile(new ResourceBundleReader(), resourceBundleFile);
     }
 
     /**
      * Reads a data set using the specified Readable.
      *
      * @param readable the readable
-     * @param file     the file to read
+     * @param csvFile     the file to read
      * @throws FileNotFoundException when the file can't be found
      */
-    private void readFile(final Readable readable, final File file) throws FileNotFoundException {
-        fireBeginRead(file);
-        this.file = file;
+    private void readFile(final Readable readable, final File csvFile) throws FileNotFoundException {
+        this.file = csvFile;
+        fireBeginRead();
         rows.clear();
         readable.readFile(file);
         setMetaData(readable.getMetaData());
@@ -655,7 +660,7 @@ public final class CSV implements Serializable {
             Row row = readable.next();
             addRow(row);
         }
-        fireFinishRead(file);
+        fireFinishRead();
     }
 
     /**
@@ -681,41 +686,41 @@ public final class CSV implements Serializable {
     /**
      * Writes the contents to a file in XML format.
      *
-     * @param file the file
+     * @param xmlFile the file
      * @throws Exception when the file could not be written
      */
-    public void writeXML(final File file) throws Exception {
-        write(new XmlWriter(new FileOutputStream(file)));
+    public void writeXML(final File xmlFile) throws Exception {
+        write(new XmlWriter(new FileOutputStream(xmlFile)));
     }
 
     /**
      * Writes the contents to a file in JSON format.
      *
-     * @param file the file
+     * @param jsonFile the file
      * @throws Exception when the file could not be written
      */
-    public void writeJSON(final File file) throws Exception {
-        write(new JsonWriter(new FileOutputStream(file)));
+    public void writeJSON(final File jsonFile) throws Exception {
+        write(new JsonWriter(new FileOutputStream(jsonFile)));
     }
 
     /**
      * Writes the contents to a file in HTML format.
      *
-     * @param file the file
+     * @param htmlFile the file
      * @throws Exception when the file could not be written
      */
-    public void writeHtml(final File file) throws Exception {
-        write(new HtmlWriter(new FileOutputStream(file)));
+    public void writeHtml(final File htmlFile) throws Exception {
+        write(new HtmlWriter(new FileOutputStream(htmlFile)));
     }
 
     /**
      * Writes the contents to multiple files.
      *
-     * @param file the file
+     * @param resourceBundleFile the file
      * @throws Exception when the file could not be written
      */
-    public void writeResourceBundle(final File file) throws Exception {
-        write(new ResourceBundleWriter(file));
+    public void writeResourceBundle(final File resourceBundleFile) throws Exception {
+        write(new ResourceBundleWriter(resourceBundleFile));
     }
 
     /**
@@ -946,9 +951,8 @@ public final class CSV implements Serializable {
     /**
      * Informs all FileListeners that the reading process has been started.
      *
-     * @param file the file
      */
-    private void fireBeginRead(final File file) {
+    private void fireBeginRead() {
         for (FileListener l : fileListeners) {
             l.beginRead(file);
         }
@@ -957,9 +961,8 @@ public final class CSV implements Serializable {
     /**
      * Informs all FileListeners that the reading process has been finished.
      *
-     * @param file the file
      */
-    private void fireFinishRead(final File file) {
+    private void fireFinishRead() {
         for (FileListener l : fileListeners) {
             l.finishRead(file);
         }
@@ -980,9 +983,8 @@ public final class CSV implements Serializable {
     /**
      * Informs all FileListeners that writing process has been started.
      *
-     * @param file the file
      */
-    private void fireBeginWrite(final File file) {
+    private void fireBeginWrite() {
         for (FileListener l : fileListeners) {
             l.beginRead(file);
         }
@@ -991,9 +993,8 @@ public final class CSV implements Serializable {
     /**
      * Informs all FileListeners that writing process has been finished.
      *
-     * @param file the file
      */
-    private void fireFinishWrite(final File file) {
+    private void fireFinishWrite() {
         for (FileListener l : fileListeners) {
             l.finishRead(file);
         }

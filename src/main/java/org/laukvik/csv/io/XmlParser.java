@@ -21,38 +21,89 @@ import static org.laukvik.csv.io.XmlParser.Mode.VALUE;
  */
 public class XmlParser {
 
-    private final static char START_SYMBOL = '<';
-    private final static char CLOSE_SYMBOL = '>';
-    private final static char EQUAL_SYMBOL = '=';
-    private final static char QUOTE_SYMBOL = '"';
-    private final static char TAB_SYMBOL = '\t';
-    private final static char NEWLINE_SYMBOL = '\n';
-    private final static char RETURN_SYMBOL = '\r';
-    private final static char SPACE_SYMBOL = ' ';
+    /**
+     * The character for opening a tag.
+     */
+    private static final char START_SYMBOL = '<';
+    /**
+     * The character for closing a tag.
+     */
+    private static final char CLOSE_SYMBOL = '>';
+    /**
+     * The character for equal.
+     */
+    private static final char EQUAL_SYMBOL = '=';
+    /**
+     * The character for qoute.
+     */
+    private static final char QUOTE_SYMBOL = '"';
+    /**
+     * The character for TAB.
+     */
+    private static final char TAB_SYMBOL = '\t';
+    /**
+     * The character for newline.
+     */
+    private static final char NEWLINE_SYMBOL = '\n';
+    /**
+     * The character for return.
+     */
+    private static final char RETURN_SYMBOL = '\r';
+    /**
+     * The character for space.
+     */
+    private static final char SPACE_SYMBOL = ' ';
+    /**
+     * The listeners.
+     */
     private final List<XmlListener> listeners;
+    /** The current tag. */
     private Tag current;
 
+    /**
+     * Creates a new XmlParser.
+     */
     public XmlParser() {
         listeners = new ArrayList<>();
     }
 
-    public void addListener(XmlListener listener) {
+    /**
+     * Adds an XmlListener.
+     *
+     * @param listener the listener to add
+     */
+    public final void addListener(final XmlListener listener) {
         listeners.add(listener);
     }
 
-    private void fireFoundTag(Tag tag) {
+    /**
+     * Fires when it has found the tag.
+     *
+     * @param tag the tag
+     */
+    private void fireFoundTag(final Tag tag) {
         for (XmlListener l : listeners) {
             l.foundTag(tag);
         }
     }
 
-    private void fireAttributeTag(Attribute attribute) {
+    /**
+     * Fires when it has found an attribute.
+     *
+     * @param attribute the attribute
+     */
+    private void fireAttributeTag(final Attribute attribute) {
         for (XmlListener l : listeners) {
             l.foundAttribute(attribute);
         }
     }
 
-    private void foundTag(String value) {
+    /**
+     * The tag with the value was found.
+     *
+     * @param value the value
+     */
+    private void foundTag(final String value) {
         if (!value.isEmpty() && value.charAt(0) == '/') {
             current = current.getParent();
         } else {
@@ -61,18 +112,33 @@ public class XmlParser {
         fireFoundTag(current);
     }
 
-    private void foundAttr(String value) {
-        Attribute attr = current.addAttribute(value);
+    /**
+     * Found the name of the attribute.
+     *
+     * @param attribute the value
+     */
+    private void foundAttr(final String attribute) {
+        Attribute attr = current.addAttribute(attribute);
         fireAttributeTag(attr);
     }
 
-    private void foundValue(String value) {
-        if (value.trim().length() > 0) {
-            current.getAttributes().get(current.getAttributes().size() - 1).setValue(value);
+    /**
+     * Found the value of the attribute.
+     *
+     * @param attributeValue the value of the attribute
+     */
+    private void foundValue(final String attributeValue) {
+        if (attributeValue.trim().length() > 0) {
+            current.getAttributes().get(current.getAttributes().size() - 1).setValue(attributeValue);
         }
     }
 
-    private void foundText(String value) {
+    /**
+     * Found a text node.
+     *
+     * @param value the text
+     */
+    private void foundText(final String value) {
         if (value.trim().length() > 0) {
             Tag t = new Tag("text");
             t.setText(value);
@@ -80,8 +146,14 @@ public class XmlParser {
         }
     }
 
-
-    public Tag parseFile(final File file) throws IOException {
+    /**
+     * Parses the file.
+     *
+     * @param file the file
+     * @return the Tag
+     * @throws IOException when the file can't read
+     */
+    public final Tag parseFile(final File file) throws IOException {
         FileReader reader = new FileReader(file);
         final Tag root = new Tag("document");
         current = root;
@@ -312,25 +384,59 @@ public class XmlParser {
         return root;
     }
 
+    /**
+     * Indicates the state of parsing.
+     */
     enum Mode {
+        /** Not parsed anything yet. */
         EMPTY,
+        /** In text mode. */
         TEXT,
+        /** The name of the tag. */
         TAG,
+        /** Inside a tag. */
         BODY,
+        /** Inside attribute name. */
         ATTR,
+        /** Is equal sign. */
         EQ,
+        /**
+         * The quote start.
+         */
         QUOTE_OPEN,
+        /** The value of the attribute. */
         VALUE,
+        /**
+         * The quote end.
+         */
         QUOTE_STOP,
+        /**
+         * The close symbol.
+         */
         CLOSE
     }
 
+    /**
+     * Listener for when reading XML.
+     *
+     */
     public interface XmlListener {
+        /**
+         * Found the tag.
+         * @param tag the tag
+         */
         void foundTag(Tag tag);
 
+        /**
+         * Found the attribute.
+         * @param attribute the attribute
+         */
         void foundAttribute(Attribute attribute);
     }
 
+    /**
+     *
+     */
     static class Attribute {
 
         private final String name;
@@ -350,11 +456,7 @@ public class XmlParser {
         }
 
         public String toHtml() {
-//            if (value == null){
-//                return name;
-//            } else {
             return name + "=\"" + value + "\"";
-//            }
         }
 
         @Override
@@ -400,24 +502,24 @@ public class XmlParser {
             return attributeList;
         }
 
-        public Attribute addAttribute(String name) {
+        public Attribute addAttribute(final String name) {
             return addAttribute(new Attribute(name));
         }
 
-        public Attribute addAttribute(Attribute attribute) {
+        public Attribute addAttribute(final Attribute attribute) {
             attributeList.add(attribute);
             return attribute;
         }
 
-        public boolean isText() {
+        public final boolean isText() {
             return text != null;
         }
 
-        public void setText(final String text) {
+        public final void setText(final String text) {
             this.text = text;
         }
 
-        public boolean isSingle() {
+        public final boolean isSingle() {
             for (int x = 0; x < SINGLE_TAGS.length; x++) {
                 if (SINGLE_TAGS[x].equalsIgnoreCase(name)) {
                     return true;
@@ -427,11 +529,11 @@ public class XmlParser {
         }
 
         @Override
-        public String toString() {
+        public final String toString() {
             return name;
         }
 
-        public String toHtml() {
+        public final String toHtml() {
             StringBuilder b = new StringBuilder();
             if (isText()) {
                 b.append(text);

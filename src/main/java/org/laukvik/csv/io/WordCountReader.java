@@ -20,14 +20,26 @@ import java.util.TreeMap;
  */
 public class WordCountReader implements Readable {
 
+    /**
+     * Map containing words and count.
+     */
     private final Map<String, Integer> map;
+    /** The MetaData. */
     private final MetaData metaData;
+    /** The word column. */
     private final StringColumn wordColumn;
+    /** The count column. */
     private final StringColumn countColumn;
+    /** The current row. */
     private Row row;
+    /** The row counter. */
     private int index;
+    /** The list of words. */
     private List<String> list;
 
+    /**
+     * Creates a new instance.
+     */
     public WordCountReader() {
         map = new TreeMap<>();
         metaData = new MetaData();
@@ -37,10 +49,22 @@ public class WordCountReader implements Readable {
         metaData.addColumn(countColumn);
     }
 
-    public void readFile(File file) throws FileNotFoundException {
+    /**
+     * Reads the file.
+     *
+     * @param file the file
+     * @throws FileNotFoundException when the file cant be found
+     */
+    public final void readFile(final File file) throws FileNotFoundException {
         parse(file);
     }
 
+    /**
+     * Returns a trimmed and lowercase version of the word which is null pointer safe.
+     *
+     * @param word the word
+     * @return the trimmed version
+     */
     private String cleaned(final String word) {
         if (word == null) {
             return null;
@@ -49,7 +73,13 @@ public class WordCountReader implements Readable {
         }
     }
 
-    private void parse(File file) throws FileNotFoundException {
+    /**
+     * Parses the file.
+     *
+     * @param file the file
+     * @throws FileNotFoundException when the file cant be found
+     */
+    private void parse(final File file) throws FileNotFoundException {
         final FileReader r = new FileReader(file);
         try (Scanner s = new Scanner(file)) {
             while (s.hasNextLine()) {
@@ -74,23 +104,39 @@ public class WordCountReader implements Readable {
         index = 0;
     }
 
-    @Override
-    public MetaData getMetaData() {
+    /**
+     * Returns the MetaData.
+     *
+     * @return the MetaData
+     */
+    public final MetaData getMetaData() {
         return metaData;
     }
 
-    @Override
-    public Row getRow() {
+    /**
+     * Return the current row.
+     *
+     * @return the row
+     */
+    public final Row getRow() {
         return row;
     }
 
-    @Override
-    public boolean hasNext() {
+    /**
+     * Returns true if more rows are available.
+     *
+     * @return true if more rows
+     */
+    public final boolean hasNext() {
         return index < map.size();
     }
 
-    @Override
-    public Row next() {
+    /**
+     * Returns the next row.
+     *
+     * @return the next row
+     */
+    public final Row next() {
         row = new Row();
         String key = list.get(index);
         row.update(wordColumn, list.get(index)).update(countColumn, map.get(key) + "");

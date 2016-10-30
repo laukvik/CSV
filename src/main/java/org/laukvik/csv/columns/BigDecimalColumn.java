@@ -41,23 +41,52 @@ public class BigDecimalColumn extends Column<BigDecimal> {
         return value.toString();
     }
 
-    public BigDecimal parse(String value) {
+    /**
+     * Parses the string.
+     *
+     * @param value the string
+     * @return BigDecimal
+     */
+    public final BigDecimal parse(final String value) {
         return new BigDecimal(value);
     }
 
-    public int compare(BigDecimal one, BigDecimal another) {
+    /**
+     * Compares two BigDecimals.
+     *
+     * @param one     one column
+     * @param another another column
+     * @return the compare value
+     */
+    public final int compare(final BigDecimal one, final BigDecimal another) {
         return one.compareTo(another);
     }
 
-    public String toString() {
+    /**
+     * @return
+     */
+    public final String toString() {
         return getName() + "(Integer)";
     }
 
-    public int hashCode() {
+    /**
+     * Returns the hash code
+     *
+     * @return the hash code
+     */
+    public final int hashCode() {
         return 7;
     }
 
-    public boolean equals(Object obj) {
+
+
+    /**
+     * Returns true if the objects are equals.
+     *
+     * @param obj another BigDecimal column
+     * @return true when equals
+     */
+    public final boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

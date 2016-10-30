@@ -16,12 +16,11 @@ import java.util.ResourceBundle;
 /**
  * JavaFX MenuBar for the CSV application.
  *
- * @author Morten Laukvik
  */
 class CsvMenuBar extends MenuBar {
 
     /**
-     * The Menu for View
+     * The Menu for View.
      */
     private final Menu viewMenu;
     /**
@@ -35,6 +34,11 @@ class CsvMenuBar extends MenuBar {
     /** The ResourceBundle. */
     private final ResourceBundle bundle;
 
+    /**
+     * Creates a new MenuBar for the JavaFX application.
+     *
+     * @param main the main app
+     */
     CsvMenuBar(final Main main) {
         super();
         this.main = main;
@@ -45,7 +49,7 @@ class CsvMenuBar extends MenuBar {
         MenuItem newItem = new MenuItem(bundle.getString("file.new"));
         newItem.setAccelerator(KeyCombination.keyCombination("Meta+n"));
         newItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.newFile();
             }
         });
@@ -53,7 +57,7 @@ class CsvMenuBar extends MenuBar {
         MenuItem openItem = new MenuItem(bundle.getString("file.open"));
         openItem.setAccelerator(KeyCombination.keyCombination("Meta+o"));
         openItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleFileOpen();
             }
         });
@@ -66,7 +70,7 @@ class CsvMenuBar extends MenuBar {
         MenuItem saveAsItem = new MenuItem(bundle.getString("file.saveas"));
         saveAsItem.setAccelerator(KeyCombination.keyCombination("Meta+s+shift"));
         saveAsItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleSaveAsAction();
             }
         });
@@ -74,7 +78,7 @@ class CsvMenuBar extends MenuBar {
         MenuItem importItem = new MenuItem(bundle.getString("file.import"));
         importItem.setAccelerator(KeyCombination.keyCombination("Meta+i"));
         importItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleOpenFileWithOptions();
             }
         });
@@ -87,32 +91,32 @@ class CsvMenuBar extends MenuBar {
         MenuItem exportHtmlItem = new MenuItem(bundle.getString("file.export.html"));
         MenuItem resourceBundleItem = new MenuItem(bundle.getString("file.export.resourcebundle"));
         exportJsonItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleExportJsonAction();
             }
         });
         exportXmlItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleExportXmlAction();
             }
         });
         exportHtmlItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleExportHtmlAction();
             }
         });
         resourceBundleItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleOpenResourceBundleAction();
             }
         });
 
-        exportMenu.getItems().addAll(exportJsonItem,exportXmlItem,exportHtmlItem, resourceBundleItem);
+        exportMenu.getItems().addAll(exportJsonItem, exportXmlItem, exportHtmlItem, resourceBundleItem);
 
         MenuItem printItem = new MenuItem(bundle.getString("file.print"));
         printItem.setAccelerator(KeyCombination.keyCombination("Meta+p"));
         printItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handlePrintAction();
             }
         });
@@ -126,21 +130,21 @@ class CsvMenuBar extends MenuBar {
         MenuItem cutItem = new MenuItem(bundle.getString("edit.cut"));
         cutItem.setAccelerator(KeyCombination.keyCombination("Meta+x"));
         cutItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleCutAction();
             }
         });
 
         MenuItem copyItem = new MenuItem(bundle.getString("edit.copy"));
         copyItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleCopyAction();
             }
         });
         copyItem.setAccelerator(KeyCombination.keyCombination("Meta+c"));
         MenuItem pasteItem = new MenuItem(bundle.getString("edit.paste"));
         pasteItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handlePasteAction();
             }
         });
@@ -148,47 +152,48 @@ class CsvMenuBar extends MenuBar {
         MenuItem deleteItem = new MenuItem(bundle.getString("edit.delete"));
         deleteItem.setAccelerator(KeyCombination.keyCombination("Meta+backspace"));
         deleteItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleDeleteAction();
             }
         });
 
         MenuItem moveUpItem = new MenuItem(bundle.getString("edit.moveup"));
-        moveUpItem.setAccelerator(KeyCombination.keyCombination("Meta+"+ KeyCode.UP));
+        moveUpItem.setAccelerator(KeyCombination.keyCombination("Meta+" + KeyCode.UP));
         moveUpItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleMoveUpAction();
             }
         });
         MenuItem moveDownItem = new MenuItem(bundle.getString("edit.movedown"));
-        moveDownItem.setAccelerator(KeyCombination.keyCombination("Meta+"+ KeyCode.DOWN));
+        moveDownItem.setAccelerator(KeyCombination.keyCombination("Meta+" + KeyCode.DOWN));
         moveDownItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleMoveDownAction();
             }
         });
-        edit.getItems().addAll(cutItem, copyItem, pasteItem, deleteItem, new SeparatorMenuItem(), moveUpItem, moveDownItem);
+        edit.getItems().addAll(cutItem, copyItem, pasteItem, deleteItem,
+                new SeparatorMenuItem(), moveUpItem, moveDownItem);
 
         // ----- Insert ------
         final Menu insert = new Menu(bundle.getString("insert"));
         MenuItem newColumnItem = new MenuItem(bundle.getString("insert.column"));
         newColumnItem.setAccelerator(KeyCombination.keyCombination("Meta+i"));
         newColumnItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleNewColumnAction();
             }
         });
         MenuItem newRowItem = new MenuItem(bundle.getString("insert.row"));
         newRowItem.setAccelerator(KeyCombination.keyCombination("Meta+R"));
         newRowItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleNewRowAction();
             }
         });
         MenuItem headersRowItem = new MenuItem(bundle.getString("insert.headers"));
         headersRowItem.setAccelerator(KeyCombination.keyCombination("Meta+H"));
         headersRowItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleNewHeaders();
             }
         });
@@ -200,7 +205,7 @@ class CsvMenuBar extends MenuBar {
         final Menu queryMenu = new Menu(bundle.getString("query"));  // Clear query
         MenuItem newQueryMenuItem = new MenuItem(bundle.getString("query.new"));
         newQueryMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleNewQuery();
             }
         });
@@ -213,8 +218,8 @@ class CsvMenuBar extends MenuBar {
         viewResultsMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+1"));
         viewResultsMenuItem.setSelected(true);
         viewResultsMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
-                setSelectedMode(0);
+            public void handle(final ActionEvent t) {
+                setSelectedMode(ViewMode.Results);
                 main.handleViewResultsAction();
             }
         });
@@ -222,18 +227,19 @@ class CsvMenuBar extends MenuBar {
         CheckMenuItem viewChartMenuItem = new CheckMenuItem(bundle.getString("view.piechart"));
         viewChartMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+2"));
         viewChartMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
-                setSelectedMode(1);
+            public void handle(final ActionEvent t) {
+                setSelectedMode(ViewMode.Chart);
                 main.handleViewChartAction();
 
             }
         });
 
+        // TODO - WRONG NAME
         CheckMenuItem previewChartMenuItem = new CheckMenuItem(bundle.getString("view.preview"));
         previewChartMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+3"));
         previewChartMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
-                setSelectedMode(2);
+            public void handle(final ActionEvent t) {
+                setSelectedMode(ViewMode.Preview);
                 main.handleViewPreviewAction();
 
             }
@@ -242,8 +248,8 @@ class CsvMenuBar extends MenuBar {
         CheckMenuItem wikipediaMenuItem = new CheckMenuItem(bundle.getString("view.wikipedia"));
         wikipediaMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+4"));
         wikipediaMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
-                setSelectedMode(3);
+            public void handle(final ActionEvent t) {
+                setSelectedMode(ViewMode.Wikipedia);
                 main.handleViewWikipediaAction();
 
             }
@@ -252,8 +258,8 @@ class CsvMenuBar extends MenuBar {
         CheckMenuItem googleMapsMenuItem = new CheckMenuItem(bundle.getString("view.googlemaps"));
         googleMapsMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+5"));
         googleMapsMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
-                setSelectedMode(4);
+            public void handle(final ActionEvent t) {
+                setSelectedMode(ViewMode.Maps);
                 main.handleViewGoogleMapsAction();
 
             }
@@ -262,20 +268,21 @@ class CsvMenuBar extends MenuBar {
         CheckMenuItem googleSearchMenuItem = new CheckMenuItem(bundle.getString("view.google"));
         googleSearchMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+6"));
         googleSearchMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
-                setSelectedMode(5);
+            public void handle(final ActionEvent t) {
+                setSelectedMode(ViewMode.Search);
                 main.handleViewGoogleSearchAction();
 
             }
         });
 
-        viewMenu.getItems().addAll(viewResultsMenuItem, viewChartMenuItem, previewChartMenuItem, wikipediaMenuItem, googleMapsMenuItem, googleSearchMenuItem);
+        viewMenu.getItems().addAll(viewResultsMenuItem, viewChartMenuItem, previewChartMenuItem,
+                wikipediaMenuItem, googleMapsMenuItem, googleSearchMenuItem);
 
         // ----- Help ------
         final Menu help = new Menu(bundle.getString("help"));
         MenuItem aboutMenuItem = new MenuItem(bundle.getString("help.about"));
         aboutMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 main.handleAboutAction();
             }
         });
@@ -290,21 +297,26 @@ class CsvMenuBar extends MenuBar {
         getMenus().add(help);
     }
 
-    public void buildRecentList(Recent recent){
+    /**
+     * Builds a menu with all recently loaded files.
+     *
+     * @param recent the recent object
+     */
+    public void buildRecentList(final Recent recent) {
         openRecentMenu.getItems().clear();
-        for (File file : recent.getList()){
+        for (File file : recent.getList()) {
             MenuItem openRecentItem = new MenuItem(file.getAbsolutePath());
             openRecentItem.setOnAction(new EventHandler<ActionEvent>() {
-                public void handle(ActionEvent t) {
+                public void handle(final ActionEvent t) {
                     main.loadFile(file);
                 }
             });
             openRecentMenu.getItems().add(openRecentItem);
         }
-        openRecentMenu.getItems().add( new SeparatorMenuItem());
+        openRecentMenu.getItems().add(new SeparatorMenuItem());
         MenuItem openRecentItem = new MenuItem(bundle.getString("file.recent.clear"));
         openRecentItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {
+            public void handle(final ActionEvent t) {
                 recent.clear();
                 buildRecentList(recent);
             }
@@ -312,11 +324,16 @@ class CsvMenuBar extends MenuBar {
         openRecentMenu.getItems().add(openRecentItem);
     }
 
-    private void setSelectedMode(int index) {
+    /**
+     * Sets the selected view mode.
+     *
+     * @param viewMode the view mode
+     */
+    private void setSelectedMode(final ViewMode viewMode) {
         int x = 0;
         for (MenuItem item : viewMenu.getItems()) {
             CheckMenuItem i = (CheckMenuItem) item;
-            i.setSelected(x == index);
+            i.setSelected(x == viewMode.ordinal());
             x++;
         }
     }

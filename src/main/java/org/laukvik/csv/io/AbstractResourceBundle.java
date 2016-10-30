@@ -9,7 +9,7 @@ import java.io.FileFilter;
  * Helper class for reading and writing ResourceBundles.
  *
  */
-public class AbstractResourceBundle {
+public abstract class AbstractResourceBundle {
 
     /**
      * The column name.
@@ -24,6 +24,11 @@ public class AbstractResourceBundle {
      */
     static final String EXTENSION = ".properties";
 
+    /**
+     * Hides the default constructor.
+     */
+    protected AbstractResourceBundle() {
+    }
 
     /**
      * Returns the locale for the filename.
@@ -44,7 +49,10 @@ public class AbstractResourceBundle {
             if (locale.startsWith("_")) {
                 locale = locale.substring(1);
             }
-            return locale.isEmpty() ? null : locale;
+            if (locale.isEmpty()) {
+                return null;
+            }
+            return locale;
         }
     }
 
@@ -104,8 +112,9 @@ public class AbstractResourceBundle {
          * @param file the file to check
          * @return true if accepted
          */
-        public boolean accept(final File file) {
-            return !(file == null || file.isDirectory()) && AbstractResourceBundle.getLocale(file.getName(), bundleBaseName) != null;
+        public final boolean accept(final File file) {
+            return !(file == null || file.isDirectory())
+                    && AbstractResourceBundle.getLocale(file.getName(), bundleBaseName) != null;
         }
     }
 
