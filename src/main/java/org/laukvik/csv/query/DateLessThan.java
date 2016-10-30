@@ -21,19 +21,30 @@ import org.laukvik.csv.columns.DateColumn;
 import java.util.Date;
 
 /**
- * Compares a DateColumn to be less than a date
+ * Compares a DateColumn to be less than a date.
  */
-public class DateLessThan extends AbstractDateMatcher {
+public final class DateLessThan extends AbstractDateMatcher {
 
 
-    public DateLessThan(DateColumn column, Date value) {
+    /**
+     * Compares a DateColumn to be less than the value.
+     *
+     * @param column the dateColumn
+     * @param value  the date
+     */
+    public DateLessThan(final DateColumn column, final Date value) {
         super(column, value);
     }
 
-    @Override
-    public boolean matches(Row row) {
+    /**
+     * Returns true if matches.
+     *
+     * @param row the row
+     * @return true if matches
+     */
+    public boolean matches(final Row row) {
         Date d = row.getDate(column);
-        return isLessThan(d, value);
+        return DateColumn.isLessThan(d, value);
     }
 
 }

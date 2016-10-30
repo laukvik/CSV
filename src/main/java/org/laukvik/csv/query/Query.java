@@ -33,7 +33,7 @@ import java.util.List;
  * The query contains the criteria to be used when filtering the data set.
  *
  */
-public class Query {
+public final class Query {
 
     private final MetaData metaData;
     private final CSV csv;

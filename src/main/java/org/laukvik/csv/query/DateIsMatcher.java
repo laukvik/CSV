@@ -21,18 +21,29 @@ import org.laukvik.csv.columns.DateColumn;
 import java.util.Date;
 
 /**
- * Compares a DateColumn to specified Date
+ * Compares a DateColumn to specified Date.
  */
-public class DateIsMatcher extends AbstractDateMatcher {
+public final class DateIsMatcher extends AbstractDateMatcher {
 
-    public DateIsMatcher(DateColumn column, Date value) {
+    /**
+     * Compares a DateColumn to specified Date.
+     *
+     * @param column the dateColumn
+     * @param value  the date
+     */
+    public DateIsMatcher(final DateColumn column, final Date value) {
         super(column, value);
     }
 
-    @Override
-    public boolean matches(Row row) {
+    /**
+     * Returns true if the value matches.
+     *
+     * @param row the row
+     * @return true if matches
+     */
+    public boolean matches(final Row row) {
         Date d = row.getDate(column);
-        return !(d == null || value == null) && isEqualDate(value, d);
+        return !(d == null || value == null) && DateColumn.isEqualDate(value, d);
     }
 
 }

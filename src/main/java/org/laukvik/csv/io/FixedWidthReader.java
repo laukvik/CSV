@@ -9,18 +9,21 @@ import java.io.File;
 /**
  * Reads a data set using fixed width columns.
  *
- * @author Morten Laukvik
+ * TODO - implement this class
  */
-public class FixedWidthReader implements ClosableReader {
+public final class FixedWidthReader implements ClosableReader {
 
+    /**
+     * The MetaData.
+     */
     private final MetaData metaData;
 
     /**
-     * Reads CSV data from the reader with the specified columns
+     * Reads CSV data from the reader with the specified columns.
      *
      * @param columnWidths the width of each column
      */
-    public FixedWidthReader(int... columnWidths) {
+    public FixedWidthReader(final int... columnWidths) {
         final int[] columnWidths1 = columnWidths;
         this.metaData = new MetaData();
         for (int x = 0; x < columnWidths.length; x++) {
@@ -30,37 +33,61 @@ public class FixedWidthReader implements ClosableReader {
         }
     }
 
-    @Override
+    /**
+     * Reads a file with fixed column widths.
+     *
+     * @param file the file
+     */
     public void readFile(final File file) {
 
     }
 
-    @Override
+    /**
+     * Returns the MetaData.
+     *
+     * @return the MetaData
+     */
     public MetaData getMetaData() {
         return metaData;
     }
 
-    @Override
+    /**
+     * Returns true if more rows are available.
+     * @return true if more rows are available
+     */
     public boolean hasNext() {
         return false;
     }
 
-    @Override
+    /**
+     * Returns the next row.
+     * @return the next row
+     */
     public Row next() {
         return null;
     }
 
-    @Override
+    /**
+     * Returns the current row.
+     * @return the current row
+     */
     public Row getRow() {
         return null;
     }
 
-    @Override
+    /**
+     * Returns the amount of bytes read.
+     * @return the amount of bytes read
+     */
     public int getBytesRead() {
         return 0;
     }
 
-    @Override
+    /**
+     * Closes the outputStream.
+     *
+     * @throws Exception when the outputStream could not be closed
+     */
     public void close() throws Exception {
 
     }

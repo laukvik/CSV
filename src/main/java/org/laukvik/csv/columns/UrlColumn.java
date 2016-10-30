@@ -51,8 +51,7 @@ public final class UrlColumn extends Column<URL> {
     public URL parse(final String value) {
         try {
             return new URL(value);
-        }
-        catch (MalformedURLException ex) {
+        } catch (MalformedURLException ex) {
             return null;
         }
     }
@@ -62,7 +61,7 @@ public final class UrlColumn extends Column<URL> {
      *
      * @param one     one column
      * @param another another column
-     * @return
+     * @return a comparison value
      */
     public int compare(final URL one, final URL another) {
         return one.toExternalForm().compareTo(another.toExternalForm());

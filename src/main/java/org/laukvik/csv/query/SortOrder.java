@@ -18,7 +18,7 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.columns.Column;
 
 /**
- * Sorts a data set using the specified column and sort order
+ * Sorts a data set using the specified column and sort order.
  */
 public class SortOrder {
 

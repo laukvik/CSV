@@ -26,37 +26,63 @@ import java.util.TreeMap;
  * Frequency distribution is a table that shows the frequency of values found in a
  * column. Each entry contains the value and the count of occurrences of that value.
  *
- *
  */
-public class FrequencyDistribution {
+public final class FrequencyDistribution {
 
+    /**
+     * The column.
+     */
     private final Column column;
+    /**
+     * The map with string value and the frequency.
+     */
     private final Map<String, Integer> map;
 
     /**
      * Creates a new FrequencyDistribution with empty values for the
-     * specified column
+     * specified column.
      *
      * @param column the column
      */
-    public FrequencyDistribution(Column column) {
+    public FrequencyDistribution(final Column column) {
         this.column = column;
         this.map = new TreeMap<>();
     }
 
+    /**
+     * Returns the column.
+     *
+     * @return the column
+     */
     public Column getColumn() {
         return column;
     }
 
+    /**
+     * Returns the set of keys.
+     *
+     * @return the set of keys
+     */
     public Set<String> getKeys() {
         return map.keySet();
     }
 
-    public Integer getCount(String key) {
+    /**
+     * Returns the frequency for the specified key.
+     *
+     * @param key the key
+     * @return the frequency
+     */
+    public Integer getCount(final String key) {
         return map.get(key);
     }
 
-    public void addValue(String word) {
+    /**
+     * Adds a value.
+     *
+     * @param word the value to add
+     */
+    public void addValue(final String word) {
         if (word == null || word.length() == 0) {
             return;
         }

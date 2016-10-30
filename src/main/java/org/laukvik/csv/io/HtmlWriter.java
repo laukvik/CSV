@@ -28,21 +28,29 @@ import java.nio.charset.Charset;
  *
  * @see <a href="https://en.wikipedia.org/wiki/HTML">HTML (wikipedia)</a>
  */
-public class HtmlWriter implements Writeable, AutoCloseable {
+public final class HtmlWriter implements Writeable, AutoCloseable {
 
+    /**
+     * The outputStream to write to.
+     */
     private final OutputStream out;
 
     /**
-     * Writes the CSV to the outputStream
+     * Writes the CSV to the outputStream.
      *
      * @param outputStream the outputStream
      */
-    public HtmlWriter(OutputStream outputStream) {
+    public HtmlWriter(final OutputStream outputStream) {
         this.out = outputStream;
     }
 
-    @Override
-    public void writeCSV(CSV csv) throws IOException {
+    /**
+     * Write the CSV to the outputStream.
+     *
+     * @param csv the CSV to write
+     * @throws IOException when the csv could not be written
+     */
+    public void writeCSV(final CSV csv) throws IOException {
         Charset charset = csv.getMetaData().getCharset();
 
         out.write("<html>\n".getBytes());
@@ -59,7 +67,7 @@ public class HtmlWriter implements Writeable, AutoCloseable {
         for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
             Column col = csv.getMetaData().getColumn(x);
             out.write("<th>".getBytes());
-            out.write( col.getName().getBytes() );
+            out.write(col.getName().getBytes());
             out.write("</th>".getBytes());
         }
         out.write("</tr>\n</thead>\n".getBytes());
@@ -74,8 +82,7 @@ public class HtmlWriter implements Writeable, AutoCloseable {
                 out.write("<td>".getBytes());
                 Column col = csv.getMetaData().getColumn(x);
                 String s = r.getAsString(col);
-                if (s == null) {
-                } else {
+                if (s != null) {
                     out.write(s.getBytes());
                 }
                 out.write("</td>".getBytes());
@@ -93,7 +100,11 @@ public class HtmlWriter implements Writeable, AutoCloseable {
 
     }
 
-    @Override
+    /**
+     * Closes the outputStream.
+     *
+     * @throws Exception when the outputStream could not be closed
+     */
     public void close() throws Exception {
         out.flush();
         out.close();

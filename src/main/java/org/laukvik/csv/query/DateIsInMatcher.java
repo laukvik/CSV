@@ -21,20 +21,34 @@ import org.laukvik.csv.columns.DateColumn;
 import java.util.Date;
 
 /**
- * Compares a DateColumn to an array of Dates
+ * Compares a DateColumn to an array of Dates.
  *
  */
-public class DateIsInMatcher extends AbstractDateMatcher {
+public final class DateIsInMatcher extends AbstractDateMatcher {
 
+    /**
+     * The dates to match.
+     */
     private final Date[] values;
 
-    public DateIsInMatcher(DateColumn column, Date... values) {
+    /**
+     * Compares a DateColumn to an array of Dates.
+     *
+     * @param column the dateColumn
+     * @param values the dates
+     */
+    public DateIsInMatcher(final DateColumn column, final Date... values) {
         super(column, null);
         this.values = values;
     }
 
-    @Override
-    public boolean matches(Row row) {
+    /**
+     * Returns true if the column matches.
+     *
+     * @param row the row
+     * @return true when matches
+     */
+    public boolean matches(final Row row) {
         Date value = row.getDate(column);
         for (Date d : values) {
             if (value.equals(d)) {

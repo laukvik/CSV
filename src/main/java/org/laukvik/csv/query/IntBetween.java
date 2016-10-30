@@ -19,7 +19,7 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
 
 /**
- * Compares a IntegerColumn to be between to values
+ * Compares a IntegerColumn to be between to values.
  */
 public class IntBetween extends RowMatcher {
 

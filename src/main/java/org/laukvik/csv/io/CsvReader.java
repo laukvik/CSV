@@ -81,7 +81,9 @@ public final class CsvReader implements ClosableReader {
      * @param quote     the quote character
      * @throws IOException when the CSV could not be fully read
      */
-    public CsvReader(final BufferedReader bufferedReader, final Character separator, final Character quote) throws IOException {
+    public CsvReader(final BufferedReader bufferedReader,
+                     final Character separator,
+                     final Character quote) throws IOException {
         this.autoDetectColumnSeparator = (separator == null);
         if (separator != null) {
             this.columnSeparatorChar = separator;
@@ -172,7 +174,10 @@ public final class CsvReader implements ClosableReader {
 
             // Look for seperator characters in first line
             if (lineCounter == 0 && autoDetectColumnSeparator) {
-                if (currentChar == CSV.TAB || currentChar == CSV.SEMICOLON || currentChar == CSV.PIPE || currentChar == CSV.COMMA) {
+                if (currentChar == CSV.TAB
+                        || currentChar == CSV.SEMICOLON
+                        || currentChar == CSV.PIPE
+                        || currentChar == CSV.COMMA) {
                     columnSeparatorChar = currentChar;
                     autoDetectColumnSeparator = false;
                     metaData.setSeparator(columnSeparatorChar);

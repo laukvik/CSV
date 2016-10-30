@@ -19,9 +19,9 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
 
 /**
- * Compares a IntegerColumn to be less than a value
+ * Compares a IntegerColumn to be less than a value.
  */
-public class IntLessThan extends RowMatcher {
+public final class IntLessThan extends RowMatcher {
 
     private final int value;
     private final IntegerColumn column;

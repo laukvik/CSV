@@ -25,31 +25,65 @@ public final class DoubleColumn extends Column<Double> {
      *
      * @param name the name of the column
      */
-    public DoubleColumn(String name) {
+    public DoubleColumn(final String name) {
         super(name);
     }
 
-    public String asString(Double value) {
+    /**
+     * Returns the value as a String.
+     *
+     * @param value the value
+     * @return the String
+     */
+    public String asString(final Double value) {
         return value.toString();
     }
 
-    public Double parse(String value) {
+    /**
+     * Returns the double value of the String or null if parsing failed.
+     *
+     * @param value the string
+     * @return the double value
+     */
+    public Double parse(final String value) {
         return Double.parseDouble(value);
     }
 
-    public int compare(Double one, Double another) {
+    /**
+     * Compares one and another.
+     *
+     * @param one     one column
+     * @param another another column
+     * @return the comparison
+     */
+    public int compare(final Double one, final Double another) {
         return one.compareTo(another);
     }
 
+    /**
+     * TODO - Rewrite all toString JavaDocs and add metaData attributes to them
+     * Returns the column definition as a String.
+     * @return column definition as a String
+     */
     public String toString() {
         return getName() + "(Double)";
     }
 
+    /**
+     * Returns the HashCode.
+     * @return the HashCode
+     */
     public int hashCode() {
         return 7;
     }
 
-    public boolean equals(Object obj) {
+    /**
+     * Returns true when the column is equals to obj.
+     *
+     * @param obj the obj
+     * @return true when equals
+     */
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

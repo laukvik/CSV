@@ -20,18 +20,24 @@ import java.util.Objects;
 /**
  * Represents a link to another column.
  */
-public class ForeignKey {
+public final class ForeignKey {
 
+    /**
+     * The target table.
+     */
     private String table;
+    /**
+     * The target column.
+     */
     private String column;
 
     /**
-     * Creates a new ForeignKey
+     * Creates a new ForeignKey.
      *
      * @param table the table
      * @param column the column
      */
-    public ForeignKey(String table, String column) {
+    public ForeignKey(final String table, final String column) {
         if (table == null || table.trim().isEmpty()) {
             throw new IllegalForeignKeyException("Illegal foreignKey value ");
         }
@@ -39,7 +45,13 @@ public class ForeignKey {
         this.column = column;
     }
 
-    public static ForeignKey parse(String fkValue) {
+    /**
+     * Parses a string with foreign key definition.
+     *
+     * @param fkValue the string to parse
+     * @return the ForeignKey
+     */
+    public static ForeignKey parse(final String fkValue) {
         int first = fkValue.indexOf("[");
         if (first == -1) {
             throw new IllegalForeignKeyException("Missing column. Illegal foreignKey value " + fkValue);
@@ -60,23 +72,45 @@ public class ForeignKey {
         }
     }
 
+    /**
+     * Returns the table it points to.
+     *
+     * @return the table it points to.
+     */
     public String getTable() {
         return table;
     }
 
-    public void setTable(String table) {
+    /**
+     * Sets the target table name.
+     *
+     * @param table the table name
+     */
+    public void setTable(final String table) {
         this.table = table;
     }
 
+    /**
+     * Returns the column it points to.
+     * @return the column it points to.
+     */
     public String getColumn() {
         return column;
     }
 
-    public void setColumn(String column) {
+    /**
+     * Sets the target column name.
+     *
+     * @param column the column name
+     */
+    public void setColumn(final String column) {
         this.column = column;
     }
 
-    @Override
+    /**
+     * Returns the HashCode.
+     * @return the HashCode
+     */
     public int hashCode() {
         int hash = 3;
         hash = 47 * hash + Objects.hashCode(this.table);
@@ -84,8 +118,13 @@ public class ForeignKey {
         return hash;
     }
 
-    @Override
-    public boolean equals(Object obj) {
+    /**
+     * Returns true when equals to the object.
+     *
+     * @param obj the object
+     * @return true when equals
+     */
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

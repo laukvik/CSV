@@ -19,9 +19,10 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 
 /**
- * Compares a StringColumn to have one or more of the specified values
+ * Compares a StringColumn to have one or more of the specified values.
  */
-public class StringInMatcher extends RowMatcher {
+public final class StringInMatcher extends RowMatcher {
+
 
     private final String[] value;
     private final StringColumn column;
@@ -45,7 +46,6 @@ public class StringInMatcher extends RowMatcher {
         return v1.equals(v2);
     }
 
-    @Override
     public boolean matches(Row row) {
         String val = row.getString(column);
         if (val == null) {

@@ -2,11 +2,15 @@ package org.laukvik.csv.query;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ * TODO - Tests should be moved to DateColumn instead
+ */
 public class DateLessThanTest {
 
     public Date createDate(int year, int month, int day) {
@@ -20,17 +24,17 @@ public class DateLessThanTest {
     @Test
     public void shouldBeLessThan() {
         Date d1 = createDate(1900, 5, 23);
-        Assert.assertEquals(true, DateLessThan.isLessThan(d1, createDate(1900, 5, 24)));
-        Assert.assertEquals(true, DateLessThan.isLessThan(d1, createDate(1900, 6, 23)));
-        Assert.assertEquals(true, DateLessThan.isLessThan(d1, createDate(1901, 5, 23)));
+        Assert.assertEquals(true, DateColumn.isLessThan(d1, createDate(1900, 5, 24)));
+        Assert.assertEquals(true, DateColumn.isLessThan(d1, createDate(1900, 6, 23)));
+        Assert.assertEquals(true, DateColumn.isLessThan(d1, createDate(1901, 5, 23)));
     }
 
     @Test
     public void shouldNotBeLessThan() {
         Date d1 = createDate(1900, 5, 23);
-        Assert.assertEquals(false, DateLessThan.isLessThan(d1, createDate(1899, 5, 23)));
-        Assert.assertEquals(false, DateLessThan.isLessThan(d1, createDate(1899, 6, 23)));
-        Assert.assertEquals(false, DateLessThan.isLessThan(d1, createDate(1899, 5, 24)));
+        Assert.assertEquals(false, DateColumn.isLessThan(d1, createDate(1899, 5, 23)));
+        Assert.assertEquals(false, DateColumn.isLessThan(d1, createDate(1899, 6, 23)));
+        Assert.assertEquals(false, DateColumn.isLessThan(d1, createDate(1899, 5, 24)));
     }
 
 }

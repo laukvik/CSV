@@ -26,7 +26,7 @@ import java.util.Date;
 public final class DateGreaterThan extends AbstractDateMatcher {
 
     /**
-     * Compares a DateColumn to specified Date
+     * Compares a DateColumn to specified Date.
      *
      * @param column the dataColumn
      * @param value the value to compare
@@ -36,12 +36,14 @@ public final class DateGreaterThan extends AbstractDateMatcher {
     }
 
     /**
+     * Compares the value of the column and returns true if it matches.
+     *
      * @param row the row
-     * @return
+     * @return returns true when matches
      */
     public boolean matches(final Row row) {
         Date d = row.getDate(column);
-        return isGreaterThan(d, value);
+        return DateColumn.isGreaterThan(d, value);
     }
 
 }

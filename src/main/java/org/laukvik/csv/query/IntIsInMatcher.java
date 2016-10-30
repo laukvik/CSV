@@ -19,9 +19,9 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
 
 /**
- * Compares a IntegerColumn to be in an array of values
+ * Compares a IntegerColumn to be in an array of values.
  */
-public class IntIsInMatcher extends RowMatcher {
+public final class IntIsInMatcher extends RowMatcher {
 
     private final Integer[] values;
     private final IntegerColumn column;

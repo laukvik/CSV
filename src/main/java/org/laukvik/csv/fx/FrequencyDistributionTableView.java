@@ -9,13 +9,16 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.util.ResourceBundle;
 
 /**
- * JavaFX table which contains a Frequency distribution table of values and the amount of instance pr item in the list.
+ * JavaFX table which contains a Frequency distribution table of values and the amount of instance
+ * pr item in the list.
  *
- * @author Morten Laukvik
  */
-class FrequencyDistributionTableView extends TableView<ObservableFrequencyDistribution> {
+final class FrequencyDistributionTableView extends TableView<ObservableFrequencyDistribution> {
 
-    public FrequencyDistributionTableView() {
+    /**
+     * Creates a new instance.
+     */
+    FrequencyDistributionTableView() {
         super();
         ResourceBundle bundle = Builder.getBundle();
         setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

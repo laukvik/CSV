@@ -21,7 +21,7 @@ import org.laukvik.csv.columns.IntegerColumn;
 /**
  * Compares a IntegerColumn to be equal to a value
  */
-public class IntIsMatcher extends RowMatcher {
+public final class IntIsMatcher extends RowMatcher {
 
     private final int value;
     private final IntegerColumn column;

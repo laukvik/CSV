@@ -21,17 +21,30 @@ import org.laukvik.csv.columns.Column;
 /**
  * Compares a Column to be empty.
  */
-public class EmptyMatcher extends RowMatcher {
+public final class EmptyMatcher extends RowMatcher {
 
+    /**
+     * The column.
+     */
     private final Column column;
 
-    public EmptyMatcher(Column column) {
+    /**
+     * Compares the Column to be empty.
+     *
+     * @param column the column
+     */
+    public EmptyMatcher(final Column column) {
         super();
         this.column = column;
     }
 
-    @Override
-    public boolean matches(Row row) {
+    /**
+     * Returns true if the column matches.
+     *
+     * @param row the row
+     * @return true if the column matches
+     */
+    public boolean matches(final Row row) {
         return row.isNull(column);
     }
 

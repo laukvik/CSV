@@ -19,9 +19,9 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 
 /**
- * Compares a StringColumn to have the specified value
+ * Compares a StringColumn to have the specified value.
  */
-public class StringEqualMatcher extends RowMatcher {
+public final class StringEqualMatcher extends RowMatcher {
 
     private final String value;
     private final StringColumn column;

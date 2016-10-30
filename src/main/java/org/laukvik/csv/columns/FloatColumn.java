@@ -16,45 +16,76 @@
 package org.laukvik.csv.columns;
 
 /**
- * Column with Float as the data type
+ * Column with Float as the data type.
  */
-public class FloatColumn extends Column<Float> {
+public final class FloatColumn extends Column<Float> {
 
     /**
-     * Column with Float as the data type
+     * Column with Float as the data type.
      *
      * @param name the name of the column
      */
-    public FloatColumn(String name) {
+    public FloatColumn(final String name) {
         super(name);
     }
 
-    @Override
-    public String asString(Float value) {
+    /**
+     * Returns the float as a String.
+     *
+     * @param value the value
+     * @return the value as a String
+     */
+    public String asString(final Float value) {
         return value.toString();
     }
 
-    @Override
-    public Float parse(String value) {
+    /**
+     * Returns the float value of a string.
+     *
+     * @param value the string
+     * @return the float value
+     */
+    public Float parse(final String value) {
         return Float.parseFloat(value);
     }
 
-    public int compare(Float one, Float another) {
+    /**
+     * Compares two float values.
+     *
+     * @param one     one column
+     * @param another another column
+     * @return the comparison
+     */
+    public int compare(final Float one, final Float another) {
         return one.compareTo(another);
     }
 
-    @Override
+    /**
+     * Returns the Column definition.
+     *
+     * TODO - Move this into the abstract class
+     *
+     * @return the column definition
+     */
     public String toString() {
         return getName() + "(Float)";
     }
 
-    @Override
+    /**
+     * Return the HashCode.
+     * @return the HashCode
+     */
     public int hashCode() {
         return 7;
     }
 
-    @Override
-    public boolean equals(Object obj) {
+    /**
+     * Returns true when equals to obj.
+     *
+     * @param obj the object to compare with
+     * @return true when equals
+     */
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

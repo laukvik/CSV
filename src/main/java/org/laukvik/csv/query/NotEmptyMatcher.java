@@ -19,9 +19,9 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
 /**
- * Compares a Column to be not empty
+ * Compares a Column to be not empty.
  */
-public class NotEmptyMatcher extends RowMatcher {
+public final class NotEmptyMatcher extends RowMatcher {
 
     private final Column column;
 

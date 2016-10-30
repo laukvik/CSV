@@ -9,12 +9,40 @@ import java.io.File;
  */
 public interface FileListener {
 
-    void beginRead( final File file );
-    void finishRead( final File file );
+    /**
+     * Notifies that its starting to read the file.
+     *
+     * @param file the file
+     */
+    void beginRead(File file);
 
-    void readBytes( final long count, final long total );
+    /**
+     * Notifies that its finished reading the file.
+     *
+     * @param file the file
+     */
+    void finishRead(File file);
 
-    void beginWrite( final File file );
-    void finishWrite( final File file );
+    /**
+     * Notifies that its finished reading the file.
+     *
+     * @param count the amount of bytes read
+     * @param total the total amount of bytes to read
+     */
+    void readBytes(long count, long total);
+
+    /**
+     * Notifies that its beginning to write to the file.
+     *
+     * @param file the file
+     */
+    void beginWrite(File file);
+
+    /**
+     * Notifies that its finished writing to the file.
+     *
+     * @param file the file
+     */
+    void finishWrite(File file);
 
 }
