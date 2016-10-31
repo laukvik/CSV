@@ -47,28 +47,6 @@ public final class IntBetween extends RowMatcher {
     }
 
     /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        Integer value = row.getInteger(column);
-        return isBetween(value, min, max);
-    }
-
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        Integer value = row.getInteger(column);
-        return isBetween(value, min, max);
-    }
-
-    /**
      * Returns true if the value is between minimum and maximum.
      *
      * @param value   the value
@@ -81,6 +59,17 @@ public final class IntBetween extends RowMatcher {
             return false;
         }
         return value >= minimum && value <= maximum;
+    }
+
+    /**
+     * Returns true when the row matches.
+     *
+     * @param row the row
+     * @return true when the row matches
+     */
+    public boolean matches(final Row row) {
+        Integer value = row.getInteger(column);
+        return isBetween(value, min, max);
     }
 
 }
