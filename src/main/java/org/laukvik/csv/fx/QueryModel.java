@@ -19,19 +19,19 @@ public class QueryModel {
     private final CSV csv;
     private final List<Selection> selections;
 
-    public QueryModel(final CSV csv, final Main main){
+    public QueryModel(final CSV csv, final Main main) {
         this.csv = csv;
         this.main = main;
         this.selections = new ArrayList<>();
     }
 
-    public void clearSelections(){
+    public void clearSelections() {
         this.selections.clear();
     }
 
-    public List<ObservableRow> buildObservableRows(){
+    public List<ObservableRow> buildObservableRows() {
         List<ObservableRow> list = new ArrayList<>();
-        if (this.isEmpty()){
+        if (this.isEmpty()) {
             csv.clearQuery();
             for (int y = 0; y < csv.getRowCount(); y++) {
                 list.add(new ObservableRow(csv.getRow(y), main));
@@ -45,12 +45,12 @@ public class QueryModel {
         return list;
     }
 
-    private void buildQuery(){
+    private void buildQuery() {
         Query.Where where = csv.findByQuery().where();
-        for (Selection s : selections){
-            String [] arr = new String[ s.getValues().size() ];
+        for (Selection s : selections) {
+            String[] arr = new String[s.getValues().size()];
             int x = 0;
-            for (String v : s.getValues()){
+            for (String v : s.getValues()) {
                 arr[x] = v;
                 x++;
             }
@@ -58,18 +58,18 @@ public class QueryModel {
         }
     }
 
-    public Selection findSelectionByColumn(Column column){
-        for (Selection s : selections){
-            if (s.getColumn().equals(column)){
+    public Selection findSelectionByColumn(Column column) {
+        for (Selection s : selections) {
+            if (s.getColumn().equals(column)) {
                 return s;
             }
         }
         return null;
     }
 
-    public void addSelection(Column column, String value){
+    public void addSelection(Column column, String value) {
         Selection s = findSelectionByColumn(column);
-        if (s == null){
+        if (s == null) {
             s = new Selection(column);
             s.addValue(value);
             this.selections.add(s);
@@ -78,11 +78,11 @@ public class QueryModel {
         }
     }
 
-    public void removeSelection(Column column, String value){
+    public void removeSelection(Column column, String value) {
         Selection s = findSelectionByColumn(column);
-        if (s != null){
+        if (s != null) {
             s.removeValue(value);
-            if (s.isEmpty()){
+            if (s.isEmpty()) {
                 this.selections.remove(s);
             }
         }
@@ -94,9 +94,9 @@ public class QueryModel {
 
     public boolean isSelected(final Column column, final String value) {
         Selection s = findSelectionByColumn(column);
-        if (s != null){
-            for (String v : s.getValues()){
-                if (v.equals(value)){
+        if (s != null) {
+            for (String v : s.getValues()) {
+                if (v.equals(value)) {
                     return true;
                 }
             }

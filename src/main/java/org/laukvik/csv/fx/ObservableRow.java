@@ -29,10 +29,8 @@ import java.util.List;
 
 /**
  * Represents a row in JavaFX.
- *
- *
  */
-class ObservableRow implements javafx.beans.value.ChangeListener<String>{
+class ObservableRow implements javafx.beans.value.ChangeListener<String> {
 
     final ChangeListener listener;
     private final List<SimpleStringProperty> items;
@@ -64,8 +62,8 @@ class ObservableRow implements javafx.beans.value.ChangeListener<String>{
 
     @Override
     public boolean equals(final Object o) {
-        ObservableRow or = (ObservableRow)o;
-        return row.equals( or.row );
+        ObservableRow or = (ObservableRow) o;
+        return row.equals(or.row);
     }
 
     @Override
@@ -73,8 +71,8 @@ class ObservableRow implements javafx.beans.value.ChangeListener<String>{
         int columnIndex = items.indexOf(observable);
         int rowIndex = row.indexOf();
         Column column = row.getCSV().getMetaData().getColumn(columnIndex);
-        if (column instanceof StringColumn){
-            row.update( (StringColumn) column, newValue );
+        if (column instanceof StringColumn) {
+            row.update((StringColumn) column, newValue);
         }
         listener.cellUpdated(columnIndex, rowIndex);
     }

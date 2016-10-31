@@ -24,18 +24,27 @@ import java.util.List;
 /**
  * Reads a data set by a list of objects.
  *
+ * @param <T> The instance of an Object.
  */
-public class JavaReader<T> implements Readable {
-
-    private final List<T> list;
-    private final CSV csv;
-    private int index;
-    private Row row;
+public final class JavaReader<T> implements Readable {
 
     /**
-     * Reads the list of Java objects into a data set
+     * The list of objects found.
+     */
+    private final List<T> list;
+    /** The CSV. */
+    private final CSV csv;
+    /** The number of objects read. */
+    private int index;
+    /**
+     * The current row.
+     */
+    private Row currentRow;
+
+    /**
+     * Reads the list of Java objects into a data set.
      *
-     * @param csv the csv
+     * @param csv  the csv
      * @param list the list
      */
     public JavaReader(final CSV csv, final List<T> list) {
@@ -47,7 +56,7 @@ public class JavaReader<T> implements Readable {
 
 
     /**
-     * Returns the appropriate column for the specified Field
+     * Returns the appropriate column for the specified Field.
      *
      * @param field the reflection field
      * @return the column
@@ -86,59 +95,60 @@ public class JavaReader<T> implements Readable {
     }
 
     /**
-     * Updates the instance with the properties from the specified instance
+     * Updates the instance with the properties from the specified instance.
      *
-     * @param row the row
-     * @param column the column
+     * @param row      the row
+     * @param column   the column
      * @param instance the object to
-     * @throws NoSuchFieldException when the field cant be found
+     * @throws NoSuchFieldException   when the field cant be found
      * @throws IllegalAccessException when the field cant be accessed
      */
-    public static void updateByColumn(final Row row, final Column column, final Object instance) throws NoSuchFieldException, IllegalAccessException {
+    public static void updateByColumn(final Row row, final Column column, final Object instance)
+            throws NoSuchFieldException, IllegalAccessException {
         Field f = instance.getClass().getField(column.getName());
-        if (column instanceof StringColumn){
+        if (column instanceof StringColumn) {
             StringColumn c = (StringColumn) column;
             row.update(c, (String) f.get(instance));
-        } else if (column instanceof IntegerColumn){
+        } else if (column instanceof IntegerColumn) {
             IntegerColumn c = (IntegerColumn) column;
             row.update(c, (Integer) f.get(instance));
-        } else if (column instanceof BooleanColumn){
+        } else if (column instanceof BooleanColumn) {
             BooleanColumn c = (BooleanColumn) column;
             row.update(c, (Boolean) f.get(instance));
-        } else if (column instanceof FloatColumn){
+        } else if (column instanceof FloatColumn) {
             FloatColumn c = (FloatColumn) column;
             row.update(c, (Float) f.get(instance));
-        } else if (column instanceof ByteColumn){
+        } else if (column instanceof ByteColumn) {
             ByteColumn c = (ByteColumn) column;
-        } else if (column instanceof DateColumn){
+        } else if (column instanceof DateColumn) {
             DateColumn c = (DateColumn) column;
             row.update(c, (Date) f.get(instance));
-        } else if (column instanceof DoubleColumn){
+        } else if (column instanceof DoubleColumn) {
             DoubleColumn c = (DoubleColumn) column;
             row.update(c, (Double) f.get(instance));
-        } else if (column instanceof UrlColumn){
+        } else if (column instanceof UrlColumn) {
             UrlColumn c = (UrlColumn) column;
             row.update(c, (URL) f.get(instance));
-        } else if (column instanceof BigDecimalColumn){
+        } else if (column instanceof BigDecimalColumn) {
             BigDecimalColumn c = (BigDecimalColumn) column;
             row.update(c, (BigDecimal) f.get(instance));
         }
     }
 
     /**
-     * Builds a MetaData object from a class
+     * Builds a MetaData object from a class.
      *
      * @param instance the class
      * @return returns the MetaData
      */
-    public static MetaData buildMetaData(Class instance){
+    public static MetaData buildMetaData(final Class instance) {
         MetaData metaData = new MetaData();
         for (Field f : instance.getDeclaredFields()) {
             // Set accessible to allow injecting private fields - otherwise an exception will occur
             f.setAccessible(true);
             // Find the name of the field - in code
             Column c = findColumnByField(f);
-            if (c != null){
+            if (c != null) {
                 metaData.addColumn(c);
             }
             f.setAccessible(false);
@@ -165,12 +175,12 @@ public class JavaReader<T> implements Readable {
     @Override
     public Row next() {
         Object instance = list.get(index);
-        Row row = csv.addRow();
+        currentRow = csv.addRow();
         MetaData metaData = csv.getMetaData();
-        for (int x=0; x<metaData.getColumnCount(); x++){
+        for (int x = 0; x < metaData.getColumnCount(); x++) {
             Column c = metaData.getColumn(x);
             try {
-                updateByColumn(row, c, instance);
+                updateByColumn(currentRow, c, instance);
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
@@ -178,12 +188,12 @@ public class JavaReader<T> implements Readable {
             }
         }
         index++;
-        return row;
+        return currentRow;
     }
 
     @Override
     public Row getRow() {
-        return row;
+        return currentRow;
     }
 
 }

@@ -30,24 +30,65 @@ import java.io.OutputStream;
  */
 public final class JsonWriter implements Writeable {
 
-    private final static char CURLY_LEFT = '{';
-    private final static char CURLY_RIGHT = '}';
-    private final static char SEMICOLON = ':';
-    private final static char DOUBLE_QUOTE = '"';
-    private final static char BRACKET_LEFT = '[';
-    private final static char BRACKET_RIGHT = ']';
-    private final static char LINEFEED = '\n';
-    private final static char TAB = '\t';
-    private final static char COMMA = ',';
-    private final static char SPACE = ' ';
-
+    /**
+     * Character for curly left bracket.
+     */
+    private static final char CURLY_LEFT = '{';
+    /**
+     * Character for curly right bracket.
+     */
+    private static final char CURLY_RIGHT = '}';
+    /**
+     * Character for semi colon.
+     */
+    private static final char SEMICOLON = ':';
+    /**
+     * Character for double quote.
+     */
+    private static final char DOUBLE_QUOTE = '"';
+    /**
+     * Character for left bracket.
+     */
+    private static final char BRACKET_LEFT = '[';
+    /**
+     * Character for right bracket.
+     */
+    private static final char BRACKET_RIGHT = ']';
+    /**
+     * Character for linefeed.
+     */
+    private static final char LINEFEED = '\n';
+    /**
+     * Character for tab.
+     */
+    private static final char TAB = '\t';
+    /**
+     * Character for comma.
+     */
+    private static final char COMMA = ',';
+    /**
+     * Character for space.
+     */
+    private static final char SPACE = ' ';
+    /**
+     * The outputStream to write to.
+     */
     private final OutputStream out;
 
-    public JsonWriter(final OutputStream out) {
-        this.out = out;
+    /**
+     * Creates a new instance.
+     * @param outputStream the outputStream to write to
+     */
+    public JsonWriter(final OutputStream outputStream) {
+        this.out = outputStream;
     }
 
-    @Override
+    /**
+     * Writes the CSV to the file.
+     *
+     * @param csv the CSV to write
+     * @throws IOException when the file could not be written to
+     */
     public void writeCSV(final CSV csv) throws IOException {
         MetaData md = csv.getMetaData();
         out.write(BRACKET_LEFT);
@@ -87,19 +128,22 @@ public final class JsonWriter implements Writeable {
         out.flush();
     }
 
-    private void writeString(String s, OutputStream out) throws IOException {
-        if (s == null) {
-
-        } else {
+    /**
+     * Writes the string to the outputStream.
+     * @param s the string to write
+     * @param outputStream the outputStream
+     * @throws IOException when the string could not be written
+     */
+    private void writeString(final String s, final OutputStream outputStream) throws IOException {
+        if (s != null) {
             for (int z = 0; z < s.length(); z++) {
                 char c = s.charAt(z);
                 if (c == DOUBLE_QUOTE) {
-                    out.write('\\');
-                    out.write(c);
+                    outputStream.write('\\');
+                    outputStream.write(c);
                 } else {
-                    out.write(c);
+                    outputStream.write(c);
                 }
-
             }
         }
     }

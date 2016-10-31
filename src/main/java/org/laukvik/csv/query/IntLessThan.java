@@ -23,12 +23,22 @@ import org.laukvik.csv.columns.IntegerColumn;
  */
 public final class IntLessThan extends RowMatcher {
 
+    /**
+     * The value to match.
+     */
     private final int value;
+    /** The column to match. */
     private final IntegerColumn column;
 
-    public IntLessThan(IntegerColumn column, int value) {
+    /**
+     * The value of the column must be value.
+     *
+     * @param integerColumn the column
+     * @param value         the value
+     */
+    public IntLessThan(final IntegerColumn integerColumn, final int value) {
         super();
-        this.column = column;
+        this.column = integerColumn;
         this.value = value;
     }
 
@@ -38,7 +48,7 @@ public final class IntLessThan extends RowMatcher {
      * @param row the row
      * @return true when the row matches
      */
-    public boolean matches(Row row) {
+    public boolean matches(final Row row) {
         Integer i = row.getInteger(column);
         return i != null && i < value;
     }

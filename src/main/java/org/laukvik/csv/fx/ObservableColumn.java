@@ -12,11 +12,17 @@ import org.laukvik.csv.columns.Column;
  * @author Morten Laukvik
  */
 @SuppressWarnings("WeakerAccess")
-public final class ObservableColumn{
+public final class ObservableColumn {
 
+    /**
+     * The property for visible
+     */
     private final SimpleBooleanProperty visible;
+    /** The property for name */
     private final SimpleStringProperty name;
+    /** The Column its for. */
     private final Column column;
+    /** The Main instance. */
     private Main main;
 
     /**
@@ -36,19 +42,36 @@ public final class ObservableColumn{
         });
     }
 
+    /**
+     * Returns the visibleProperty
+     * @return the visibleProperty
+     */
     public SimpleBooleanProperty visibleProperty() {
         return visible;
     }
 
+    /**
+     * Returns the nameProperty
+     * @return the nameProperty
+     */
     public SimpleStringProperty nameProperty() {
         return name;
     }
 
+    /**
+     * Returns the name
+     * @return the name
+     */
     public String getName() {
         return column.getName();
     }
 
-    public void setName(String name) {
+    /**
+     * Sets the name.
+     *
+     * @param name the name
+     */
+    public void setName(final String name) {
         this.name.setValue(name);
         column.setName(name);
     }

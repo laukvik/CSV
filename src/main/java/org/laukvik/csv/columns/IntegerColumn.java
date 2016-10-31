@@ -16,39 +16,72 @@
 package org.laukvik.csv.columns;
 
 /**
- * Column with Integer as the data type
+ * Column with Integer as the data type.
  */
 public final class IntegerColumn extends Column<Integer> {
 
     /**
-     * Column with Integer as the data type
+     * Column with Integer as the data type.
      *
      * @param name the name of the column
      */
-    public IntegerColumn(String name) {
+    public IntegerColumn(final String name) {
         super(name);
     }
 
-    public String asString(Integer value) {
+    /**
+     * Returns the value as a String.
+     *
+     * @param value the value
+     * @return
+     */
+    public String asString(final Integer value) {
         return value.toString();
     }
 
-    public Integer parse(String value) {
+    /**
+     * Returns the value of the String.
+     *
+     * @param value the string
+     * @return
+     */
+    public Integer parse(final String value) {
         return Integer.parseInt(value);
     }
 
-    public int compare(Integer one, Integer another) {
+    /**
+     * Compares the two values.
+     *
+     * @param one     one column
+     * @param another another column
+     * @return
+     */
+    public int compare(final Integer one, final Integer another) {
         return one.compareTo(another);
     }
 
+    /**
+     * Returns the ColumnDefinition.
+     * @return the ColumnDefinition.
+     */
     public String toString() {
         return getName() + "(Integer)";
     }
 
+    /**
+     * Returns the HashCode.
+     * @return the HashCode
+     */
     public int hashCode() {
         return 7;
     }
 
+    /**
+     * Compares with another IntegerColumn.
+     *
+     * @param obj the IntegerColumn to compare with
+     * @return true if equals
+     */
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;

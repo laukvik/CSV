@@ -246,16 +246,17 @@ public final class DateColumn extends Column<Date> {
     }
 
     /**
+     * Returns the date format.
      *
-     * @return
+     * @return the date format
      */
     public String getFormat() {
         return format;
     }
 
     /**
-     *
-     * @return
+     * Returns the DateFormat instance.
+     * @return the DateFormat instance
      */
     public DateFormat getDateFormat() {
         return dateFormat;

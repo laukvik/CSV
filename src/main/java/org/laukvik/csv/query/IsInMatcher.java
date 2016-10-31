@@ -19,13 +19,19 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
 /**
- * Compares a Column to be in an array of objects
+ * Compares a Column to be in an array of objects.
  *
  * @param <T> the type of object
  */
-public class IsInMatcher<T> extends RowMatcher {
+public final class IsInMatcher<T> extends RowMatcher {
 
-    public IsInMatcher(Column<T> column, T[] values) {
+    /**
+     * The value of the column must be in the values.
+     *
+     * @param column the column
+     * @param values the values
+     */
+    public IsInMatcher(final Column<T> column, final T... values) {
         super();
         final Column<T> column1 = column;
         final T[] values1 = values;
@@ -40,7 +46,7 @@ public class IsInMatcher<T> extends RowMatcher {
      * @param row the row
      * @return true when the row matches
      */
-    public boolean matches(Row row) {
+    public boolean matches(final Row row) {
 
 //        Object o = row.get(column);
 //        if (o == null) {

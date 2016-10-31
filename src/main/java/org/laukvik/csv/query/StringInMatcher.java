@@ -23,26 +23,49 @@ import org.laukvik.csv.columns.StringColumn;
  */
 public final class StringInMatcher extends RowMatcher {
 
-
+    /**
+     * The values to match.
+     */
     private final String[] value;
+    /** The Column to match. */
     private final StringColumn column;
 
-    public StringInMatcher(StringColumn column, String... value) {
+    /**
+     * The value of the column must be among the values.
+     *
+     * @param stringColumn the column
+     * @param values       the values
+     */
+    public StringInMatcher(final StringColumn stringColumn, final String... values) {
         super();
-        this.column = column;
-        this.value = value;
+        this.column = stringColumn;
+        this.value = values;
     }
 
-    public static boolean isAny(String v1, String... value) {
-        for (String v : value) {
-            if (isAny(v1, v)) {
+    /**
+     * Returns true if the value is among the values.
+     *
+     * @param value  the value
+     * @param values the values
+     * @return true if its among the values
+     */
+    public static boolean isAny(final String value, final String... values) {
+        for (String v : values) {
+            if (isAny(value, v)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isAny(String v1, String v2) {
+    /**
+     * Returns true if both strings are equal.
+     *
+     * @param v1 the value
+     * @param v2 the other value
+     * @return true if its equal
+     */
+    public static boolean isAny(final String v1, final String v2) {
         return v1.equals(v2);
     }
 
@@ -52,7 +75,7 @@ public final class StringInMatcher extends RowMatcher {
      * @param row the row
      * @return true when the row matches
      */
-    public boolean matches(Row row) {
+    public boolean matches(final Row row) {
         String val = row.getString(column);
         if (val == null) {
             return false;

@@ -12,23 +12,46 @@ import java.util.List;
 /**
  * Remembers a list of recently opened files.
  *
- * @author Morten Laukvik
  */
 public final class Recent {
 
-    final private CSV csv;
-    final private File file;
+    /**
+     * The default limit of files.
+     */
+    public static final int DEFAULT_LIMIT = 10;
+    /**
+     * The CSV instance.
+     */
+    private final CSV csv;
+    /**
+     * The file with the recent list.
+     */
+    private final File file;
+    /**
+     * The maximum number of files to remember.
+     */
     private final int limit;
 
-    public Recent(final File file, final int limit) {
+    /**
+     * Reads the recent list from the file with the specified limit.
+     *
+     * @param recentFile the recent file
+     * @param limit      the maximum number of files to remember
+     */
+    public Recent(final File recentFile, final int limit) {
         this.csv = new CSV();
-        this.file = file;
+        this.file = recentFile;
         this.limit = limit;
         load();
     }
 
-    public Recent(final File file) {
-        this(file, 10);
+    /**
+     * Reads the recent list from the file with the default limit.
+     *
+     * @param recentFile the recent file
+     */
+    public Recent(final File recentFile) {
+        this(recentFile, DEFAULT_LIMIT);
     }
 
     /**
@@ -53,12 +76,19 @@ public final class Recent {
         return file;
     }
 
+    /**
+     * Returns the File where the remembered files are.
+     * @return the file
+     */
     public static File getConfigurationFile() {
         return new File(getHome(), "recent.csv");
     }
 
-    private void load(){
-        if (!file.exists() || file.length() == 0){
+    /**
+     * Loads the recent file.
+     */
+    private void load() {
+        if (!file.exists() || file.length() == 0) {
             csv.getMetaData().addColumn("filename");
         } else {
             try {
@@ -69,7 +99,11 @@ public final class Recent {
         }
     }
 
-    public boolean save(){
+    /**
+     * Saves the list to the file.
+     * @return true if successful
+     */
+    public boolean save() {
         try {
             csv.writeFile(file);
             return true;
@@ -78,17 +112,27 @@ public final class Recent {
         }
     }
 
-    public List<File> getList(){
-        StringColumn c = (StringColumn)csv.getMetaData().getColumn(0);
+    /**
+     * Returns the list of files remembered.
+     *
+     * @return the list
+     */
+    public List<File> getList() {
+        StringColumn c = (StringColumn) csv.getMetaData().getColumn(0);
         List<File> list = new ArrayList<>();
-        for (int y=0; y<csv.getRowCount(); y++){
+        for (int y = 0; y < csv.getRowCount(); y++) {
             Row r = csv.getRow(y);
-            list.add( new File(r.getString(c)) );
+            list.add(new File(r.getString(c)));
         }
         return list;
     }
 
-    public void open(final File file){
+    /**
+     * Remembers the specified file.
+     *
+     * @param file the file
+     */
+    public void open(final File file) {
         StringColumn c = (StringColumn) csv.getMetaData().getColumn(0);
         csv.addRow().update(c, file.getAbsolutePath());
         if (csv.getRowCount() > limit) {
@@ -98,6 +142,9 @@ public final class Recent {
         save();
     }
 
+    /**
+     * Clears the list of remembered files.
+     */
     public void clear() {
         csv.removeRows();
     }

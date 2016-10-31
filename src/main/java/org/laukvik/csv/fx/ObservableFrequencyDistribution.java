@@ -20,7 +20,7 @@ public final class ObservableFrequencyDistribution {
     private final SimpleIntegerProperty count;
 
     /**
-     * Builds a new instance with the specified values
+     * Builds a new instance with the specified values.
      *
      * @param selected whether the value is selected
      * @param value the value

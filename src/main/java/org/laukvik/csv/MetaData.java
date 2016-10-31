@@ -26,30 +26,49 @@ import java.util.List;
 
 /**
  * Specifies information about all the columns in the data set.
- *
  */
-public class MetaData implements Serializable {
+public final class MetaData implements Serializable {
 
+    /**
+     * The list of columns.
+     */
     private final List<Column> columns;
+    /**
+     * The Character set.
+     */
     private Charset charset;
+    /**
+     * The column separator character.
+     */
     private Character separatorChar;
+    /**
+     * The quote character.
+     */
     private Character quoteChar;
+    /**
+     * The CSV instance it belongs to.
+     */
     private CSV csv;
 
     /**
-     * Creates a new instance.
+     * Builds an empty MetaData.
      */
-    public MetaData(){
+    public MetaData() {
         charset = Charset.defaultCharset();
         columns = new ArrayList<>();
     }
 
-    public void fireColumnChanged(Column column){
+    /**
+     * Informs the ChangeListener that the column was updated.
+     *
+     * @param column the column
+     */
+    public void fireColumnChanged(final Column column) {
         csv.fireColumnUpdated(column);
     }
 
     /**
-     * Returns the CSV it belongs to
+     * Returns the CSV it belongs to.
      *
      * @return the CSV
      */
@@ -58,36 +77,36 @@ public class MetaData implements Serializable {
     }
 
     /**
-     * Sets the CSV it belongs to
+     * Sets the CSV it belongs to.
      *
      * @param csv the CSV
      */
-    public void setCSV(CSV csv) {
+    public void setCSV(final CSV csv) {
         this.csv = csv;
     }
 
     /**
-     * Returns the column with the specified name
+     * Returns the column with the specified name.
      *
      * @param name the column name
      * @return the column
      */
-    public Column getColumn(String name) {
+    public Column getColumn(final String name) {
         return columns.get(indexOf(name));
     }
 
     /**
-     * Returns the column with the specified name
+     * Returns the column with the specified name.
      *
      * @param columnIndex the column index
      * @return the column
      */
-    public Column getColumn(int columnIndex) {
+    public Column getColumn(final int columnIndex) {
         return columns.get(columnIndex);
     }
 
     /**
-     * Returns the Charset being used
+     * Returns the Charset being used.
      *
      * @return the Charset
      */
@@ -96,16 +115,16 @@ public class MetaData implements Serializable {
     }
 
     /**
-     * Sets the Charset
+     * Sets the Charset.
      *
      * @param charset the charset
      */
-    public void setCharset(Charset charset) {
+    public void setCharset(final Charset charset) {
         this.charset = charset;
     }
 
     /**
-     * Returns the amount of columns
+     * Returns the amount of columns.
      *
      * @return the amount of columns
      */
@@ -114,28 +133,28 @@ public class MetaData implements Serializable {
     }
 
     /**
-     * Adds a new column with the specified name
-     *
+     * Adds a new column with the specified name.
+     * <p>
      * columnName(DataType=option)
      *
      * @param name the name
      * @return the column added
      */
-    public Column addColumn(String name) {
+    public Column addColumn(final String name) {
         return addColumn(Column.parseName(name));
     }
 
     /**
-     * Adds the column
+     * Adds the column.
      *
      * @param column the column to add
      * @return the added column
      */
-    public Column addColumn(Column column) {
+    public Column addColumn(final Column column) {
         column.setMetaData(this);
         columns.add(column);
-        if (csv != null){
-            for (int x=0; x<csv.getRowCount(); x++){
+        if (csv != null) {
+            for (int x = 0; x < csv.getRowCount(); x++) {
                 csv.getRow(x).updateColumn(column, "");
             }
             csv.fireColumnCreated(column);
@@ -144,44 +163,44 @@ public class MetaData implements Serializable {
     }
 
     /**
-     * Removes the column
+     * Removes the column.
      *
      * @param column the column to remove
      */
-    public void removeColumn(Column column) {
+    public void removeColumn(final Column column) {
         columns.remove(column);
         csv.removeColumn(column);
         column.setMetaData(null);
     }
 
     /**
-     * Changes the order of a specified column to another
+     * Changes the order of a specified column to another.
      *
      * @param fromIndex the index of the column to move
-     * @param toIndex the new index of the column
+     * @param toIndex   the new index of the column
      */
-    public void moveColumn(int fromIndex, int toIndex){
+    public void moveColumn(final int fromIndex, final int toIndex) {
         Collections.swap(columns, fromIndex, toIndex);
         csv.fireColumnMoved(fromIndex, toIndex);
     }
 
     /**
-     * Returns the index of the specified Column
+     * Returns the index of the specified Column.
      *
      * @param column the column
      * @return the index
      */
-    public int indexOf(Column column) {
+    public int indexOf(final Column column) {
         return columns.indexOf(column);
     }
 
     /**
-     * Returns the column index of the column with the specified column name
+     * Returns the column index of the column with the specified column name.
      *
      * @param columnName the column
      * @return the index
      */
-    private int indexOf(String columnName) {
+    private int indexOf(final String columnName) {
         int x = 0;
         for (Column c : columns) {
             if (c.getName().equalsIgnoreCase(columnName)) {
@@ -193,11 +212,11 @@ public class MetaData implements Serializable {
     }
 
     /**
-     * Removes the column with the columnIndex
+     * Removes the column with the columnIndex.
      *
      * @param columnIndex the column index
      */
-    public void removeColumn(int columnIndex) {
+    public void removeColumn(final int columnIndex) {
         Column c = columns.get(columnIndex);
         c.setMetaData(null);
         columns.remove(c);
@@ -205,7 +224,7 @@ public class MetaData implements Serializable {
     }
 
     /**
-     * Returns the separator character
+     * Returns the separator character.
      *
      * @return the separator character
      */
@@ -214,16 +233,16 @@ public class MetaData implements Serializable {
     }
 
     /**
-     * Sets the separator character
+     * Sets the separator character.
      *
-     * @param separatorChar the separator character
+     * @param character the separator character
      */
-    public void setSeparator(final Character separatorChar) {
-        this.separatorChar = separatorChar;
+    public void setSeparator(final Character character) {
+        this.separatorChar = character;
     }
 
     /**
-     * Returns the quote character
+     * Returns the quote character.
      *
      * @return the quote character
      */
@@ -232,7 +251,7 @@ public class MetaData implements Serializable {
     }
 
     /**
-     * Sets the quote character
+     * Sets the quote character.
      *
      * @param quoteChar the quote character
      */
@@ -241,16 +260,16 @@ public class MetaData implements Serializable {
     }
 
     /**
-     * Returns the BOM for the charset used
+     * Returns the BOM for the charset used.
      *
      * @return the BOM
      */
-    public BOM getBOM(){
-        if (charset == null){
+    public BOM getBOM() {
+        if (charset == null) {
             return null;
         }
-        for (BOM b : BOM.values()){
-            if (charset.equals(b)){
+        for (BOM b : BOM.values()) {
+            if (charset.equals(b)) {
                 return b;
             }
         }

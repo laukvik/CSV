@@ -23,11 +23,19 @@ import org.laukvik.csv.columns.Column;
  */
 public final class NotEmptyMatcher extends RowMatcher {
 
-    private final Column column;
+    /**
+     * The Column
+     */
+    private final Column c;
 
-    public NotEmptyMatcher(Column column) {
+    /**
+     * The value of the column must be empty.
+     *
+     * @param column the column
+     */
+    public NotEmptyMatcher(final Column column) {
         super();
-        this.column = column;
+        this.c = column;
     }
 
     /**
@@ -36,8 +44,8 @@ public final class NotEmptyMatcher extends RowMatcher {
      * @param row the row
      * @return true when the row matches
      */
-    public boolean matches(Row row) {
-        return !row.isNull(column);
+    public boolean matches(final Row row) {
+        return !row.isNull(c);
     }
 
 }
