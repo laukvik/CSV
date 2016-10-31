@@ -39,10 +39,10 @@ public final class EmptyMatcher extends RowMatcher {
     }
 
     /**
-     * Returns true if the column matches.
+     * Returns true when the row matches.
      *
      * @param row the row
-     * @return true if the column matches
+     * @return true when the row matches
      */
     public boolean matches(final Row row) {
         return row.isNull(column);

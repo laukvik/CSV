@@ -43,10 +43,10 @@ public final class DateIsInMatcher extends AbstractDateMatcher {
     }
 
     /**
-     * Returns true if the column matches.
+     * Returns true when the row matches.
      *
      * @param row the row
-     * @return true when matches
+     * @return true when the row matches
      */
     public boolean matches(final Row row) {
         Date value = row.getDate(column);

@@ -32,7 +32,12 @@ public final class IntIsMatcher extends RowMatcher {
         this.value = value;
     }
 
-    @Override
+    /**
+     * Returns true when the row matches.
+     *
+     * @param row the row
+     * @return true when the row matches
+     */
     public boolean matches(Row row) {
         Integer i = row.getInteger(column);
         return i != null && value == i;

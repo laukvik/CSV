@@ -21,23 +21,66 @@ import org.laukvik.csv.columns.IntegerColumn;
 /**
  * Compares a IntegerColumn to be between to values.
  */
-public class IntBetween extends RowMatcher {
+public final class IntBetween extends RowMatcher {
 
+    /**
+     * The smallest allowed value.
+     */
     private final int min;
+    /** The largest allowed value. */
     private final int max;
+    /** The column. */
     private final IntegerColumn column;
 
-    public IntBetween(IntegerColumn column, int min, int max) {
+    /**
+     * The value of the column must be between the minimum and maximum value.
+     *
+     * @param integerColumn the IntegerColumn
+     * @param minimum       the minimum value
+     * @param maximum       the maximum value
+     */
+    public IntBetween(final IntegerColumn integerColumn, final int minimum, final int maximum) {
         super();
-        this.column = column;
-        this.min = min;
-        this.max = max;
+        this.column = integerColumn;
+        this.min = minimum;
+        this.max = maximum;
     }
 
-    @Override
-    public boolean matches(Row row) {
+    /**
+     * Returns true when the row matches.
+     *
+     * @param row the row
+     * @return true when the row matches
+     */
+    public boolean matches(final Row row) {
         Integer value = row.getInteger(column);
-        return value != null && value >= min && value <= max;
+        return isBetween(value, min, max);
+    }
+
+    /**
+     * Returns true when the row matches.
+     *
+     * @param row the row
+     * @return true when the row matches
+     */
+    public boolean matches(final Row row) {
+        Integer value = row.getInteger(column);
+        return isBetween(value, min, max);
+    }
+
+    /**
+     * Returns true if the value is between minimum and maximum.
+     *
+     * @param value   the value
+     * @param minimum the minimum value
+     * @param maximum the maximum value
+     * @return when the value is between minimum and maximum
+     */
+    public static boolean isBetween(final Integer value, final int minimum, final int maximum) {
+        if (value == null) {
+            return false;
+        }
+        return value >= minimum && value <= maximum;
     }
 
 }

@@ -23,20 +23,32 @@ import org.laukvik.csv.columns.IntegerColumn;
  */
 public final class IntIsInMatcher extends RowMatcher {
 
+    /**
+     * The values to compare to.
+     */
     private final Integer[] values;
+    /** The column to use. */
     private final IntegerColumn column;
 
-    public IntIsInMatcher(IntegerColumn column, Integer[] values) {
+    /**
+     * The value of the column must be the same as one or more in the values.
+     *
+     * @param column the column
+     * @param values the values
+     */
+    public IntIsInMatcher(final IntegerColumn column, final Integer... values) {
         super();
         this.column = column;
         this.values = values;
-        if (values == null) {
-            throw new IllegalArgumentException("isIn() value cant be null " + values);
-        }
     }
 
-    @Override
-    public boolean matches(Row row) {
+    /**
+     * Returns true when the row matches.
+     *
+     * @param row the row
+     * @return true when the row matches
+     */
+    public boolean matches(final Row row) {
         Integer value = row.getInteger(column);
         if (value == null) {
             return false;
@@ -47,7 +59,6 @@ public final class IntIsInMatcher extends RowMatcher {
                 return true;
             }
         }
-
         return false;
     }
 

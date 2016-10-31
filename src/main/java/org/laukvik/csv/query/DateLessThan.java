@@ -37,10 +37,10 @@ public final class DateLessThan extends AbstractDateMatcher {
     }
 
     /**
-     * Returns true if matches.
+     * Returns true when the row matches.
      *
      * @param row the row
-     * @return true if matches
+     * @return true when the row matches
      */
     public boolean matches(final Row row) {
         Date d = row.getDate(column);

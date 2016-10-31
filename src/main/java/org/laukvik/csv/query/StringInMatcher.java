@@ -46,6 +46,12 @@ public final class StringInMatcher extends RowMatcher {
         return v1.equals(v2);
     }
 
+    /**
+     * Returns true when the row matches.
+     *
+     * @param row the row
+     * @return true when the row matches
+     */
     public boolean matches(Row row) {
         String val = row.getString(column);
         if (val == null) {

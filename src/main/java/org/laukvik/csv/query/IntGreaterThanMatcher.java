@@ -23,19 +23,50 @@ import org.laukvik.csv.columns.IntegerColumn;
  */
 public final class IntGreaterThanMatcher extends RowMatcher {
 
-    private final int value;
+    /**
+     * The minimum value.
+     */
+    private final int min;
+    /**
+     * The column.
+     */
     private final IntegerColumn column;
 
-    public IntGreaterThanMatcher(IntegerColumn column, int value) {
+    /**
+     * The value of the column must be greater than minimumValue.
+     *
+     * @param integerColumn the column
+     * @param minimumValue  the minimum value
+     */
+    public IntGreaterThanMatcher(final IntegerColumn integerColumn, final int minimumValue) {
         super();
-        this.column = column;
-        this.value = value;
+        this.column = integerColumn;
+        this.min = minimumValue;
     }
 
-    @Override
-    public boolean matches(Row row) {
-        Integer value = row.getInteger(column);
-        return value != null && value > this.value;
+    /**
+     * Returns true if the value is greater than minimum.
+     *
+     * @param value   the value
+     * @param minimum the minimum value
+     * @return when the value is greater than minimum
+     */
+    public static boolean isGreaterThan(final Integer value, final int minimum) {
+        if (value == null) {
+            return false;
+        }
+        return value > minimum;
+    }
+
+    /**
+     * Returns true when the row matches.
+     *
+     * @param row the row
+     * @return true when the row matches
+     */
+    public boolean matches(final Row row) {
+        Integer otherValue = row.getInteger(column);
+        return isGreaterThan(otherValue, min);
     }
 
 }

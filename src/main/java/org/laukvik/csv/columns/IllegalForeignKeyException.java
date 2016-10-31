@@ -15,11 +15,33 @@
  */
 package org.laukvik.csv.columns;
 
+/**
+ * Indicates that the ForeignKey value could not be parsed.
+ */
+public final class IllegalForeignKeyException extends RuntimeException {
 
-class IllegalForeignKeyException extends RuntimeException {
+    /**
+     * Contains the illegal foreign key value.
+     */
+    private final String value;
 
-    public IllegalForeignKeyException(String message) {
+    /**
+     * The value was illegal.
+     *
+     * @param message the reason why it was illegal
+     * @param value   the illegal value
+     */
+    public IllegalForeignKeyException(final String message, final String value) {
         super(message);
+        this.value = value;
     }
 
+    /**
+     * Returns the illegal foreign key value.
+     *
+     * @return the value
+     */
+    public String getValue() {
+        return value;
+    }
 }

@@ -24,7 +24,7 @@ import java.util.Date;
  * Compares a DateColumn to have the year to be the specified value.
  *
  */
-public final class YearIs extends AbstractDateMatcher {
+public final class YearIsMatcher extends AbstractDateMatcher {
 
     /**
      * The year.
@@ -37,7 +37,7 @@ public final class YearIs extends AbstractDateMatcher {
      * @param dateColumn the dateColumn
      * @param year       the year
      */
-    public YearIs(final DateColumn dateColumn, final int year) {
+    public YearIsMatcher(final DateColumn dateColumn, final int year) {
         super(dateColumn, null);
         this.year = year;
     }

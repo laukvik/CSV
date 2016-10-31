@@ -30,7 +30,12 @@ public final class NotEmptyMatcher extends RowMatcher {
         this.column = column;
     }
 
-    @Override
+    /**
+     * Returns true when the row matches.
+     *
+     * @param row the row
+     * @return true when the row matches
+     */
     public boolean matches(Row row) {
         return !row.isNull(column);
     }

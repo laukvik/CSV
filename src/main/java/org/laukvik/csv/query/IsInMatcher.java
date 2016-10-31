@@ -34,7 +34,12 @@ public class IsInMatcher<T> extends RowMatcher {
         }
     }
 
-    @Override
+    /**
+     * Returns true when the row matches.
+     *
+     * @param row the row
+     * @return true when the row matches
+     */
     public boolean matches(Row row) {
 
 //        Object o = row.get(column);

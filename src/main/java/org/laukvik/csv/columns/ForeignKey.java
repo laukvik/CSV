@@ -34,15 +34,15 @@ public final class ForeignKey {
     /**
      * Creates a new ForeignKey.
      *
-     * @param table the table
-     * @param column the column
+     * @param tableName the table
+     * @param columnName the column
      */
-    public ForeignKey(final String table, final String column) {
-        if (table == null || table.trim().isEmpty()) {
-            throw new IllegalForeignKeyException("Illegal foreignKey value ");
+    public ForeignKey(final String tableName, final String columnName) {
+        if (tableName == null || tableName.trim().isEmpty()) {
+            throw new IllegalForeignKeyException("Illegal foreignKey value ", tableName);
         }
-        this.table = table;
-        this.column = column;
+        this.table = tableName;
+        this.column = columnName;
     }
 
     /**
@@ -54,19 +54,19 @@ public final class ForeignKey {
     public static ForeignKey parse(final String fkValue) {
         int first = fkValue.indexOf("[");
         if (first == -1) {
-            throw new IllegalForeignKeyException("Missing column. Illegal foreignKey value " + fkValue);
+            throw new IllegalForeignKeyException("Missing column. Illegal foreignKey value " + fkValue, fkValue);
         } else {
             int last = fkValue.indexOf("]");
             if (last == -1) {
-                throw new IllegalForeignKeyException("Illegal foreignKey value " + fkValue);
+                throw new IllegalForeignKeyException("Illegal foreignKey value " + fkValue, fkValue);
             }
             String table = fkValue.substring(0, first);
             if (table.trim().isEmpty()) {
-                throw new IllegalForeignKeyException("Missing table name in '" + fkValue + "'");
+                throw new IllegalForeignKeyException("Missing table name in '" + fkValue + "'", fkValue);
             }
             String column = fkValue.substring(first + 1, last);
             if (column.trim().isEmpty()) {
-                throw new IllegalForeignKeyException("Missing column in '" + fkValue + "'");
+                throw new IllegalForeignKeyException("Missing column in '" + fkValue + "'", fkValue);
             }
             return new ForeignKey(table, column);
         }
@@ -84,10 +84,10 @@ public final class ForeignKey {
     /**
      * Sets the target table name.
      *
-     * @param table the table name
+     * @param tableName the table name
      */
-    public void setTable(final String table) {
-        this.table = table;
+    public void setTable(final String tableName) {
+        this.table = tableName;
     }
 
     /**
@@ -101,10 +101,10 @@ public final class ForeignKey {
     /**
      * Sets the target column name.
      *
-     * @param column the column name
+     * @param columnName the column name
      */
-    public void setColumn(final String column) {
-        this.column = column;
+    public void setColumn(final String columnName) {
+        this.column = columnName;
     }
 
     /**

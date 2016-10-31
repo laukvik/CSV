@@ -176,19 +176,19 @@ public class QueryTest {
     public void findWithQueries() throws IOException, ParseException {
         StringColumn homeState = (StringColumn) csv.getMetaData().getColumn("Home State");
         StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
-
         List<Row> rows;
-
         rows = csv.findByQuery().where().column(homeState).is("New York").getResultList();
         Assert.assertEquals(7, rows.size());
-
         rows = csv.findByQuery().where().column(party).is("Democratic").getResultList();
         Assert.assertEquals(15, rows.size());
-
         rows = csv.findByQuery().where().column(homeState).is("New York").column(party).is("Democratic").getResultList();
         Assert.assertEquals(4, rows.size());
-
     }
 
+    @Test
+    public void test() {
+        CSV csv = new CSV();
+        Query q = csv.findByQuery();
+    }
 
 }

@@ -1,5 +1,7 @@
 /**
- * <p>Contains classes for working with queries.</p>
+ *
+ * Contains classes for working with queries.
+ *
  * <p>
  * <pre>
  * .select()

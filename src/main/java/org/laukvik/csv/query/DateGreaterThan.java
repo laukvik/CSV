@@ -36,10 +36,10 @@ public final class DateGreaterThan extends AbstractDateMatcher {
     }
 
     /**
-     * Compares the value of the column and returns true if it matches.
+     * Returns true when the row matches.
      *
      * @param row the row
-     * @return returns true when matches
+     * @return true when the row matches
      */
     public boolean matches(final Row row) {
         Date d = row.getDate(column);

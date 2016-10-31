@@ -32,8 +32,13 @@ public final class StringEqualMatcher extends RowMatcher {
         this.value = value;
     }
 
-    @Override
-    public boolean matches(Row row) {
+    /**
+     * Returns true when the row matches.
+     *
+     * @param row the row
+     * @return true when the row matches
+     */
+    public boolean matches(final Row row) {
         String v = row.getString(column);
         return v != null && v.equalsIgnoreCase(value);
     }

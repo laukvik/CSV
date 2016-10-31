@@ -22,9 +22,19 @@ import org.laukvik.csv.columns.Column;
  */
 public class SortOrder {
 
-    public final static Type ASC = Type.ASC;
-    public final static Type DESC = Type.DESC;
-    public final static Type NONE = Type.NONE;
+    /**
+     * Ascending sort order.
+     */
+    public static final Type ASC = Type.ASC;
+    /**
+     * Descending sort order.
+     */
+    public static final Type DESC = Type.DESC;
+    /**
+     * Natural sort order.
+     */
+    public static final Type NONE = Type.NONE;
+
     private final Column column;
     private final Type type;
 
