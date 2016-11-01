@@ -32,12 +32,12 @@ public final class StringEqualMatcher extends RowMatcher {
 
     /**
      * The value of the column must be.
-     * @param column the column
+     * @param stringColumn the column
      * @param value the value
      */
-    public StringEqualMatcher(final StringColumn column, final String value) {
+    public StringEqualMatcher(final StringColumn stringColumn, final String value) {
         super();
-        this.column = column;
+        this.column = stringColumn;
         this.value = value;
     }
 

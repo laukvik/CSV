@@ -89,7 +89,12 @@ public final class CsvReader implements ClosableReader {
             this.columnSeparatorChar = separator;
         }
         this.reader = bufferedReader;
-        this.quoteChar = quote == null ? CSV.DOUBLE_QUOTE : quote;
+        if (quote == null) {
+            this.quoteChar = CSV.DOUBLE_QUOTE;
+        } else {
+            this.quoteChar = quote;
+        }
+
         this.metaData = new MetaData();
         this.lineCounter = 0;
         this.bytesRead = 0;

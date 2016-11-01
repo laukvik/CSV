@@ -54,11 +54,12 @@ public enum BOM {
     /**
      * Creates a new BOM with the specified BOM and bytes.
      *
-     * @param charset the charset
+     * @param charsetName the charset
      * @param chars   the chars
+     * @see Charset
      */
-    BOM(final String charset, final byte... chars) {
-        this.charset = charset;
+    BOM(final String charsetName, final byte... chars) {
+        this.charset = charsetName;
         this.bytes = chars;
     }
 

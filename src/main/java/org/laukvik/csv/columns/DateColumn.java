@@ -45,11 +45,11 @@ public final class DateColumn extends Column<Date> {
      * Creates a new column with the columnName and dateFormat.
      *
      * @param columnName   the name of the column
-     * @param dateFormat the data format
+     * @param dateFormatPattern the data format
      */
-    public DateColumn(final String columnName, final String dateFormat) {
+    public DateColumn(final String columnName, final String dateFormatPattern) {
         super(columnName);
-        this.format = dateFormat;
+        this.format = dateFormatPattern;
         this.dateFormat = new SimpleDateFormat(format);
     }
 

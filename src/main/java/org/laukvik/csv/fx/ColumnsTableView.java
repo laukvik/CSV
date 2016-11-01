@@ -23,6 +23,15 @@ class ColumnsTableView extends TableView<ObservableColumn> {
     private static final int CHECKBOX_WIDTH = 32;
 
     /**
+     *  The width ratio of checkbox.
+     */
+    private static final float CHECKBOX_RATIO = 0.2f;
+    /**
+     * The width ratio of column.
+     */
+    private static final float COLUMN_RATIO = 1 - CHECKBOX_RATIO;
+
+    /**
      * A TableView representing a Column in the CSV.
      */
     ColumnsTableView() {
@@ -56,7 +65,8 @@ class ColumnsTableView extends TableView<ObservableColumn> {
 
         /* Resizing */
         setPlaceholder(new Label(bundle.getString("table.columns.empty")));
-        checkboxColumn.prefWidthProperty().bind(widthProperty().multiply(0.2));
-        columnNameColumn.prefWidthProperty().bind(widthProperty().multiply(0.8));
+        checkboxColumn.prefWidthProperty().bind(widthProperty().multiply(CHECKBOX_RATIO));
+        columnNameColumn.prefWidthProperty().bind(widthProperty().multiply(COLUMN_RATIO));
     }
+
 }
