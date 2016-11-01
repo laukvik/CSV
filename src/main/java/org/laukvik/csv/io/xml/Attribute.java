@@ -54,7 +54,7 @@ public class Attribute {
     }
 
     /**
-     * Returns HTML
+     * Returns HTML.
      *
      * @return HTML
      */

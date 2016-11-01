@@ -28,7 +28,8 @@ import java.util.List;
 /**
  * Writes the data set in the CSV format.
  *
- * @see <a href="https://tools.ietf.org/html/rfc4180">Common Format and MIME Type for Comma-Separated Values (CSV) Files</a>
+ * @see <a href="https://tools.ietf.org/html/rfc4180">Common Format and MIME Type for Comma-Separated
+ * Values (CSV) Files</a>
  * @see <a href="https://en.wikipedia.org/wiki/Comma-separated_values">Comma Separated Values (wikipedia)</a>
  */
 public final class CsvWriter implements Writeable, AutoCloseable {
@@ -94,6 +95,13 @@ public final class CsvWriter implements Writeable, AutoCloseable {
         writeRow(row, row.getCSV().getMetaData());
     }
 
+    /**
+     * Writes the row to File.
+     *
+     * @param row      the row
+     * @param metaData the MetaData to use
+     * @throws IOException when the file could not be written to.
+     */
     public void writeRow(final Row row, final MetaData metaData) throws IOException {
         List<String> values = new ArrayList<>();
         for (int x = 0; x < metaData.getColumnCount(); x++) {
@@ -103,7 +111,13 @@ public final class CsvWriter implements Writeable, AutoCloseable {
         writeValues(values);
     }
 
-    public void writeMetaData(MetaData metaData) throws IOException {
+    /**
+     * Writes the MetaData.
+     *
+     * @param metaData the MetaData
+     * @throws IOException when the MetaData could not be written
+     */
+    public void writeMetaData(final MetaData metaData) throws IOException {
         List<String> items = new ArrayList<>();
         for (int x = 0; x < metaData.getColumnCount(); x++) {
             Column c = metaData.getColumn(x);
@@ -113,6 +127,11 @@ public final class CsvWriter implements Writeable, AutoCloseable {
         writeValues(items);
     }
 
+    /**
+     * Writes the values.
+     * @param values the values
+     * @throws IOException when the values could not be written
+     */
     private void writeValues(final List<String> values) throws IOException {
         for (int x = 0; x < values.size(); x++) {
             if (x > 0) {

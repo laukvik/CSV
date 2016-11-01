@@ -24,53 +24,64 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Writes the data set to the ResourceBundle
- *
+ * Writes the data set to the ResourceBundle.
  */
-public class ResourceBundleWriter extends AbstractResourceBundle implements Writeable{
+public final class ResourceBundleWriter extends AbstractResourceBundle implements Writeable {
 
-
+    /**
+     * The folder to read from.
+     */
     private final File folder;
+    /** The base filename to read. The bundle name. */
     private final String basename;
 
     /**
-     * Writes the data set to the ResourceBundle
-     *
+     * Writes the data set to the ResourceBundle.
+     * <p>
      * language.properties
      *
      * @param file the file
      */
-    public ResourceBundleWriter(File file) {
+    public ResourceBundleWriter(final File file) {
         this.folder = file.getParentFile();
         this.basename = getBasename(file);
     }
 
-    @Override
-    public void writeCSV(CSV csv) throws IOException {
-        if (csv.getMetaData().getColumnCount() < 2){
-            // First row is the property. Two or more columns is required.
-        } else {
-            for (int x=1; x<csv.getMetaData().getColumnCount(); x++){
+    /**
+     * Writes the ResourceBundle to files.
+     *
+     * @param csv the CSV to write
+     * @throws IOException when the files could not be written
+     */
+    public void writeCSV(final CSV csv) throws IOException {
+        if (csv.getMetaData().getColumnCount() > 1) {
+            for (int x = 1; x < csv.getMetaData().getColumnCount(); x++) {
                 StringColumn column = (StringColumn) csv.getMetaData().getColumn(x);
                 writeBundle(csv, column);
             }
         }
     }
 
-    public void writeBundle(CSV csv, StringColumn column){
+    /**
+     * Writes a single language to file.
+     *
+     * @param csv    the CSV
+     * @param column the column with the language
+     */
+    public void writeBundle(final CSV csv, final StringColumn column) {
         String filename = getFilename(column, basename);
         File bundleFile = new File(folder, filename);
         StringColumn keyColumn = (StringColumn) csv.getMetaData().getColumn(0);
 
-        try(FileWriter writer = new FileWriter(bundleFile)){
-            for (int y=0; y<csv.getRowCount(); y++){
+        try (FileWriter writer = new FileWriter(bundleFile)) {
+            for (int y = 0; y < csv.getRowCount(); y++) {
                 Row r = csv.getRow(y);
-                writer.write( r.getString(keyColumn) );
+                writer.write(r.getString(keyColumn));
                 writer.write("=");
-                writer.write( r.getString(column) );
+                writer.write(r.getString(column));
                 writer.write("\r\n");
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

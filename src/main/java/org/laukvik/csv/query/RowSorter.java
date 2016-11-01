@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Sorts Rows using the Comparator.
  */
-class RowSorter implements Comparator<Row> {
+public class RowSorter implements Comparator<Row> {
 
     /**
      * List of SortOrder to use.
@@ -36,16 +36,22 @@ class RowSorter implements Comparator<Row> {
     private final List<SortOrder> sortOrders;
 
     /**
-     * Sorts Rows using the Comparator using the specified sortOrders
+     * Sorts Rows using the Comparator using the specified sortOrders.
      *
-     * @param sortOrders
+     * @param sortOrders the list of sort orders.
      */
     public RowSorter(final List<SortOrder> sortOrders) {
         this.sortOrders = sortOrders;
     }
 
-    @Override
-    public int compare(Row r1, Row r2) {
+    /**
+     * Compares the two rows with each other.
+     *
+     * @param r1 the first row
+     * @param r2 the second row
+     * @return a comparable value
+     */
+    public final int compare(final Row r1, final Row r2) {
         for (SortOrder sortOrder : sortOrders) {
             Column c = sortOrder.getColumn();
 
@@ -71,9 +77,7 @@ class RowSorter implements Comparator<Row> {
                 }
             }
 
-            if (result == 0) {
-                /* Values are the same so continue sorting */
-            } else {
+            if (result != 0) {
                 return result;
             }
         }

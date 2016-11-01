@@ -375,8 +375,8 @@ public class Main extends Application implements ChangeListener, FileListener {
         gridpane.setHgap(20);
         gridpane.setVgap(10);
 
-        final Label separatorLabel = new Label(bundle.getString("metadata.separator"));
-        gridpane.add(separatorLabel, 0, 1);
+        final Label sepLabel = new Label(bundle.getString("metadata.separator"));
+        gridpane.add(sepLabel, 0, 1);
         final ChoiceBox separatorBox = new ChoiceBox();
         List<String> items = new ArrayList<>();
         items.add(bundle.getString("metadata.separator.autodetect"));
@@ -799,9 +799,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         updateColumns();
         updateRows();
         int columnCount = csv.getMetaData().getColumnCount();
-        if (columnCount == 0) {
-            // Nothing to select
-        } else if (columnIndex > columnCount - 1) {
+        if (columnIndex > columnCount - 1) {
             // Deleted last
             columnsTableView.getSelectionModel().select(columnCount - 1);
             columnsTableView.getFocusModel().focus(columnCount - 1);

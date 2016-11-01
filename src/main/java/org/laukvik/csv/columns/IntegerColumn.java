@@ -33,7 +33,7 @@ public final class IntegerColumn extends Column<Integer> {
      * Returns the value as a String.
      *
      * @param value the value
-     * @return
+     * @return the value as a String
      */
     public String asString(final Integer value) {
         return value.toString();
@@ -43,7 +43,7 @@ public final class IntegerColumn extends Column<Integer> {
      * Returns the value of the String.
      *
      * @param value the string
-     * @return
+     * @return the integer value
      */
     public Integer parse(final String value) {
         return Integer.parseInt(value);
@@ -54,7 +54,7 @@ public final class IntegerColumn extends Column<Integer> {
      *
      * @param one     one column
      * @param another another column
-     * @return
+     * @return the compare value
      */
     public int compare(final Integer one, final Integer another) {
         return one.compareTo(another);
@@ -82,7 +82,7 @@ public final class IntegerColumn extends Column<Integer> {
      * @param obj the IntegerColumn to compare with
      * @return true if equals
      */
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

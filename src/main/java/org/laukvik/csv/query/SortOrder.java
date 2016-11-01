@@ -20,7 +20,7 @@ import org.laukvik.csv.columns.Column;
 /**
  * Sorts a data set using the specified column and sort order.
  */
-public class SortOrder {
+public final class SortOrder {
 
     /**
      * Ascending sort order.
@@ -35,25 +35,59 @@ public class SortOrder {
      */
     public static final Type NONE = Type.NONE;
 
+    /**
+     * The column.
+     */
     private final Column column;
+    /**
+     * The order type.
+     */
     private final Type type;
 
-    public SortOrder(Column column, Type type) {
+    /**
+     * Creates a new instance.
+     *
+     * @param column the column
+     * @param type   the type
+     */
+    public SortOrder(final Column column, final Type type) {
         this.column = column;
         this.type = type;
     }
 
+    /**
+     * Returns the column.
+     * @return the column
+     */
     public Column getColumn() {
         return column;
     }
 
+    /**
+     * Returns the order type.
+     * @return the order type.
+     */
     public Type getType() {
         return type;
     }
 
+    /**
+     * Indicates what sort order to use.
+     */
     public enum Type {
 
-        ASC, DESC, NONE
+        /**
+         * Ascending sort order.
+         */
+        ASC,
+        /**
+         * Descending sort order.
+         */
+        DESC,
+        /**
+         * No sort order.
+         */
+        NONE
     }
 
 }

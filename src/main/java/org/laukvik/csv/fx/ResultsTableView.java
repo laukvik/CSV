@@ -15,8 +15,11 @@ import static org.laukvik.csv.fx.Builder.createResultsRows;
  *
  * @author Morten Laukvik
  */
-class ResultsTableView extends TableView<ObservableRow> {
+public class ResultsTableView extends TableView<ObservableRow> {
 
+    /**
+     * Creates a new empty instance.
+     */
     public ResultsTableView() {
         super();
         ResourceBundle bundle = Builder.getBundle();
@@ -25,12 +28,21 @@ class ResultsTableView extends TableView<ObservableRow> {
         setPlaceholder(l);
     }
 
-    public void clearRows(){
+    /**
+     * Removes all rows.
+     */
+    public final void clearRows() {
         setItems(FXCollections.observableArrayList());
         getColumns().clear();
     }
 
-    public void columnsChanged(CSV csv, Main main) {
+    /**
+     * Notifies that the rows where changed and needs rebuilding.
+     *
+     * @param csv  the csv instance
+     * @param main the main instance
+     */
+    public final void columnsChanged(final CSV csv, final Main main) {
         createResultsColumns(this, csv.getMetaData());
         createResultsRows(this, csv, main);
     }

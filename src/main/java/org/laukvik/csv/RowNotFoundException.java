@@ -16,10 +16,32 @@
 package org.laukvik.csv;
 
 
-class RowNotFoundException extends IllegalArgumentException {
+/**
+ * Indicates that the row could not be found.
+ */
+public final class RowNotFoundException extends IllegalArgumentException {
 
-    public RowNotFoundException(int index, int required) {
-        super("Row with index " + index + " was not found. Required: " + required);
+    /**
+     * The row index.
+     */
+    private final int rowIndex;
+
+    /**
+     * The row with the index could not be found.
+     *
+     * @param index the index
+     */
+    public RowNotFoundException(final int index) {
+        super("Row with index " + index + " was not found.");
+        this.rowIndex = index;
     }
 
+    /**
+     * Returns the row index that could not be found.
+     *
+     * @return the row index
+     */
+    public int getRowIndex() {
+        return rowIndex;
+    }
 }

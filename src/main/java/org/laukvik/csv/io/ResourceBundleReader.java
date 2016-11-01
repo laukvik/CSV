@@ -15,19 +15,34 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * @author Morten Laukvik
+ * Reads a properties and all other properties with the same base name which matches
+ * the ResourceBundle concept.
+ *
  */
-public class ResourceBundleReader extends AbstractResourceBundle implements Readable {
+public final class ResourceBundleReader extends AbstractResourceBundle implements Readable {
 
+    /**
+     * The MetaData with the locales.
+     */
     private MetaData metaData;
-    private Row row;
+    /**
+     * The current row.
+     */
+    private Row currentRow;
+    /**
+     * The list of property files.
+     */
     private List<Properties> propertiesList;
+    /** The current row index. */
     private int index;
+    /** The list of keys. */
     private List<String> keys;
 
     /**
+     * Reads the file.
+     *
      * @param file the file
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException when the file wasn't found
      */
     public void readFile(final File file) throws FileNotFoundException {
         String filename = file.getName();
@@ -61,6 +76,15 @@ public class ResourceBundleReader extends AbstractResourceBundle implements Read
         }
     }
 
+    /**
+     * Reads the file and extracts all used property values.
+     *
+     * @param file the file
+     * @param lang the language
+     * @param keySet the keys to read
+     * @return the Properties
+     * @throws IOException when the file could not be read
+     */
     private Properties addFile(final File file, final String lang, final Set<String> keySet) throws IOException {
         metaData.addColumn(new StringColumn(lang));
         Properties p = new Properties();
@@ -71,34 +95,49 @@ public class ResourceBundleReader extends AbstractResourceBundle implements Read
         return p;
     }
 
-    @Override
+    /**
+     * Returns the MetaData.
+     * @return the MetaData
+     */
     public MetaData getMetaData() {
         return metaData;
     }
 
-    @Override
+    /**
+     * Returns the row.
+     *
+     * @return the row
+     */
     public Row getRow() {
-        return row;
+        return currentRow;
     }
 
-    @Override
+    /**
+     * Returns true if more rows are available.
+     *
+     * @return true if more rows are available
+     */
     public boolean hasNext() {
         return index < keys.size() - 1;
     }
 
-    @Override
+    /**
+     * Returns the next row.
+     *
+     * @return the next row
+     */
     public Row next() {
         index++;
-        row = new Row();
+        currentRow = new Row();
         String key = keys.get(index);
         StringColumn sc = (StringColumn) metaData.getColumn(0);
-        row.update(sc, key);
+        currentRow.update(sc, key);
         for (int x = 0; x < propertiesList.size(); x++) {
             StringColumn column = (StringColumn) metaData.getColumn(x + 1);
             Properties p = propertiesList.get(x);
-            row.update(column, (String) p.get(key));
+            currentRow.update(column, (String) p.get(key));
         }
-        return row;
+        return currentRow;
     }
 
 

@@ -16,50 +16,85 @@
 package org.laukvik.csv.columns;
 
 /**
- * Column with String as the data type
+ * Column with String as the data type.
  */
 public final class StringColumn extends Column<String> {
 
+    /**
+     * The size of the column.
+     */
     private int size;
 
     /**
-     * Column with String as the data type
+     * Column with String as the data type.
      *
      * @param name the name of the column
      */
-    public StringColumn(String name) {
+    public StringColumn(final String name) {
         super(name);
     }
 
+    /**
+     * Returns the size.
+     *
+     * @return the size
+     */
     public int getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    /**
+     * Sets the size.
+     *
+     * @param size the new size
+     */
+    public void setSize(final int size) {
         this.size = size;
     }
 
-    @Override
-    public String asString(String value) {
+    /**
+     * Returns the value.
+     *
+     * @param value the value
+     * @return the value
+     */
+    public String asString(final String value) {
         return value;
     }
 
-    @Override
-    public String parse(String value) {
+    /**
+     * Returns the value.
+     *
+     * @param value the string
+     * @return the value
+     */
+    public String parse(final String value) {
         return value;
     }
 
-    @Override
-    public int compare(String one, String another) {
+    /**
+     * Compares the two values.
+     *
+     * @param one     one column
+     * @param another another column
+     * @return the compare value
+     */
+    public int compare(final String one, final String another) {
         return one.compareTo(another);
     }
 
-    @Override
+    /**
+     * Returns the column definition.
+     * @return the column definition
+     */
     public String toString() {
         return getName() + "(String)";
     }
 
-    @Override
+    /**
+     * Returns the HashCode.
+     * @return the HashCode
+     */
     public int hashCode() {
         return 7;
     }

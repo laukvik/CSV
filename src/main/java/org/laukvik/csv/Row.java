@@ -44,12 +44,14 @@ public final class Row implements Serializable {
     /**
      * The timestamp it was created. Used only internally to separate rows.
      */
-    protected final long timestamp;
+    private final long timestamp;
     /**
      * The Map containing the column data.
      */
     private final Map<Column, Object> map;
-    /** The CSV the row belongs to. */
+    /**
+     * The CSV the row belongs to.
+     */
     private CSV csv;
 
     /**
@@ -62,6 +64,7 @@ public final class Row implements Serializable {
 
     /**
      * Returns the row formatted as a String.
+     *
      * @return the row as STring
      */
     public String toString() {
@@ -80,6 +83,7 @@ public final class Row implements Serializable {
 
     /**
      * Returns the CSV it belongs to.
+     *
      * @return the CSV
      */
     public CSV getCSV() {
@@ -89,65 +93,128 @@ public final class Row implements Serializable {
     /**
      * Sets the CSV it belongs to.
      *
-     * @param csv
+     * @param csv the csv instance
      */
     public void setCSV(final CSV csv) {
         this.csv = csv;
     }
 
     /**
-     * Updates the column with the value
+     * Updates the column with the value.
      *
      * @param column the column to update
-     * @param value
-     * @return
+     * @param value the value
+     * @return the row
      */
-    public Row updateColumn(Column column, String value) {
+    public Row updateColumn(final Column column, final String value) {
         map.put(column, column.parse(value));
         return this;
     }
 
-    public Row update(ByteColumn column, Byte value) {
+    /**
+     * Updates the column with the value.
+     *
+     * @param column the column to update
+     * @param value  the value
+     * @return the row
+     */
+    public Row update(final ByteColumn column, final Byte value) {
         map.put(column, value);
         return this;
     }
 
-    public Row update(BigDecimalColumn column, BigDecimal value) {
+    /**
+     * Updates the column with the value.
+     *
+     * @param column the column to update
+     * @param value  the value
+     * @return the row
+     */
+    public Row update(final BigDecimalColumn column, final BigDecimal value) {
         map.put(column, value);
         return this;
     }
 
-    public Row update(IntegerColumn column, Integer value) {
+    /**
+     * Updates the column with the value.
+     *
+     * @param column the column to update
+     * @param value  the value
+     * @return the row
+     */
+    public Row update(final IntegerColumn column, final Integer value) {
         map.put(column, value);
         return this;
     }
 
-    public Row update(FloatColumn column, Float value) {
+    /**
+     * Updates the column with the value.
+     *
+     * @param column the column to update
+     * @param value  the value
+     * @return the row
+     */
+    public Row update(final FloatColumn column, final Float value) {
         map.put(column, value);
         return this;
     }
 
-    public Row update(DoubleColumn column, Double value) {
+    /**
+     * Updates the column with the value.
+     *
+     * @param column the column to update
+     * @param value  the value
+     * @return the row
+     */
+    public Row update(final DoubleColumn column, final Double value) {
         map.put(column, value);
         return this;
     }
 
-    public Row update(BooleanColumn column, Boolean value) {
+    /**
+     * Updates the column with the value.
+     *
+     * @param column the column to update
+     * @param value  the value
+     * @return the row
+     */
+    public Row update(final BooleanColumn column, final Boolean value) {
         map.put(column, value);
         return this;
     }
 
-    public Row update(StringColumn column, String value) {
+    /**
+     * Updates the column with the value.
+     *
+     * @param column the column to update
+     * @param value  the value
+     * @return the row
+     */
+    public Row update(final StringColumn column, final String value) {
         map.put(column, value);
         return this;
     }
 
-    public Row update(UrlColumn column, URL value) {
+    /**
+     * Updates the column with the value.
+     *
+     * @param column the column to update
+     * @param value  the value
+     * @return the row
+     */
+    public Row update(final UrlColumn column, final URL value) {
         map.put(column, value);
         return this;
     }
 
-    public Row update(DateColumn column, Date value) {
+    /**
+     * Updates the column with the value.
+     *
+     * @param column the column to update
+     * @param value  the value
+     * @return the row
+     */
+    public Row update(final DateColumn column, final Date value) {
         map.put(column, value);
         return this;
     }
@@ -163,7 +230,7 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Returns the column as String
+     * Returns the column as String.
      *
      * @param column the column
      * @return the column as a String
@@ -172,24 +239,49 @@ public final class Row implements Serializable {
         return map.get(column) + "";
     }
 
-    public String getString(StringColumn column) {
-        return (String) map.get(column);
-    }
-
-    public Date getDate(DateColumn column) {
-        return (Date) map.get(column);
-    }
-
-    public Float getFloat(FloatColumn column) {
-        return (Float) map.get(column);
-    }
-
-    public Integer getInteger(IntegerColumn column) {
-        return (Integer) map.get(column);
+    /**
+     * Returns the value of the column.
+     *
+     * @param stringColumn the column
+     * @return the value
+     */
+    public String getString(final StringColumn stringColumn) {
+        return (String) map.get(stringColumn);
     }
 
     /**
-     * Returns the hashCode
+     * Returns the date of the column.
+     *
+     * @param dateColumn the column
+     * @return the value
+     */
+    public Date getDate(final DateColumn dateColumn) {
+        return (Date) map.get(dateColumn);
+    }
+
+    /**
+     * Returns the value of the column.
+     *
+     * @param floatColumn the column
+     * @return the value
+     */
+    public Float getFloat(final FloatColumn floatColumn) {
+        return (Float) map.get(floatColumn);
+    }
+
+    /**
+     * Returns the value of the column.
+     *
+     * @param integerColumn the column
+     * @return the value
+     */
+    public Integer getInteger(final IntegerColumn integerColumn) {
+        return (Integer) map.get(integerColumn);
+    }
+
+    /**
+     * Returns the hashCode.
+     *
      * @return the hashCode
      */
     public int hashCode() {
@@ -199,7 +291,7 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Returns true if the objects are equals
+     * Returns true if the objects are equals.
      *
      * @param obj the object
      * @return true when equals
@@ -216,7 +308,7 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Removes the value for the column
+     * Removes the value for the column.
      *
      * @param column the column
      */
@@ -226,6 +318,7 @@ public final class Row implements Serializable {
 
     /**
      * Returns the row index.
+     *
      * @return the row index
      */
     public int indexOf() {

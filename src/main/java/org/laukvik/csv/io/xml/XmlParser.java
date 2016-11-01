@@ -198,6 +198,8 @@ public class XmlParser {
                         break;
                     case CLOSE:
                         break; // </>
+                    default:
+                        break;
                 }
             } else if (c == CLOSE_SYMBOL) {  // <tag attr="value"> <tag>
                 // Tag close
@@ -235,7 +237,8 @@ public class XmlParser {
                         mode = EMPTY;
                         break;
                     case CLOSE:
-//                        mode = TEXT;
+                        break;
+                    default:
                         break;
                 }
             } else if (c == EQUAL_SYMBOL) {
@@ -269,6 +272,8 @@ public class XmlParser {
                         break;
                     case CLOSE:
                         break; // Not allowed
+                    default:
+                        break;
                 }
             } else if (c == QUOTE_SYMBOL) {
                 /*
@@ -308,6 +313,8 @@ public class XmlParser {
                         break;
                     case CLOSE:
                         break; // Quote not allowed in close tag
+                    default:
+                        break;
                 }
             } else if (c == SPACE_SYMBOL || c == TAB_SYMBOL || c == NEWLINE_SYMBOL || c == RETURN_SYMBOL) {
                 // Whitespace  <tag attr="value">
@@ -345,6 +352,8 @@ public class XmlParser {
                         break;
                     case CLOSE:
                         break;
+                    default:
+                        break;
                 }
             } else {
                 //-- Everything
@@ -379,6 +388,8 @@ public class XmlParser {
                         break;
                     case CLOSE:
                         close.append(c);
+                        break;
+                    default:
                         break;
                 }
             }

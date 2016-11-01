@@ -54,8 +54,7 @@ public final class IntIsInMatcher extends RowMatcher {
             return false;
         }
         for (Integer v : values) {
-            if (v == null) {
-            } else if (value.intValue() == v.intValue()) {
+            if (v != null && value.intValue() == v.intValue()) {
                 return true;
             }
         }

@@ -250,7 +250,8 @@ public abstract class Column<T> implements Comparable {
                     Integer i = Integer.parseInt(size);
                     c.setSize(i);
                 } catch (Exception e) {
-                    throw new IllegalColumnDefinitionException("Column " + columnName + " has invalid size '" + size + "'");
+                    throw new IllegalColumnDefinitionException(
+                            "Column " + columnName + " has invalid size '" + size + "'");
                 }
             }
             return c;

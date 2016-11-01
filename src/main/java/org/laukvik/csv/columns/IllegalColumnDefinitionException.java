@@ -25,7 +25,7 @@ public class IllegalColumnDefinitionException extends RuntimeException {
      *
      * @param message the reason
      */
-    public IllegalColumnDefinitionException(String message) {
+    public IllegalColumnDefinitionException(final String message) {
         super(message);
     }
 

@@ -15,8 +15,17 @@ import org.laukvik.csv.columns.Column;
 @SuppressWarnings("WeakerAccess")
 public final class ObservableFrequencyDistribution {
 
+    /**
+     * The selection property.
+     */
     private final SimpleBooleanProperty selected;
+    /**
+     * The value property.
+     */
     private final SimpleStringProperty value;
+    /**
+     * The count property.
+     */
     private final SimpleIntegerProperty count;
 
     /**
@@ -28,13 +37,19 @@ public final class ObservableFrequencyDistribution {
      * @param column the column
      * @param main the main
      */
-    public ObservableFrequencyDistribution(final boolean selected, final String value, final int count, final Column column, final Main main) {
+    public ObservableFrequencyDistribution(final boolean selected,
+                                           final String value,
+                                           final int count,
+                                           final Column column,
+                                           final Main main) {
         this.selected = new SimpleBooleanProperty(selected);
         this.value = new SimpleStringProperty(value);
         this.count = new SimpleIntegerProperty(count);
         this.selected.addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
+            public void changed(final ObservableValue<? extends Boolean> observable,
+                                final Boolean oldValue,
+                                final Boolean newValue) {
                 if (main != null) {
                     if (newValue) {
                         main.handleSelected(column, value);
@@ -46,26 +61,53 @@ public final class ObservableFrequencyDistribution {
         });
     }
 
+    /**
+     * Returns true if it is selected.
+     *
+     * @return the true if selected
+     */
     public boolean isSelected() {
         return selected.get();
     }
 
+    /**
+     * Returns the selected Property.
+     * @return the selected Property.
+     */
     public SimpleBooleanProperty selectedProperty() {
         return selected;
     }
 
+    /**
+     * Returns the value.
+     *
+     * @return the value
+     */
     public String getValue() {
         return value.get();
     }
 
+    /**
+     * Returns the value Property.
+     * @return the value Property.
+     */
     public SimpleStringProperty valueProperty() {
         return value;
     }
 
+    /**
+     * Returns the count.
+     *
+     * @return the count
+     */
     public int getCount() {
         return count.get();
     }
 
+    /**
+     * Returns the count Property.
+     * @return the count Property.
+     */
     public SimpleIntegerProperty countProperty() {
         return count;
     }

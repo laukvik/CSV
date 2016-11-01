@@ -9,16 +9,17 @@ import org.laukvik.csv.columns.Column;
 /**
  * Represents a column that is observable for JavaFX components.
  *
- * @author Morten Laukvik
  */
 @SuppressWarnings("WeakerAccess")
 public final class ObservableColumn {
 
     /**
-     * The property for visible
+     * The property for visible.
      */
     private final SimpleBooleanProperty visible;
-    /** The property for name */
+    /**
+     * The property for name.
+     */
     private final SimpleStringProperty name;
     /** The Column its for. */
     private final Column column;
@@ -36,14 +37,16 @@ public final class ObservableColumn {
         this.column = column;
         visible.addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
+            public void changed(final ObservableValue<? extends Boolean> observable,
+                                final Boolean oldValue,
+                                final Boolean newValue) {
                 column.setVisible(newValue);
             }
         });
     }
 
     /**
-     * Returns the visibleProperty
+     * Returns the visibleProperty.
      * @return the visibleProperty
      */
     public SimpleBooleanProperty visibleProperty() {
@@ -51,7 +54,7 @@ public final class ObservableColumn {
     }
 
     /**
-     * Returns the nameProperty
+     * Returns the nameProperty.
      * @return the nameProperty
      */
     public SimpleStringProperty nameProperty() {
@@ -59,7 +62,7 @@ public final class ObservableColumn {
     }
 
     /**
-     * Returns the name
+     * Returns the name.
      * @return the name
      */
     public String getName() {

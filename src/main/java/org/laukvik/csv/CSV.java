@@ -297,7 +297,7 @@ public final class CSV implements Serializable {
      */
     public Row getRow(final int rowIndex) {
         if (rowIndex > getRowCount()) {
-            throw new RowNotFoundException(rowIndex, getRowCount());
+            throw new RowNotFoundException(rowIndex);
         }
         return rows.get(rowIndex);
     }

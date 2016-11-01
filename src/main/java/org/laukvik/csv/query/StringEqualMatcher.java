@@ -31,11 +31,11 @@ public final class StringEqualMatcher extends RowMatcher {
     private final StringColumn column;
 
     /**
-     * The value of the column must be
-     * @param column
-     * @param value
+     * The value of the column must be.
+     * @param column the column
+     * @param value the value
      */
-    public StringEqualMatcher(StringColumn column, String value) {
+    public StringEqualMatcher(final StringColumn column, final String value) {
         super();
         this.column = column;
         this.value = value;

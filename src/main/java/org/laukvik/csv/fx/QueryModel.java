@@ -9,26 +9,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Stores a selection of multiple columns and values in a flat structure
+ * Stores a selection of multiple columns and values in a flat structure.
  *
  * @author Morten Laukvik
  */
-public class QueryModel {
+public final class QueryModel {
 
-    final Main main;
+    /**
+     * The Main instance.
+     */
+    private final Main main;
+    /**
+     * The CSV instance.
+     */
     private final CSV csv;
+    /** The Selection of values for the query. */
     private final List<Selection> selections;
 
+    /**
+     * Creates a new instance.
+     * @param csv the csv instance
+     * @param main the main instance
+     */
     public QueryModel(final CSV csv, final Main main) {
         this.csv = csv;
         this.main = main;
         this.selections = new ArrayList<>();
     }
 
+    /**
+     * Removes all selections.
+     *
+     */
     public void clearSelections() {
         this.selections.clear();
     }
 
+    /**
+     * Builds a new list of ObservableRows.
+     *
+     * @return the list
+     */
     public List<ObservableRow> buildObservableRows() {
         List<ObservableRow> list = new ArrayList<>();
         if (this.isEmpty()) {
@@ -45,6 +66,9 @@ public class QueryModel {
         return list;
     }
 
+    /**
+     * Builds a new query.
+     */
     private void buildQuery() {
         Query.Where where = csv.findByQuery().where();
         for (Selection s : selections) {
@@ -58,7 +82,13 @@ public class QueryModel {
         }
     }
 
-    public Selection findSelectionByColumn(Column column) {
+    /**
+     * Finds all selected values in the column.
+     *
+     * @param column the column
+     * @return the selection
+     */
+    public Selection findSelectionByColumn(final Column column) {
         for (Selection s : selections) {
             if (s.getColumn().equals(column)) {
                 return s;
@@ -67,7 +97,13 @@ public class QueryModel {
         return null;
     }
 
-    public void addSelection(Column column, String value) {
+    /**
+     * Adds a new selection.
+     *
+     * @param column the column
+     * @param value  the value
+     */
+    public void addSelection(final Column column, final String value) {
         Selection s = findSelectionByColumn(column);
         if (s == null) {
             s = new Selection(column);
@@ -78,7 +114,13 @@ public class QueryModel {
         }
     }
 
-    public void removeSelection(Column column, String value) {
+    /**
+     * Removes the selection with the column and value combination.
+     *
+     * @param column the column
+     * @param value  the value
+     */
+    public void removeSelection(final Column column, final String value) {
         Selection s = findSelectionByColumn(column);
         if (s != null) {
             s.removeValue(value);
@@ -88,10 +130,22 @@ public class QueryModel {
         }
     }
 
+    /**
+     * Returns whether the selection is empty or not.
+     *
+     * @return true if the are no selections
+     */
     public boolean isEmpty() {
         return selections.isEmpty();
     }
 
+    /**
+     * Returns true if the value is selected.
+     *
+     * @param column the column
+     * @param value the value
+     * @return true if selected
+     */
     public boolean isSelected(final Column column, final String value) {
         Selection s = findSelectionByColumn(column);
         if (s != null) {
