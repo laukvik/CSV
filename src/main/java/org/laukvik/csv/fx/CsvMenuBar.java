@@ -15,9 +15,8 @@ import java.util.ResourceBundle;
 
 /**
  * JavaFX MenuBar for the CSV application.
- *
  */
-class CsvMenuBar extends MenuBar {
+public final class CsvMenuBar extends MenuBar {
 
     /**
      * The Menu for View.
@@ -28,11 +27,13 @@ class CsvMenuBar extends MenuBar {
      */
     private final Main main;
     /**
+     * The ResourceBundle.
+     */
+    private final ResourceBundle bundle;
+    /**
      * The Menu for recent files.
      */
-    private final Menu openRecentMenu;
-    /** The ResourceBundle. */
-    private final ResourceBundle bundle;
+    private Menu openRecentMenu;
 
     /**
      * Creates a new MenuBar for the JavaFX application.
@@ -44,7 +45,23 @@ class CsvMenuBar extends MenuBar {
         this.main = main;
         bundle = Builder.getBundle();
         setUseSystemMenuBar(Builder.isMac());
-        // ----- File -----
+        viewMenu = buildViewMenu(main);
+        //
+        getMenus().add(buildFileMenu(main));
+        getMenus().add(buildEditMenu(main));
+        getMenus().add(buildQueryMenu(main));
+        getMenus().add(buildInsertMenu(main));
+        getMenus().addAll(viewMenu);
+        getMenus().add(buildHelpMenu(main));
+    }
+
+    /**
+     * Builds the file menu.
+     *
+     * @param main the main instance
+     * @return the menu
+     */
+    private Menu buildFileMenu(final Main main) {
         final Menu fileMenu = new Menu(bundle.getString("file"));
         MenuItem newItem = new MenuItem(bundle.getString("file.new"));
         newItem.setAccelerator(KeyCombination.keyCombination("Meta+n"));
@@ -123,7 +140,16 @@ class CsvMenuBar extends MenuBar {
         fileMenu.getItems().addAll(newItem, openItem, openRecentMenu, saveItem, saveAsItem, new SeparatorMenuItem(),
                 importItem, exportMenu, new SeparatorMenuItem(), printItem);
 
+        return fileMenu;
+    }
 
+    /**
+     * Builds the edit menu.
+     *
+     * @param main the main instance
+     * @return the menu
+     */
+    private Menu buildEditMenu(final Main main) {
 
         // ----- Edit ------
         final Menu edit = new Menu(bundle.getString("edit"));
@@ -174,6 +200,35 @@ class CsvMenuBar extends MenuBar {
         edit.getItems().addAll(cutItem, copyItem, pasteItem, deleteItem,
                 new SeparatorMenuItem(), moveUpItem, moveDownItem);
 
+        return edit;
+    }
+
+    /**
+     * Builds the query menu.
+     *
+     * @param main the main instance
+     * @return the menu
+     */
+    private Menu buildQueryMenu(final Main main) {
+        // ----- Query ------
+        final Menu queryMenu = new Menu(bundle.getString("query"));  // Clear query
+        MenuItem newQueryMenuItem = new MenuItem(bundle.getString("query.new"));
+        newQueryMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(final ActionEvent t) {
+                main.handleNewQuery();
+            }
+        });
+        queryMenu.getItems().addAll(newQueryMenuItem);
+        return queryMenu;
+    }
+
+    /**
+     * Builds the insert menu.
+     *
+     * @param main the main instance
+     * @return the menu
+     */
+    private Menu buildInsertMenu(final Main main) {
         // ----- Insert ------
         final Menu insert = new Menu(bundle.getString("insert"));
         MenuItem newColumnItem = new MenuItem(bundle.getString("insert.column"));
@@ -200,20 +255,17 @@ class CsvMenuBar extends MenuBar {
         insert.getItems().addAll(newColumnItem, newRowItem, headersRowItem);
 
 
+        return insert;
+    }
 
-        // ----- Query ------
-        final Menu queryMenu = new Menu(bundle.getString("query"));  // Clear query
-        MenuItem newQueryMenuItem = new MenuItem(bundle.getString("query.new"));
-        newQueryMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(final ActionEvent t) {
-                main.handleNewQuery();
-            }
-        });
-
-        queryMenu.getItems().addAll(newQueryMenuItem);
-
-        // ----- View ------
-        viewMenu = new Menu(bundle.getString("view"));
+    /**
+     * Builds the view menu.
+     *
+     * @param main the main instance
+     * @return the menu
+     */
+    private Menu buildViewMenu(final Main main) {
+        Menu menu = new Menu(bundle.getString("view"));
         CheckMenuItem viewResultsMenuItem = new CheckMenuItem(bundle.getString("view.results"));
         viewResultsMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+1"));
         viewResultsMenuItem.setSelected(true);
@@ -275,10 +327,19 @@ class CsvMenuBar extends MenuBar {
             }
         });
 
-        viewMenu.getItems().addAll(viewResultsMenuItem, viewChartMenuItem, previewChartMenuItem,
+        menu.getItems().addAll(viewResultsMenuItem, viewChartMenuItem, previewChartMenuItem,
                 wikipediaMenuItem, googleMapsMenuItem, googleSearchMenuItem);
 
-        // ----- Help ------
+        return menu;
+    }
+
+    /**
+     * Builds the help menu.
+     *
+     * @param main the main instance
+     * @return the menu
+     */
+    private Menu buildHelpMenu(final Main main) {
         final Menu help = new Menu(bundle.getString("help"));
         MenuItem aboutMenuItem = new MenuItem(bundle.getString("help.about"));
         aboutMenuItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -287,14 +348,7 @@ class CsvMenuBar extends MenuBar {
             }
         });
         help.getItems().addAll(aboutMenuItem);
-
-        //
-        getMenus().add(fileMenu);
-        getMenus().add(edit);
-        getMenus().add(queryMenu);
-        getMenus().add(insert);
-        getMenus().addAll(viewMenu);
-        getMenus().add(help);
+        return help;
     }
 
     /**

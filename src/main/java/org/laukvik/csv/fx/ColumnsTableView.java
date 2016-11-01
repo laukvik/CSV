@@ -18,6 +18,11 @@ import java.util.ResourceBundle;
 class ColumnsTableView extends TableView<ObservableColumn> {
 
     /**
+     * The width of the checkbox column.
+     */
+    private static final int CHECKBOX_WIDTH = 32;
+
+    /**
      * A TableView representing a Column in the CSV.
      */
     ColumnsTableView() {
@@ -28,8 +33,8 @@ class ColumnsTableView extends TableView<ObservableColumn> {
         setEditable(true);
 
         final TableColumn<ObservableColumn, Boolean> checkboxColumn = new TableColumn<>("");
-        checkboxColumn.setMinWidth(32);
-        checkboxColumn.setMaxWidth(32);
+        checkboxColumn.setMinWidth(CHECKBOX_WIDTH);
+        checkboxColumn.setMaxWidth(CHECKBOX_WIDTH);
         checkboxColumn.setEditable(true);
         checkboxColumn.setCellValueFactory(new PropertyValueFactory<>("visible"));
         checkboxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(checkboxColumn));

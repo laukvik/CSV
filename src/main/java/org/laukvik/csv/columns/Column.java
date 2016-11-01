@@ -167,9 +167,7 @@ public abstract class Column<T> implements Comparable {
         ForeignKey foreignKey = null;
         {
             String fkValue = findValue("foreignKey", keys, values);
-            if (fkValue == null || fkValue.trim().isEmpty()) {
-
-            } else {
+            if (fkValue != null && !fkValue.trim().isEmpty()) {
                 foreignKey = ForeignKey.parse(fkValue);
             }
         }

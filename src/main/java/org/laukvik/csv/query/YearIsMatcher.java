@@ -49,7 +49,7 @@ public final class YearIsMatcher extends AbstractDateMatcher {
      * @return true if it matches
      */
     public boolean matches(final Row row) {
-        Date v = row.getDate(column);
+        Date v = row.getDate(getColumn());
         return DateColumn.isYear(v, year);
     }
 

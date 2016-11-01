@@ -18,29 +18,29 @@ public class Attribute {
     /**
      * Creates a new attribute without a value.
      *
-     * @param name the value
+     * @param attributeName the value
      */
-    public Attribute(final String name) {
-        this.name = name;
+    public Attribute(final String attributeName) {
+        this.name = attributeName;
     }
 
     /**
      * Creates a new attribute with name and value.
      *
-     * @param name  the name
-     * @param value the value
+     * @param attributeName  the name
+     * @param attributeValue the value
      */
-    public Attribute(final String name, final String value) {
-        this.name = name;
-        this.value = value;
+    public Attribute(final String attributeName, final String attributeValue) {
+        this.name = attributeName;
+        this.value = attributeValue;
     }
 
     /**
      * Sets the new value.
      *
-     * @param value the value
+     * @param attributeValue the value
      */
-    public final void setValue(final String value) {
+    public final void setValue(final String attributeValue) {
         this.value = value;
     }
 

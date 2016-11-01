@@ -11,7 +11,7 @@ public final class FileChooserExtensions {
     /**
      * All supported FileChooser Extensions.
      */
-    public static FileChooser.ExtensionFilter[] SUPPORTED_EXTENSIONS = {
+    public static final FileChooser.ExtensionFilter[] SUPPORTED_EXTENSIONS = {
             buildCSV(), buildResourceBundle(), buildTextFile(), buildJsonFile(), buildHtmlFile(), buildXmlFile()
     };
 

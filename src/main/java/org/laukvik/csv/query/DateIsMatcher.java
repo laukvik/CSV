@@ -42,8 +42,8 @@ public final class DateIsMatcher extends AbstractDateMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        Date d = row.getDate(column);
-        return !(d == null || value == null) && DateColumn.isEqualDate(value, d);
+        Date d = row.getDate(getColumn());
+        return !(d == null || getValue() == null) && DateColumn.isEqualDate(getValue(), d);
     }
 
 }

@@ -42,8 +42,8 @@ public final class DateGreaterThan extends AbstractDateMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        Date d = row.getDate(column);
-        return DateColumn.isGreaterThan(d, value);
+        Date d = row.getDate(getColumn());
+        return DateColumn.isGreaterThan(d, getValue());
     }
 
 }

@@ -13,11 +13,11 @@ public abstract class AbstractDateMatcher extends RowMatcher {
     /**
      * The date.
      */
-    protected Date value;
+    private Date value;
     /**
      * The DateColumn.
      */
-    protected DateColumn column;
+    private DateColumn column;
 
     /**
      * Creats a new matcher.
@@ -31,4 +31,21 @@ public abstract class AbstractDateMatcher extends RowMatcher {
         this.value = date;
     }
 
+    /**
+     * Returns the date.
+     *
+     * @return the date
+     */
+    public final Date getValue() {
+        return value;
+    }
+
+    /**
+     * Returns the column.
+     *
+     * @return the column
+     */
+    public final DateColumn getColumn() {
+        return column;
+    }
 }

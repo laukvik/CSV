@@ -272,8 +272,7 @@ public final class CsvReader implements ClosableReader {
 
         for (int x = 0; x < values.size(); x++) {
             String value = values.get(x);
-            if (x >= metaData.getColumnCount()) {
-            } else {
+            if (x < metaData.getColumnCount()) {
                 Column c = metaData.getColumn(x);
                 if (c instanceof StringColumn) {
                     row.update((StringColumn) c, value);

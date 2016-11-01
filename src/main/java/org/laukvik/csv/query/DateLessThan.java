@@ -43,8 +43,8 @@ public final class DateLessThan extends AbstractDateMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        Date d = row.getDate(column);
-        return DateColumn.isLessThan(d, value);
+        Date d = row.getDate(getColumn());
+        return DateColumn.isLessThan(d, getValue());
     }
 
 }

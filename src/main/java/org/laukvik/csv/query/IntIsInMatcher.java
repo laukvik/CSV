@@ -33,12 +33,12 @@ public final class IntIsInMatcher extends RowMatcher {
     /**
      * The value of the column must be the same as one or more in the values.
      *
-     * @param column the column
+     * @param integerColumn the column
      * @param values the values
      */
-    public IntIsInMatcher(final IntegerColumn column, final Integer... values) {
+    public IntIsInMatcher(final IntegerColumn integerColumn, final Integer... values) {
         super();
-        this.column = column;
+        this.column = integerColumn;
         this.values = values;
     }
 

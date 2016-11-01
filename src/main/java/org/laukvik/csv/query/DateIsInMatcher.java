@@ -49,7 +49,7 @@ public final class DateIsInMatcher extends AbstractDateMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        Date value = row.getDate(column);
+        Date value = row.getDate(getColumn());
         for (Date d : values) {
             if (value.equals(d)) {
                 return true;
