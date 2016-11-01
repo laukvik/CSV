@@ -13,7 +13,28 @@ import java.util.ResourceBundle;
  * pr item in the list.
  *
  */
-final class FrequencyDistributionTableView extends TableView<ObservableFrequencyDistribution> {
+public final class FrequencyDistributionTableView extends TableView<ObservableFrequencyDistribution> {
+
+    /**
+     * The width of the select column.
+     */
+    private static final int SELECT_WIDTH = 32;
+    /**
+     * The width of the count column.
+     */
+    private static final int COUNT_WIDTH = 96;
+    /**
+     * The ratio of the select column.
+     */
+    private static final float SELECT_RATIO = 0.1f;
+    /**
+     * The ratio of the value column.
+     */
+    private static final float VALUE_RATIO = 0.7f;
+    /**
+     * The ratio of the count column.
+     */
+    private static final float COUNT_RATIO = 0.2f;
 
     /**
      * Creates a new instance.
@@ -27,8 +48,8 @@ final class FrequencyDistributionTableView extends TableView<ObservableFrequency
 
         final TableColumn selectUniqueColumn = new TableColumn("");
         selectUniqueColumn.setSortable(false);
-        selectUniqueColumn.setMinWidth(32);
-        selectUniqueColumn.setMaxWidth(32);
+        selectUniqueColumn.setMinWidth(SELECT_WIDTH);
+        selectUniqueColumn.setMaxWidth(SELECT_WIDTH);
         selectUniqueColumn.setCellValueFactory(
                 new PropertyValueFactory<ObservableFrequencyDistribution, Boolean>("selected")
         );
@@ -45,12 +66,12 @@ final class FrequencyDistributionTableView extends TableView<ObservableFrequency
                 new PropertyValueFactory<ObservableFrequencyDistribution, Integer>("count")
         );
         countUniqueColumn.setStyle("-fx-alignment: CENTER_RIGHT");
-        countUniqueColumn.setMinWidth(32);
-        countUniqueColumn.setMaxWidth(120);
-        countUniqueColumn.setPrefWidth(96);
+//        countUniqueColumn.setMinWidth(32);
+//        countUniqueColumn.setMaxWidth(120);
+        countUniqueColumn.setPrefWidth(COUNT_WIDTH);
         getColumns().add(countUniqueColumn);
-        selectUniqueColumn.prefWidthProperty().bind(widthProperty().multiply(0.1));
-        valueUniqueColumn.prefWidthProperty().bind(widthProperty().multiply(0.7));
-        countUniqueColumn.prefWidthProperty().bind(widthProperty().multiply(0.2));
+        selectUniqueColumn.prefWidthProperty().bind(widthProperty().multiply(SELECT_RATIO));
+        valueUniqueColumn.prefWidthProperty().bind(widthProperty().multiply(VALUE_RATIO));
+        countUniqueColumn.prefWidthProperty().bind(widthProperty().multiply(COUNT_RATIO));
     }
 }

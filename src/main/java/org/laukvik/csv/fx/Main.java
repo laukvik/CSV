@@ -77,6 +77,26 @@ import static org.laukvik.csv.fx.Builder.toKb;
 public class Main extends Application implements ChangeListener, FileListener {
 
     /**
+     * The horisontal divider position.
+     */
+    private static final float DIVIDER_POSITION_H = 0.25f;
+    /**
+     * The vertical divider position.
+     */
+    private static final float DIVIDER_POSITION_V = 0.2f;
+    /**
+     * The maximum number of items in pie chart.
+     */
+    private static final int PIE_CHART_MAX = 50;
+    /**
+     * The width of the progressbar.
+     */
+    private static final int PROGRESS_BAR_WIDTH = 200;
+    /**
+     * The padding in dialog.
+     */
+    private static final int DIALOG_PADDING = 10;
+    /**
      * The ResourceBundle for this application.
      */
     private final ResourceBundle bundle = Builder.getBundle();
@@ -185,7 +205,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      */
     public static PieChart buildPieChart(final FrequencyDistributionTableView frequencyDistributionTableView) {
         List<PieChart.Data> dataset = new ArrayList<>();
-        int max = 50;
+
         int x = 0;
         for (ObservableFrequencyDistribution fd : frequencyDistributionTableView.getItems()) {
             if (fd.isSelected()) {
@@ -194,7 +214,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         }
         if (dataset.isEmpty()) {
             for (ObservableFrequencyDistribution fd : frequencyDistributionTableView.getItems()) {
-                if (x < max) {
+                if (x < PIE_CHART_MAX) {
                     dataset.add(new PieChart.Data(fd.getValue(), fd.getCount()));
                 }
                 x++;
@@ -251,11 +271,13 @@ public class Main extends Application implements ChangeListener, FileListener {
         resultsScroll.setFitToHeight(true);
         resultsScroll.setFitToWidth(true);
 
+
+
         final SplitPane tableSplit = new SplitPane(columnsScroll, uniqueScroll);
         tableSplit.setOrientation(Orientation.VERTICAL);
-        tableSplit.setDividerPosition(0, 0.25);
+        tableSplit.setDividerPosition(0, DIVIDER_POSITION_H);
         final SplitPane mainSplit = new SplitPane(tableSplit, resultsScroll);
-        mainSplit.setDividerPositions(0.2);
+        mainSplit.setDividerPositions(DIVIDER_POSITION_V);
 
         final VBox topContainer = new VBox();
 
@@ -280,9 +302,9 @@ public class Main extends Application implements ChangeListener, FileListener {
         Label separator = new Label(bundle.getString("status.separator"));
         separator.setDisable(true);
         separatorLabel = new Label("-");
-        progressBar = new ProgressBar(100);
+        progressBar = new ProgressBar();
         progressBar.setVisible(false);
-        progressBar.setPrefWidth(200);
+        progressBar.setPrefWidth(PROGRESS_BAR_WIDTH);
         bar.getItems().addAll(rows, rowsLabel, cols, colsLabel, size, sizeLabel, encoding, encodingLabel,
                 separator, separatorLabel, progressBar);
 
@@ -295,7 +317,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         final Scene scene = new Scene(root, percent.getWidth(), percent.getHeight());
         stage.setScene(scene);
         stage.show();
-        recent = new Recent(Recent.getConfigurationFile(), 10);
+        recent = new Recent(Recent.getConfigurationFile());
         menuBar.buildRecentList(recent);
         newFile();
     }
@@ -371,9 +393,9 @@ public class Main extends Application implements ChangeListener, FileListener {
         dialog.setHeaderText(bundle.getString("dialog.file.open"));
 
         final GridPane gridpane = new GridPane();
-        gridpane.setPadding(new Insets(10, 20, 10, 20));
-        gridpane.setHgap(20);
-        gridpane.setVgap(10);
+        gridpane.setPadding(new Insets(DIALOG_PADDING, DIALOG_PADDING, DIALOG_PADDING, DIALOG_PADDING));
+        gridpane.setHgap(DIALOG_PADDING);
+        gridpane.setVgap(DIALOG_PADDING);
 
         final Label sepLabel = new Label(bundle.getString("metadata.separator"));
         gridpane.add(sepLabel, 0, 1);

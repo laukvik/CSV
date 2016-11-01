@@ -53,43 +53,29 @@ import java.util.TreeSet;
 /**
  * An API for reading and writing to Viewer. The implementation is based on the
  * specification from http://tools.ietf.org/rfc/rfc4180.txt
- * <p>
- * <p>
  * <h2>Reading files</h2>
- * <p>
- * <p>
  * <h3>Auto detection</h3>
- * <p>
  * <p>The easiest way to read a CSV file is to call the default constructor.
  * This method will try to auto detect separator character and encoding.</p>
- * <p>
  * <pre>
  * CSV csv = new CSV(new File("presidents.csv"));
  * </pre>
- * <p>
- * <p>
- * <p>
  * <h3>Manually specify separator character</h3>
- * <p>
  * <p>To read files using a SEMI COLON as separator character</p>
  * <pre>
  *     CSV csv = new CSV();
  *     csv.readFile( new File("presidents.csv"), CSV.SEMICOLON );
  * </pre>
- * <p>
  * <p>To read files using a semi colon as PIPE character</p>
  * <pre>
  * CSV csv = new CSV();
  * csv.readFile( new File("presidents.csv"), CSV.PIPE );
  * </pre>
- * <p>
  * <p>To read files using a semi colon as TAB character</p>
- * <p>
  * <pre>
  * CSV csv = new CSV();
  * csv.readFile( new File("presidents.csv"), CSV.TAB );
  * </pre>
- * <p>
  * <h3>Reading values from Java objects</h3>
  * <pre>
  * class Employee{
@@ -108,10 +94,7 @@ import java.util.TreeSet;
  * CSV csv = new CSV();
  * csv.readJava(employees);
  * </pre>
- * <p>
- * <p>
  * <h3>Working with queries</h3>
- * <p>
  * <pre>
  * CSV csv = new CSV( new File("presidents.csv") );
  * List&lt;Row&gt; rows = csv.findByQuery().where().column("Party").is("Whig").getResultList();
@@ -679,7 +662,9 @@ public final class CSV implements Serializable {
      * @throws Exception when the file could not be written
      */
     private void write(final Writeable writer) throws Exception {
+        fireBeginWrite();
         writer.writeCSV(this);
+        fireFinishWrite();
     }
 
     /**
@@ -689,7 +674,9 @@ public final class CSV implements Serializable {
      * @throws Exception when the file could not be written
      */
     public void writeFile(final File csvFile) throws Exception {
+        fireBeginWrite();
         write(new CsvWriter(new FileOutputStream(csvFile)));
+        fireFinishWrite();
     }
 
     /**
@@ -699,7 +686,9 @@ public final class CSV implements Serializable {
      * @throws Exception when the file could not be written
      */
     public void writeXML(final File xmlFile) throws Exception {
+        fireBeginWrite();
         write(new XmlWriter(new FileOutputStream(xmlFile)));
+        fireFinishWrite();
     }
 
     /**
@@ -709,7 +698,9 @@ public final class CSV implements Serializable {
      * @throws Exception when the file could not be written
      */
     public void writeJSON(final File jsonFile) throws Exception {
+        fireBeginWrite();
         write(new JsonWriter(new FileOutputStream(jsonFile)));
+        fireFinishWrite();
     }
 
     /**
@@ -719,7 +710,9 @@ public final class CSV implements Serializable {
      * @throws Exception when the file could not be written
      */
     public void writeHtml(final File htmlFile) throws Exception {
+        fireBeginWrite();
         write(new HtmlWriter(new FileOutputStream(htmlFile)));
+        fireFinishWrite();
     }
 
     /**
@@ -729,7 +722,9 @@ public final class CSV implements Serializable {
      * @throws Exception when the file could not be written
      */
     public void writeResourceBundle(final File resourceBundleFile) throws Exception {
+        fireBeginWrite();
         write(new ResourceBundleWriter(resourceBundleFile));
+        fireFinishWrite();
     }
 
     /**
