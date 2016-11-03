@@ -67,34 +67,9 @@ public final class BigDecimalColumn extends Column<BigDecimal> {
      *
      * @return thre String representation
      */
-    public String toString() {
+    public String toHtml() {
         return getName() + "(Integer)";
     }
 
-    /**
-     * Returns the hash code.
-     *
-     * @return the hash code
-     */
-    public int hashCode() {
-        return 7;
-    }
-
-    /**
-     * Returns true if the objects are equals.
-     *
-     * @param obj another BigDecimal column
-     * @return true when equals
-     */
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final BigDecimalColumn other = (BigDecimalColumn) obj;
-        return true;
-    }
 
 }

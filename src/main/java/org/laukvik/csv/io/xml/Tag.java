@@ -7,7 +7,7 @@ import java.util.List;
  * Contains zero or more tags.
  *
  */
-public class Tag {
+public final class Tag {
 
     /**
      * All tags that doesn't have an ending tag.
@@ -40,7 +40,7 @@ public class Tag {
      *
      * @return the text
      */
-    public final String getText() {
+    public String getText() {
         return text;
     }
 
@@ -49,7 +49,7 @@ public class Tag {
      *
      * @return the parent
      */
-    public final Tag getParent() {
+    public Tag getParent() {
         return parent;
     }
 
@@ -59,7 +59,7 @@ public class Tag {
      * @param tagName the name of the tag
      * @return the new tag
      */
-    public final Tag addTag(final String tagName) {
+    public Tag addTag(final String tagName) {
         return addTag(new Tag(tagName));
     }
 
@@ -69,7 +69,7 @@ public class Tag {
      * @param tag the tag
      * @return the tag
      */
-    public final Tag addTag(final Tag tag) {
+    public Tag addTag(final Tag tag) {
         tag.parent = this;
         children.add(tag);
         return tag;
@@ -80,7 +80,7 @@ public class Tag {
      *
      * @return all attributes
      */
-    public final List<Attribute> getAttributes() {
+    public List<Attribute> getAttributes() {
         return attributeList;
     }
 
@@ -90,7 +90,7 @@ public class Tag {
      * @param attributeName the name of the attribute
      * @return the added attribute
      */
-    public final Attribute addAttribute(final String attributeName) {
+    public Attribute addAttribute(final String attributeName) {
         return addAttribute(new Attribute(attributeName));
     }
 
@@ -100,7 +100,7 @@ public class Tag {
      * @param attribute the attribute
      * @return the added attribute
      */
-    public final Attribute addAttribute(final Attribute attribute) {
+    public Attribute addAttribute(final Attribute attribute) {
         attributeList.add(attribute);
         return attribute;
     }
@@ -109,7 +109,7 @@ public class Tag {
      * Returns true if the tag is a text node.
      * @return true if text node
      */
-    public final boolean isText() {
+    public boolean isText() {
         return text != null;
     }
 
@@ -118,7 +118,7 @@ public class Tag {
      *
      * @param value the text value
      */
-    public final void setText(final String value) {
+    public void setText(final String value) {
         this.text = value;
     }
 
@@ -127,7 +127,7 @@ public class Tag {
      *
      * @return true if the tag is a single tag
      */
-    public final boolean isSingle() {
+    public boolean isSingle() {
         for (int x = 0; x < SINGLE_TAGS.length; x++) {
             if (SINGLE_TAGS[x].equalsIgnoreCase(name)) {
                 return true;
@@ -140,7 +140,7 @@ public class Tag {
      * Returns the name of the tag.
      * @return the name
      */
-    public final String toString() {
+    public String toString() {
         return name;
     }
 
@@ -149,7 +149,7 @@ public class Tag {
      *
      * @return HTML
      */
-    public final String toHtml() {
+    public String toHtml() {
         StringBuilder b = new StringBuilder();
         if (isText()) {
             b.append(text);

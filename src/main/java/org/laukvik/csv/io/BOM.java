@@ -108,14 +108,14 @@ public enum BOM {
     /**
      * Returns whether the bytes matches the current.
      *
-     * @param bytes the bytes
+     * @param values the bytes
      * @return true if it matches
      */
-    public boolean is(final byte... bytes) {
-        if (bytes.length < this.bytes.length) {
+    public boolean is(final byte... values) {
+        if (values.length < this.bytes.length) {
             return false;
         }
-        byte[] sameBytes = Arrays.copyOfRange(bytes, 0, this.bytes.length);
+        byte[] sameBytes = Arrays.copyOfRange(values, 0, this.bytes.length);
         return Arrays.equals(sameBytes, this.bytes);
     }
 

@@ -2,9 +2,8 @@ package org.laukvik.csv.io.xml;
 
 /**
  * An attribute contains a named key and a value.
- *
  */
-public class Attribute {
+public final class Attribute {
 
     /**
      * The name.
@@ -36,12 +35,39 @@ public class Attribute {
     }
 
     /**
+     * Returns the attribute name.
+     *
+     * @return the attribute name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the attribute name.
+     *
+     * @param attributeName the attribute name
+     */
+    public void setName(final String attributeName) {
+        this.name = attributeName;
+    }
+
+    /**
+     * Returns the attribute value.
+     *
+     * @return the attribute value
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
      * Sets the new value.
      *
      * @param attributeValue the value
      */
-    public final void setValue(final String attributeValue) {
-        this.value = value;
+    public void setValue(final String attributeValue) {
+        this.value = attributeValue;
     }
 
     /**
@@ -49,17 +75,11 @@ public class Attribute {
      *
      * @return HTML
      */
-    public final String toHtml() {
+    public String toHtml() {
+        if (value == null || value.trim().isEmpty()) {
+            return name + "=\"\"";
+        }
         return name + "=\"" + value + "\"";
     }
 
-    /**
-     * Returns HTML.
-     *
-     * @return HTML
-     */
-    public final String toString() {
-        return toHtml();
-    }
 }
-
