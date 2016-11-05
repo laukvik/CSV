@@ -20,6 +20,8 @@ import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -32,21 +34,13 @@ import java.util.List;
  * Values (CSV) Files</a>
  * @see <a href="https://en.wikipedia.org/wiki/Comma-separated_values">Comma Separated Values (wikipedia)</a>
  */
-public final class CsvWriter implements Writeable, AutoCloseable {
+public final class CsvWriter implements Writeable {
 
-    /**
-     * The outputStream to write to.
-     */
-    private final OutputStream out;
 
     /**
      * Writes the data set in the CSV format to the outputStream.
-     *
-     * @param outputStream the outputstream
-     * @throws IOException when the data could not be written
      */
-    public CsvWriter(final OutputStream outputStream) throws IOException {
-        this.out = outputStream;
+    public CsvWriter() {
     }
 
     /**
@@ -72,27 +66,40 @@ public final class CsvWriter implements Writeable, AutoCloseable {
      * Writes the CSV to the file.
      *
      * @param csv the CSV to write
-     * @throws IOException the file could not be written
+     * @param file the file
      */
-    public void writeCSV(final CSV csv) throws IOException {
-        BOM bom = csv.getMetaData().getBOM();
-        if (bom != null) {
-            out.write(bom.getBytes());
-        }
-        writeMetaData(csv.getMetaData());
-        for (int y = 0; y < csv.getRowCount(); y++) {
-            writeRow(csv.getRow(y));
+    public void writeCSV(final CSV csv, final File file) {
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            writeCSV(csv, out);
+        } catch (final IOException e) {
+            e.printStackTrace();
         }
     }
 
     /**
-     * Writes a single row of CSV data.
+     * Writes the CSV to the file.
      *
-     * @param row the row to write
-     * @throws IOException when the row could not be written
+     * @param csv the CSV to write
+     * @param out outputStream
+     * @throws IOException the file could not be written
      */
-    private void writeRow(final Row row) throws IOException {
-        writeRow(row, row.getCSV().getMetaData());
+    public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
+        BOM bom = csv.getMetaData().getBOM();
+        if (bom != null) {
+            out.write(bom.getBytes());
+        }
+        writeMetaData(csv.getMetaData(), out);
+        for (int y = 0; y < csv.getRowCount(); y++) {
+            writeCSV(csv.getRow(y), out);
+        }
+    }
+
+    public void writeCSV(final Row row, final OutputStream outputStream) throws IOException {
+        writeRow(row, row.getCSV().getMetaData(), outputStream);
+    }
+
+    public void writeCSV(final MetaData metaData, final OutputStream outputStream) throws IOException {
+        writeMetaData(metaData, outputStream);
     }
 
     /**
@@ -100,39 +107,43 @@ public final class CsvWriter implements Writeable, AutoCloseable {
      *
      * @param row      the row
      * @param metaData the MetaData to use
+     * @param out      outputStream
      * @throws IOException when the file could not be written to.
      */
-    public void writeRow(final Row row, final MetaData metaData) throws IOException {
+    private void writeRow(final Row row, final MetaData metaData, final OutputStream out) throws IOException {
         List<String> values = new ArrayList<>();
         for (int x = 0; x < metaData.getColumnCount(); x++) {
             Column c = metaData.getColumn(x);
             values.add(row.getAsString(c));
         }
-        writeValues(values);
+        writeValues(values, out);
     }
 
     /**
      * Writes the MetaData.
      *
      * @param metaData the MetaData
+     * @param out      outputStream
      * @throws IOException when the MetaData could not be written
      */
-    public void writeMetaData(final MetaData metaData) throws IOException {
+    private void writeMetaData(final MetaData metaData, final OutputStream out) throws IOException {
         List<String> items = new ArrayList<>();
         for (int x = 0; x < metaData.getColumnCount(); x++) {
             Column c = metaData.getColumn(x);
             String header = c.getName() + "(" + c.getName() + ")";
             items.add(header);
         }
-        writeValues(items);
+        writeValues(items, out);
     }
 
     /**
      * Writes the values.
+     *
      * @param values the values
+     * @param out    outputStream
      * @throws IOException when the values could not be written
      */
-    private void writeValues(final List<String> values) throws IOException {
+    private void writeValues(final List<String> values, final OutputStream out) throws IOException {
         for (int x = 0; x < values.size(); x++) {
             if (x > 0) {
                 out.write(CSV.COMMA);
@@ -162,12 +173,4 @@ public final class CsvWriter implements Writeable, AutoCloseable {
         out.write(CSV.LINEFEED);
     }
 
-    /**
-     * Closes the outputStream.
-     *
-     * @throws Exception when the outputStream could not be closed
-     */
-    public void close() throws Exception {
-        out.close();
-    }
 }

@@ -20,6 +20,8 @@ import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -70,26 +72,35 @@ public final class JsonWriter implements Writeable {
      * Character for space.
      */
     private static final char SPACE = ' ';
-    /**
-     * The outputStream to write to.
-     */
-    private final OutputStream out;
 
     /**
      * Creates a new instance.
-     * @param outputStream the outputStream to write to
      */
-    public JsonWriter(final OutputStream outputStream) {
-        this.out = outputStream;
+    public JsonWriter() {
     }
 
     /**
      * Writes the CSV to the file.
      *
      * @param csv the CSV to write
+     * @param file the file
+     */
+    public void writeCSV(final CSV csv, final File file) {
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            writeCSV(csv, out);
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Writes the CSV to the file.
+     *
+     * @param csv the CSV to write
+     * @param out outputStream
      * @throws IOException when the file could not be written to
      */
-    public void writeCSV(final CSV csv) throws IOException {
+    public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
         MetaData md = csv.getMetaData();
         out.write(BRACKET_LEFT);
         out.write(LINEFEED);
@@ -126,6 +137,16 @@ public final class JsonWriter implements Writeable {
         out.write(LINEFEED);
         out.write(BRACKET_RIGHT);
         out.flush();
+    }
+
+    @Override
+    public void writeCSV(Row row, OutputStream outputStream) throws IOException {
+
+    }
+
+    @Override
+    public void writeCSV(MetaData metaData, OutputStream outputStream) throws IOException {
+
     }
 
     /**

@@ -16,12 +16,14 @@
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
+import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Writes the data set to the ResourceBundle.
@@ -31,18 +33,25 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
     /**
      * The folder to read from.
      */
-    private final File folder;
+    private File folder;
     /** The base filename to read. The bundle name. */
-    private final String basename;
+    private String basename;
 
     /**
      * Writes the data set to the ResourceBundle.
      * <p>
      * language.properties
+     */
+    public ResourceBundleWriter() {
+    }
+
+    /**
+     * Writes the CSV to the file.
      *
+     * @param csv the CSV
      * @param file the file
      */
-    public ResourceBundleWriter(final File file) {
+    public void writeCSV(final CSV csv, final File file) {
         this.folder = file.getParentFile();
         this.basename = getBasename(file);
     }
@@ -51,9 +60,10 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
      * Writes the ResourceBundle to files.
      *
      * @param csv the CSV to write
+     * @param out the outputStream
      * @throws IOException when the files could not be written
      */
-    public void writeCSV(final CSV csv) throws IOException {
+    public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
         if (csv.getMetaData().getColumnCount() > 1) {
             for (int x = 1; x < csv.getMetaData().getColumnCount(); x++) {
                 StringColumn column = (StringColumn) csv.getMetaData().getColumn(x);
@@ -62,13 +72,19 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
         }
     }
 
+    public void writeCSV(Row row, OutputStream outputStream) throws IOException {
+    }
+
+    public void writeCSV(MetaData metaData, OutputStream outputStream) throws IOException {
+    }
+
     /**
      * Writes a single language to file.
      *
      * @param csv    the CSV
      * @param column the column with the language
      */
-    public void writeBundle(final CSV csv, final StringColumn column) {
+    private void writeBundle(final CSV csv, final StringColumn column) {
         String filename = getFilename(column, basename);
         File bundleFile = new File(folder, filename);
         StringColumn keyColumn = (StringColumn) csv.getMetaData().getColumn(0);

@@ -16,9 +16,12 @@
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
+import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -28,29 +31,37 @@ import java.nio.charset.Charset;
  *
  * @see <a href="https://en.wikipedia.org/wiki/HTML">HTML (wikipedia)</a>
  */
-public final class HtmlWriter implements Writeable, AutoCloseable {
-
-    /**
-     * The outputStream to write to.
-     */
-    private final OutputStream out;
+public final class HtmlWriter implements Writeable {
 
     /**
      * Writes the CSV to the outputStream.
      *
-     * @param outputStream the outputStream
      */
-    public HtmlWriter(final OutputStream outputStream) {
-        this.out = outputStream;
+    public HtmlWriter() {
+    }
+
+    /**
+     * Writes the CSV to the file.
+     *
+     * @param csv the CSV to write
+     * @param file the file
+     */
+    public void writeCSV(final CSV csv, final File file) {
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            writeCSV(csv, out);
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Write the CSV to the outputStream.
      *
      * @param csv the CSV to write
+     * @param out outputStream
      * @throws IOException when the csv could not be written
      */
-    public void writeCSV(final CSV csv) throws IOException {
+    public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
         Charset charset = csv.getMetaData().getCharset();
 
         out.write("<html>\n".getBytes());
@@ -100,14 +111,14 @@ public final class HtmlWriter implements Writeable, AutoCloseable {
 
     }
 
-    /**
-     * Closes the outputStream.
-     *
-     * @throws Exception when the outputStream could not be closed
-     */
-    public void close() throws Exception {
-        out.flush();
-        out.close();
+    @Override
+    public void writeCSV(Row row, OutputStream outputStream) throws IOException {
+
+    }
+
+    @Override
+    public void writeCSV(MetaData metaData, OutputStream outputStream) throws IOException {
+
     }
 
 }

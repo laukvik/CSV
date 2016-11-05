@@ -16,40 +16,54 @@
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
+import org.laukvik.csv.MetaData;
+import org.laukvik.csv.Row;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * An interface for writing data sets.
  *
- * TODO - writeMetaData( MetaData metaData, OutputStream outputStream );
- * TODO - writeRow( Row row );
  *
  */
 public interface Writeable {
 
     /**
-     * Writes the contents of the CSV using a writer.
+     * Writes the CSV to the file.
      *
      * @param csv the CSV to write
+     * @param file the file
      * @throws IOException when the CSV could not be written
      */
-    void writeCSV(CSV csv) throws IOException;
+    void writeCSV(CSV csv, File file);
 
-//    /**
-//     * Writes the MetaData to the outputStream.
-//     *
-//     * @param metaData the metaData
-//     * @param outputStream the outputStream
-//     */
-//    void writeMetaData(MetaData metaData, OutputStream outputStream);
-//
-//    /**
-//     * Writes the row to the outputStream.
-//     *
-//     * @param row the row
-//     * @param outputStream the outputStream
-//     */
-//    void writeMetaData(Row row, OutputStream outputStream);
+    /**
+     * Writes the csv to the outputStream.
+     *
+     * @param csv          the CSV
+     * @param outputStream the outputStream
+     * @throws IOException when the csv could not be written
+     */
+    void writeCSV(CSV csv, OutputStream outputStream) throws IOException;
+
+    /**
+     * Writes the single row to the outputStream.
+     *
+     * @param row          the row
+     * @param outputStream the outputStream
+     * @throws IOException when the row can't be written
+     */
+    void writeCSV(Row row, OutputStream outputStream) throws IOException;
+
+    /**
+     * Writes the metadata to the outputStream.
+     *
+     * @param metaData     the metadata
+     * @param outputStream the outputStream
+     * @throws IOException when the row can't be written
+     */
+    void writeCSV(MetaData metaData, OutputStream outputStream) throws IOException;
 
 }

@@ -16,9 +16,12 @@
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
+import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -28,7 +31,7 @@ import java.nio.charset.Charset;
  *
  * @see <a href="https://en.wikipedia.org/wiki/XML">XML (wikipedia)</a>
  */
-public class XmlWriter implements Writeable {
+public final class XmlWriter implements Writeable {
 
     /**
      * Character for beginning of a tag.
@@ -75,10 +78,8 @@ public class XmlWriter implements Writeable {
      */
     private static final char TAB = '\t';
     /**
-     * The OutputStream to write to.
+     * The name of the root element to write.
      */
-    private final OutputStream out;
-    /** The name of the root element to write. */
     private final String rootElementName;
     /**
      * The name of the row element to write.
@@ -88,32 +89,45 @@ public class XmlWriter implements Writeable {
     /**
      * Writes the CSV to the outputStream using the specified rootElementName and rowElementName.
      *
-     * @param outputStream the outputStream
      * @param rootName the name of the root element in XML
      * @param rowName  the name of the element representing a row
      */
-    public XmlWriter(final OutputStream outputStream, final String rootName, final String rowName) {
-        this.out = outputStream;
+    public XmlWriter(final String rootName, final String rowName) {
         this.rootElementName = rootName;
         this.rowElementName = rowName;
     }
 
     /**
      * Writes the CSV to the outputStream using the default values for rootElementName and rowElementName.
-     *
-     * @param outputStream the outputStream
      */
-    public XmlWriter(final OutputStream outputStream) {
-        this(outputStream, "rows", "row");
+    public XmlWriter() {
+        this("rows", "row");
+    }
+
+
+    /**
+     * Writes the CSV to the file.
+     *
+     * @param csv  the CSV to write
+     * @param file the file
+     * @throws IOException when the CSV can't be fully written
+     */
+    public void writeCSV(final CSV csv, final File file) {
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            writeCSV(csv, out);
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Writes the CSV.
      *
      * @param csv the CSV to write
+     * @param out the outputStream
      * @throws IOException when the file cant be written
      */
-    public final void writeCSV(final CSV csv) throws IOException {
+    public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
         Charset charset = csv.getMetaData().getCharset();
         out.write(("<?xml version=\"1.0\" encoding=\"" + charset.name() + "\"?>").getBytes());
 
@@ -172,6 +186,16 @@ public class XmlWriter implements Writeable {
         out.write(CLOSE);
         out.flush();
         out.close();
+    }
+
+    @Override
+    public void writeCSV(Row row, OutputStream outputStream) throws IOException {
+
+    }
+
+    @Override
+    public void writeCSV(MetaData metaData, OutputStream outputStream) throws IOException {
+
     }
 
 }
