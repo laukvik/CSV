@@ -17,62 +17,39 @@ package org.laukvik.csv.columns;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 
 public class ForeignKeyTest {
 
     @Test
-    public void validParseFormat() {
-        ForeignKey.parse("table[column]");
+    public void shouldTable() {
+        ForeignKey fk = new ForeignKey("employee");
+        assertEquals("employee", fk.getTable());
     }
 
-    @Test(expected = IllegalForeignKeyException.class)
-    public void missingStartParantheses() {
-        ForeignKey.parse("table column]");
+    @Test
+    public void shouldTableColumn() {
+        ForeignKey fk = new ForeignKey("employee", "id");
+        assertEquals("employee", fk.getTable());
+        assertEquals("id", fk.getColumn());
     }
 
-    @Test(expected = IllegalForeignKeyException.class)
-    public void missingColumn() {
-        ForeignKey.parse("table");
+    @Test
+    public void setters() {
+        ForeignKey fk = new ForeignKey("employee");
+        fk.setTable("customer");
+        fk.setColumn("customer_id");
+        assertEquals("customer", fk.getTable());
+        assertEquals("customer_id", fk.getColumn());
     }
 
-    @Test(expected = IllegalForeignKeyException.class)
-    public void missingTable() {
-        ForeignKey.parse("[column]");
-    }
-
-    @Test(expected = IllegalForeignKeyException.class)
-    public void missingTableAndColumn() {
-        ForeignKey.parse("[]");
-    }
-
-    @Test(expected = IllegalForeignKeyException.class)
-    public void emptyColumn() {
-        ForeignKey.parse("table[]");
-    }
-
-    @Test(expected = IllegalForeignKeyException.class)
-    public void tableAndColumnNull() {
-        new ForeignKey(null, null);
-    }
-
-    @Test(expected = IllegalForeignKeyException.class)
-    public void emptyValueShouldFail2() {
-        new ForeignKey("", "");
-    }
-
-    @Test(expected = IllegalForeignKeyException.class)
-    public void emptyTableAndColumn() {
-        new ForeignKey(null, "");
-    }
-
-    @Test(expected = IllegalForeignKeyException.class)
-    public void emptyTableAndNullColumn() {
-        new ForeignKey("", null);
-    }
-
-    @Test(expected = IllegalForeignKeyException.class)
-    public void emptyValueShouldFail5() {
-        new ForeignKey(" ", " ");
+    @Test
+    public void equals() {
+        ForeignKey fk1 = new ForeignKey("employee", "id");
+        ForeignKey fk2 = new ForeignKey("employee", "id");
+        assertTrue(fk1.equals(fk2));
     }
 
 }

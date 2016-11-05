@@ -67,8 +67,6 @@ import static org.laukvik.csv.fx.Builder.getSeparatorCharByString;
 import static org.laukvik.csv.fx.Builder.getSeparatorString;
 import static org.laukvik.csv.fx.Builder.toKb;
 
-//import static org.laukvik.csv.fx.Builder.getSeparatorCharByString;
-
 /**
  * The JavaFX desktop application for opening and displaying the data sets.
  *
@@ -140,6 +138,10 @@ public class Main extends Application implements ChangeListener, FileListener {
      * The Label for showing the separator.
      */
     private Label separatorLabel;
+    /**
+     * The Label for showing the file type.
+     */
+    private Label fileTypeLabel;
     /**
      * The Label for showing the progress bar.
      */
@@ -234,6 +236,26 @@ public class Main extends Application implements ChangeListener, FileListener {
             return "";
         } else {
             return toKb(file.length());
+        }
+    }
+
+    /**
+     * Returns the formatted file type.
+     * @param file the file
+     * @return the formatted file type
+     */
+    private static String formatFiletype(final File file) {
+        if (file == null) {
+            return "";
+        } else {
+            String filename = file.getName();
+            if (filename.endsWith(".txt")) {
+                return "Text";
+            } else if (filename.endsWith(".properties")) {
+                return "ResourceBundle";
+            } else {
+                return "CSV";
+            }
         }
     }
 
@@ -343,17 +365,18 @@ public class Main extends Application implements ChangeListener, FileListener {
         Label separator = new Label(bundle.getString("status.separator"));
         separator.setDisable(true);
         separatorLabel = new Label("-");
+        Label filetype = new Label(bundle.getString("status.filetype"));
+        filetype.setDisable(true);
+        fileTypeLabel = new Label("");
         progressBar = new ProgressBar();
         progressBar.setVisible(false);
         progressBar.setPrefWidth(PROGRESS_BAR_WIDTH);
         bar.getItems().addAll(rows, rowsLabel, cols, colsLabel, size, sizeLabel, encoding, encodingLabel,
-                separator, separatorLabel, progressBar);
-
+                separator, separatorLabel, filetype, fileTypeLabel, progressBar);
         final BorderPane root = new BorderPane();
         root.setTop(topContainer);
         root.setCenter(mainSplit);
         root.setBottom(bar);
-
         final java.awt.Dimension percent = getPercentSize(0.8f, 0.7f);
         final Scene scene = new Scene(root, percent.getWidth(), percent.getHeight());
         stage.setScene(scene);
@@ -587,6 +610,8 @@ public class Main extends Application implements ChangeListener, FileListener {
         sizeLabel.setText(formatFilesize(csv.getFile()));
         separatorLabel.setText(formatSeparator(csv.getMetaData().getSeparatorChar()));
         stage.setTitle(formatFilename(csv.getFile()));
+
+        fileTypeLabel.setText(formatFiletype(csv.getFile()));
     }
 
     /**
