@@ -19,7 +19,6 @@ import static org.laukvik.csv.io.xml.Mode.VALUE;
 
 /**
  * Parses XML.
- *
  */
 public class XmlParser {
 
@@ -59,8 +58,32 @@ public class XmlParser {
      * The listeners.
      */
     private final List<XmlListener> listeners;
-    /** The current tag. */
+    /**
+     * The current tag.
+     */
     private Tag current;
+    /**
+     * The mode the reading state is in.
+     */
+    private Mode mode;
+
+    /**
+     * Variable for appending text.
+     */
+    private StringBuilder text;
+    /**
+     * Variable for appending tag name.
+     */
+    private StringBuilder tag;
+    /**
+     * Variable for appending attribute name.
+     */
+    private StringBuilder attr;
+    /**
+     * Variable for appending attribute value.
+     */
+    private StringBuilder value;
+
 
     /**
      * Creates a new XmlParser.
@@ -149,6 +172,253 @@ public class XmlParser {
     }
 
     /**
+     * Found a start symbol.
+     */
+    private void parseStartSymbol() {
+        // Tag start
+        switch (mode) {
+            case EMPTY:
+                mode = TAG;
+                tag = new StringBuilder();
+                break;
+            case TEXT:
+                mode = TAG;
+                if (text.length() > 0) {
+                    foundText(text.toString());
+                }
+                text = new StringBuilder();
+                break;
+            case TAG:
+                break; // Invalid  <<
+            case BODY:
+                break; // < <
+            case ATTR:
+                break; // class<
+            case EQ:
+                break; // <=<
+            case QUOTE_OPEN:
+                break;
+            case VALUE:
+                break; // class="<
+            case QUOTE_STOP:
+                break;
+            case CLOSE:
+                break; // </>
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Found a close symbol.
+     */
+    private void parseCloseSymbol() {
+        switch (mode) {
+            case EMPTY:
+                break; // Syntax error.. Cant start with >
+            case TEXT:
+                break; // Syntax error.
+            case TAG:
+                mode = EMPTY;
+                foundTag(tag.toString());
+                tag = new StringBuilder();
+                break;
+            case BODY:
+                mode = EMPTY;
+                foundTag(tag.toString());
+                tag = new StringBuilder();
+                break;
+            case ATTR:
+                mode = TEXT;
+                attr = new StringBuilder();
+                break;
+            case EQ:
+                break;
+            case QUOTE_OPEN:
+                break;
+            case VALUE:
+                mode = TEXT;
+                foundValue(value.toString());
+                value = new StringBuilder();
+                break;
+            case QUOTE_STOP:
+                foundValue(value.toString());
+                value = new StringBuilder();
+                mode = EMPTY;
+                break;
+            case CLOSE:
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Found an equal sign.
+     */
+    private void parseEqualSymbol() {
+        switch (mode) {
+            case EMPTY:
+                mode = TEXT;
+                text.append('=');
+                break;
+            case TEXT:
+                text.append('=');
+                break;
+            case TAG:
+                break; // Not allowed in tag name <tag=
+            case BODY:
+                mode = EQ;
+                break;
+            case ATTR:
+                mode = EQ;
+                foundAttr(attr.toString());
+                attr = new StringBuilder();
+                break; // Not allowed in attribute name
+            case EQ:
+                break;
+            case QUOTE_OPEN:
+                break;
+            case VALUE:
+                value.append('=');
+                break;
+            case QUOTE_STOP:
+                break;
+            case CLOSE:
+                break; // Not allowed
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Found a quote symbol.
+     */
+    private void parseQuoteSymbol() {
+        switch (mode) {
+            case EMPTY:
+                mode = TEXT;
+                text.append('"');
+                break;
+            case TEXT:
+                text.append('"');
+                break;
+            case TAG:
+                break; // Quote not allowed in tag name
+            case BODY:
+                mode = ATTR;
+                break; // attr="   attr ="    attr =  "
+            case ATTR:
+                break;
+            case EQ:
+                mode = QUOTE_OPEN;
+                break;
+            case QUOTE_OPEN:
+                mode = QUOTE_STOP;
+                break;
+            case VALUE:
+                mode = QUOTE_STOP;
+                foundValue(value.toString());
+                value = new StringBuilder();
+                break;
+            case QUOTE_STOP:
+                mode = BODY;
+                break;
+            case CLOSE:
+                break; // Quote not allowed in close tag
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Found whitespace character.
+     *
+     * @param c the character
+     */
+    private void parseWhitespace(final char c) {
+        switch (mode) {
+            case EMPTY:
+                mode = TEXT;
+                break;
+            case TEXT:
+                if (c == SPACE_SYMBOL) {
+                    text.append(c);
+                }
+                break;
+            case TAG:
+                mode = BODY;
+                foundTag(tag.toString());
+                tag = new StringBuilder();
+                break; // tag name ends
+            case BODY:
+                break; // ignore white space
+            case ATTR:
+                mode = BODY;
+                foundAttr(attr.toString());
+                attr = new StringBuilder();
+                break; // attribute without value e.g <input checked>
+            case EQ:
+                break;
+            case QUOTE_OPEN:
+                break;
+            case VALUE:
+                value.append(c);
+                break;
+            case QUOTE_STOP:
+                mode = BODY;
+                foundValue(value.toString());
+                break;
+            case CLOSE:
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Found a non control character.
+     *
+     * @param c the character
+     */
+    private void parseEverything(final char c) {
+        switch (mode) {
+            case EMPTY:
+                mode = TEXT;
+                text.append(c);
+                break;
+            case TEXT:
+                text.append(c);
+                break;
+            case TAG:
+                tag.append(c);
+                break;
+            case BODY:
+                mode = ATTR;
+                attr.append(c);
+                break;
+            case ATTR:
+                attr.append(c);
+                break;
+            case EQ:
+                break;
+            case QUOTE_OPEN:
+                value.append(c);
+                mode = VALUE;
+                break;
+            case VALUE:
+                value.append(c);
+                break;
+            case QUOTE_STOP:
+                break;
+            case CLOSE:
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
      * Parses the file.
      *
      * @param file the file
@@ -159,239 +429,30 @@ public class XmlParser {
         FileReader reader = new FileReader(file);
         final Tag root = new Tag("document");
         current = root;
-        Mode mode = EMPTY;
-        StringBuilder text = new StringBuilder();
-        StringBuilder tag = new StringBuilder();
-        StringBuilder attr = new StringBuilder();
-        StringBuilder value = new StringBuilder();
-        final StringBuilder close = new StringBuilder();
+        mode = EMPTY;
+
+        text = new StringBuilder();
+        tag = new StringBuilder();
+        attr = new StringBuilder();
+        value = new StringBuilder();
         while (reader.ready()) {
 
             char c = (char) reader.read();
             if (c == START_SYMBOL) {
-                // Tag start
-                switch (mode) {
-                    case EMPTY:
-                        mode = TAG;
-                        tag = new StringBuilder();
-                        break;
-                    case TEXT:
-                        mode = TAG;
-                        if (text.length() > 0) {
-                            foundText(text.toString());
-                        }
-                        text = new StringBuilder();
-                        break;
-                    case TAG:
-                        break; // Invalid  <<
-                    case BODY:
-                        break; // < <
-                    case ATTR:
-                        break; // class<
-                    case EQ:
-                        break; // <=<
-                    case QUOTE_OPEN:
-                        break;
-                    case VALUE:
-                        break; // class="<
-                    case QUOTE_STOP:
-                        break;
-                    case CLOSE:
-                        break; // </>
-                    default:
-                        break;
-                }
+                parseStartSymbol();
             } else if (c == CLOSE_SYMBOL) {  // <tag attr="value"> <tag>
                 // Tag close
-                switch (mode) {
-                    case EMPTY:
-                        break; // Syntax error.. Cant start with >
-                    case TEXT:
-                        break; // Syntax error.
-                    case TAG:
-                        mode = EMPTY;
-                        foundTag(tag.toString());
-                        tag = new StringBuilder();
-                        break;
-                    case BODY:
-                        mode = EMPTY;
-                        foundTag(tag.toString());
-                        tag = new StringBuilder();
-                        break;
-                    case ATTR:
-                        mode = TEXT;
-                        attr = new StringBuilder();
-                        break;
-                    case EQ:
-                        break;
-                    case QUOTE_OPEN:
-                        break;
-                    case VALUE:
-                        mode = TEXT;
-                        foundValue(value.toString());
-                        value = new StringBuilder();
-                        break;
-                    case QUOTE_STOP:
-                        foundValue(value.toString());
-                        value = new StringBuilder();
-                        mode = EMPTY;
-                        break;
-                    case CLOSE:
-                        break;
-                    default:
-                        break;
-                }
+                parseCloseSymbol();
             } else if (c == EQUAL_SYMBOL) {
                 // Equals
-                switch (mode) {
-                    case EMPTY:
-                        mode = TEXT;
-                        text.append(c);
-                        break;
-                    case TEXT:
-                        text.append(c);
-                        break;
-                    case TAG:
-                        break; // Not allowed in tag name <tag=
-                    case BODY:
-                        mode = EQ;
-                        break;
-                    case ATTR:
-                        mode = EQ;
-                        foundAttr(attr.toString());
-                        attr = new StringBuilder();
-                        break; // Not allowed in attribute name
-                    case EQ:
-                        break;
-                    case QUOTE_OPEN:
-                        break;
-                    case VALUE:
-                        value.append(c);
-                        break;
-                    case QUOTE_STOP:
-                        break;
-                    case CLOSE:
-                        break; // Not allowed
-                    default:
-                        break;
-                }
+                parseEqualSymbol();
             } else if (c == QUOTE_SYMBOL) {
-                /*
-                 *  Quote
-                 *
-                 *  <tag attr="value">
-                 *
-                 **/
-                switch (mode) {
-                    case EMPTY:
-                        mode = TEXT;
-                        text.append(c);
-                        break;
-                    case TEXT:
-                        text.append(c);
-                        break;
-                    case TAG:
-                        break; // Quote not allowed in tag name
-                    case BODY:
-                        mode = ATTR;
-                        break; // attr="   attr ="    attr =  "
-                    case ATTR:
-                        break;
-                    case EQ:
-                        mode = QUOTE_OPEN;
-                        break;
-                    case QUOTE_OPEN:
-                        mode = QUOTE_STOP;
-                        break;
-                    case VALUE:
-                        mode = QUOTE_STOP;
-                        foundValue(value.toString());
-                        value = new StringBuilder();
-                        break;
-                    case QUOTE_STOP:
-                        mode = BODY;
-                        break;
-                    case CLOSE:
-                        break; // Quote not allowed in close tag
-                    default:
-                        break;
-                }
+                parseQuoteSymbol();
             } else if (c == SPACE_SYMBOL || c == TAB_SYMBOL || c == NEWLINE_SYMBOL || c == RETURN_SYMBOL) {
                 // Whitespace  <tag attr="value">
-                switch (mode) {
-                    case EMPTY:
-                        mode = TEXT;
-                        break;
-                    case TEXT:
-                        if (c == SPACE_SYMBOL) {
-                            text.append(c);
-                        }
-                        break;
-                    case TAG:
-                        mode = BODY;
-                        foundTag(tag.toString());
-                        tag = new StringBuilder();
-                        break; // tag name ends
-                    case BODY:
-                        break; // ignore white space
-                    case ATTR:
-                        mode = BODY;
-                        foundAttr(attr.toString());
-                        attr = new StringBuilder();
-                        break; // attribute without value e.g <input checked>
-                    case EQ:
-                        break;
-                    case QUOTE_OPEN:
-                        break;
-                    case VALUE:
-                        value.append(c);
-                        break;
-                    case QUOTE_STOP:
-                        mode = BODY;
-                        foundValue(value.toString());
-                        break;
-                    case CLOSE:
-                        break;
-                    default:
-                        break;
-                }
+                parseWhitespace(c);
             } else {
-                //-- Everything
-                switch (mode) {
-                    case EMPTY:
-                        mode = TEXT;
-                        text.append(c);
-                        break;
-                    case TEXT:
-                        text.append(c);
-                        break;
-                    case TAG:
-                        tag.append(c);
-                        break;
-                    case BODY:
-                        mode = ATTR;
-                        attr.append(c);
-                        break;
-                    case ATTR:
-                        attr.append(c);
-                        break;
-                    case EQ:
-                        break;
-                    case QUOTE_OPEN:
-                        value.append(c);
-                        mode = VALUE;
-                        break;
-                    case VALUE:
-                        value.append(c);
-                        break;
-                    case QUOTE_STOP:
-                        break;
-                    case CLOSE:
-                        close.append(c);
-                        break;
-                    default:
-                        break;
-                }
+                parseEverything(c);
             }
         }
         return root;
