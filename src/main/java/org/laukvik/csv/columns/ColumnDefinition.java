@@ -7,6 +7,10 @@ import java.util.Set;
 /**
  * Defines the features of a column. In simplest form it's only the column name. It more complex it can contain
  * one or more attributes. An attribute is a key and a value.
+ *
+ * <pre>
+ * President(type=VARCHAR[20],primaryKey=true,increment=true,foreignKey=table[id])
+ * </pre>
  */
 public final class ColumnDefinition {
 
@@ -143,10 +147,10 @@ public final class ColumnDefinition {
      */
     public boolean getBoolean(final String attributeName) {
         Attribute v = get(attributeName);
-        if (v == null || v.getValue() == null || v.getValue().trim().isEmpty()) {
+        if (v == null || v.value == null || v.value.trim().isEmpty()) {
             return false;
         }
-        return v.getValue().trim().equalsIgnoreCase("true");
+        return v.value.trim().equalsIgnoreCase("true");
     }
 
     /**
@@ -175,6 +179,101 @@ public final class ColumnDefinition {
     public Set<String> getAttributeNames() {
         return attributeMap.keySet();
     }
+
+
+    /**
+     * Specifies an attribute value with optional extra value.
+     */
+    final class Attribute {
+
+        /**
+         * The value.
+         */
+        private String value;
+        /**
+         * The optional value.
+         */
+        private String optional;
+
+        /**
+         * Creates an attribute with no extra value.
+         *
+         * @param value the value
+         */
+        public Attribute(final String value) {
+            this.value = value;
+            int firstIndex = value.indexOf("[");
+            if (firstIndex > -1) {
+                int lastIndex = value.lastIndexOf("]");
+                if (lastIndex > firstIndex) {
+                    String v = value.substring(firstIndex + 1, lastIndex);
+                    this.optional = v;
+                    this.value = value.substring(0, firstIndex);
+                }
+            }
+        }
+
+        /**
+         * Creates an attribute with value and the optional extra value.
+         *
+         * @param value    the value
+         * @param optional the optional value
+         */
+        public Attribute(final String value, final String optional) {
+            this.value = value;
+            this.optional = optional;
+        }
+
+        /**
+         * Returns the compressed version.
+         *
+         * @return the compressed version
+         */
+        public String toCompressed() {
+            if (optional != null) {
+                return value + "[" + optional + "]";
+            } else {
+                return value;
+            }
+        }
+
+        /**
+         * Returns the value.
+         *
+         * @return the value
+         */
+        public String getValue() {
+            return value;
+        }
+
+        /**
+         * Sets the value.
+         *
+         * @param value the value
+         */
+        public void setValue(final String value) {
+            this.value = value;
+        }
+
+        /**
+         * Returns the optional value.
+         *
+         * @return the optional value
+         */
+        public String getOptional() {
+            return optional;
+        }
+
+        /**
+         * Sets the optional value.
+         *
+         * @param optional the optional value
+         */
+        public void setOptional(final String optional) {
+            this.optional = optional;
+        }
+    }
+
 
 
 }

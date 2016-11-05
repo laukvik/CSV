@@ -107,13 +107,13 @@ public abstract class Column<T> implements Comparable {
     }
 
     /**
-     * Returns the
+     * Analyzes the column definition an builds a column.
      *
      * @param columnDefinition the columnDefinition
      * @return the column
      */
     public static Column parseColumnDefinition(final ColumnDefinition columnDefinition) {
-        Attribute attrType = columnDefinition.get("type");
+        ColumnDefinition.Attribute attrType = columnDefinition.get("type");
         String columnName = columnDefinition.getColumnName();
         Column c = null;
 
@@ -136,7 +136,7 @@ public abstract class Column<T> implements Comparable {
             } else if (typeName.equalsIgnoreCase("BOOLEAN")) {
                 c = new BooleanColumn(columnName);
             } else if (typeName.equalsIgnoreCase("DATE")) {
-                Attribute attr = columnDefinition.get("format");
+                ColumnDefinition.Attribute attr = columnDefinition.get("format");
 
                 if (attr == null || attr.getValue().isEmpty()) {
                     throw new IllegalColumnDefinitionException("");
@@ -151,7 +151,7 @@ public abstract class Column<T> implements Comparable {
 
             } else if (typeName.startsWith("VARCHAR")) {
                 StringColumn sc = new StringColumn(columnName);
-                String w = attrType.getExtra();
+                String w = attrType.getOptional();
                 if (w != null) {
                     String v2 = w.trim();
                     try {
@@ -168,12 +168,12 @@ public abstract class Column<T> implements Comparable {
             boolean primaryKey = columnDefinition.getBoolean("primaryKey");
             c.setPrimaryKey(primaryKey);
 
-            Attribute attrFk = columnDefinition.get("foreignKey");
+            ColumnDefinition.Attribute attrFk = columnDefinition.get("foreignKey");
             if (attrFk != null) {
-                c.setForeignKey(new ForeignKey(attrFk.getValue(), attrFk.getExtra()));
+                c.setForeignKey(new ForeignKey(attrFk.getValue(), attrFk.getOptional()));
             }
 
-            Attribute attrDefault = columnDefinition.get("default");
+            ColumnDefinition.Attribute attrDefault = columnDefinition.get("default");
             if (attrDefault != null) {
                 c.setDefaultValue(attrDefault.getValue());
             }

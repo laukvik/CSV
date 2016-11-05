@@ -42,11 +42,11 @@ public class ColumnDefinitionTest {
     public void parseDetails() throws Exception {
         ColumnDefinition cd = new ColumnDefinition("President(type=VARCHAR[20],primaryKey=true,increment=true,foreignKey=table[id])");
         assertEquals("VARCHAR", cd.get("type").getValue());
-        assertEquals("20", cd.get("type").getExtra());
+        assertEquals("20", cd.get("type").getOptional());
         assertEquals("true", cd.get("primaryKey").getValue());
         assertEquals("true", cd.get("increment").getValue());
         assertEquals("table", cd.get("foreignKey").getValue());
-        assertEquals("id", cd.get("foreignKey").getExtra());
+        assertEquals("id", cd.get("foreignKey").getOptional());
     }
 
     @Test
