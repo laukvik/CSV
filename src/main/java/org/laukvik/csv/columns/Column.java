@@ -18,7 +18,6 @@ package org.laukvik.csv.columns;
 import org.laukvik.csv.MetaData;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,190 +73,6 @@ public abstract class Column<T> implements Comparable {
     }
 
     /**
-     * Parses a column name with support for optional metadata about the column. The supported format of metadata is
-     * like this:
-     * <p>
-     * <pre>
-     * "President(type=VARCHAR,primaryKey=true,increment=true,foreignKey=null)"
-     * </pre>
-     *
-     * @param name the name
-     * @return the column
-     */
-    public static final Column parseName(final String name) {
-        /* Extract extra information about the column*/
-        String columnName = null;
-        // Variables for meta values
-        List<String> keys = new ArrayList<>();
-        List<String> values = new ArrayList<>();
-        // Look for metadata in column headers
-        int firstIndex = name.indexOf("(");
-        if (firstIndex == -1) {
-            // No extra information
-            columnName = name;
-        } else {
-            // Found extra information
-            int lastIndex = name.indexOf(")", firstIndex);
-            columnName = name.substring(0, firstIndex);
-            if (lastIndex != -1) {
-                // String with metadata
-                String extraDetails = name.substring(firstIndex + 1, lastIndex);
-
-                String[] keyValues;
-                if (extraDetails.contains(",")) {
-                    keyValues = extraDetails.split(",");
-                } else {
-                    keyValues = new String[]{extraDetails};
-                }
-                // Extract all key/value pairs from metadata
-                for (String keyValue : keyValues) {
-                    if (keyValue.contains("=")) {
-                        String[] arr = keyValue.split("=");
-                        String key = arr[0];
-                        String value = arr[1];
-                        keys.add(key.trim());
-                        values.add(value.trim());
-                    } else {
-                        keys.add(keyValue.trim());
-                        values.add("");
-                    }
-                }
-
-            }
-        }
-
-        // Find dataType before continuing
-        String dataType = "VARCHAR";
-        for (int x = 0; x < keys.size(); x++) {
-            String key = keys.get(x);
-            String val = values.get(x);
-            if (key.equalsIgnoreCase("type")) {
-                dataType = val;
-            }
-        }
-
-        boolean allowsNull = true;
-        {
-            String allowNullValue = findValue("allowNulls", keys, values);
-            if (allowNullValue != null) {
-                if (allowNullValue.equalsIgnoreCase("true")) {
-                    allowsNull = true;
-                } else if (allowNullValue.equalsIgnoreCase("false")) {
-                    allowsNull = false;
-                } else {
-                    throw new IllegalColumnDefinitionException("allowNulls  cant be " + allowNullValue);
-                }
-            }
-        }
-
-        boolean primaryKey = false;
-        {
-            String pkValue = findValue("primaryKey", keys, values);
-            if (pkValue != null) {
-                if (pkValue.equalsIgnoreCase("true")) {
-                    primaryKey = true;
-                } else if (pkValue.equalsIgnoreCase("false")) {
-                    primaryKey = false;
-                } else {
-                    throw new IllegalColumnDefinitionException("primaryKey cant be " + pkValue);
-                }
-            }
-        }
-
-        ForeignKey foreignKey = null;
-        {
-            String fkValue = findValue("foreignKey", keys, values);
-            if (fkValue != null && !fkValue.trim().isEmpty()) {
-                foreignKey = ForeignKey.parse(fkValue);
-            }
-        }
-
-        String defaultValue = findValue("default", keys, values);
-
-        // Find all key pairs
-        String s = dataType.toUpperCase();
-        if (s.equalsIgnoreCase("INT")) {
-            IntegerColumn c = new IntegerColumn(columnName);
-            c.setPrimaryKey(primaryKey);
-            c.setAllowNulls(allowsNull);
-            c.setDefaultValue(defaultValue);
-            c.setForeignKey(foreignKey);
-            return c;
-        } else if (s.equalsIgnoreCase("FLOAT")) {
-            FloatColumn c = new FloatColumn(columnName);
-            c.setPrimaryKey(primaryKey);
-            c.setAllowNulls(allowsNull);
-            c.setDefaultValue(defaultValue);
-            c.setForeignKey(foreignKey);
-            return c;
-        } else if (s.equalsIgnoreCase("DOUBLE")) {
-            DoubleColumn c = new DoubleColumn(columnName);
-            c.setPrimaryKey(primaryKey);
-            c.setAllowNulls(allowsNull);
-            c.setDefaultValue(defaultValue);
-            c.setForeignKey(foreignKey);
-            return c;
-        } else if (s.equalsIgnoreCase("URL")) {
-            UrlColumn c = new UrlColumn(columnName);
-            c.setPrimaryKey(primaryKey);
-            c.setAllowNulls(allowsNull);
-            c.setDefaultValue(defaultValue);
-            c.setForeignKey(foreignKey);
-            return c;
-        } else if (s.equalsIgnoreCase("BOOLEAN")) {
-            BooleanColumn c = new BooleanColumn(columnName);
-            c.setPrimaryKey(primaryKey);
-            c.setAllowNulls(allowsNull);
-            c.setDefaultValue(defaultValue);
-            c.setForeignKey(foreignKey);
-            return c;
-        } else if (s.equalsIgnoreCase("DATE")) {
-            String format = findValue("format", keys, values);
-            if (format == null || format.trim().isEmpty()) {
-                throw new IllegalColumnDefinitionException("Format cant be empty!");
-            }
-            try {
-                SimpleDateFormat f = new SimpleDateFormat(format);
-            } catch (Exception e) {
-                throw new IllegalColumnDefinitionException("Format cant be " + format + "!");
-            }
-            DateColumn c = new DateColumn(columnName, format);
-            c.setPrimaryKey(primaryKey);
-            c.setAllowNulls(allowsNull);
-            c.setDefaultValue(defaultValue);
-            c.setForeignKey(foreignKey);
-            return c;
-        } else if (s.equalsIgnoreCase("BIGDECIMAL")) {
-            BigDecimalColumn c = new BigDecimalColumn(columnName);
-            c.setPrimaryKey(primaryKey);
-            c.setAllowNulls(allowsNull);
-            c.setDefaultValue(defaultValue);
-            c.setForeignKey(foreignKey);
-            return c;
-        } else if (s.startsWith("VARCHAR")) {
-            StringColumn c = new StringColumn(columnName);
-            c.setAllowNulls(allowsNull);
-            c.setPrimaryKey(primaryKey);
-            c.setDefaultValue(defaultValue);
-            c.setForeignKey(foreignKey);
-            int first = s.indexOf("[");
-            if (first != -1) {
-                int last = s.lastIndexOf("]");
-                String size = s.substring(first + 1, last).trim();
-                try {
-                    Integer i = Integer.parseInt(size);
-                    c.setSize(i);
-                } catch (Exception e) {
-                    throw new IllegalColumnDefinitionException(
-                            "Column " + columnName + " has invalid size '" + size + "'");
-                }
-            }
-            return c;
-        }
-        return new StringColumn(columnName);
-    }
-
-    /**
      * Finds the value of the named key.
      *
      * @param key    the key to find
@@ -273,6 +88,97 @@ public abstract class Column<T> implements Comparable {
             }
         }
         return null;
+    }
+
+    /**
+     * Parses a column name with support for optional metadata about the column. The supported format of metadata is
+     * like this:
+     * <p>
+     * <pre>
+     * "President(type=VARCHAR,primaryKey=true,increment=true,foreignKey=null)"
+     * </pre>
+     *
+     * @param name the name
+     * @return the column
+     */
+    public static final Column parseName(final String name) {
+        ColumnDefinition cd = new ColumnDefinition(name);
+        return parseColumnDefinition(cd);
+    }
+
+    /**
+     * Returns the
+     *
+     * @param columnDefinition the columnDefinition
+     * @return the column
+     */
+    public static Column parseColumnDefinition(final ColumnDefinition columnDefinition) {
+        Attribute attrType = columnDefinition.get("type");
+        String columnName = columnDefinition.getColumnName();
+        Column c = null;
+
+        if (attrType == null) {
+            c = new StringColumn(columnName);
+        } else {
+            String typeName = attrType.getValue();
+            if (typeName == null) {
+                c = new StringColumn(columnName);
+            } else if (typeName.equalsIgnoreCase("INT")) {
+                c = new IntegerColumn(columnName);
+            } else if (typeName.equalsIgnoreCase("FLOAT")) {
+                c = new FloatColumn(columnName);
+            } else if (typeName.equalsIgnoreCase("DOUBLE")) {
+                c = new DoubleColumn(columnName);
+            } else if (typeName.equalsIgnoreCase("BIGDECIMAL")) {
+                c = new BigDecimalColumn(columnName);
+            } else if (typeName.equalsIgnoreCase("URL")) {
+                c = new UrlColumn(columnName);
+            } else if (typeName.equalsIgnoreCase("BOOLEAN")) {
+                c = new BooleanColumn(columnName);
+            } else if (typeName.equalsIgnoreCase("DATE")) {
+                Attribute attr = columnDefinition.get("format");
+
+                if (attr == null || attr.getValue().isEmpty()) {
+                    throw new IllegalColumnDefinitionException("");
+                } else {
+                    try {
+                        new SimpleDateFormat(attr.getValue());
+                        c = new DateColumn(columnName, attr.getValue());
+                    } catch (final IllegalArgumentException e) {
+                        throw new IllegalColumnDefinitionException(attr.getValue());
+                    }
+                }
+
+            } else if (typeName.startsWith("VARCHAR")) {
+                StringColumn sc = new StringColumn(columnName);
+                String w = attrType.getExtra();
+                if (w != null) {
+                    String v2 = w.trim();
+                    try {
+                        sc.setSize(Integer.parseInt(v2));
+                    } catch (final NumberFormatException e) {
+                        throw new IllegalColumnDefinitionException(w);
+                    }
+                }
+                c = sc;
+            }
+            boolean allowsNull = columnDefinition.getBoolean("allowNulls");
+            c.setAllowNulls(allowsNull);
+
+            boolean primaryKey = columnDefinition.getBoolean("primaryKey");
+            c.setPrimaryKey(primaryKey);
+
+            Attribute attrFk = columnDefinition.get("foreignKey");
+            if (attrFk != null) {
+                c.setForeignKey(new ForeignKey(attrFk.getValue(), attrFk.getExtra()));
+            }
+
+            Attribute attrDefault = columnDefinition.get("default");
+            if (attrDefault != null) {
+                c.setDefaultValue(attrDefault.getValue());
+            }
+        }
+        return c;
     }
 
     /**
@@ -460,7 +366,9 @@ public abstract class Column<T> implements Comparable {
      * Fired when the column is changed.
      */
     private void fireColumnChanged() {
-        metaData.fireColumnChanged(this);
+        if (metaData != null) {
+            metaData.fireColumnChanged(this);
+        }
     }
 
     /**
@@ -480,5 +388,6 @@ public abstract class Column<T> implements Comparable {
         }
         return -1;
     }
+
 
 }

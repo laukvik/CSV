@@ -24,7 +24,7 @@ public class ColumnTest {
     @Test
     public void defaultValues() {
         IntegerColumn c = (IntegerColumn) Column.parseName("Presidency(type=int,default=1)");
-        Assert.assertEquals("defaultValue", "1", c.getDefaultValue());
+        Assert.assertEquals("1", c.getDefaultValue());
     }
 
     @Test
