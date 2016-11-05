@@ -20,7 +20,7 @@ public abstract class AbstractDateMatcher extends RowMatcher {
     private DateColumn column;
 
     /**
-     * Creats a new matcher.
+     * Creates a new matcher.
      *
      * @param dateColumn the dateColumn
      * @param date      the date

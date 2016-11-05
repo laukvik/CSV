@@ -27,7 +27,6 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -309,18 +308,13 @@ public class CSVTest {
     }
 
     @Test
-    public void readInvalid() {
-        try {
+    public void readInvalid() throws IOException {
             CSV csv = new CSV();
             csv.readFile(getResource("invalid.csv"));
             MetaData md = csv.getMetaData();
             assertEquals("First", "First", md.getColumn(0).getName());
             assertEquals("Last", "Last", md.getColumn(1).getName());
             assertSame("ColumnCount", 2, md.getColumnCount());
-        }
-        catch (Exception e) {
-            assertTrue("Found invalid data", (e instanceof InvalidRowDataException));
-        }
     }
 
     @Test

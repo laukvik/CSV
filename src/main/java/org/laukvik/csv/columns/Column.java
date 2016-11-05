@@ -102,7 +102,7 @@ public abstract class Column<T> implements Comparable {
      * @param name the name
      * @return the column
      */
-    public static final Column parseName(final String name) {
+    public static Column parseName(final String name) {
         ColumnDefinition cd = new ColumnDefinition(name);
         return parseColumnDefinition(cd);
     }

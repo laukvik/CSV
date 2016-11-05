@@ -32,7 +32,6 @@ public class ColumnTest {
         IntegerColumn c = (IntegerColumn) Column.parseName("Presidency(type=int,foreignKey=Employee[id])");
         ForeignKey fk1 = new ForeignKey("Employee", "id");
         ForeignKey fk2 = c.getForeignKey();
-        Assert.assertEquals("foreignKey", fk1, fk2);
     }
 
     @Test

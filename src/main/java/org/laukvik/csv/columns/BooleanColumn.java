@@ -49,6 +49,9 @@ public final class BooleanColumn extends Column<Boolean> {
      * @return the value
      */
     public Boolean parse(final String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
         return Boolean.parseBoolean(value);
     }
 

@@ -15,8 +15,6 @@
  */
 package org.laukvik.csv.columns;
 
-import java.util.Objects;
-
 /**
  * Represents a link to another column.
  */
@@ -83,34 +81,6 @@ public final class ForeignKey {
      */
     public void setColumn(final String columnName) {
         this.column = columnName;
-    }
-
-    /**
-     * Returns the HashCode.
-     * @return the HashCode
-     */
-//    public int hashCode() {
-//        int hash = 3;
-//        hash = 47 * hash + Objects.hashCode(this.table);
-//        hash = 47 * hash + Objects.hashCode(this.column);
-//        return hash;
-//    }
-
-    /**
-     * Returns true when equals to the object.
-     *
-     * @param obj the object
-     * @return true when equals
-     */
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ForeignKey other = (ForeignKey) obj;
-        return Objects.equals(this.table, other.table) && Objects.equals(this.column, other.column);
     }
 
 }

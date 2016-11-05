@@ -61,7 +61,7 @@ final class Builder {
 
 
     /**
-     * Returns the Image symobolizing the application.
+     * Returns the Image symobolizeing the application.
      *
      * @return the Image
      */
@@ -192,7 +192,7 @@ final class Builder {
     }
 
     /**
-     * Returns the String representation of the seperator character.
+     * Returns the String representation of the separator character.
      *
      * @param separator the separator
      * @return the String representation
@@ -213,7 +213,7 @@ final class Builder {
     }
 
     /**
-     * Returns the char representation of the seperator character.
+     * Returns the char representation of the separator character.
      *
      * @param separator the separator
      * @return the String representation
