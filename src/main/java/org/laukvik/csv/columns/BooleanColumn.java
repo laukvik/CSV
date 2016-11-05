@@ -68,11 +68,4 @@ public final class BooleanColumn extends Column<Boolean> {
         return one.compareTo(another);
     }
 
-    /**
-     * Returns the column a String.
-     * @return the
-     */
-    public String toString() {
-        return getName() + "(Boolean)";
-    }
 }

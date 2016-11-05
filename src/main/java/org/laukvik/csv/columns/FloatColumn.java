@@ -60,40 +60,4 @@ public final class FloatColumn extends Column<Float> {
         return one.compareTo(another);
     }
 
-    /**
-     * Returns the Column definition.
-     *
-     * TODO - Move this into the abstract class
-     *
-     * @return the column definition
-     */
-    public String toString() {
-        return getName() + "(Float)";
-    }
-
-    /**
-     * Return the HashCode.
-     * @return the HashCode
-     */
-    public int hashCode() {
-        return 7;
-    }
-
-    /**
-     * Returns true when equals to obj.
-     *
-     * @param obj the object to compare with
-     * @return true when equals
-     */
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final FloatColumn other = (FloatColumn) obj;
-        return true;
-    }
-
 }

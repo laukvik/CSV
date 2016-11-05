@@ -177,7 +177,7 @@ public final class CsvReader implements ClosableReader {
             // Adds the currentValue
             boolean addValue = false;
 
-            // Look for seperator characters in first line
+            // Look for separator characters in first line
             if (lineCounter == 0 && autoDetectColumnSeparator) {
                 if (currentChar == CSV.TAB
                         || currentChar == CSV.SEMICOLON

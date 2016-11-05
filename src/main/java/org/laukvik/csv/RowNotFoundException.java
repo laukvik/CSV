@@ -36,12 +36,4 @@ public final class RowNotFoundException extends IllegalArgumentException {
         this.rowIndex = index;
     }
 
-    /**
-     * Returns the row index that could not be found.
-     *
-     * @return the row index
-     */
-    public int getRowIndex() {
-        return rowIndex;
-    }
 }

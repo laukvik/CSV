@@ -65,12 +65,4 @@ public final class ByteColumn extends Column<byte[]> {
         return 1;
     }
 
-    /**
-     * Returns the column definition.
-     *
-     * @return the column
-     */
-    public String toString() {
-        return getName() + "(Byte)";
-    }
 }

@@ -53,6 +53,7 @@ public abstract class Column<T> implements Comparable {
     private String name;
     /**
      * Returns the visibility.
+     * TODO - Remove visibility - this is only interesting in JavaFX app
      */
     private boolean visible;
     /**
@@ -387,6 +388,43 @@ public abstract class Column<T> implements Comparable {
             return getName().compareTo(c.getName());
         }
         return -1;
+    }
+
+    /**
+     * Returns the ColumnDefinition this column.
+     *
+     * @return the formatted version
+     */
+    public final ColumnDefinition toColumnDefinition() {
+        ColumnDefinition cd = new ColumnDefinition(getName());
+        cd.setAttribute("type", "BigDecimal");
+        if (getDefaultValue() != null) {
+            cd.setAttribute("default", getDefaultValue());
+        }
+        ForeignKey fk = getForeignKey();
+        if (fk != null) {
+            cd.setAttribute("foreignKey", fk.getTable(), fk.getColumn());
+        }
+        if (getWidth() > 0) {
+            cd.setAttribute("width", getWidth() + "");
+        }
+        if (!isAllowNulls()) {
+            cd.setAttribute("allowNulls", "false");
+        }
+        if (isPrimaryKey()) {
+            cd.setAttribute("primaryKey", "true");
+        }
+        return cd;
+    }
+
+    /**
+     * Returns the compressed version of this column.
+     *
+     * @return the compressed version
+     */
+    public final String toCSV() {
+        ColumnDefinition cd = toColumnDefinition();
+        return cd.toCompressed();
     }
 
 

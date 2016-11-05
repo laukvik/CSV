@@ -60,37 +60,4 @@ public final class IntegerColumn extends Column<Integer> {
         return one.compareTo(another);
     }
 
-    /**
-     * Returns the ColumnDefinition.
-     * @return the ColumnDefinition.
-     */
-    public String toString() {
-        return getName() + "(Integer)";
-    }
-
-    /**
-     * Returns the HashCode.
-     * @return the HashCode
-     */
-    public int hashCode() {
-        return 7;
-    }
-
-    /**
-     * Compares with another IntegerColumn.
-     *
-     * @param obj the IntegerColumn to compare with
-     * @return true if equals
-     */
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final IntegerColumn other = (IntegerColumn) obj;
-        return true;
-    }
-
 }

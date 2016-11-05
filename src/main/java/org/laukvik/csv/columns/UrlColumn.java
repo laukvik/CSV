@@ -67,37 +67,4 @@ public final class UrlColumn extends Column<URL> {
         return one.toExternalForm().compareTo(another.toExternalForm());
     }
 
-    /**
-     * Returns the URL as string.
-     * @return the string
-     */
-    public String toString() {
-        return getName() + "(URL)";
-    }
-
-    /**
-     * Returns the hashCode.
-     * @return the hashCode
-     */
-    public int hashCode() {
-        return 3;
-    }
-
-    /**
-     * Returns true if equals obj.
-     *
-     * @param obj the object to compare with
-     * @return true if equals
-     */
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final UrlColumn other = (UrlColumn) obj;
-        return true;
-    }
-
 }

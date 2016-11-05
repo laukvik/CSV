@@ -301,37 +301,4 @@ public final class DateColumn extends Column<Date> {
         return one.compareTo(another);
     }
 
-    /**
-     * Returns the Column as String.
-     * @return the Column as String
-     */
-    public String toString() {
-        return getName() + "(Date)";
-    }
-
-    /**
-     * Returns the HashCode.
-     * @return the HashCode
-     */
-    public int hashCode() {
-        return 3;
-    }
-
-    /**
-     * Returns true if obj is the same.
-     *
-     * @param obj object to compare with
-     * @return true when equals
-     */
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final DateColumn other = (DateColumn) obj;
-        return true;
-    }
-
 }

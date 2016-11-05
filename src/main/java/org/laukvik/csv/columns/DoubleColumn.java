@@ -60,38 +60,4 @@ public final class DoubleColumn extends Column<Double> {
         return one.compareTo(another);
     }
 
-    /**
-     * TODO - Rewrite all toString JavaDocs and add metaData attributes to them
-     * Returns the column definition as a String.
-     * @return column definition as a String
-     */
-    public String toString() {
-        return getName() + "(Double)";
-    }
-
-    /**
-     * Returns the HashCode.
-     * @return the HashCode
-     */
-    public int hashCode() {
-        return 7;
-    }
-
-    /**
-     * Returns true when the column is equals to obj.
-     *
-     * @param obj the obj
-     * @return true when equals
-     */
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final DoubleColumn other = (DoubleColumn) obj;
-        return true;
-    }
-
 }

@@ -62,14 +62,4 @@ public final class BigDecimalColumn extends Column<BigDecimal> {
         return one.compareTo(another);
     }
 
-    /**
-     * Returns the String representation of the column.
-     *
-     * @return thre String representation
-     */
-    public String toHtml() {
-        return getName() + "(Integer)";
-    }
-
-
 }

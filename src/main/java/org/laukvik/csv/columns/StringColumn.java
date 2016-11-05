@@ -83,20 +83,4 @@ public final class StringColumn extends Column<String> {
         return one.compareTo(another);
     }
 
-    /**
-     * Returns the column definition.
-     * @return the column definition
-     */
-    public String toString() {
-        return getName() + "(String)";
-    }
-
-    /**
-     * Returns the HashCode.
-     * @return the HashCode
-     */
-    public int hashCode() {
-        return 7;
-    }
-
 }

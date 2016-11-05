@@ -37,7 +37,7 @@ public final class ColumnDefinition {
      *
      * @return the string
      */
-    public String toCompressed() {
+    String toCompressed() {
         StringBuilder b = new StringBuilder();
         b.append(columnName);
         if (!isEmpty()) {
@@ -105,7 +105,7 @@ public final class ColumnDefinition {
      * @param name  the name
      * @param value the value
      */
-    public void setAttribute(final String name, final String value) {
+    void setAttribute(final String name, final String value) {
         if (!name.trim().isEmpty()) {
             attributeMap.put(name.toLowerCase(), new Attribute(value));
         }
@@ -114,9 +114,22 @@ public final class ColumnDefinition {
     /**
      * Sets an attribute.
      *
+     * @param name  the name
+     * @param value the value
+     * @param extra the extra value
+     */
+    void setAttribute(final String name, final String value, final String extra) {
+        if (!name.trim().isEmpty()) {
+            attributeMap.put(name.toLowerCase(), new Attribute(value, extra));
+        }
+    }
+
+    /**
+     * Sets an attribute.
+     *
      * @param name the name
      */
-    public void removeAttribute(final String name) {
+    void removeAttribute(final String name) {
         attributeMap.remove(name.toLowerCase());
     }
 
@@ -125,7 +138,7 @@ public final class ColumnDefinition {
      *
      * @return the column name
      */
-    public String getColumnName() {
+    String getColumnName() {
         return columnName;
     }
 
@@ -135,7 +148,7 @@ public final class ColumnDefinition {
      * @param attributeName the name of the attribute
      * @return the value
      */
-    public Attribute get(final String attributeName) {
+    Attribute get(final String attributeName) {
         return attributeMap.get(attributeName.toLowerCase());
     }
 
@@ -145,12 +158,9 @@ public final class ColumnDefinition {
      * @param attributeName the name of the attribute
      * @return the value
      */
-    public boolean getBoolean(final String attributeName) {
+    boolean getBoolean(final String attributeName) {
         Attribute v = get(attributeName);
-        if (v == null || v.value == null || v.value.trim().isEmpty()) {
-            return false;
-        }
-        return v.value.trim().equalsIgnoreCase("true");
+        return !(v == null || v.value == null || v.value.trim().isEmpty()) && v.value.trim().equalsIgnoreCase("true");
     }
 
     /**
@@ -158,7 +168,7 @@ public final class ColumnDefinition {
      *
      * @return true when no attributes.
      */
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return attributeMap.isEmpty();
     }
 
@@ -167,7 +177,7 @@ public final class ColumnDefinition {
      *
      * @return the amount
      */
-    public int getAttributeCount() {
+    int getAttributeCount() {
         return attributeMap.keySet().size();
     }
 
@@ -176,7 +186,7 @@ public final class ColumnDefinition {
      *
      * @return the names
      */
-    public Set<String> getAttributeNames() {
+    Set<String> getAttributeNames() {
         return attributeMap.keySet();
     }
 
@@ -206,8 +216,7 @@ public final class ColumnDefinition {
             if (firstIndex > -1) {
                 int lastIndex = value.lastIndexOf("]");
                 if (lastIndex > firstIndex) {
-                    String v = value.substring(firstIndex + 1, lastIndex);
-                    this.optional = v;
+                    this.optional = value.substring(firstIndex + 1, lastIndex);
                     this.value = value.substring(0, firstIndex);
                 }
             }
@@ -229,7 +238,7 @@ public final class ColumnDefinition {
          *
          * @return the compressed version
          */
-        public String toCompressed() {
+        String toCompressed() {
             if (optional != null) {
                 return value + "[" + optional + "]";
             } else {
@@ -242,7 +251,7 @@ public final class ColumnDefinition {
          *
          * @return the value
          */
-        public String getValue() {
+        String getValue() {
             return value;
         }
 
@@ -251,7 +260,7 @@ public final class ColumnDefinition {
          *
          * @param value the value
          */
-        public void setValue(final String value) {
+        void setValue(final String value) {
             this.value = value;
         }
 
@@ -260,7 +269,7 @@ public final class ColumnDefinition {
          *
          * @return the optional value
          */
-        public String getOptional() {
+        String getOptional() {
             return optional;
         }
 
@@ -269,7 +278,7 @@ public final class ColumnDefinition {
          *
          * @param optional the optional value
          */
-        public void setOptional(final String optional) {
+        void setOptional(final String optional) {
             this.optional = optional;
         }
     }
