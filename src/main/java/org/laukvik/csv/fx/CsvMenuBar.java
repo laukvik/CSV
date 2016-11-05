@@ -45,23 +45,22 @@ public final class CsvMenuBar extends MenuBar {
         this.main = main;
         bundle = Builder.getBundle();
         setUseSystemMenuBar(Builder.isMac());
-        viewMenu = buildViewMenu(main);
+        viewMenu = buildViewMenu();
         //
-        getMenus().add(buildFileMenu(main));
-        getMenus().add(buildEditMenu(main));
-        getMenus().add(buildQueryMenu(main));
-        getMenus().add(buildInsertMenu(main));
+        getMenus().add(buildFileMenu());
+        getMenus().add(buildEditMenu());
+        getMenus().add(buildQueryMenu());
+        getMenus().add(buildInsertMenu());
         getMenus().addAll(viewMenu);
-        getMenus().add(buildHelpMenu(main));
+        getMenus().add(buildHelpMenu());
     }
 
     /**
      * Builds the file menu.
      *
-     * @param main the main instance
      * @return the menu
      */
-    private Menu buildFileMenu(final Main main) {
+    private Menu buildFileMenu() {
         final Menu fileMenu = new Menu(bundle.getString("file"));
         MenuItem newItem = new MenuItem(bundle.getString("file.new"));
         newItem.setAccelerator(KeyCombination.keyCombination("Meta+n"));
@@ -146,10 +145,9 @@ public final class CsvMenuBar extends MenuBar {
     /**
      * Builds the edit menu.
      *
-     * @param main the main instance
      * @return the menu
      */
-    private Menu buildEditMenu(final Main main) {
+    private Menu buildEditMenu() {
 
         // ----- Edit ------
         final Menu edit = new Menu(bundle.getString("edit"));
@@ -206,10 +204,9 @@ public final class CsvMenuBar extends MenuBar {
     /**
      * Builds the query menu.
      *
-     * @param main the main instance
      * @return the menu
      */
-    private Menu buildQueryMenu(final Main main) {
+    private Menu buildQueryMenu() {
         // ----- Query ------
         final Menu queryMenu = new Menu(bundle.getString("query"));  // Clear query
         MenuItem newQueryMenuItem = new MenuItem(bundle.getString("query.new"));
@@ -225,10 +222,9 @@ public final class CsvMenuBar extends MenuBar {
     /**
      * Builds the insert menu.
      *
-     * @param main the main instance
      * @return the menu
      */
-    private Menu buildInsertMenu(final Main main) {
+    private Menu buildInsertMenu() {
         // ----- Insert ------
         final Menu insert = new Menu(bundle.getString("insert"));
         MenuItem newColumnItem = new MenuItem(bundle.getString("insert.column"));
@@ -261,10 +257,9 @@ public final class CsvMenuBar extends MenuBar {
     /**
      * Builds the view menu.
      *
-     * @param main the main instance
      * @return the menu
      */
-    private Menu buildViewMenu(final Main main) {
+    private Menu buildViewMenu() {
         Menu menu = new Menu(bundle.getString("view"));
         CheckMenuItem viewResultsMenuItem = new CheckMenuItem(bundle.getString("view.results"));
         viewResultsMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+1"));
@@ -336,10 +331,9 @@ public final class CsvMenuBar extends MenuBar {
     /**
      * Builds the help menu.
      *
-     * @param main the main instance
      * @return the menu
      */
-    private Menu buildHelpMenu(final Main main) {
+    private Menu buildHelpMenu() {
         final Menu help = new Menu(bundle.getString("help"));
         MenuItem aboutMenuItem = new MenuItem(bundle.getString("help.about"));
         aboutMenuItem.setOnAction(new EventHandler<ActionEvent>() {

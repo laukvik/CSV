@@ -46,10 +46,10 @@ public final class StringColumn extends Column<String> {
     /**
      * Sets the size.
      *
-     * @param size the new size
+     * @param columnSize the new size
      */
-    public void setSize(final int size) {
-        this.size = size;
+    public void setSize(final int columnSize) {
+        this.size = columnSize;
     }
 
     /**

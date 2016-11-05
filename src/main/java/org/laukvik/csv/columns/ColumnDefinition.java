@@ -200,7 +200,7 @@ public final class ColumnDefinition {
          *
          * @param value the value
          */
-        public Attribute(final String value) {
+        Attribute(final String value) {
             this.value = value;
             int firstIndex = value.indexOf("[");
             if (firstIndex > -1) {
@@ -219,7 +219,7 @@ public final class ColumnDefinition {
          * @param value    the value
          * @param optional the optional value
          */
-        public Attribute(final String value, final String optional) {
+        Attribute(final String value, final String optional) {
             this.value = value;
             this.optional = optional;
         }

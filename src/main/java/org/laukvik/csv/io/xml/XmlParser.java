@@ -70,19 +70,19 @@ public class XmlParser {
     /**
      * Variable for appending text.
      */
-    private StringBuilder text;
+    private StringBuilder textBuilder;
     /**
      * Variable for appending tag name.
      */
-    private StringBuilder tag;
+    private StringBuilder tagBuilder;
     /**
      * Variable for appending attribute name.
      */
-    private StringBuilder attr;
+    private StringBuilder attrBuilder;
     /**
      * Variable for appending attribute value.
      */
-    private StringBuilder value;
+    private StringBuilder valueBuilder;
 
 
     /**
@@ -126,13 +126,13 @@ public class XmlParser {
     /**
      * The tag with the value was found.
      *
-     * @param value the value
+     * @param tagValue the value
      */
-    private void foundTag(final String value) {
-        if (!value.isEmpty() && value.charAt(0) == '/') {
+    private void foundTag(final String tagValue) {
+        if (!tagValue.isEmpty() && tagValue.charAt(0) == '/') {
             current = current.getParent();
         } else {
-            current = current.addTag(value);
+            current = current.addTag(tagValue);
         }
         fireFoundTag(current);
     }
@@ -143,8 +143,7 @@ public class XmlParser {
      * @param attribute the value
      */
     private void foundAttr(final String attribute) {
-        Attribute attr = current.addAttribute(attribute);
-        fireAttributeTag(attr);
+        fireAttributeTag(current.addAttribute(attribute));
     }
 
     /**
@@ -161,12 +160,12 @@ public class XmlParser {
     /**
      * Found a text node.
      *
-     * @param value the text
+     * @param textValue the text
      */
-    private void foundText(final String value) {
-        if (value.trim().length() > 0) {
+    private void foundText(final String textValue) {
+        if (!textValue.trim().isEmpty()) {
             Tag t = new Tag("text");
-            t.setText(value);
+            t.setText(textValue);
             current.addTag(t);
         }
     }
@@ -179,14 +178,14 @@ public class XmlParser {
         switch (mode) {
             case EMPTY:
                 mode = TAG;
-                tag = new StringBuilder();
+                tagBuilder = new StringBuilder();
                 break;
             case TEXT:
                 mode = TAG;
-                if (text.length() > 0) {
-                    foundText(text.toString());
+                if (textBuilder.length() > 0) {
+                    foundText(textBuilder.toString());
                 }
-                text = new StringBuilder();
+                textBuilder = new StringBuilder();
                 break;
             case TAG:
                 break; // Invalid  <<
@@ -220,17 +219,17 @@ public class XmlParser {
                 break; // Syntax error.
             case TAG:
                 mode = EMPTY;
-                foundTag(tag.toString());
-                tag = new StringBuilder();
+                foundTag(tagBuilder.toString());
+                tagBuilder = new StringBuilder();
                 break;
             case BODY:
                 mode = EMPTY;
-                foundTag(tag.toString());
-                tag = new StringBuilder();
+                foundTag(tagBuilder.toString());
+                tagBuilder = new StringBuilder();
                 break;
             case ATTR:
                 mode = TEXT;
-                attr = new StringBuilder();
+                attrBuilder = new StringBuilder();
                 break;
             case EQ:
                 break;
@@ -238,12 +237,12 @@ public class XmlParser {
                 break;
             case VALUE:
                 mode = TEXT;
-                foundValue(value.toString());
-                value = new StringBuilder();
+                foundValue(valueBuilder.toString());
+                valueBuilder = new StringBuilder();
                 break;
             case QUOTE_STOP:
-                foundValue(value.toString());
-                value = new StringBuilder();
+                foundValue(valueBuilder.toString());
+                valueBuilder = new StringBuilder();
                 mode = EMPTY;
                 break;
             case CLOSE:
@@ -260,10 +259,10 @@ public class XmlParser {
         switch (mode) {
             case EMPTY:
                 mode = TEXT;
-                text.append('=');
+                textBuilder.append('=');
                 break;
             case TEXT:
-                text.append('=');
+                textBuilder.append('=');
                 break;
             case TAG:
                 break; // Not allowed in tag name <tag=
@@ -272,15 +271,15 @@ public class XmlParser {
                 break;
             case ATTR:
                 mode = EQ;
-                foundAttr(attr.toString());
-                attr = new StringBuilder();
+                foundAttr(attrBuilder.toString());
+                attrBuilder = new StringBuilder();
                 break; // Not allowed in attribute name
             case EQ:
                 break;
             case QUOTE_OPEN:
                 break;
             case VALUE:
-                value.append('=');
+                valueBuilder.append('=');
                 break;
             case QUOTE_STOP:
                 break;
@@ -298,10 +297,10 @@ public class XmlParser {
         switch (mode) {
             case EMPTY:
                 mode = TEXT;
-                text.append('"');
+                textBuilder.append('"');
                 break;
             case TEXT:
-                text.append('"');
+                textBuilder.append('"');
                 break;
             case TAG:
                 break; // Quote not allowed in tag name
@@ -318,8 +317,8 @@ public class XmlParser {
                 break;
             case VALUE:
                 mode = QUOTE_STOP;
-                foundValue(value.toString());
-                value = new StringBuilder();
+                foundValue(valueBuilder.toString());
+                valueBuilder = new StringBuilder();
                 break;
             case QUOTE_STOP:
                 mode = BODY;
@@ -343,31 +342,31 @@ public class XmlParser {
                 break;
             case TEXT:
                 if (c == SPACE_SYMBOL) {
-                    text.append(c);
+                    textBuilder.append(c);
                 }
                 break;
             case TAG:
                 mode = BODY;
-                foundTag(tag.toString());
-                tag = new StringBuilder();
+                foundTag(tagBuilder.toString());
+                tagBuilder = new StringBuilder();
                 break; // tag name ends
             case BODY:
                 break; // ignore white space
             case ATTR:
                 mode = BODY;
-                foundAttr(attr.toString());
-                attr = new StringBuilder();
+                foundAttr(attrBuilder.toString());
+                attrBuilder = new StringBuilder();
                 break; // attribute without value e.g <input checked>
             case EQ:
                 break;
             case QUOTE_OPEN:
                 break;
             case VALUE:
-                value.append(c);
+                valueBuilder.append(c);
                 break;
             case QUOTE_STOP:
                 mode = BODY;
-                foundValue(value.toString());
+                foundValue(valueBuilder.toString());
                 break;
             case CLOSE:
                 break;
@@ -385,29 +384,29 @@ public class XmlParser {
         switch (mode) {
             case EMPTY:
                 mode = TEXT;
-                text.append(c);
+                textBuilder.append(c);
                 break;
             case TEXT:
-                text.append(c);
+                textBuilder.append(c);
                 break;
             case TAG:
-                tag.append(c);
+                tagBuilder.append(c);
                 break;
             case BODY:
                 mode = ATTR;
-                attr.append(c);
+                attrBuilder.append(c);
                 break;
             case ATTR:
-                attr.append(c);
+                attrBuilder.append(c);
                 break;
             case EQ:
                 break;
             case QUOTE_OPEN:
-                value.append(c);
+                valueBuilder.append(c);
                 mode = VALUE;
                 break;
             case VALUE:
-                value.append(c);
+                valueBuilder.append(c);
                 break;
             case QUOTE_STOP:
                 break;
@@ -430,11 +429,10 @@ public class XmlParser {
         final Tag root = new Tag("document");
         current = root;
         mode = EMPTY;
-
-        text = new StringBuilder();
-        tag = new StringBuilder();
-        attr = new StringBuilder();
-        value = new StringBuilder();
+        textBuilder = new StringBuilder();
+        tagBuilder = new StringBuilder();
+        attrBuilder = new StringBuilder();
+        valueBuilder = new StringBuilder();
         while (reader.ready()) {
 
             char c = (char) reader.read();

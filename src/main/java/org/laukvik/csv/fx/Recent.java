@@ -130,11 +130,11 @@ public final class Recent {
     /**
      * Remembers the specified file.
      *
-     * @param file the file
+     * @param fileToRemember the file
      */
-    public void open(final File file) {
+    public void open(final File fileToRemember) {
         StringColumn c = (StringColumn) csv.getMetaData().getColumn(0);
-        csv.addRow().update(c, file.getAbsolutePath());
+        csv.addRow().update(c, fileToRemember.getAbsolutePath());
         if (csv.getRowCount() > limit) {
             int extra = csv.getRowCount() - limit;
             csv.removeRowsBetween(0, extra);

@@ -225,6 +225,47 @@ public class Main extends Application implements ChangeListener, FileListener {
     }
 
     /**
+     * Returns the formatted file size.
+     * @param file the file
+     * @return the formatted size
+     */
+    private static String formatFilesize(final File file) {
+        if (file == null) {
+            return "";
+        } else {
+            return toKb(file.length());
+        }
+    }
+
+    /**
+     * Returns the text version of the separator character.
+     *
+     * @param character the separator
+     * @return the text version
+     */
+    private static String formatSeparator(final Character character) {
+        if (character == null) {
+            return "";
+        } else {
+            return getSeparatorString(character);
+        }
+    }
+
+    /**
+     * Formats the file name as string.
+     *
+     * @param file the file
+     * @return the formatted name
+     */
+    private static String formatFilename(final File file) {
+        if (file == null) {
+            return "";
+        } else {
+            return file.getName();
+        }
+    }
+
+    /**
      * Starts the JavaFX application.
      *
      * @param primaryStage the stage
@@ -543,13 +584,9 @@ public class Main extends Application implements ChangeListener, FileListener {
         } else {
             encodingLabel.setText(csv.getMetaData().getCharset().name());
         }
-        sizeLabel.setText(toKb(csv.getFile() == null ? 0 : csv.getFile().length()) + "");
-        if (csv.getMetaData().getSeparatorChar() == null) {
-            separatorLabel.setText("");
-        } else {
-            separatorLabel.setText(getSeparatorString(csv.getMetaData().getSeparatorChar()));
-        }
-        stage.setTitle(csv.getFile() == null ? "" : csv.getFile().getName() + "");
+        sizeLabel.setText(formatFilesize(csv.getFile()));
+        separatorLabel.setText(formatSeparator(csv.getMetaData().getSeparatorChar()));
+        stage.setTitle(formatFilename(csv.getFile()));
     }
 
     /**

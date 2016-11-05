@@ -93,7 +93,8 @@ public final class Selection {
 
         final Selection selection = (Selection) o;
 
-        return getColumn() != null ? getColumn().equals(selection.getColumn()) : selection.getColumn() == null && (getValues() != null ? getValues().equals(selection.getValues()) : selection.getValues() == null);
+        return getColumn() != null ? getColumn().equals(selection.getColumn()) : selection.getColumn() == null
+                && (getValues() != null ? getValues().equals(selection.getValues()) : selection.getValues() == null);
 
     }
 
