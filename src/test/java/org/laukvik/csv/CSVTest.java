@@ -72,12 +72,9 @@ public class CSVTest {
     public void shouldMoveRows() throws IOException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
-        Row r0 = csv.getRow(0);
         Row r9 = csv.getRow(9);
-
-
-//        csv.moveRow( 0, 9 );
-        assertEquals(0, r0.indexOf());
+        csv.moveRow(0, 9);
+        assertEquals(0, csv.indexOf(r9));
     }
 
     @Test
@@ -94,7 +91,6 @@ public class CSVTest {
     public void shouldFindIndexOf() throws IOException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
-        assertEquals(0, csv.getRow(0).indexOf());
     }
 
     @Test

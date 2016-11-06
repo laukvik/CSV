@@ -31,7 +31,6 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
 /**
@@ -49,10 +48,6 @@ public final class Row implements Serializable {
      * The Map containing the column data.
      */
     private final Map<Column, Object> map;
-    /**
-     * The CSV the row belongs to.
-     */
-    private CSV csv;
 
     /**
      * Creates a new Row.
@@ -79,24 +74,6 @@ public final class Row implements Serializable {
             x++;
         }
         return b.toString();
-    }
-
-    /**
-     * Returns the CSV it belongs to.
-     *
-     * @return the CSV
-     */
-    public CSV getCSV() {
-        return csv;
-    }
-
-    /**
-     * Sets the CSV it belongs to.
-     *
-     * @param csv the csv instance
-     */
-    public void setCSV(final CSV csv) {
-        this.csv = csv;
     }
 
     /**
@@ -280,17 +257,6 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Returns the hashCode.
-     *
-     * @return the hashCode
-     */
-    public int hashCode() {
-        int hash = 5;
-        hash = 53 * hash + Objects.hashCode(this.csv);
-        return hash;
-    }
-
-    /**
      * Returns true if the objects are equals.
      *
      * @param obj the object
@@ -316,12 +282,4 @@ public final class Row implements Serializable {
         map.remove(column);
     }
 
-    /**
-     * Returns the row index.
-     *
-     * @return the row index
-     */
-    public int indexOf() {
-        return csv.indexOf(this);
-    }
 }

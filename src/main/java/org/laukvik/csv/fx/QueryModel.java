@@ -55,12 +55,12 @@ public final class QueryModel {
         if (this.isEmpty()) {
             csv.clearQuery();
             for (int y = 0; y < csv.getRowCount(); y++) {
-                list.add(new ObservableRow(csv.getRow(y), main));
+                list.add(new ObservableRow(csv.getRow(y), csv, main));
             }
         } else {
             buildQuery();
             for (Row r : csv.getQuery().getResultList()) {
-                list.add(new ObservableRow(r, main));
+                list.add(new ObservableRow(r, csv, main));
             }
         }
         return list;

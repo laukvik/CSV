@@ -690,9 +690,9 @@ public class Main extends Application implements ChangeListener, FileListener {
      */
     public final void rowCreated(final int rowIndex, final Row row) {
         if (rowIndex == resultsTableView.getItems().size() + 1) {
-            resultsTableView.getItems().add(new ObservableRow(row, this));
+            resultsTableView.getItems().add(new ObservableRow(row, csv, this));
         } else {
-            resultsTableView.getItems().add(rowIndex, new ObservableRow(row, this));
+            resultsTableView.getItems().add(rowIndex, new ObservableRow(row, csv, this));
         }
         updateToolbar();
     }

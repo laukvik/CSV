@@ -103,7 +103,7 @@ public final class CsvWriter implements DatasetFileWriter, DatasetOutputStream {
      * @throws IOException when the row could not be written
      */
     public void writeCSV(final Row row, final MetaData metaData, final OutputStream outputStream) throws IOException {
-        writeRow(row, row.getCSV().getMetaData(), outputStream);
+        writeRow(row, metaData, outputStream);
     }
 
     /**

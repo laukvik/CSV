@@ -42,6 +42,10 @@ public class ObservableRow implements javafx.beans.value.ChangeListener<String> 
     private final List<SimpleStringProperty> items;
     /** The row it represents. */
     private final Row row;
+    /**
+     * The CSV it belongs to.
+     */
+    private final CSV csv;
 
     /**
      * Builds a new ObservableRow from the Row.
@@ -49,11 +53,11 @@ public class ObservableRow implements javafx.beans.value.ChangeListener<String> 
      * @param row      the row
      * @param listener the listener
      */
-    public ObservableRow(final Row row, final ChangeListener listener) {
+    public ObservableRow(final Row row, final CSV csv, final ChangeListener listener) {
         this.row = row;
         this.listener = listener;
         items = FXCollections.observableArrayList();
-        CSV csv = row.getCSV();
+        this.csv = csv;
         MetaData md = csv.getMetaData();
         for (int x = 0; x < md.getColumnCount(); x++) {
             Column col = md.getColumn(x);
@@ -107,8 +111,8 @@ public class ObservableRow implements javafx.beans.value.ChangeListener<String> 
                               final String oldValue,
                               final String newValue) {
         int columnIndex = items.indexOf(observable);
-        int rowIndex = row.indexOf();
-        Column column = row.getCSV().getMetaData().getColumn(columnIndex);
+        int rowIndex = csv.indexOf(row);
+        Column column = csv.getMetaData().getColumn(columnIndex);
         if (column instanceof StringColumn) {
             row.update((StringColumn) column, newValue);
         }

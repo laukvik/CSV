@@ -301,7 +301,6 @@ public final class CSV implements Serializable {
      */
     public Row buildRow() {
         Row r = new Row();
-        r.setCSV(this);
         return r;
     }
 
@@ -324,7 +323,6 @@ public final class CSV implements Serializable {
      */
     public Row addRow(final int rowIndex) {
         Row r = new Row();
-        r.setCSV(this);
         rows.add(rowIndex, r);
         fireRowCreated(rowIndex, r);
         return r;
@@ -337,7 +335,6 @@ public final class CSV implements Serializable {
      * @return the row being added
      */
     private Row addRow(final Row row) {
-        row.setCSV(this);
         rows.add(row);
         fireRowCreated(rows.size(), row);
         return row;
