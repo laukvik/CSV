@@ -985,7 +985,7 @@ public final class CSV implements Serializable {
      */
     private void fireBeginWrite() {
         for (FileListener l : fileListeners) {
-            l.beginRead(file);
+            l.beginWrite(file);
         }
     }
 
@@ -994,7 +994,7 @@ public final class CSV implements Serializable {
      */
     private void fireFinishWrite() {
         for (FileListener l : fileListeners) {
-            l.finishRead(file);
+            l.finishWrite(file);
         }
     }
 

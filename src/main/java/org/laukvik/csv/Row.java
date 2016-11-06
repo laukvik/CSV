@@ -257,23 +257,6 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Returns true if the objects are equals.
-     *
-     * @param obj the object
-     * @return true when equals
-     */
-    public boolean equals(final Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Row otherRow = (Row) obj;
-        return timestamp == otherRow.timestamp;
-    }
-
-    /**
      * Removes the value for the column.
      *
      * @param column the column
