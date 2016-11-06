@@ -25,6 +25,7 @@ import org.laukvik.csv.io.BOM;
 import org.laukvik.csv.io.ClosableReader;
 import org.laukvik.csv.io.CsvReader;
 import org.laukvik.csv.io.CsvWriter;
+import org.laukvik.csv.io.DatasetFileWriter;
 import org.laukvik.csv.io.HtmlWriter;
 import org.laukvik.csv.io.JavaReader;
 import org.laukvik.csv.io.JsonWriter;
@@ -32,14 +33,12 @@ import org.laukvik.csv.io.Readable;
 import org.laukvik.csv.io.ResourceBundleReader;
 import org.laukvik.csv.io.ResourceBundleWriter;
 import org.laukvik.csv.io.WordCountReader;
-import org.laukvik.csv.io.Writeable;
 import org.laukvik.csv.io.XmlWriter;
 import org.laukvik.csv.query.Query;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.Charset;
@@ -673,13 +672,9 @@ public final class CSV implements Serializable {
      * @param fileToWrite the file to write to
      * @throws Exception when the file could not be written
      */
-    private void write(final Writeable writer, final File fileToWrite) throws Exception {
+    private void write(final DatasetFileWriter writer, final File fileToWrite) throws Exception {
         fireBeginWrite();
-        try (FileOutputStream out = new FileOutputStream(fileToWrite)) {
-            writer.writeCSV(this, out);
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+        writer.writeCSV(this, fileToWrite);
         fireFinishWrite();
     }
 

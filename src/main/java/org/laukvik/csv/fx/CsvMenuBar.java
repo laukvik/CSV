@@ -281,10 +281,9 @@ public final class CsvMenuBar extends MenuBar {
             }
         });
 
-        // TODO - WRONG NAME
-        CheckMenuItem previewChartMenuItem = new CheckMenuItem(bundle.getString("view.preview"));
-        previewChartMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+3"));
-        previewChartMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+        CheckMenuItem previewMenuItem = new CheckMenuItem(bundle.getString("view.preview"));
+        previewMenuItem.setAccelerator(KeyCombination.keyCombination("Meta+3"));
+        previewMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(final ActionEvent t) {
                 setSelectedMode(ViewMode.Preview);
                 main.handleViewPreviewAction();
@@ -322,7 +321,7 @@ public final class CsvMenuBar extends MenuBar {
             }
         });
 
-        menu.getItems().addAll(viewResultsMenuItem, viewChartMenuItem, previewChartMenuItem,
+        menu.getItems().addAll(viewResultsMenuItem, viewChartMenuItem, previewMenuItem,
                 wikipediaMenuItem, googleMapsMenuItem, googleSearchMenuItem);
 
         return menu;

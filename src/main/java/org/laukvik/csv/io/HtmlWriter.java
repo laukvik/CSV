@@ -16,7 +16,6 @@
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
@@ -31,7 +30,7 @@ import java.nio.charset.Charset;
  *
  * @see <a href="https://en.wikipedia.org/wiki/HTML">HTML (wikipedia)</a>
  */
-public final class HtmlWriter implements Writeable {
+public final class HtmlWriter implements DatasetFileWriter {
 
     /**
      * Writes the CSV to the outputStream.
@@ -108,17 +107,6 @@ public final class HtmlWriter implements Writeable {
         out.write("</body>\n".getBytes());
         out.write("</html>\n".getBytes());
         out.flush();
-
-    }
-
-    @Override
-    public void writeCSV(Row row, OutputStream outputStream) throws IOException {
-
-    }
-
-    @Override
-    public void writeCSV(MetaData metaData, OutputStream outputStream) throws IOException {
-
     }
 
 }

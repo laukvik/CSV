@@ -16,7 +16,6 @@
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
@@ -31,7 +30,7 @@ import java.nio.charset.Charset;
  *
  * @see <a href="https://en.wikipedia.org/wiki/XML">XML (wikipedia)</a>
  */
-public final class XmlWriter implements Writeable {
+public final class XmlWriter implements DatasetFileWriter {
 
     /**
      * Character for beginning of a tag.
@@ -178,7 +177,6 @@ public final class XmlWriter implements Writeable {
             out.write(CR);
             out.write(LINEFEED);
         }
-
         // Close root element
         out.write(OPEN);
         out.write(SLASH);
@@ -186,16 +184,6 @@ public final class XmlWriter implements Writeable {
         out.write(CLOSE);
         out.flush();
         out.close();
-    }
-
-    @Override
-    public void writeCSV(Row row, OutputStream outputStream) throws IOException {
-
-    }
-
-    @Override
-    public void writeCSV(MetaData metaData, OutputStream outputStream) throws IOException {
-
     }
 
 }

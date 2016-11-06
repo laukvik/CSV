@@ -16,7 +16,6 @@
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 
@@ -28,7 +27,7 @@ import java.io.OutputStream;
 /**
  * Writes the data set to the ResourceBundle.
  */
-public final class ResourceBundleWriter extends AbstractResourceBundle implements Writeable {
+public final class ResourceBundleWriter extends AbstractResourceBundle implements DatasetFileWriter {
 
     /**
      * The folder to read from.
@@ -54,6 +53,10 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
     public void writeCSV(final CSV csv, final File file) {
         this.folder = file.getParentFile();
         this.basename = getBasename(file);
+        for (int x = 1; x < csv.getMetaData().getColumnCount(); x++) {
+            StringColumn column = (StringColumn) csv.getMetaData().getColumn(x);
+            writeBundle(csv, column);
+        }
     }
 
     /**
@@ -64,18 +67,10 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
      * @throws IOException when the files could not be written
      */
     public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
-        if (csv.getMetaData().getColumnCount() > 1) {
-            for (int x = 1; x < csv.getMetaData().getColumnCount(); x++) {
-                StringColumn column = (StringColumn) csv.getMetaData().getColumn(x);
-                writeBundle(csv, column);
-            }
+        for (int x = 1; x < csv.getMetaData().getColumnCount(); x++) {
+            StringColumn column = (StringColumn) csv.getMetaData().getColumn(x);
+            writeBundle(csv, column);
         }
-    }
-
-    public void writeCSV(Row row, OutputStream outputStream) throws IOException {
-    }
-
-    public void writeCSV(MetaData metaData, OutputStream outputStream) throws IOException {
     }
 
     /**
@@ -88,7 +83,6 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
         String filename = getFilename(column, basename);
         File bundleFile = new File(folder, filename);
         StringColumn keyColumn = (StringColumn) csv.getMetaData().getColumn(0);
-
         try (FileWriter writer = new FileWriter(bundleFile)) {
             for (int y = 0; y < csv.getRowCount(); y++) {
                 Row r = csv.getRow(y);

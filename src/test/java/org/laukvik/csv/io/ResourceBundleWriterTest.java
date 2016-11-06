@@ -41,13 +41,7 @@ public class ResourceBundleWriterTest {
         csv.writeResourceBundle( file );
 
         csv = new CSV();
-        try {
-            csv.readResourceBundle(file);
-        } catch (Exception e) {
-
-        } finally {
-            file.delete();
-        }
+        csv.readResourceBundle(file);
 
         Assert.assertEquals(4,csv.getMetaData().getColumnCount());
         Assert.assertEquals(2, csv.getRowCount());

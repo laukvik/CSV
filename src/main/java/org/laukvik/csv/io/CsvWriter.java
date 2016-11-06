@@ -34,7 +34,7 @@ import java.util.List;
  * Values (CSV) Files</a>
  * @see <a href="https://en.wikipedia.org/wiki/Comma-separated_values">Comma Separated Values (wikipedia)</a>
  */
-public final class CsvWriter implements Writeable {
+public final class CsvWriter implements DatasetFileWriter, DatasetOutputStream {
 
 
     /**
@@ -94,10 +94,23 @@ public final class CsvWriter implements Writeable {
         }
     }
 
+    /**
+     * Writes the row to the outputStream.
+     *
+     * @param row          the row
+     * @param outputStream the outputStream
+     * @throws IOException when the row could not be written
+     */
     public void writeCSV(final Row row, final OutputStream outputStream) throws IOException {
         writeRow(row, row.getCSV().getMetaData(), outputStream);
     }
 
+    /**
+     * Writes the metadata to the outputStream.
+     * @param metaData     the metadata
+     * @param outputStream the outputStream
+     * @throws IOException when the metaData could not be written
+     */
     public void writeCSV(final MetaData metaData, final OutputStream outputStream) throws IOException {
         writeMetaData(metaData, outputStream);
     }

@@ -30,7 +30,7 @@ import java.io.OutputStream;
  *
  * @see <a href="https://en.wikipedia.org/wiki/JSON">JSON (wikipedia)</a>
  */
-public final class JsonWriter implements Writeable {
+public final class JsonWriter implements DatasetFileWriter {
 
     /**
      * Character for curly left bracket.
@@ -137,16 +137,6 @@ public final class JsonWriter implements Writeable {
         out.write(LINEFEED);
         out.write(BRACKET_RIGHT);
         out.flush();
-    }
-
-    @Override
-    public void writeCSV(Row row, OutputStream outputStream) throws IOException {
-
-    }
-
-    @Override
-    public void writeCSV(MetaData metaData, OutputStream outputStream) throws IOException {
-
     }
 
     /**
