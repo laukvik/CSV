@@ -90,7 +90,7 @@ public final class CsvWriter implements DatasetFileWriter, DatasetOutputStream {
         }
         writeMetaData(csv.getMetaData(), out);
         for (int y = 0; y < csv.getRowCount(); y++) {
-            writeCSV(csv.getRow(y), out);
+            writeCSV(csv.getRow(y), csv.getMetaData(), out);
         }
     }
 
@@ -98,10 +98,11 @@ public final class CsvWriter implements DatasetFileWriter, DatasetOutputStream {
      * Writes the row to the outputStream.
      *
      * @param row          the row
+     * @param metaData     the metadata
      * @param outputStream the outputStream
      * @throws IOException when the row could not be written
      */
-    public void writeCSV(final Row row, final OutputStream outputStream) throws IOException {
+    public void writeCSV(final Row row, final MetaData metaData, final OutputStream outputStream) throws IOException {
         writeRow(row, row.getCSV().getMetaData(), outputStream);
     }
 

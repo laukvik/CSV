@@ -18,6 +18,7 @@ package org.laukvik.csv.io;
 import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
+import org.laukvik.csv.MetaData;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
@@ -44,10 +45,10 @@ public class CsvWriterTest {
 
         try (FileOutputStream out = new FileOutputStream(f)) {
             CsvWriter w = new CsvWriter();
-            w.writeCSV(csv.getMetaData(), out);
-
-            w.writeCSV(csv.buildRow().update(first, "Bill").update(last, "Gates"), out);
-            w.writeCSV(csv.buildRow().update(first, "Steve").update(last, "Jobs"), out);
+            MetaData md = csv.getMetaData();
+            w.writeCSV(md, out);
+            w.writeCSV(csv.buildRow().update(first, "Bill").update(last, "Gates"), md, out);
+            w.writeCSV(csv.buildRow().update(first, "Steve").update(last, "Jobs"), md, out);
 
         } catch (IOException e) {
             e.printStackTrace();
