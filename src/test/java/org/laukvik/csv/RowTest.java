@@ -89,14 +89,6 @@ public class RowTest {
     }
 
     @Test
-    public void shouldToString() {
-        CSV csv = new CSV();
-        BigDecimalColumn bdc = csv.addBigDecimalColumn("bigDecimal");
-        Row r = csv.addRow();
-        r.setBigDecimal(bdc, new BigDecimal("123"));
-    }
-
-    @Test
     public void setBigDecimal() {
         CSV csv = new CSV();
         BigDecimalColumn bdc = csv.addBigDecimalColumn("bigDecimal");

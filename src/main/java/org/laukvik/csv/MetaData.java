@@ -208,7 +208,7 @@ public final class MetaData implements Serializable {
             }
             x++;
         }
-        throw new ColumnNotFoundException(x);
+        return -1;
     }
 
     /**

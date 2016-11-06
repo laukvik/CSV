@@ -18,7 +18,6 @@ package org.laukvik.csv.query;
 import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.ParseException;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 import org.laukvik.csv.columns.IntegerColumn;
@@ -45,7 +44,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void lessThan() throws IOException, ParseException {
+    public void lessThan() throws IOException {
         CSV csv = findCSV();
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isLessThan(11).getResultList();
@@ -53,7 +52,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void greaterThan() throws IOException, ParseException {
+    public void greaterThan() throws IOException {
         CSV csv = findCSV();
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isGreaterThan(40).getResultList();
@@ -61,7 +60,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void getResultList() throws IOException, ParseException {
+    public void getResultList() throws IOException {
         CSV csv = findCSV();
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().getResultList();
@@ -69,7 +68,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void intIs() throws IOException, ParseException {
+    public void intIs() throws IOException {
         CSV csv = findCSV();
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).is(5).getResultList();
@@ -77,7 +76,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void isBetween() throws IOException, ParseException {
+    public void isBetween() throws IOException {
         CSV csv = findCSV();
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isBetween(10, 12).getResultList();
@@ -85,7 +84,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void isEmpty() throws IOException, ParseException {
+    public void isEmpty() throws IOException {
         CSV csv = findCSV();
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isEmpty().getResultList();
@@ -93,7 +92,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void isIn() throws IOException, ParseException {
+    public void isIn() throws IOException {
         CSV csv = findCSV();
         IntegerColumn presidency = (IntegerColumn) csv.getMetaData().getColumn("Presidency");
         List<Row> rows = csv.findByQuery().where().column(presidency).isIn(1, 2, 3).getResultList();
@@ -101,7 +100,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void stringIs() throws IOException, ParseException {
+    public void stringIs() throws IOException {
         CSV csv = findCSV();
         StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
         List<Row> rows = csv.findByQuery().where().column(party).is("Whig").getResultList();
@@ -109,7 +108,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void stringIsIn() throws IOException, ParseException {
+    public void stringIsIn() throws IOException {
         CSV csv = findCSV();
         StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
         List<Row> rows = csv.findByQuery().where().column(party).isIn("Whig", "Independent").getResultList();
@@ -117,7 +116,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void stringEmpty() throws IOException, ParseException {
+    public void stringEmpty() throws IOException {
         CSV csv = findCSV();
         StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
         List<Row> rows = csv.findByQuery().where().column(party).isEmpty().getResultList();
@@ -125,7 +124,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void stringNotEmpty() throws IOException, ParseException {
+    public void stringNotEmpty() throws IOException {
         CSV csv = findCSV();
         StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
         List<Row> rows = csv.findByQuery().where().column(party).isNotEmpty().getResultList();
@@ -141,7 +140,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void isDate() throws IOException, ParseException {
+    public void isDate() throws IOException {
         CSV csv = findCSV();
         DateColumn tookOffice = (DateColumn) csv.getMetaData().getColumn("Took office");
         List<Row> rows = csv.findByQuery().where().column(tookOffice).isDate(createDate(1789, 3, 30)).getResultList();
@@ -149,7 +148,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void isDateGreater() throws IOException, ParseException {
+    public void isDateGreater() throws IOException {
         CSV csv = findCSV();
         DateColumn tookOffice = (DateColumn) csv.getMetaData().getColumn("Took office");
         List<Row> rows = csv.findByQuery().where().column(tookOffice).isDateGreaterThan(createDate(1900, 1, 1)).getResultList();
@@ -157,7 +156,7 @@ public class CsvQueryTest {
     }
 
     @Test
-    public void isDateLess() throws IOException, ParseException {
+    public void isDateLess() throws IOException {
         CSV csv = findCSV();
         DateColumn tookOffice = (DateColumn) csv.getMetaData().getColumn("Took office");
         List<Row> rows = csv.findByQuery().where().column(tookOffice).isDateLessThan(createDate(1900, 1, 1)).getResultList();

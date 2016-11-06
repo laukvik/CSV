@@ -3,7 +3,6 @@ package org.laukvik.csv.fx;
 import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.ParseException;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
@@ -26,7 +25,7 @@ public class QueryModelTest {
     }
 
     @Test
-    public void shouldAddSelection() throws IOException, ParseException {
+    public void shouldAddSelection() throws IOException {
         CSV csv = findCSV();
         StringColumn homeState = (StringColumn) csv.getMetaData().getColumn("Home State");
         StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");

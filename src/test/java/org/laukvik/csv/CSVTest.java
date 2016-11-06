@@ -129,7 +129,7 @@ public class CSVTest {
     }
 
     @Test
-    public void findRows() throws IOException, ParseException {
+    public void findRows() throws IOException {
         CSV csv = new CSV();
         csv.readFile(getResource("countries.csv"));
         assertEquals(249, csv.getRowCount());
@@ -146,7 +146,7 @@ public class CSVTest {
     }
 
     @Test
-    public void iterator() throws IOException, ParseException {
+    public void iterator() throws IOException {
         CSV csv = new CSV();
         for (Row r : csv.getRows()) {
         }

@@ -17,7 +17,6 @@ package org.laukvik.csv.io;
 
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.ParseException;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
@@ -28,7 +27,7 @@ import java.io.IOException;
 public class JsonWriterTest {
 
     @Test
-    public void writeJson() throws IOException, ParseException {
+    public void writeJson() throws IOException {
         File file = File.createTempFile("EmptyRows", ".json");
 
         CSV csv = new CSV();
