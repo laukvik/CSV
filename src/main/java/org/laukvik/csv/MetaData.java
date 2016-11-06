@@ -155,7 +155,7 @@ public final class MetaData implements Serializable {
         columns.add(column);
         if (csv != null) {
             for (int x = 0; x < csv.getRowCount(); x++) {
-                csv.getRow(x).updateColumn(column, "");
+                csv.getRow(x).set(column, "");
             }
             csv.fireColumnCreated(column);
         }

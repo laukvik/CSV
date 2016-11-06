@@ -1000,7 +1000,7 @@ public class Main extends Application implements ChangeListener, FileListener {
             for (int x = 0; x < values.length; x++) {
                 String value = values[x];
                 Column c = csv.getMetaData().getColumn(x);
-                r.updateColumn(c, value);
+                r.set(c, value);
             }
             updateRows();
             resultsTableView.getSelectionModel().select(rowIndex);

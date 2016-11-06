@@ -15,12 +15,16 @@
  */
 package org.laukvik.csv;
 
+import org.laukvik.csv.columns.BigDecimalColumn;
 import org.laukvik.csv.columns.BooleanColumn;
 import org.laukvik.csv.columns.ByteColumn;
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.DateColumn;
+import org.laukvik.csv.columns.DoubleColumn;
 import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.columns.UrlColumn;
 import org.laukvik.csv.io.BOM;
 import org.laukvik.csv.io.ClosableReader;
 import org.laukvik.csv.io.CsvReader;
@@ -416,66 +420,109 @@ public final class CSV implements Serializable {
     /**
      * Adds a new StringColumn with the specified name.
      *
-     * @param name the name
+     * @param columnName the name
      * @return the StringColumn being created
      */
-    public StringColumn addStringColumn(final String name) {
-        return addStringColumn(new StringColumn(name));
-    }
-
-    /**
-     * Adds a new StringColumn with the specified name.
-     *
-     * @param column the StringColumn
-     * @return the StringColumn being created
-     */
-    private StringColumn addStringColumn(final StringColumn column) {
-        addColumn(column);
-        return column;
+    public StringColumn addStringColumn(final String columnName) {
+        StringColumn c = new StringColumn(columnName);
+        addColumn(c);
+        return c;
     }
 
     /**
      * Adds a new IntegerColumn.
      *
-     * @param column the IntegerColumn
+     * @param columnName the name
      * @return the IntegerColumn being created
      */
-    public IntegerColumn addIntegerColumn(final IntegerColumn column) {
-        addColumn(column);
-        return column;
+    public IntegerColumn addIntegerColumn(final String columnName) {
+        IntegerColumn c = new IntegerColumn(columnName);
+        addColumn(c);
+        return c;
     }
 
     /**
      * Adds a new FloatColumn.
      *
-     * @param column the FloatColumn
+     * @param columnName the name
      * @return the FloatColumn being created
      */
-    public FloatColumn addFloatColumn(final FloatColumn column) {
-        addColumn(column);
-        return column;
+    public FloatColumn addFloatColumn(final String columnName) {
+        FloatColumn c = new FloatColumn(columnName);
+        addColumn(c);
+        return c;
     }
 
     /**
      * Adds a new BooleanColumn.
      *
-     * @param column the BooleanColumn
+     * @param columnName the name
      * @return the BooleanColumn being created
      */
-    public BooleanColumn addBooleanColumn(final BooleanColumn column) {
-        addColumn(column);
-        return column;
+    public BooleanColumn addBooleanColumn(final String columnName) {
+        BooleanColumn c = new BooleanColumn(columnName);
+        addColumn(c);
+        return c;
     }
 
     /**
      * Adds a new ByteColumn.
      *
-     * @param column the ByteColumn
+     * @param columnName the name
      * @return the ByteColumn being created
      */
-    public ByteColumn addByteColumn(final ByteColumn column) {
-        addColumn(column);
-        return column;
+    public ByteColumn addByteColumn(final String columnName) {
+        ByteColumn c = new ByteColumn(columnName);
+        addColumn(c);
+        return c;
+    }
+
+    /**
+     * Adds a new BigDecimalColumn.
+     *
+     * @param columnName the name
+     * @return the BigDecimalColumn being created
+     */
+    public BigDecimalColumn addBigDecimalColumn(final String columnName) {
+        BigDecimalColumn c = new BigDecimalColumn(columnName);
+        addColumn(c);
+        return c;
+    }
+
+    /**
+     * Adds a new DateColumn.
+     *
+     * @param columnName the name
+     * @return the DateColumn being created
+     */
+    public DateColumn addDateColumn(final String columnName) {
+        DateColumn c = new DateColumn(columnName);
+        addColumn(c);
+        return c;
+    }
+
+    /**
+     * Adds a new DoubleColumn.
+     *
+     * @param columnName the name
+     * @return the DoubleColumn being created
+     */
+    public DoubleColumn addDoubleColumn(final String columnName) {
+        DoubleColumn c = new DoubleColumn(columnName);
+        addColumn(c);
+        return c;
+    }
+
+    /**
+     * Adds a new UrlColumn.
+     *
+     * @param columnName the name
+     * @return the UrlColumn being created
+     */
+    public UrlColumn addUrlColumn(final String columnName) {
+        UrlColumn c = new UrlColumn(columnName);
+        addColumn(c);
+        return c;
     }
 
     /**

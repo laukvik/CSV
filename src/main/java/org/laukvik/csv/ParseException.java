@@ -18,7 +18,7 @@ package org.laukvik.csv;
 /**
  * Indicates that the data set could not be parsed.
  */
-public class ParseException extends Exception {
+public final class ParseException extends Exception {
 
     /**
      * Indicates that the data set could not be parsed.

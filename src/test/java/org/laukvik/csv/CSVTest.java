@@ -17,7 +17,15 @@ package org.laukvik.csv;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.laukvik.csv.columns.BigDecimalColumn;
+import org.laukvik.csv.columns.BooleanColumn;
+import org.laukvik.csv.columns.ByteColumn;
+import org.laukvik.csv.columns.DateColumn;
+import org.laukvik.csv.columns.DoubleColumn;
+import org.laukvik.csv.columns.FloatColumn;
+import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.columns.UrlColumn;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,17 +34,44 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 
 public class CSVTest {
 
-    // ------ Rows ------
+
 
     public static File getResource(String filename) {
         ClassLoader classLoader = CSVTest.class.getClassLoader();
         return new File(classLoader.getResource(filename).getFile());
+    }
+
+
+    // ------ Columns ------
+
+    @Test
+    public void shouldAddColumnTypes() {
+        CSV csv = new CSV();
+        BigDecimalColumn bdc = csv.addBigDecimalColumn("bigDecimal");
+        BooleanColumn bc = csv.addBooleanColumn("boolean");
+        ByteColumn byteC = csv.addByteColumn("byte");
+        DateColumn datec = csv.addDateColumn("date");
+        DoubleColumn dc = csv.addDoubleColumn("double");
+        FloatColumn fc = csv.addFloatColumn("float");
+        IntegerColumn ic = csv.addIntegerColumn("integer");
+        StringColumn sc = csv.addStringColumn("string");
+        UrlColumn uc = csv.addUrlColumn("url");
+        assertNotNull(bdc);
+        assertNotNull(bc);
+        assertNotNull(byteC);
+        assertNotNull(datec);
+        assertNotNull(dc);
+        assertNotNull(fc);
+        assertNotNull(ic);
+        assertNotNull(sc);
+        assertNotNull(uc);
     }
 
     // ------ Rows ------

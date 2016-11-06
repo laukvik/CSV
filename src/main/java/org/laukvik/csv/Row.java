@@ -58,32 +58,13 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Returns the row formatted as a String.
-     *
-     * @return the row as STring
-     */
-    public String toString() {
-        StringBuilder b = new StringBuilder();
-        int x = 0;
-        for (Column c : map.keySet()) {
-            if (x > 0) {
-                b.append(",");
-            }
-            Object o = map.get(c);
-            b.append(c.getName()).append("=").append(o);
-            x++;
-        }
-        return b.toString();
-    }
-
-    /**
-     * Updates the column with the value.
+     * Sets the value for the column.
      *
      * @param column the column to setDate
      * @param value the value
      * @return the row
      */
-    public Row updateColumn(final Column column, final String value) {
+    public Row set(final Column column, final String value) {
         map.put(column, column.parse(value));
         return this;
     }
@@ -95,7 +76,7 @@ public final class Row implements Serializable {
      * @param value  the value
      * @return the row
      */
-    public Row setBytes(final ByteColumn column, final Byte value) {
+    public Row setBytes(final ByteColumn column, final byte[] value) {
         map.put(column, value);
         return this;
     }
@@ -249,6 +230,17 @@ public final class Row implements Serializable {
     /**
      * Returns the value of the column.
      *
+     * @param bigDecimalColumn the column
+     * @return the value
+     */
+    public BigDecimal getBigDecimal(final BigDecimalColumn bigDecimalColumn) {
+        return (BigDecimal) map.get(bigDecimalColumn);
+    }
+
+
+    /**
+     * Returns the value of the column.
+     *
      * @param integerColumn the column
      * @return the value
      */
@@ -265,4 +257,44 @@ public final class Row implements Serializable {
         map.remove(column);
     }
 
+
+    /**
+     * Returns the value of the column.
+     *
+     * @param booleanColumn the column
+     * @return the value
+     */
+    public Boolean getBoolean(final BooleanColumn booleanColumn) {
+        return (Boolean) map.get(booleanColumn);
+    }
+
+    /**
+     * Returns the value of the column.
+     *
+     * @param byteColumn the column
+     * @return the value
+     */
+    public byte[] getBytes(final ByteColumn byteColumn) {
+        return (byte[]) map.get(byteColumn);
+    }
+
+    /**
+     * Returns the value of the column.
+     *
+     * @param doubleColumn the column
+     * @return the value
+     */
+    public Double getDouble(final DoubleColumn doubleColumn) {
+        return (Double) map.get(doubleColumn);
+    }
+
+    /**
+     * Returns the value of the column.
+     *
+     * @param urlColumn the column
+     * @return the value
+     */
+    public URL getURL(final UrlColumn urlColumn) {
+        return (URL) map.get(urlColumn);
+    }
 }

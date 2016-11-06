@@ -270,7 +270,7 @@ public final class CsvReader implements ClosableReader {
             String value = values.get(x);
             if (x < metaData.getColumnCount()) {
                 Column c = metaData.getColumn(x);
-                row.updateColumn(c, value);
+                row.set(c, value);
             }
         }
         return true;
