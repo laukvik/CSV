@@ -114,7 +114,7 @@ public class ObservableRow implements javafx.beans.value.ChangeListener<String> 
         int rowIndex = csv.indexOf(row);
         Column column = csv.getMetaData().getColumn(columnIndex);
         if (column instanceof StringColumn) {
-            row.update((StringColumn) column, newValue);
+            row.setString((StringColumn) column, newValue);
         }
         listener.cellUpdated(columnIndex, rowIndex);
     }

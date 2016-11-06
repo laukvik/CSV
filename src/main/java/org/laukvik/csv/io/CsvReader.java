@@ -3,16 +3,7 @@ package org.laukvik.csv.io;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
-import org.laukvik.csv.columns.BigDecimalColumn;
-import org.laukvik.csv.columns.BooleanColumn;
-import org.laukvik.csv.columns.ByteColumn;
 import org.laukvik.csv.columns.Column;
-import org.laukvik.csv.columns.DateColumn;
-import org.laukvik.csv.columns.DoubleColumn;
-import org.laukvik.csv.columns.FloatColumn;
-import org.laukvik.csv.columns.IntegerColumn;
-import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.columns.UrlColumn;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -279,41 +270,7 @@ public final class CsvReader implements ClosableReader {
             String value = values.get(x);
             if (x < metaData.getColumnCount()) {
                 Column c = metaData.getColumn(x);
-                if (c instanceof StringColumn) {
-                    row.update((StringColumn) c, value);
-
-                } else if (c instanceof BigDecimalColumn) {
-                    BigDecimalColumn bc = (BigDecimalColumn) c;
-                    row.update(bc, bc.parse(value));
-
-                } else if (c instanceof BooleanColumn) {
-                    BooleanColumn bc = (BooleanColumn) c;
-                    row.update((BooleanColumn) c, bc.parse(value));
-
-                } else if (c instanceof ByteColumn) {
-                    ByteColumn bc = (ByteColumn) c;
-//                    row.update( bc, bc.parse(value) );
-
-                } else if (c instanceof DateColumn) {
-                    DateColumn dc = (DateColumn) c;
-                    row.update(dc, dc.parse(value));
-
-                } else if (c instanceof DoubleColumn) {
-                    DoubleColumn dc = (DoubleColumn) c;
-                    row.update(dc, dc.parse(value));
-
-                } else if (c instanceof FloatColumn) {
-                    FloatColumn fc = (FloatColumn) c;
-                    row.update(fc, fc.parse(value));
-
-                } else if (c instanceof IntegerColumn) {
-                    IntegerColumn ic = (IntegerColumn) c;
-                    row.update((IntegerColumn) c, ic.parse(value));
-
-                } else if (c instanceof UrlColumn) {
-                    UrlColumn ic = (UrlColumn) c;
-                    row.update(ic, ic.parse(value));
-                }
+                row.updateColumn(c, value);
             }
         }
         return true;

@@ -108,30 +108,30 @@ public final class JavaReader<T> implements Readable {
         Field f = instance.getClass().getField(column.getName());
         if (column instanceof StringColumn) {
             StringColumn c = (StringColumn) column;
-            row.update(c, (String) f.get(instance));
+            row.setString(c, (String) f.get(instance));
         } else if (column instanceof IntegerColumn) {
             IntegerColumn c = (IntegerColumn) column;
-            row.update(c, (Integer) f.get(instance));
+            row.setInteger(c, (Integer) f.get(instance));
         } else if (column instanceof BooleanColumn) {
             BooleanColumn c = (BooleanColumn) column;
-            row.update(c, (Boolean) f.get(instance));
+            row.setBoolean(c, (Boolean) f.get(instance));
         } else if (column instanceof FloatColumn) {
             FloatColumn c = (FloatColumn) column;
-            row.update(c, (Float) f.get(instance));
+            row.setFloat(c, (Float) f.get(instance));
         } else if (column instanceof ByteColumn) {
             ByteColumn c = (ByteColumn) column;
         } else if (column instanceof DateColumn) {
             DateColumn c = (DateColumn) column;
-            row.update(c, (Date) f.get(instance));
+            row.setDate(c, (Date) f.get(instance));
         } else if (column instanceof DoubleColumn) {
             DoubleColumn c = (DoubleColumn) column;
-            row.update(c, (Double) f.get(instance));
+            row.setDouble(c, (Double) f.get(instance));
         } else if (column instanceof UrlColumn) {
             UrlColumn c = (UrlColumn) column;
-            row.update(c, (URL) f.get(instance));
+            row.setURL(c, (URL) f.get(instance));
         } else if (column instanceof BigDecimalColumn) {
             BigDecimalColumn c = (BigDecimalColumn) column;
-            row.update(c, (BigDecimal) f.get(instance));
+            row.setBigDecimal(c, (BigDecimal) f.get(instance));
         }
     }
 

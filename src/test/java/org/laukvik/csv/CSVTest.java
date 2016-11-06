@@ -45,10 +45,10 @@ public class CSVTest {
     public void shouldBuildDistinctSet() throws IOException {
         CSV csv = new CSV();
         StringColumn president = csv.addStringColumn("President");
-        csv.addRow().update(president, "Hillary");
-        csv.addRow().update(president, "Barak");
-        csv.addRow().update(president, "Hillary");
-        csv.addRow().update(president, "Clinton");
+        csv.addRow().setString(president, "Hillary");
+        csv.addRow().setString(president, "Barak");
+        csv.addRow().setString(president, "Hillary");
+        csv.addRow().setString(president, "Clinton");
         Set<String> values = csv.buildDistinctValues(0);
         Assert.assertEquals(3, values.size());
 
@@ -59,7 +59,7 @@ public class CSVTest {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         StringColumn president = csv.addStringColumn("President");
-        csv.addRow(0).update(president, "Barak Obama");
+        csv.addRow(0).setString(president, "Barak Obama");
     }
 
     @Test
@@ -102,6 +102,14 @@ public class CSVTest {
 
     // ------ Reading ------
 
+
+    @Test
+    public void readUsingConstructor() throws IOException {
+        CSV csv = new CSV(getResource("presidents.csv"));
+        MetaData md = csv.getMetaData();
+        assertSame(44, csv.getRowCount());
+    }
+
     @Test
     public void iterator() throws IOException, ParseException {
         CSV csv = new CSV();
@@ -114,8 +122,8 @@ public class CSVTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
-        Row r1 = csv.addRow().update(first, "Bill").update(last, "Gates");
-        Row r2 = csv.addRow().update(first, "Steve").update(last, "Jobs");
+        Row r1 = csv.addRow().setString(first, "Bill").setString(last, "Gates");
+        Row r2 = csv.addRow().setString(first, "Steve").setString(last, "Jobs");
 //        assertEquals("Row1", 2, r1.getValues().size());
 //        assertEquals("Row1", 2, r2.getValues().size());
         assertSame("RowCount", csv.getRowCount(), 2);
@@ -134,8 +142,8 @@ public class CSVTest {
         assertEquals("First should be 0", 0, first.indexOf());
         assertEquals("Last should be 1", 1, last.indexOf());
 
-        csv.addRow().update(first, "Bill").update(last, "Gates");
-        csv.addRow().update(first, "Steve").update(last, "Jobs");
+        csv.addRow().setString(first, "Bill").setString(last, "Gates");
+        csv.addRow().setString(first, "Steve").setString(last, "Jobs");
 
         assertSame("RowCount", csv.getRowCount(), 2);
         try {
@@ -424,7 +432,7 @@ public class CSVTest {
         CSV csv = new CSV();
 //        csv.readJava(employees);
 //        assertEquals(3, csv.getRowCount());
-//        csv.addRow().update(president, "");
+//        csv.addRow().setDate(president, "");
     }
 
     static class Employee {

@@ -139,7 +139,7 @@ public class WordCountReader implements Readable {
     public final Row next() {
         row = new Row();
         String key = list.get(index);
-        row.update(wordColumn, list.get(index)).update(countColumn, map.get(key) + "");
+        row.setString(wordColumn, list.get(index)).setString(countColumn, map.get(key) + "");
         index++;
         return row;
     }

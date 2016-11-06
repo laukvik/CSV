@@ -35,8 +35,8 @@ public class ResourceBundleWriterTest {
         StringColumn defaultColumn = csv.addStringColumn("default");
         StringColumn noColumn      = csv.addStringColumn("no");
         StringColumn seColumn      = csv.addStringColumn("se");
-        csv.addRow().update(keyColumn, "add").update(defaultColumn, "Add").update(noColumn, "Legg til").update(seColumn, "Lägg till");
-        csv.addRow().update(keyColumn, "remove").update(defaultColumn, "Delete").update(noColumn, "Slett").update(seColumn, "Radera");
+        csv.addRow().setString(keyColumn, "add").setString(defaultColumn, "Add").setString(noColumn, "Legg til").setString(seColumn, "Lägg till");
+        csv.addRow().setString(keyColumn, "remove").setString(defaultColumn, "Delete").setString(noColumn, "Slett").setString(seColumn, "Radera");
 
         csv.writeResourceBundle( file );
 

@@ -39,11 +39,11 @@ public class XmlWriterTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
 
-        csv.addRow().update(first, "&");
-        csv.addRow().update(first, "\"");
-        csv.addRow().update(first, ">");
-        csv.addRow().update(first, "<");
-        csv.addRow().update(first, "'");
+        csv.addRow().setString(first, "&");
+        csv.addRow().setString(first, "\"");
+        csv.addRow().setString(first, ">");
+        csv.addRow().setString(first, "<");
+        csv.addRow().setString(first, "'");
 
         XmlWriter writer = new XmlWriter();
         writer.writeCSV(csv, new FileOutputStream(file));
@@ -61,8 +61,8 @@ public class XmlWriterTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
 
-        csv.addRow().update(first, "Bob");
-        csv.addRow().update(first, "Dylan");
+        csv.addRow().setString(first, "Bob");
+        csv.addRow().setString(first, "Dylan");
 
         XmlWriter writer = new XmlWriter("people", "person");
         writer.writeCSV(csv, new FileOutputStream(file));

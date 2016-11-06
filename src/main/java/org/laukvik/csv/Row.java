@@ -79,7 +79,7 @@ public final class Row implements Serializable {
     /**
      * Updates the column with the value.
      *
-     * @param column the column to update
+     * @param column the column to setDate
      * @param value the value
      * @return the row
      */
@@ -91,11 +91,11 @@ public final class Row implements Serializable {
     /**
      * Updates the column with the value.
      *
-     * @param column the column to update
+     * @param column the column to setDate
      * @param value  the value
      * @return the row
      */
-    public Row update(final ByteColumn column, final Byte value) {
+    public Row setBytes(final ByteColumn column, final Byte value) {
         map.put(column, value);
         return this;
     }
@@ -103,11 +103,11 @@ public final class Row implements Serializable {
     /**
      * Updates the column with the value.
      *
-     * @param column the column to update
+     * @param column the column to setDate
      * @param value  the value
      * @return the row
      */
-    public Row update(final BigDecimalColumn column, final BigDecimal value) {
+    public Row setBigDecimal(final BigDecimalColumn column, final BigDecimal value) {
         map.put(column, value);
         return this;
     }
@@ -115,11 +115,11 @@ public final class Row implements Serializable {
     /**
      * Updates the column with the value.
      *
-     * @param column the column to update
+     * @param column the column to setDate
      * @param value  the value
      * @return the row
      */
-    public Row update(final IntegerColumn column, final Integer value) {
+    public Row setInteger(final IntegerColumn column, final Integer value) {
         map.put(column, value);
         return this;
     }
@@ -127,11 +127,11 @@ public final class Row implements Serializable {
     /**
      * Updates the column with the value.
      *
-     * @param column the column to update
+     * @param column the column to setDate
      * @param value  the value
      * @return the row
      */
-    public Row update(final FloatColumn column, final Float value) {
+    public Row setFloat(final FloatColumn column, final Float value) {
         map.put(column, value);
         return this;
     }
@@ -139,11 +139,11 @@ public final class Row implements Serializable {
     /**
      * Updates the column with the value.
      *
-     * @param column the column to update
+     * @param column the column to setDate
      * @param value  the value
      * @return the row
      */
-    public Row update(final DoubleColumn column, final Double value) {
+    public Row setDouble(final DoubleColumn column, final Double value) {
         map.put(column, value);
         return this;
     }
@@ -151,11 +151,11 @@ public final class Row implements Serializable {
     /**
      * Updates the column with the value.
      *
-     * @param column the column to update
+     * @param column the column to setDate
      * @param value  the value
      * @return the row
      */
-    public Row update(final BooleanColumn column, final Boolean value) {
+    public Row setBoolean(final BooleanColumn column, final Boolean value) {
         map.put(column, value);
         return this;
     }
@@ -163,11 +163,11 @@ public final class Row implements Serializable {
     /**
      * Updates the column with the value.
      *
-     * @param column the column to update
+     * @param column the column to setDate
      * @param value  the value
      * @return the row
      */
-    public Row update(final StringColumn column, final String value) {
+    public Row setString(final StringColumn column, final String value) {
         map.put(column, value);
         return this;
     }
@@ -175,11 +175,11 @@ public final class Row implements Serializable {
     /**
      * Updates the column with the value.
      *
-     * @param column the column to update
+     * @param column the column to setDate
      * @param value  the value
      * @return the row
      */
-    public Row update(final UrlColumn column, final URL value) {
+    public Row setURL(final UrlColumn column, final URL value) {
         map.put(column, value);
         return this;
     }
@@ -187,11 +187,11 @@ public final class Row implements Serializable {
     /**
      * Updates the column with the value.
      *
-     * @param column the column to update
+     * @param column the column to setDate
      * @param value  the value
      * @return the row
      */
-    public Row update(final DateColumn column, final Date value) {
+    public Row setDate(final DateColumn column, final Date value) {
         map.put(column, value);
         return this;
     }

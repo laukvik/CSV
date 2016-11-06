@@ -229,7 +229,7 @@ public final class CSV implements Serializable {
         Row r = addRow(0);
         for (int x = 0; x < getMetaData().getColumnCount(); x++) {
             StringColumn c = (StringColumn) getMetaData().getColumn(x);
-            r.update(c, c.getName());
+            r.setString(c, c.getName());
             c.setName("Column" + (x + 1));
         }
         fireRowCreated(0, r);

@@ -131,11 +131,11 @@ public final class ResourceBundleReader extends AbstractResourceBundle implement
         currentRow = new Row();
         String key = keys.get(index);
         StringColumn sc = (StringColumn) metaData.getColumn(0);
-        currentRow.update(sc, key);
+        currentRow.setString(sc, key);
         for (int x = 0; x < propertiesList.size(); x++) {
             StringColumn column = (StringColumn) metaData.getColumn(x + 1);
             Properties p = propertiesList.get(x);
-            currentRow.update(column, (String) p.get(key));
+            currentRow.setString(column, (String) p.get(key));
         }
         return currentRow;
     }

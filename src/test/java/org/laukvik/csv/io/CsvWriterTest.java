@@ -47,8 +47,8 @@ public class CsvWriterTest {
             CsvWriter w = new CsvWriter();
             MetaData md = csv.getMetaData();
             w.writeCSV(md, out);
-            w.writeCSV(csv.buildRow().update(first, "Bill").update(last, "Gates"), md, out);
-            w.writeCSV(csv.buildRow().update(first, "Steve").update(last, "Jobs"), md, out);
+            w.writeCSV(csv.buildRow().setString(first, "Bill").setString(last, "Gates"), md, out);
+            w.writeCSV(csv.buildRow().setString(first, "Steve").setString(last, "Jobs"), md, out);
 
         } catch (IOException e) {
             e.printStackTrace();

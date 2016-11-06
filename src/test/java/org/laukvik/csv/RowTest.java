@@ -41,7 +41,7 @@ public class RowTest {
         CSV csv = new CSV();
         IntegerColumn id = csv.addIntegerColumn(new IntegerColumn("id"));
         Row r = csv.addRow();
-        r.update(id, 123);
+        r.setInteger(id, 123);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class RowTest {
         CSV csv = new CSV();
         FloatColumn fc = csv.addFloatColumn(new FloatColumn("id"));
         Row r = csv.addRow();
-        r.update(fc, 123.45f);
+        r.setFloat(fc, 123.45f);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class RowTest {
         CSV csv = new CSV();
         StringColumn sc = csv.addStringColumn("desc");
         Row r = csv.addRow();
-        r.update(sc, "just testing");
+        r.setString(sc, "just testing");
     }
 
     @Test
@@ -65,7 +65,7 @@ public class RowTest {
         CSV csv = new CSV();
         BooleanColumn bc = csv.addBooleanColumn(new BooleanColumn("isTrue"));
         Row r = csv.addRow();
-        r.update(bc, true);
+        r.setBoolean(bc, true);
     }
 
     @Test
@@ -74,6 +74,6 @@ public class RowTest {
         ByteColumn bc = csv.addByteColumn(new ByteColumn("byte"));
         Row r = csv.addRow();
         byte a = 2;
-        r.update(bc, a);
+        r.setBytes(bc, a);
     }
 }

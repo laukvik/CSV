@@ -134,7 +134,7 @@ public final class Recent {
      */
     public void open(final File fileToRemember) {
         StringColumn c = (StringColumn) csv.getMetaData().getColumn(0);
-        csv.addRow().update(c, fileToRemember.getAbsolutePath());
+        csv.addRow().setString(c, fileToRemember.getAbsolutePath());
         if (csv.getRowCount() > limit) {
             int extra = csv.getRowCount() - limit;
             csv.removeRowsBetween(0, extra);

@@ -34,9 +34,9 @@ public class JsonWriterTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
 
-        csv.addRow().update(first, "Morten");
-        csv.addRow().update(first, "\"");
-        csv.addRow().update(first, " ");
+        csv.addRow().setString(first, "Morten");
+        csv.addRow().setString(first, "\"");
+        csv.addRow().setString(first, " ");
 
         JsonWriter writer = new JsonWriter();
         writer.writeCSV(csv, new FileOutputStream(file));
@@ -72,7 +72,7 @@ public class JsonWriterTest {
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
 
-        csv.addRow().update(first, "Morten").update(last, "Laukvik");
+        csv.addRow().setString(first, "Morten").setString(last, "Laukvik");
 
         JsonWriter writer = new JsonWriter();
         writer.writeCSV(csv, new FileOutputStream(file));

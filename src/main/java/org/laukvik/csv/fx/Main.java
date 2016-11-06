@@ -75,7 +75,7 @@ import static org.laukvik.csv.fx.Builder.toKb;
 public class Main extends Application implements ChangeListener, FileListener {
 
     /**
-     * The horisontal divider position.
+     * The horizontal divider position.
      */
     private static final float DIVIDER_POSITION_H = 0.25f;
     /**
