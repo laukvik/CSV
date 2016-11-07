@@ -78,19 +78,20 @@ public final class FrequencyDistribution {
     }
 
     /**
-     * Adds a value.
+     * Adds a value. Nulls are treated as empty strings.
      *
      * @param word the value to add
      */
     public void addValue(final String word) {
-        if (word == null || word.length() == 0) {
-            return;
+        String newWord = word;
+        if (word == null) {
+            newWord = "";
         }
-        if (map.containsKey(word)) {
-            Integer count = map.get(word) + 1;
-            map.put(word, count);
+        if (map.containsKey(newWord)) {
+            Integer count = map.get(newWord) + 1;
+            map.put(newWord, count);
         } else {
-            map.put(word, 1);
+            map.put(newWord, 1);
         }
     }
 

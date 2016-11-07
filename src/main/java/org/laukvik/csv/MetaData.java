@@ -169,7 +169,9 @@ public final class MetaData implements Serializable {
      */
     public void removeColumn(final Column column) {
         columns.remove(column);
-        csv.removeColumn(column);
+        if (csv != null) {
+            csv.removeColumn(column);
+        }
         column.setMetaData(null);
     }
 
@@ -179,9 +181,31 @@ public final class MetaData implements Serializable {
      * @param fromIndex the index of the column to move
      * @param toIndex   the new index of the column
      */
-    public void moveColumn(final int fromIndex, final int toIndex) {
+    public void swapColumn(final int fromIndex, final int toIndex) {
         Collections.swap(columns, fromIndex, toIndex);
-        csv.fireColumnMoved(fromIndex, toIndex);
+        if (csv != null) {
+            csv.fireColumnMoved(fromIndex, toIndex);
+        }
+    }
+
+    /**
+     * Changes the order of a specified column to another.
+     *
+     * @param fromIndex the index of the column to move
+     * @param toIndex   the new index of the column
+     */
+    public void moveColumn(final int fromIndex, final int toIndex) {
+        Column c1 = getColumn(fromIndex);
+        Column c2 = getColumn(toIndex);
+        System.out.println("Moving from: " + fromIndex + " to " + toIndex);
+
+        columns.remove(c1);
+
+        columns.add(toIndex, c1);
+
+        if (csv != null) {
+            csv.fireColumnMoved(fromIndex, toIndex);
+        }
     }
 
     /**
@@ -228,7 +252,7 @@ public final class MetaData implements Serializable {
      *
      * @return the separator character
      */
-    public Character getSeparatorChar() {
+    public char getSeparatorChar() {
         return separatorChar;
     }
 
