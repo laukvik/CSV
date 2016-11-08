@@ -2,7 +2,6 @@
  *
  * Contains classes for working with queries.
  *
- * <p>
  * <pre>
  * .select()
  * .where()
@@ -10,7 +9,8 @@
  * .select()
  * .where()
  * .findResults();
- *
+ * </pre>
+ * <pre>
  * .where
  * .column("BookID").is(5)
  * .column("Chapter").isGreaterThan(3)

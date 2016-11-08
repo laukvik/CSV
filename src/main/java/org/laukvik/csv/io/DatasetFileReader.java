@@ -14,7 +14,6 @@ public interface DatasetFileReader {
      *
      * @param file the csvFile
      * @param csv  the csv instance
-     * @return the CSV
      */
     void readFile(CSV csv, File file);
 

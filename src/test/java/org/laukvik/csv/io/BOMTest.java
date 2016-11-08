@@ -7,12 +7,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class BOMTest {
 
+    public static File getResource(String filename) {
+        ClassLoader classLoader = BOMTest.class.getClassLoader();
+        return new File(classLoader.getResource(filename).getFile());
+    }
 
     @Test
     public void checkBytes(){
@@ -37,6 +43,7 @@ public class BOMTest {
     @Test
     public void checkBytesUTF32LE(){
         assertTrue( BOM.UTF32LE.is( (byte)0xFF ,(byte)0xFE ,(byte)0x00 ,(byte)0x00 ));
+        assertTrue(Arrays.equals(new byte[]{(byte) 0xFF, (byte) 0xFE, (byte) 0x00, (byte) 0x00}, BOM.UTF32LE.getBytes()));
     }
 
     @Test
@@ -47,10 +54,10 @@ public class BOMTest {
     private File createCharsetFile(BOM bom) throws IOException {
         File file = File.createTempFile("charset_test",".csv");
         try (
-            FileOutputStream outputStream = new FileOutputStream(file);
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, bom.getCharset());
-            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-                ){
+                FileOutputStream outputStream = new FileOutputStream(file);
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, bom.getCharset());
+                BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)
+        ) {
             outputStream.write(bom.getBytes());
             bufferedWriter.write("ABA");
             bufferedWriter.newLine();
@@ -63,6 +70,7 @@ public class BOMTest {
     @Test
     public void utf8() throws IOException {
         assertEquals(BOM.UTF8, BOM.findBom( createCharsetFile(BOM.UTF8) ));
+        assertEquals(BOM.UTF8, BOM.findBom(getResource("charset_utf_8.csv")));
     }
 
     @Test
@@ -83,6 +91,12 @@ public class BOMTest {
     @Test
     public void utf16be() throws IOException {
         assertEquals(BOM.UTF16BE, BOM.findBom( createCharsetFile( BOM.UTF16BE ) ));
+    }
+
+    @Test
+    public void test() throws IOException {
+        assertNull(BOM.findBom(null));
+        assertNull(BOM.UTF8.is());
     }
 
 }

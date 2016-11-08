@@ -109,7 +109,6 @@ public final class XmlWriter implements DatasetFileWriter {
      *
      * @param csv  the CSV to write
      * @param file the file
-     * @throws IOException when the CSV can't be fully written
      */
     public void writeCSV(final CSV csv, final File file) {
         try (FileOutputStream out = new FileOutputStream(file)) {

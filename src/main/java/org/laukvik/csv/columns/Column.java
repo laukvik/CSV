@@ -94,7 +94,6 @@ public abstract class Column<T> implements Comparable {
     /**
      * Parses a column name with support for optional metadata about the column. The supported format of metadata is
      * like this:
-     * <p>
      * <pre>
      * "President(type=VARCHAR,primaryKey=true,increment=true,foreignKey=null)"
      * </pre>

@@ -13,10 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Reads a data set in the CSV format.
- * <p>
+ * <h2>Reads a data set in the CSV format.</h2>
+ *
  * <h3>Reading a file with auto detect on:</h3>
- * <p>
  * <pre>
  * try (CsvReader r = new CsvReader( new File("presidents.csv"), Charset.forName(charset)) )) {
  *   while (r.hasNext()) {
@@ -27,9 +26,7 @@ import java.util.List;
  *     e.printStacktrace();
  * }
  * </pre>
- * <p>
  * <h3>Reading a file with specifying separator character and encoding:</h3>
- * <p>
  * <pre>
  * try (CsvReader r = new CsvReader( new File("presidents.csv"), Charset.forName(charset)) )) {
  *   while (r.hasNext()) {
