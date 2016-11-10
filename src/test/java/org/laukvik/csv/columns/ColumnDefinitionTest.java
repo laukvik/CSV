@@ -91,4 +91,16 @@ public class ColumnDefinitionTest {
         assertEquals(true, cd.getAttributeNames().contains("primarykey"));
     }
 
+    @Test
+    public void setValue() throws Exception {
+        ColumnDefinition cd = new ColumnDefinition("President");
+        cd.setAttribute("type", "varchar", "15");
+        assertEquals("varchar", cd.get("type").getValue());
+        assertEquals("15", cd.get("type").getOptional());
+        cd.get("type").setOptional("16");
+        assertEquals("16", cd.get("type").getOptional());
+        cd.get("type").setValue("int");
+        assertEquals("int", cd.get("type").getValue());
+    }
+
 }

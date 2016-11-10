@@ -35,6 +35,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
@@ -74,6 +75,36 @@ public class CSVTest {
         assertNotNull(uc);
     }
 
+    @Test
+    public void shouldInsertHeaders() throws IOException {
+        CSV csv = new CSV(getResource("noheaders.csv"));
+        assertEquals(1, csv.getRowCount());
+        assertEquals(2, csv.getMetaData().getColumnCount());
+        csv.insertHeaders();
+        assertEquals(2, csv.getRowCount());
+        assertEquals(2, csv.getMetaData().getColumnCount());
+    }
+
+    @Test
+    public void shouldRemoveColum() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(getResource("presidents.csv"));
+        StringColumn c = (StringColumn) csv.getMetaData().getColumn(0);
+        int cols = csv.getMetaData().getColumnCount();
+        csv.getMetaData().removeColumn(0);
+        assertEquals(cols - 1, csv.getMetaData().getColumnCount());
+    }
+
+    @Test
+    public void fireColumnMoved() throws IOException {
+        CSV csv = new CSV();
+        StringColumn first = csv.addStringColumn("first");
+        StringColumn last = csv.addStringColumn("last");
+        csv.fireColumnMoved(0, 1);
+        assertEquals(first, csv.getMetaData().getColumn(1));
+        assertEquals(last, csv.getMetaData().getColumn(0));
+    }
+
     // ------ Rows ------
 
     @Test
@@ -101,6 +132,11 @@ public class CSVTest {
     public void shouldSwapRows() throws IOException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
+        Row r0 = csv.getRow(0);
+        Row r10 = csv.getRow(10);
+        csv.swapRows(0, 10);
+        assertEquals(10, csv.indexOf(r0));
+        assertEquals(0, csv.indexOf(r10));
     }
 
     @Test
@@ -114,18 +150,27 @@ public class CSVTest {
 
     @Test
     public void shouldRemoveRow() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(getResource("presidents.csv"));
+        assertEquals(44, csv.getRowCount());
+        csv.removeRow(1);
+        assertEquals(43, csv.getRowCount());
     }
 
     @Test
     public void shouldRemoveRowsBetween() throws IOException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
+        csv.removeRowsBetween(0, 9);
+        assertEquals(34, csv.getRowCount());
     }
 
     @Test
     public void shouldFindIndexOf() throws IOException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
+        Row r = csv.getRow(10);
+        assertEquals(10, csv.indexOf(r));
     }
 
     @Test
@@ -135,12 +180,31 @@ public class CSVTest {
         assertEquals(249, csv.getRowCount());
     }
 
+    // ------ div ------
+
+    @Test
+    public void clear() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(getResource("presidents.csv"));
+        csv.clear();
+        assertEquals(0, csv.getRowCount());
+    }
+
+
+
     // ------ Reading ------
+
+    @Test
+    public void getRow() throws IOException {
+        CSV csv = new CSV(getResource("presidents.csv"));
+        assertNull(csv.getRow(5000));
+    }
 
 
     @Test
     public void readUsingConstructor() throws IOException {
         CSV csv = new CSV(getResource("presidents.csv"));
+        assertNotNull(csv.getFile());
         MetaData md = csv.getMetaData();
         assertSame(44, csv.getRowCount());
     }
@@ -470,6 +534,36 @@ public class CSVTest {
 //        csv.addRow().setDate(president, "");
     }
 
+    @Test
+    public void shouldFireFileEvent() throws Exception {
+        CSV csv = new CSV();
+        FileListen l = new FileListen();
+        csv.addFileListener(l);
+        csv.readFile(getResource("presidents.csv"));
+        assertEquals(1, l.beginRead);
+        assertEquals(1, l.finishRead);
+        assertEquals(0, l.beginWrite);
+        assertEquals(0, l.finishWrite);
+        csv.writeFile(File.createTempFile("presidents", ".csv"));
+        assertEquals(1, l.beginRead);
+        assertEquals(1, l.finishRead);
+        assertEquals(1, l.beginWrite);
+        assertEquals(1, l.finishWrite);
+    }
+
+    @Test
+    public void shouldRemoveFileListener() throws Exception {
+        CSV csv = new CSV();
+        FileListen l = new FileListen();
+        csv.addFileListener(l);
+        csv.removeFileListener(l);
+        csv.readFile(getResource("presidents.csv"));
+        assertEquals(0, l.beginRead);
+        assertEquals(0, l.finishRead);
+        assertEquals(0, l.beginWrite);
+        assertEquals(0, l.finishWrite);
+    }
+
     static class Employee {
         public String name;
         public int age;
@@ -479,6 +573,39 @@ public class CSVTest {
             this.name = name;
             this.age = age;
             this.isWoman = isWoman;
+        }
+    }
+
+    // ------ Events -----
+    class ChangeListen {
+
+    }
+
+    class FileListen implements FileListener {
+
+        int beginRead = 0;
+        int finishRead = 0;
+        int beginWrite = 0;
+        int finishWrite = 0;
+
+        @Override
+        public void beginRead(File file) {
+            beginRead++;
+        }
+
+        @Override
+        public void finishRead(File file) {
+            finishRead++;
+        }
+
+        @Override
+        public void beginWrite(File file) {
+            beginWrite++;
+        }
+
+        @Override
+        public void finishWrite(File file) {
+            finishWrite++;
         }
     }
 

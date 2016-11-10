@@ -24,14 +24,6 @@ public interface FileListener {
     void finishRead(File file);
 
     /**
-     * Notifies that its finished reading the file.
-     *
-     * @param count the amount of bytes read
-     * @param total the total amount of bytes to read
-     */
-    void readBytes(long count, long total);
-
-    /**
      * Notifies that its beginning to write to the file.
      *
      * @param file the file

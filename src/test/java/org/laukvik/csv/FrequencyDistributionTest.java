@@ -50,7 +50,7 @@ public class FrequencyDistributionTest {
         fd.addValue(null);
         fd.addValue("");
         assertEquals((Integer) 2, fd.getCount("James"));
-        assertEquals((Integer) 1, fd.getCount(""));
+        assertEquals((Integer) 2, fd.getCount(""));
     }
 
 }

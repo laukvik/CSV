@@ -66,6 +66,8 @@ public final class BooleanColumn extends Column<Boolean> {
         if (one == null && another != null) {
             return 1;
         } else if (one != null && another == null) {
+            return -1;
+        } else if (one == null && another == null) {
             return 0;
         }
         return one.compareTo(another);

@@ -879,7 +879,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * @param columnIndex the index of the column
      */
     private void deleteColumn(final int columnIndex) {
-        csv.removeColumn(csv.getMetaData().getColumn(columnIndex));
+        csv.getMetaData().removeColumn(columnIndex);
         updateColumns();
         updateRows();
         int columnCount = csv.getMetaData().getColumnCount();

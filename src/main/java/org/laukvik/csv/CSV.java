@@ -227,7 +227,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Moves all rows down and inserts new columns.
+     * Adds column names when a CSV has been read without their column names.
      */
     public void insertHeaders() {
         Row r = addRow(0);
@@ -526,18 +526,6 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Removes the column and all its data.
-     *
-     * @param column the column
-     */
-    public void removeColumn(final Column column) {
-        for (Row r : rows) {
-            r.remove(column);
-        }
-        getMetaData().removeColumn(column);
-    }
-
-    /**
      * Removes all rows within the specified range.
      *
      * @param fromRowIndex the start index
@@ -570,9 +558,7 @@ public final class CSV implements Serializable {
             this.metaData.setCharset(charset);
         }
         fireMetaDataRead();
-        long max = file.length();
         while (reader.hasNext()) {
-            fireBytesRead(reader.getBytesRead(), max);
             addRow(reader.getRow());
         }
         fireFinishRead();
@@ -1012,18 +998,6 @@ public final class CSV implements Serializable {
     private void fireFinishRead() {
         for (FileListener l : fileListeners) {
             l.finishRead(file);
-        }
-    }
-
-    /**
-     * Informs all FileListeners how many bytes have been read.
-     *
-     * @param read how many bytes have been read
-     * @param max  the maximum number of bytes available
-     */
-    private void fireBytesRead(final long read, final long max) {
-        for (FileListener l : fileListeners) {
-            l.readBytes(read, max);
         }
     }
 

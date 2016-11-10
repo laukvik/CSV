@@ -170,7 +170,9 @@ public final class MetaData implements Serializable {
     public void removeColumn(final Column column) {
         columns.remove(column);
         if (csv != null) {
-            csv.removeColumn(column);
+            for (Row r : csv.getRows()) {
+                r.remove(column);
+            }
         }
         column.setMetaData(null);
     }
@@ -252,7 +254,7 @@ public final class MetaData implements Serializable {
      *
      * @return the separator character
      */
-    public char getSeparatorChar() {
+    public Character getSeparatorChar() {
         return separatorChar;
     }
 

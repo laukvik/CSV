@@ -72,6 +72,13 @@ public final class DateColumn extends Column<Date> {
      * @return the comparison
      */
     public static int compareDates(final Date one, final Date another) {
+        if (one == null && another == null) {
+            return 0;
+        } else if (one == null) {
+            return -1;
+        } else if (another == null) {
+            return 1;
+        }
         return one.compareTo(another);
     }
 
@@ -105,6 +112,13 @@ public final class DateColumn extends Column<Date> {
      * @return true if the date is the same
      */
     public static boolean isEqualDate(final Date d1, final Date d2) {
+        if (d1 == null && d2 == null) {
+            return true;
+        } else if (d1 == null) {
+            return false;
+        } else if (d2 == null) {
+            return false;
+        }
         GregorianCalendar c1 = new GregorianCalendar();
         c1.setTime(d1);
         GregorianCalendar c2 = new GregorianCalendar();
@@ -122,6 +136,13 @@ public final class DateColumn extends Column<Date> {
      * @return true if the time is the same
      */
     public static boolean isEqualTime(final Date d1, final Date d2) {
+        if (d1 == null && d2 == null) {
+            return true;
+        } else if (d1 == null) {
+            return false;
+        } else if (d2 == null) {
+            return false;
+        }
         GregorianCalendar c1 = new GregorianCalendar();
         c1.setTime(d1);
         GregorianCalendar c2 = new GregorianCalendar();
