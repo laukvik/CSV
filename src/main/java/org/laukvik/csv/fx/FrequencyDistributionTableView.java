@@ -36,11 +36,11 @@ public final class FrequencyDistributionTableView extends TableView<ObservableFr
      */
     private static final float COUNT_RATIO = 0.2f;
     /**
-     * The minimum width of the count column
+     * The minimum width of the count column.
      */
     private static final int MIN_WIDTH = 32;
     /**
-     * The maximum width of the count column
+     * The maximum width of the count column.
      */
     private static final int MAX_WIDTH = 120;
 
