@@ -25,7 +25,6 @@ import java.util.Arrays;
 /**
  * Constants indicating encoding used in text file.
  *
- * @author Morten Laukvik
  * @see <a href="https://en.wikipedia.org/wiki/Byte_order_mark">Byte Order Mark (wikipedia)</a>
  */
 public enum BOM {
@@ -112,6 +111,9 @@ public enum BOM {
      * @return true if it matches
      */
     public boolean is(final byte... values) {
+        if (values.length == 0) {
+            return false;
+        }
         if (values.length < this.bytes.length) {
             return false;
         }

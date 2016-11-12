@@ -2,9 +2,7 @@ package org.laukvik.csv.fx;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.print.Printer;
@@ -38,14 +36,12 @@ import javafx.stage.Stage;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.ChangeListener;
 import org.laukvik.csv.FileListener;
-import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.BOM;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -66,6 +62,7 @@ import static org.laukvik.csv.fx.Builder.getPercentSize;
 import static org.laukvik.csv.fx.Builder.getSeparatorCharByString;
 import static org.laukvik.csv.fx.Builder.getSeparatorString;
 import static org.laukvik.csv.fx.Builder.toKb;
+import static org.laukvik.csv.fx.ChartBuilder.buildPieChart;
 
 /**
  * The JavaFX desktop application for opening and displaying the data sets.
@@ -82,10 +79,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * The vertical divider position.
      */
     private static final float DIVIDER_POSITION_V = 0.2f;
-    /**
-     * The maximum number of items in pie chart.
-     */
-    private static final int PIE_CHART_MAX = 50;
+
     /**
      * The width of the progressbar.
      */
@@ -187,44 +181,17 @@ public class Main extends Application implements ChangeListener, FileListener {
      */
     private static String toClipboardString(final int rowIndex, final CSV csv) {
         StringBuilder b = new StringBuilder();
-        for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
+        for (int x = 0; x < csv.getColumnCount(); x++) {
             if (x > 0) {
                 b.append(CSV.TAB);
             }
-            StringColumn sc = (StringColumn) csv.getMetaData().getColumn(x);
+            StringColumn sc = (StringColumn) csv.getColumn(x);
             b.append(csv.getRow(rowIndex).getString(sc));
         }
         return b.toString();
     }
 
-    /**
-     * Builds a pie chart.
-     * <p>
-     * TODO - Extract this to separate class and extrac max as a final int
-     *
-     * @param frequencyDistributionTableView the frequencyDistributionTableView
-     * @return piechart
-     */
-    public static PieChart buildPieChart(final FrequencyDistributionTableView frequencyDistributionTableView) {
-        List<PieChart.Data> dataset = new ArrayList<>();
 
-        int x = 0;
-        for (ObservableFrequencyDistribution fd : frequencyDistributionTableView.getItems()) {
-            if (fd.isSelected()) {
-                dataset.add(new PieChart.Data(fd.getValue(), fd.getCount()));
-            }
-        }
-        if (dataset.isEmpty()) {
-            for (ObservableFrequencyDistribution fd : frequencyDistributionTableView.getItems()) {
-                if (x < PIE_CHART_MAX) {
-                    dataset.add(new PieChart.Data(fd.getValue(), fd.getCount()));
-                }
-                x++;
-            }
-        }
-        ObservableList<PieChart.Data> data = FXCollections.observableArrayList(dataset);
-        return new PieChart(data);
-    }
 
     /**
      * Returns the formatted file size.
@@ -540,13 +507,19 @@ public class Main extends Application implements ChangeListener, FileListener {
      */
     public final void loadFile(final File file, final Character separatorChar, final Charset charset) {
         newFile();
+        csv.setAutoDetectCharset(true);
+        csv.setAutoDetectQuote(true);
+        csv.setAutoDetectSeparator(true);
         try {
             if (charset == null && separatorChar == null) {
                 csv.readFile(file);
             } else if (charset != null) {
-                csv.readFile(file, charset, separatorChar);
+                csv.setCharset(charset);
+                csv.setSeparator(separatorChar);
+                csv.readFile(file);
             } else if (separatorChar != null) {
-                csv.readFile(file, separatorChar);
+                csv.setSeparator(separatorChar);
+                csv.readFile(file);
             }
 
             queryModel = new QueryModel(csv, this);
@@ -573,7 +546,7 @@ public class Main extends Application implements ChangeListener, FileListener {
                 recent.open(file);
                 menuBar.buildRecentList(recent);
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             alert(e.getMessage());
         }
     }
@@ -591,7 +564,7 @@ public class Main extends Application implements ChangeListener, FileListener {
                 recent.open(file);
                 menuBar.buildRecentList(recent);
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             alert(e.getMessage());
         }
     }
@@ -601,14 +574,14 @@ public class Main extends Application implements ChangeListener, FileListener {
      */
     private void updateToolbar() {
         rowsLabel.setText(csv.getRowCount() + "");
-        colsLabel.setText(csv.getMetaData().getColumnCount() + "");
-        if (csv.getMetaData().getCharset() == null) {
+        colsLabel.setText(csv.getColumnCount() + "");
+        if (csv.getCharset() == null) {
             encodingLabel.setText(bundle.getString("metadata.encoding.na"));
         } else {
-            encodingLabel.setText(csv.getMetaData().getCharset().name());
+            encodingLabel.setText(csv.getCharset().name());
         }
         sizeLabel.setText(formatFilesize(csv.getFile()));
-        separatorLabel.setText(formatSeparator(csv.getMetaData().getSeparatorChar()));
+        separatorLabel.setText(formatSeparator(csv.getSeparatorChar()));
         stage.setTitle(formatFilename(csv.getFile()));
 
         fileTypeLabel.setText(formatFiletype(csv.getFile()));
@@ -722,17 +695,6 @@ public class Main extends Application implements ChangeListener, FileListener {
     /**
      * Implemented by ChangeListener.
      *
-     * @param metaData the metaData
-     * @see ChangeListener
-     */
-    public final void metaDataRead(final MetaData metaData) {
-        columnsTableView.setItems(createAllObservableList(metaData));
-        createResultsColumns(resultsTableView, metaData);
-    }
-
-    /**
-     * Implemented by ChangeListener.
-     *
      * @param columnIndex the column
      * @param rowIndex the row
      * @see ChangeListener
@@ -773,6 +735,9 @@ public class Main extends Application implements ChangeListener, FileListener {
     public final void finishRead(final File file) {
         progressBar.setVisible(false);
         stage.setTitle(file.getAbsolutePath());
+        columnsTableView.setItems(createAllObservableList(csv));
+        createResultsColumns(resultsTableView, csv);
+        createResultsRows(resultsTableView, csv, this);
         setSelectedColumnIndex(0);
     }
 
@@ -837,7 +802,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     private void handleDeleteColumn(final int columnIndex) {
         MessageFormat format = new MessageFormat(bundle.getString("dialog.deletecolumn.confirm"));
         Object[] messageArguments = {
-                csv.getMetaData().getColumn(columnIndex).getName()
+                csv.getColumn(columnIndex).getName()
         };
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(bundle.getString("app.title"));
@@ -861,15 +826,15 @@ public class Main extends Application implements ChangeListener, FileListener {
      * Updates the columns.
      */
     private void updateColumns() {
-        columnsTableView.setItems(createAllObservableList(csv.getMetaData()));
-        createResultsColumns(resultsTableView, csv.getMetaData());
+        columnsTableView.setItems(createAllObservableList(csv));
+        createResultsColumns(resultsTableView, csv);
     }
 
     /**
      * Updates the rows.
      */
     private void updateRows() {
-        createResultsColumns(resultsTableView, csv.getMetaData());
+        createResultsColumns(resultsTableView, csv);
         createResultsRows(resultsTableView, csv, this);
     }
 
@@ -879,10 +844,10 @@ public class Main extends Application implements ChangeListener, FileListener {
      * @param columnIndex the index of the column
      */
     private void deleteColumn(final int columnIndex) {
-        csv.getMetaData().removeColumn(columnIndex);
+        csv.removeColumn(columnIndex);
         updateColumns();
         updateRows();
-        int columnCount = csv.getMetaData().getColumnCount();
+        int columnCount = csv.getColumnCount();
         if (columnIndex > columnCount - 1) {
             // Deleted last
             columnsTableView.getSelectionModel().select(columnCount - 1);
@@ -969,7 +934,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      *
      */
     public final void handleNewHeaders() {
-        csv.insertHeaders();
+        csv.insertColumns();
         updateRows();
     }
 
@@ -999,7 +964,7 @@ public class Main extends Application implements ChangeListener, FileListener {
             Row r = csv.addRow(rowIndex);
             for (int x = 0; x < values.length; x++) {
                 String value = values[x];
-                Column c = csv.getMetaData().getColumn(x);
+                Column c = csv.getColumn(x);
                 r.set(c, value);
             }
             updateRows();
@@ -1074,7 +1039,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * @param toIndex the new index
      */
     private void moveColumn(final int fromIndex, final int toIndex) {
-        csv.getMetaData().moveColumn(fromIndex, toIndex);
+        csv.moveColumn(fromIndex, toIndex);
         Collections.swap(columnsTableView.getItems(), fromIndex, toIndex);
     }
 

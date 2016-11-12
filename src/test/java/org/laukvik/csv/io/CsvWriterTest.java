@@ -18,11 +18,9 @@ package org.laukvik.csv.io;
 import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.MetaData;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
@@ -42,24 +40,18 @@ public class CsvWriterTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
+        csv.addRow().set(first, "Bill").set(last, "Gates");
+        csv.addRow().set(first, "Steve").set(last, "Jobs");
 
-        try (FileOutputStream out = new FileOutputStream(f)) {
-            CsvWriter w = new CsvWriter();
-            MetaData md = csv.getMetaData();
-            w.writeCSV(md, out);
-            w.writeCSV(csv.buildRow().setString(first, "Bill").setString(last, "Gates"), md, out);
-            w.writeCSV(csv.buildRow().setString(first, "Steve").setString(last, "Jobs"), md, out);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        CsvWriter w = new CsvWriter();
+        w.writeCSV(f, csv);
 
         try {
             CSV csv2 = new CSV();
             csv2.readFile(f);
             assertEquals("Correct row count", 2, csv2.getRowCount());
-            assertEquals("First", "First", csv2.getMetaData().getColumn(0).getName());
-            assertEquals("Last", "Last", csv2.getMetaData().getColumn(1).getName());
+            assertEquals("First", "First", csv2.getColumn(0).getName());
+            assertEquals("Last", "Last", csv2.getColumn(1).getName());
             assertEquals("Find by row index and index", "Bill", csv2.getRow(0).getString(first));
             assertEquals("Find by row index and column name", "Gates", csv2.getRow(0).getString(last));
         }

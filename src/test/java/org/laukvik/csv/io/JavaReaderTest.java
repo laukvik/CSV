@@ -2,8 +2,6 @@ package org.laukvik.csv.io;
 
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.MetaData;
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
 import java.math.BigDecimal;
@@ -17,22 +15,10 @@ import static org.junit.Assert.assertEquals;
 
 public class JavaReaderTest {
 
-    class Employee{
-        public String stringName;
-        public Integer intName;
-        public Float floatName;
-        public Boolean booleanName;
-        public Byte byteName;
-        public Date dateName;
-        public Double doubleName;
-        public URL urlName;
-        public BigDecimal bigDecimalName;
-    }
-
     @Test
     public void shouldBuildMetaData(){
-        MetaData md = JavaReader.buildMetaData(Employee.class);
-        assertEquals(9, md.getColumnCount());
+        List<Column> columns = JavaReader.buildMetaData(Employee.class, new CSV());
+        assertEquals(9, columns.size());
     }
 
     @Test
@@ -61,17 +47,21 @@ public class JavaReaderTest {
         list.add(e3);
         //
         CSV csv = new CSV();
-        JavaReader<Employee> reader = new JavaReader<Employee>( csv, list );
-        MetaData md = reader.getMetaData();
-        assertEquals(9, md.getColumnCount());
-        int y = 0;
-        while(reader.hasNext()){
-            Row r = reader.next();
-            for (int x=0; x<md.getColumnCount(); x++){
-                Column c = md.getColumn(x);
-            }
-            y++;
-        }
+        JavaReader<Employee> reader = new JavaReader<Employee>(list);
+        reader.readDataset(csv);
+        assertEquals(9, csv.getColumnCount());
+    }
+
+    class Employee {
+        public String stringName;
+        public Integer intName;
+        public Float floatName;
+        public Boolean booleanName;
+        public Byte byteName;
+        public Date dateName;
+        public Double doubleName;
+        public URL urlName;
+        public BigDecimal bigDecimalName;
     }
 
 }

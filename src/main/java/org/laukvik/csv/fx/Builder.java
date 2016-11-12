@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.FrequencyDistribution;
-import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.query.Query;
@@ -90,13 +89,13 @@ final class Builder {
     /**
      * Builds an ObservableList of all Columns found in the MetaData.
      *
-     * @param metaData the metaData
+     * @param csv the csv
      * @return ObservableList of all Columns
      */
-    public static ObservableList<ObservableColumn> createAllObservableList(final MetaData metaData) {
+    public static ObservableList<ObservableColumn> createAllObservableList(final CSV csv) {
         List<ObservableColumn> list = new ArrayList<>();
-        for (int x = 0; x < metaData.getColumnCount(); x++) {
-            Column c = metaData.getColumn(x);
+        for (int x = 0; x < csv.getColumnCount(); x++) {
+            Column c = csv.getColumn(x);
             list.add(new ObservableColumn(c));
         }
         return FXCollections.observableArrayList(list);
@@ -114,7 +113,7 @@ final class Builder {
             final int columnIndex, final CSV csv, final Main main) {
         List<ObservableFrequencyDistribution> list = new ArrayList<>();
         FrequencyDistribution d = csv.buildFrequencyDistribution(columnIndex);
-        Column c = csv.getMetaData().getColumn(columnIndex);
+        Column c = csv.getColumn(columnIndex);
         for (String key : d.getKeys()) {
             boolean selected = main.getQueryModel().isSelected(c, key);
             list.add(new ObservableFrequencyDistribution(selected, key, d.getCount(key), c, main));
@@ -150,12 +149,12 @@ final class Builder {
      * Removes all columns in the resultsTableView and populates it with all columns found in the MetaData.
      *
      * @param resultsTableView the resultsTableView
-     * @param md the MetaData
+     * @param csv the csv
      */
-    public static void createResultsColumns(final TableView<ObservableRow> resultsTableView, final MetaData md) {
+    public static void createResultsColumns(final TableView<ObservableRow> resultsTableView, final CSV csv) {
         resultsTableView.getColumns().clear();
-        for (int x = 0; x < md.getColumnCount(); x++) {
-            final Column c = md.getColumn(x);
+        for (int x = 0; x < csv.getColumnCount(); x++) {
+            final Column c = csv.getColumn(x);
             if (c.isVisible()) {
                 final TableColumn<ObservableRow, String> tc = new TableColumn<>(c.getName());
                 tc.setCellFactory(TextFieldTableCell.forTableColumn());

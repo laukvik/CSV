@@ -107,10 +107,10 @@ public final class XmlWriter implements DatasetFileWriter {
     /**
      * Writes the CSV to the file.
      *
-     * @param csv  the CSV to write
      * @param file the file
+     * @param csv  the CSV to write
      */
-    public void writeCSV(final CSV csv, final File file) {
+    public void writeCSV(final File file, final CSV csv) {
         try (FileOutputStream out = new FileOutputStream(file)) {
             writeCSV(csv, out);
         } catch (final IOException e) {
@@ -126,16 +126,14 @@ public final class XmlWriter implements DatasetFileWriter {
      * @throws IOException when the file cant be written
      */
     public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
-        Charset charset = csv.getMetaData().getCharset();
+        Charset charset = csv.getCharset();
         out.write(("<?xml version=\"1.0\" encoding=\"" + charset.name() + "\"?>").getBytes());
-
         out.write(CR);
         out.write(LINEFEED);
         // Root
         out.write(OPEN);
         out.write(this.rootElementName.getBytes());
         out.write(CLOSE);
-
         // Iterate rows
         for (int y = 0; y < csv.getRowCount(); y++) {
             out.write(CR);
@@ -144,10 +142,10 @@ public final class XmlWriter implements DatasetFileWriter {
             out.write(OPEN);
             out.write(this.rowElementName.getBytes());
             Row r = csv.getRow(y);
-            for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
-                Column col = csv.getMetaData().getColumn(x);
+            for (int x = 0; x < csv.getColumnCount(); x++) {
+                Column col = csv.getColumn(x);
                 out.write(SPACE);
-                out.write(csv.getMetaData().getColumn(x).getName().getBytes(charset));
+                out.write(csv.getColumn(x).getName().getBytes(charset));
                 out.write(EQUAL);
                 out.write(QUOTATION_MARK);
                 String s = r.getAsString(col);

@@ -15,11 +15,13 @@
  */
 package org.laukvik.csv.io;
 
+import org.laukvik.csv.CSV;
 import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Iterator;
 
 /**
@@ -31,9 +33,10 @@ public interface Readable extends Iterator<Row> {
      * Reads the specified file.
      *
      * @param file the file
+     * @param csv the csv
      * @throws FileNotFoundException when the file cant be found
      */
-    void readFile(File file) throws FileNotFoundException;
+    void readFile(File file, CSV csv) throws IOException;
 
     /**
      * Returns the MetaData.

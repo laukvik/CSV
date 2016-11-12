@@ -1,6 +1,6 @@
 package org.laukvik.csv.io;
 
-import org.laukvik.csv.MetaData;
+import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 
@@ -19,12 +19,8 @@ import java.util.Set;
  * the ResourceBundle concept.
  *
  */
-public final class ResourceBundleReader extends AbstractResourceBundle implements Readable {
+public final class ResourceBundleReader extends AbstractResourceBundle implements DatasetFileReader {
 
-    /**
-     * The MetaData with the locales.
-     */
-    private MetaData metaData;
     /**
      * The current row.
      */
@@ -42,9 +38,11 @@ public final class ResourceBundleReader extends AbstractResourceBundle implement
      * Reads the file.
      *
      * @param file the file
+     * @param csv the csv
+     *
      * @throws FileNotFoundException when the file wasn't found
      */
-    public void readFile(final File file) throws FileNotFoundException {
+    public void readFile(final File file, final CSV csv) throws FileNotFoundException {
         String filename = file.getName();
         String base = filename.substring(0, filename.lastIndexOf(EXTENSION));
         File home = new File(file.getParent());
@@ -54,17 +52,16 @@ public final class ResourceBundleReader extends AbstractResourceBundle implement
             try {
                 propertiesList = new ArrayList<>();
                 // Build files list
-                metaData = new MetaData();
-                metaData.addColumn(ResourceBundleWriter.COLUMN_PROPERTY);
+                csv.addColumn(ResourceBundleWriter.COLUMN_PROPERTY);
                 final Set<String> keySet = new HashSet<>();
 
                 // Add default
-                propertiesList.add(addFile(file, ResourceBundleWriter.COLUMN_DEFAULT, keySet));
+                propertiesList.add(addFile(file, csv, ResourceBundleWriter.COLUMN_DEFAULT, keySet));
 
                 // Add others
                 for (File f : files) {
                     String lang = getLocale(f.getName(), base);
-                    propertiesList.add(addFile(f, lang, keySet));
+                    propertiesList.add(addFile(f, csv, lang, keySet));
                 }
                 keys = new ArrayList<>();
                 keys.addAll(keySet);
@@ -80,13 +77,14 @@ public final class ResourceBundleReader extends AbstractResourceBundle implement
      * Reads the file and extracts all used property values.
      *
      * @param file the file
+     * @param csv the csv
      * @param lang the language
      * @param keySet the keys to read
      * @return the Properties
      * @throws IOException when the file could not be read
      */
-    private Properties addFile(final File file, final String lang, final Set<String> keySet) throws IOException {
-        metaData.addColumn(new StringColumn(lang));
+    private Properties addFile(final File file, final CSV csv, final String lang, final Set<String> keySet) throws IOException {
+        csv.addColumn(new StringColumn(lang));
         Properties p = new Properties();
         p.load(new FileInputStream(file));
         for (Object o : p.keySet()) {
@@ -94,52 +92,5 @@ public final class ResourceBundleReader extends AbstractResourceBundle implement
         }
         return p;
     }
-
-    /**
-     * Returns the MetaData.
-     * @return the MetaData
-     */
-    public MetaData getMetaData() {
-        return metaData;
-    }
-
-    /**
-     * Returns the row.
-     *
-     * @return the row
-     */
-    public Row getRow() {
-        return currentRow;
-    }
-
-    /**
-     * Returns true if more rows are available.
-     *
-     * @return true if more rows are available
-     */
-    public boolean hasNext() {
-        return index < keys.size() - 1;
-    }
-
-    /**
-     * Returns the next row.
-     *
-     * @return the next row
-     */
-    public Row next() {
-        index++;
-        currentRow = new Row();
-        String key = keys.get(index);
-        StringColumn sc = (StringColumn) metaData.getColumn(0);
-        currentRow.setString(sc, key);
-        for (int x = 0; x < propertiesList.size(); x++) {
-            StringColumn column = (StringColumn) metaData.getColumn(x + 1);
-            Properties p = propertiesList.get(x);
-            currentRow.setString(column, (String) p.get(key));
-        }
-        return currentRow;
-    }
-
-
 
 }

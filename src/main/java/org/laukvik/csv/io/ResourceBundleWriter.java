@@ -47,14 +47,14 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
     /**
      * Writes the CSV to the file.
      *
-     * @param csv the CSV
      * @param file the file
+     * @param csv the CSV
      */
-    public void writeCSV(final CSV csv, final File file) {
+    public void writeCSV(final File file, final CSV csv) {
         this.folder = file.getParentFile();
         this.basename = getBasename(file);
-        for (int x = 1; x < csv.getMetaData().getColumnCount(); x++) {
-            StringColumn column = (StringColumn) csv.getMetaData().getColumn(x);
+        for (int x = 1; x < csv.getColumnCount(); x++) {
+            StringColumn column = (StringColumn) csv.getColumn(x);
             writeBundle(csv, column);
         }
     }
@@ -67,8 +67,8 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
      * @throws IOException when the files could not be written
      */
     public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
-        for (int x = 1; x < csv.getMetaData().getColumnCount(); x++) {
-            StringColumn column = (StringColumn) csv.getMetaData().getColumn(x);
+        for (int x = 1; x < csv.getColumnCount(); x++) {
+            StringColumn column = (StringColumn) csv.getColumn(x);
             writeBundle(csv, column);
         }
     }
@@ -82,7 +82,7 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
     private void writeBundle(final CSV csv, final StringColumn column) {
         String filename = getFilename(column, basename);
         File bundleFile = new File(folder, filename);
-        StringColumn keyColumn = (StringColumn) csv.getMetaData().getColumn(0);
+        StringColumn keyColumn = (StringColumn) csv.getColumn(0);
         try (FileWriter writer = new FileWriter(bundleFile)) {
             for (int y = 0; y < csv.getRowCount(); y++) {
                 Row r = csv.getRow(y);

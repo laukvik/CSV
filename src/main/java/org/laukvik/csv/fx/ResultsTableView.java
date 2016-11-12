@@ -43,7 +43,7 @@ public class ResultsTableView extends TableView<ObservableRow> {
      * @param main the main instance
      */
     public final void columnsChanged(final CSV csv, final Main main) {
-        createResultsColumns(this, csv.getMetaData());
+        createResultsColumns(this, csv);
         createResultsRows(this, csv, main);
     }
 }

@@ -15,8 +15,6 @@
  */
 package org.laukvik.csv.columns;
 
-import org.laukvik.csv.MetaData;
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -27,10 +25,6 @@ import java.util.List;
  */
 public abstract class Column<T> implements Comparable {
 
-    /**
-     * The metaData.
-     */
-    private MetaData metaData;
     /**
      * Returns if the column is a primary key.
      */
@@ -264,24 +258,6 @@ public abstract class Column<T> implements Comparable {
     }
 
     /**
-     * Returns the MetaData.
-     *
-     * @return the MetaData
-     */
-    public final MetaData getMetaData() {
-        return metaData;
-    }
-
-    /**
-     * Sets the MetaData.
-     *
-     * @param metaData the MetaData
-     */
-    public final void setMetaData(final MetaData metaData) {
-        this.metaData = metaData;
-    }
-
-    /**
      * Sets the ForeignKey.
      *
      * @return the ForeignKey
@@ -354,21 +330,9 @@ public abstract class Column<T> implements Comparable {
     }
 
     /**
-     * Returns the sort order of the column.
-     *
-     * @return the sort order
-     */
-    public final int indexOf() {
-        return metaData.indexOf(this);
-    }
-
-    /**
      * Fired when the column is changed.
      */
     private void fireColumnChanged() {
-        if (metaData != null) {
-            metaData.fireColumnChanged(this);
-        }
     }
 
     /**

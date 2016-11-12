@@ -1,14 +1,14 @@
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,100 +40,106 @@ import java.util.List;
  *
  * TODO - Remove File from constructor. Should only be from readFile();
  */
-public final class CsvReader implements ClosableReader {
+public final class CsvReader implements DatasetFileReader {
 
+    private boolean autoDetectCharset;
     /**
      * The bufferedReader.
      */
-    private final BufferedReader reader;
-    /** The MetaData. */
-    private final MetaData metaData;
+    private BufferedReader reader;
     /** The quote character to use. */
-    private final Character quoteChar;
+    private Character quoteChar;
     /** Whether column separator should be automatically detected or not. */
     private boolean autoDetectColumnSeparator;
     /** The number of bytes read. */
     private int bytesRead;
     /** The number of lines read. */
     private int lineCounter;
-    /** The current row. */
-    private Row row;
     /** The column separator character. */
     private Character columnSeparatorChar;
 
     /**
      * Reads CSV from the specified reader using the separator and quote characters.
      *
-     * @param bufferedReader    the bufferedReader
+     * @param charset the charset
      * @param separator the separator character
      * @param quote     the quote character
-     * @throws IOException when the CSV could not be fully read
      */
-    public CsvReader(final BufferedReader bufferedReader,
-                     final Character separator,
-                     final Character quote) throws IOException {
+    public CsvReader(final Charset charset, final Character separator, final Character quote) {
+        this.autoDetectCharset = charset == null;
         this.autoDetectColumnSeparator = (separator == null);
         if (separator != null) {
             this.columnSeparatorChar = separator;
         }
-        this.reader = bufferedReader;
         if (quote == null) {
             this.quoteChar = CSV.DOUBLE_QUOTE;
         } else {
             this.quoteChar = quote;
         }
-
-        this.metaData = new MetaData();
-        this.lineCounter = 0;
-        this.bytesRead = 0;
-        List<String> columns = parseRow();
-        for (String rawColumnName : columns) {
-            this.metaData.addColumn(Column.parseName(rawColumnName));
-        }
-        this.metaData.setSeparator(columnSeparatorChar);
-        this.metaData.setQuoteChar(this.quoteChar);
-    }
-
-    /**
-     * Specifies the separator and quote character to use.
-     *
-     * @param file the file to read
-     * @param separator the separator char
-     * @param quote the quote char
-     * @throws IOException when the file could not be read
-     * TODO - Remove file from constructor
-     */
-    public CsvReader(final File file, final Character separator, final Character quote) throws IOException {
-        this(new BufferedReader(new FileReader(file)), separator, quote);
     }
 
     /**
      * Reads the file.
+     * todo - Re insert auto detection of charsets
+     *
      * @param file the file
+     * @param csv the csv
      * @throws IOException when the file could not be read
-     * TODO - Remove file from constructor
      */
-    public CsvReader(final File file) throws IOException {
-        this(new BufferedReader(new FileReader(file)));
+    public void readFile(final File file, final CSV csv) throws IOException {
+        this.lineCounter = 0;
+        this.bytesRead = 0;
+        reader = Files.newBufferedReader(file.toPath());
+
+        if (autoDetectCharset) {
+
+        }
+        csv.setSeparator(columnSeparatorChar);
+        csv.setQuoteChar(this.quoteChar);
+        List<String> columns = parseRow(csv);
+        for (String rawColumnName : columns) {
+            csv.addColumn(Column.parseName(rawColumnName));
+        }
+        while (reader.ready()) {
+            readRow(csv);
+        }
     }
 
     /**
-     * Reads CSV from the specified reader using default settings.
+     * Reads the next row.
      *
-     * @param bufferedReader the reader
-     * @throws IOException when the CSV could not be fully read
+     * @param csv the csv
+     * @return a boolean whether a new row was found
+     * @throws IOException when the row could not be read
      */
-    public CsvReader(final BufferedReader bufferedReader) throws IOException {
-        this(bufferedReader, null, null);
+    private boolean readRow(final CSV csv) throws IOException {
+        if (!reader.ready()) {
+            return false;
+        }
+        Row row = csv.addRow();
+        List<String> values = parseRow(csv);
+        if (values.isEmpty()) {
+            return false;
+        }
+
+        for (int x = 0; x < values.size(); x++) {
+            String value = values.get(x);
+            if (x < csv.getColumnCount()) {
+                Column c = csv.getColumn(x);
+                row.set(c, value);
+            }
+        }
+        return true;
     }
 
     /**
      * Parses one row of CSV data.
      *
+     * @param csv the csv
      * @return a list of strings
      * @throws IOException when the row could not be read
      */
-    private List<String> parseRow() throws IOException {
+    private List<String> parseRow(final CSV csv) throws IOException {
         List<String> values = new ArrayList<>();
 
         boolean isNextLine = false;
@@ -173,7 +179,7 @@ public final class CsvReader implements ClosableReader {
                         || currentChar == CSV.COMMA) {
                     columnSeparatorChar = currentChar;
                     autoDetectColumnSeparator = false;
-                    metaData.setSeparator(columnSeparatorChar);
+                    csv.setSeparator(columnSeparatorChar);
                 }
             }
 
@@ -245,109 +251,6 @@ public final class CsvReader implements ClosableReader {
         }
         lineCounter++;
         return values;
-    }
-
-    /**
-     * Reads the next row.
-     *
-     * @return a boolean whether a new row was found
-     * @throws IOException when the row could not be read
-     */
-    private boolean readRow() throws IOException {
-        if (!reader.ready()) {
-            return false;
-        }
-        row = new Row();
-        List<String> values = parseRow();
-        if (values.isEmpty()) {
-            return false;
-        }
-
-        for (int x = 0; x < values.size(); x++) {
-            String value = values.get(x);
-            if (x < metaData.getColumnCount()) {
-                Column c = metaData.getColumn(x);
-                row.set(c, value);
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Returns the column separator character.
-     * @return the column separator character.
-     */
-    public char getColumnSeparatorChar() {
-        return columnSeparatorChar;
-    }
-
-    /**
-     * Returns the amount of bytes read.
-     * @return the amount of bytes read
-     */
-    public int getBytesRead() {
-        return bytesRead;
-    }
-
-    /**
-     * Returns how many lines read.
-     * @return the number of lines read
-     */
-    public int getLineCounter() {
-        return lineCounter;
-    }
-
-    /**
-     * Returns the current row.
-     * @return the row
-     */
-    public Row getRow() {
-        return row;
-    }
-
-    /**
-     * Reads the file.
-     *
-     * @param file the file
-     */
-    public void readFile(final File file) {
-    }
-
-    /**
-     * Returns the MetaData found.
-     * @return the MetaData
-     */
-    public MetaData getMetaData() {
-        return metaData;
-    }
-
-    /**
-     * Closes the bufferedReader.
-     * @throws IOException when an IOException occurs
-     */
-    public void close() throws IOException {
-        reader.close();
-    }
-
-    /**
-     * Returns true if more rows are available.
-     * @return true if more rows
-     */
-    public boolean hasNext() {
-        try {
-            return readRow();
-        } catch (IOException ex) {
-            return false;
-        }
-    }
-
-    /**
-     * Returns the next row.
-     *
-     * @return the next row
-     */
-    public Row next() {
-        return row;
     }
 
 }

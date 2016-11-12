@@ -20,7 +20,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.ChangeListener;
-import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
@@ -59,9 +58,8 @@ public class ObservableRow implements javafx.beans.value.ChangeListener<String> 
         this.listener = listener;
         items = FXCollections.observableArrayList();
         this.csv = csv;
-        MetaData md = csv.getMetaData();
-        for (int x = 0; x < md.getColumnCount(); x++) {
-            Column col = md.getColumn(x);
+        for (int x = 0; x < csv.getColumnCount(); x++) {
+            Column col = csv.getColumn(x);
             SimpleStringProperty ssp = new SimpleStringProperty(row.getAsString(col));
             ssp.addListener(this);
             items.add(ssp);
@@ -113,7 +111,7 @@ public class ObservableRow implements javafx.beans.value.ChangeListener<String> 
                               final String newValue) {
         int columnIndex = items.indexOf(observable);
         int rowIndex = csv.indexOf(row);
-        Column column = csv.getMetaData().getColumn(columnIndex);
+        Column column = csv.getColumn(columnIndex);
         if (column instanceof StringColumn) {
             row.setString((StringColumn) column, newValue);
         }

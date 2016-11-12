@@ -1,7 +1,6 @@
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.BigDecimalColumn;
 import org.laukvik.csv.columns.BooleanColumn;
@@ -14,10 +13,10 @@ import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,14 +25,14 @@ import java.util.List;
  *
  * @param <T> The instance of an Object.
  */
-public final class JavaReader<T> implements Readable {
+public final class JavaReader<T> implements DatasetReader {
 
     /**
      * The list of objects found.
      */
     private final List<T> list;
     /** The CSV. */
-    private final CSV csv;
+    private CSV csv;
     /** The number of objects read. */
     private int index;
     /**
@@ -44,16 +43,12 @@ public final class JavaReader<T> implements Readable {
     /**
      * Reads the list of Java objects into a data set.
      *
-     * @param csv  the csv
      * @param list the list
      */
-    public JavaReader(final CSV csv, final List<T> list) {
-        this.csv = csv;
-        this.csv.setMetaData(buildMetaData(list.get(0).getClass()));
+    public JavaReader(final List<T> list) {
         this.list = list;
         this.index = 0;
     }
-
 
     /**
      * Returns the appropriate column for the specified Field.
@@ -141,44 +136,37 @@ public final class JavaReader<T> implements Readable {
      * @param instance the class
      * @return returns the MetaData
      */
-    public static MetaData buildMetaData(final Class instance) {
-        MetaData metaData = new MetaData();
+    public static List<Column> buildMetaData(final Class instance, final CSV csv) {
+        List<Column> cols = new ArrayList<>();
+
         for (Field f : instance.getDeclaredFields()) {
             // Set accessible to allow injecting private fields - otherwise an exception will occur
             f.setAccessible(true);
             // Find the name of the field - in code
             Column c = findColumnByField(f);
             if (c != null) {
-                metaData.addColumn(c);
+                cols.add(c);
             }
             f.setAccessible(false);
         }
-        return metaData;
+        return cols;
     }
 
-
-    @Override
-    public void readFile(final File file) {
-
+    /**
+     * @param csv
+     */
+    public void readDataset(final CSV csv) {
+        this.csv = csv;
+        for (Column c : buildMetaData(list.get(0).getClass(), csv)) {
+            csv.addColumn(c);
+        }
     }
 
-    @Override
-    public MetaData getMetaData() {
-        return csv.getMetaData();
-    }
-
-    @Override
-    public boolean hasNext() {
-        return index < list.size();
-    }
-
-    @Override
     public Row next() {
         Object instance = list.get(index);
         currentRow = csv.addRow();
-        MetaData metaData = csv.getMetaData();
-        for (int x = 0; x < metaData.getColumnCount(); x++) {
-            Column c = metaData.getColumn(x);
+        for (int x = 0; x < csv.getColumnCount(); x++) {
+            Column c = csv.getColumn(x);
             try {
                 updateByColumn(currentRow, c, instance);
             } catch (NoSuchFieldException e) {
@@ -191,9 +179,5 @@ public final class JavaReader<T> implements Readable {
         return currentRow;
     }
 
-    @Override
-    public Row getRow() {
-        return currentRow;
-    }
 
 }

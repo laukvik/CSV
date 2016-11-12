@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -70,7 +71,7 @@ public class BOMTest {
     @Test
     public void utf8() throws IOException {
         assertEquals(BOM.UTF8, BOM.findBom( createCharsetFile(BOM.UTF8) ));
-        assertEquals(BOM.UTF8, BOM.findBom(getResource("charset_utf_8.csv")));
+        assertNull(BOM.findBom(getResource("charset_utf_8.csv")));
     }
 
     @Test
@@ -94,9 +95,8 @@ public class BOMTest {
     }
 
     @Test
-    public void test() throws IOException {
-        assertNull(BOM.findBom(null));
-        assertNull(BOM.UTF8.is());
+    public void testNulls() throws IOException {
+        assertFalse(BOM.UTF8.is());
     }
 
 }

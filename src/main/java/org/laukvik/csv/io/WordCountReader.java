@@ -1,7 +1,6 @@
 package org.laukvik.csv.io;
 
-import org.laukvik.csv.MetaData;
-import org.laukvik.csv.Row;
+import org.laukvik.csv.CSV;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
@@ -9,31 +8,21 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
 
 /**
  * Reads the words in a text file and creates a distribution table of them.
  */
-public class WordCountReader implements Readable {
+public final class WordCountReader implements DatasetFileReader {
 
-    /**
-     * Map containing words and count.
-     */
-    private final Map<String, Integer> map;
-    /** The MetaData. */
-    private final MetaData metaData;
     /** The word column. */
     private final StringColumn wordColumn;
     /** The count column. */
     private final StringColumn countColumn;
-    /** The current row. */
-    private Row row;
-    /** The row counter. */
-    private int index;
     /** The list of words. */
     private List<String> list;
 
@@ -41,22 +30,8 @@ public class WordCountReader implements Readable {
      * Creates a new instance.
      */
     public WordCountReader() {
-        map = new TreeMap<>();
-        metaData = new MetaData();
         wordColumn = new StringColumn("Word");
         countColumn = new StringColumn("Count");
-        metaData.addColumn(wordColumn);
-        metaData.addColumn(countColumn);
-    }
-
-    /**
-     * Reads the file.
-     *
-     * @param file the file
-     * @throws FileNotFoundException when the file cant be found
-     */
-    public final void readFile(final File file) throws FileNotFoundException {
-        parse(file);
     }
 
     /**
@@ -65,7 +40,7 @@ public class WordCountReader implements Readable {
      * @param word the word
      * @return the trimmed version
      */
-    private String cleaned(final String word) {
+    public static String cleaned(final String word) {
         if (word == null) {
             return null;
         } else {
@@ -79,7 +54,8 @@ public class WordCountReader implements Readable {
      * @param file the file
      * @throws FileNotFoundException when the file cant be found
      */
-    private void parse(final File file) throws FileNotFoundException {
+    public static Map<String, Integer> parse(final File file) throws FileNotFoundException {
+        Map<String, Integer> map = new HashMap<>();
         final FileReader r = new FileReader(file);
         try (Scanner s = new Scanner(file)) {
             while (s.hasNextLine()) {
@@ -98,49 +74,29 @@ public class WordCountReader implements Readable {
                 }
             }
         }
+        return map;
+    }
+
+    /**
+     * Reads the file.
+     *
+     * @param file the file
+     * @param csv the csv
+     * @throws FileNotFoundException when the file cant be found
+     */
+    public void readFile(final File file, final CSV csv) throws FileNotFoundException {
+        csv.addColumn(wordColumn);
+        csv.addColumn(countColumn);
+        parse(file);
+        Map<String, Integer> map = parse(file);
         list = new ArrayList<>();
         list.addAll(map.keySet());
         Collections.sort(list);
-        index = 0;
+        int index = 0;
+        for (String key : list) {
+            csv.addRow().setString(wordColumn, list.get(index)).setString(countColumn, map.get(key) + "");
+            index++;
+        }
     }
 
-    /**
-     * Returns the MetaData.
-     *
-     * @return the MetaData
-     */
-    public final MetaData getMetaData() {
-        return metaData;
-    }
-
-    /**
-     * Return the current row.
-     *
-     * @return the row
-     */
-    public final Row getRow() {
-        return row;
-    }
-
-    /**
-     * Returns true if more rows are available.
-     *
-     * @return true if more rows
-     */
-    public final boolean hasNext() {
-        return index < map.size();
-    }
-
-    /**
-     * Returns the next row.
-     *
-     * @return the next row
-     */
-    public final Row next() {
-        row = new Row();
-        String key = list.get(index);
-        row.setString(wordColumn, list.get(index)).setString(countColumn, map.get(key) + "");
-        index++;
-        return row;
-    }
 }

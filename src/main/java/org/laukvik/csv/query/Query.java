@@ -396,7 +396,7 @@ public final class Query {
          * @return the new instance
          */
         public Column column(final String columnName) {
-            org.laukvik.csv.columns.Column col = csv.getMetaData().getColumn(columnName);
+            org.laukvik.csv.columns.Column col = csv.getColumn(columnName);
             Column c = new Column(col);
             c.where = this;
             columns.add(c);

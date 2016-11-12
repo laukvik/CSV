@@ -16,7 +16,6 @@
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
@@ -34,7 +33,7 @@ import java.util.List;
  * Values (CSV) Files</a>
  * @see <a href="https://en.wikipedia.org/wiki/Comma-separated_values">Comma Separated Values (wikipedia)</a>
  */
-public final class CsvWriter implements DatasetFileWriter, DatasetOutputStream {
+public final class CsvWriter implements DatasetFileWriter {
 
 
     /**
@@ -65,89 +64,63 @@ public final class CsvWriter implements DatasetFileWriter, DatasetOutputStream {
     /**
      * Writes the CSV to the file.
      *
-     * @param csv the CSV to write
+     * @param csv  the CSV to write
      * @param file the file
+     * @throws IOException when the file could not be written
      */
-    public void writeCSV(final CSV csv, final File file) {
+    public void writeCSV(final File file, final CSV csv) throws IOException {
         try (FileOutputStream out = new FileOutputStream(file)) {
-            writeCSV(csv, out);
+            // BOM
+            BOM bom = csv.getBOM();
+            if (bom != null) {
+                out.write(bom.getBytes());
+            }
+            // Columns
+            List<String> columns = buildColumns(csv);
+            writeValues(columns, out);
+            // Rows
+            for (int y = 0; y < csv.getRowCount(); y++) {
+                Row r = csv.getRow(y);
+                List<String> items = buildRow(r, csv);
+                writeValues(items, out);
+            }
+
         } catch (final IOException e) {
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    /**
-     * Writes the CSV to the file.
-     *
-     * @param csv the CSV to write
-     * @param out outputStream
-     * @throws IOException the file could not be written
-     */
-    public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
-        BOM bom = csv.getMetaData().getBOM();
-        if (bom != null) {
-            out.write(bom.getBytes());
-        }
-        writeMetaData(csv.getMetaData(), out);
-        for (int y = 0; y < csv.getRowCount(); y++) {
-            writeCSV(csv.getRow(y), csv.getMetaData(), out);
-        }
-    }
-
-    /**
-     * Writes the row to the outputStream.
-     *
-     * @param row          the row
-     * @param metaData     the metadata
-     * @param outputStream the outputStream
-     * @throws IOException when the row could not be written
-     */
-    public void writeCSV(final Row row, final MetaData metaData, final OutputStream outputStream) throws IOException {
-        writeRow(row, metaData, outputStream);
-    }
-
-    /**
-     * Writes the metadata to the outputStream.
-     * @param metaData     the metadata
-     * @param outputStream the outputStream
-     * @throws IOException when the metaData could not be written
-     */
-    public void writeCSV(final MetaData metaData, final OutputStream outputStream) throws IOException {
-        writeMetaData(metaData, outputStream);
-    }
 
     /**
      * Writes the row to File.
      *
-     * @param row      the row
-     * @param metaData the MetaData to use
-     * @param out      outputStream
+     * @param row the row
+     * @param csv the csv
      * @throws IOException when the file could not be written to.
      */
-    private void writeRow(final Row row, final MetaData metaData, final OutputStream out) throws IOException {
+    private List<String> buildRow(final Row row, final CSV csv) throws IOException {
         List<String> values = new ArrayList<>();
-        for (int x = 0; x < metaData.getColumnCount(); x++) {
-            Column c = metaData.getColumn(x);
+        for (int x = 0; x < csv.getColumnCount(); x++) {
+            Column c = csv.getColumn(x);
             values.add(row.getAsString(c));
         }
-        writeValues(values, out);
+        return values;
     }
 
     /**
-     * Writes the MetaData.
+     * Writes the column headers.
      *
-     * @param metaData the MetaData
-     * @param out      outputStream
+     * @param csv the csv
      * @throws IOException when the MetaData could not be written
      */
-    private void writeMetaData(final MetaData metaData, final OutputStream out) throws IOException {
+    private List<String> buildColumns(final CSV csv) throws IOException {
         List<String> items = new ArrayList<>();
-        for (int x = 0; x < metaData.getColumnCount(); x++) {
-            Column c = metaData.getColumn(x);
+        for (int x = 0; x < csv.getColumnCount(); x++) {
+            Column c = csv.getColumn(x);
             String header = c.getName() + "(" + c.getName() + ")";
             items.add(header);
         }
-        writeValues(items, out);
+        return items;
     }
 
     /**

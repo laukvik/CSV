@@ -35,6 +35,14 @@ public final class FrequencyDistributionTableView extends TableView<ObservableFr
      * The ratio of the count column.
      */
     private static final float COUNT_RATIO = 0.2f;
+    /**
+     * The minimum width of the count column
+     */
+    private static final int MIN_WIDTH = 32;
+    /**
+     * The maximum width of the count column
+     */
+    private static final int MAX_WIDTH = 120;
 
     /**
      * Creates a new instance.
@@ -66,8 +74,8 @@ public final class FrequencyDistributionTableView extends TableView<ObservableFr
                 new PropertyValueFactory<ObservableFrequencyDistribution, Integer>("count")
         );
         countUniqueColumn.setStyle("-fx-alignment: CENTER_RIGHT");
-//        countUniqueColumn.setMinWidth(32);
-//        countUniqueColumn.setMaxWidth(120);
+        countUniqueColumn.setMinWidth(MIN_WIDTH);
+        countUniqueColumn.setMaxWidth(MAX_WIDTH);
         countUniqueColumn.setPrefWidth(COUNT_WIDTH);
         getColumns().add(countUniqueColumn);
         selectUniqueColumn.prefWidthProperty().bind(widthProperty().multiply(SELECT_RATIO));

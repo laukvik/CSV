@@ -42,8 +42,6 @@ import static org.junit.Assert.fail;
 
 public class CSVTest {
 
-
-
     public static File getResource(String filename) {
         ClassLoader classLoader = CSVTest.class.getClassLoader();
         return new File(classLoader.getResource(filename).getFile());
@@ -79,20 +77,20 @@ public class CSVTest {
     public void shouldInsertHeaders() throws IOException {
         CSV csv = new CSV(getResource("noheaders.csv"));
         assertEquals(1, csv.getRowCount());
-        assertEquals(2, csv.getMetaData().getColumnCount());
-        csv.insertHeaders();
+        assertEquals(2, csv.getColumnCount());
+        csv.insertColumns();
         assertEquals(2, csv.getRowCount());
-        assertEquals(2, csv.getMetaData().getColumnCount());
+        assertEquals(2, csv.getColumnCount());
     }
 
     @Test
     public void shouldRemoveColum() throws IOException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
-        StringColumn c = (StringColumn) csv.getMetaData().getColumn(0);
-        int cols = csv.getMetaData().getColumnCount();
-        csv.getMetaData().removeColumn(0);
-        assertEquals(cols - 1, csv.getMetaData().getColumnCount());
+        StringColumn c = (StringColumn) csv.getColumn(0);
+        int cols = csv.getColumnCount();
+        csv.removeColumn(0);
+        assertEquals(cols - 1, csv.getColumnCount());
     }
 
     @Test
@@ -100,9 +98,9 @@ public class CSVTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("first");
         StringColumn last = csv.addStringColumn("last");
-        csv.fireColumnMoved(0, 1);
-        assertEquals(first, csv.getMetaData().getColumn(1));
-        assertEquals(last, csv.getMetaData().getColumn(0));
+        csv.moveColumn(0, 1);
+        assertEquals(first, csv.getColumn(1));
+        assertEquals(last, csv.getColumn(0));
     }
 
     // ------ Rows ------
@@ -205,7 +203,6 @@ public class CSVTest {
     public void readUsingConstructor() throws IOException {
         CSV csv = new CSV(getResource("presidents.csv"));
         assertNotNull(csv.getFile());
-        MetaData md = csv.getMetaData();
         assertSame(44, csv.getRowCount());
     }
 
@@ -236,10 +233,10 @@ public class CSVTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
-        MetaData md = csv.getMetaData();
-        assertSame(md.getColumnCount(), 2);
-        assertEquals("First should be 0", 0, first.indexOf());
-        assertEquals("Last should be 1", 1, last.indexOf());
+        assertSame(csv.getColumnCount(), 2);
+
+        assertEquals("First should be 0", 0, csv.indexOf(first));
+        assertEquals("Last should be 1", 1, csv.indexOf(last));
 
         csv.addRow().setString(first, "Bill").setString(last, "Gates");
         csv.addRow().setString(first, "Steve").setString(last, "Jobs");
@@ -267,12 +264,10 @@ public class CSVTest {
             CSV csv = new CSV();
             csv.readFile(getResource("quote_escaped.csv"));
 
-            MetaData md = csv.getMetaData();
-
-            StringColumn playerName = (StringColumn) md.getColumn(0);
-            StringColumn position = (StringColumn) md.getColumn(1);
-            StringColumn nicknames = (StringColumn) md.getColumn(2);
-            StringColumn yearsActive = (StringColumn) md.getColumn(3);
+            StringColumn playerName = (StringColumn) csv.getColumn(0);
+            StringColumn position = (StringColumn) csv.getColumn(1);
+            StringColumn nicknames = (StringColumn) csv.getColumn(2);
+            StringColumn yearsActive = (StringColumn) csv.getColumn(3);
 
             assertEquals("Player Name", "Player Name", playerName.getName());
             assertEquals("Position", "Position", position.getName());
@@ -280,7 +275,7 @@ public class CSVTest {
             assertEquals("Years Active", "Years Active", yearsActive.getName());
 
             assertSame("RowCount", 3, csv.getRowCount());
-            assertSame("ColumnCount", 4, md.getColumnCount());
+            assertSame("ColumnCount", 4, csv.getColumnCount());
 
             Row r = csv.getRow(0);
 
@@ -303,20 +298,19 @@ public class CSVTest {
         try {
             CSV csv = new CSV();
             csv.readFile(getResource("acid.csv"));
-            MetaData md = csv.getMetaData();
 
-            assertEquals("Year", "Year", md.getColumn(0).getName());
-            assertEquals("Make", "Make", md.getColumn(1).getName());
-            assertEquals("Model", "Model", md.getColumn(2).getName());
-            assertEquals("Description", "Description", md.getColumn(3).getName());
-            assertEquals("Price", "Price", md.getColumn(4).getName());
+            assertEquals("Year", "Year", csv.getColumn(0).getName());
+            assertEquals("Make", "Make", csv.getColumn(1).getName());
+            assertEquals("Model", "Model", csv.getColumn(2).getName());
+            assertEquals("Description", "Description", csv.getColumn(3).getName());
+            assertEquals("Price", "Price", csv.getColumn(4).getName());
 
-            assertSame("ColumnCount", 5, md.getColumnCount());
+            assertSame("ColumnCount", 5, csv.getColumnCount());
             assertSame("RowCount", 4, csv.getRowCount());
 
             Row r = csv.getRow(1);
 
-            StringColumn model = (StringColumn) md.getColumn("Model");
+            StringColumn model = (StringColumn) csv.getColumn("Model");
 
             assertEquals("Venture", "Venture \"Extended Edition\"", r.getString(model));
         }
@@ -335,19 +329,18 @@ public class CSVTest {
             }
 
             csv.readFile(getResource("quote_withcomma.csv"));
-            MetaData md = csv.getMetaData();
 
-            assertEquals("Year", "Year", md.getColumn(0).getName());
-            assertEquals("Make", "Make", md.getColumn(1).getName());
-            assertEquals("Model", "Model", md.getColumn(2).getName());
-            assertEquals("Description", "Description", md.getColumn(3).getName());
-            assertEquals("Price", "Price", md.getColumn(4).getName());
+            assertEquals("Year", "Year", csv.getColumn(0).getName());
+            assertEquals("Make", "Make", csv.getColumn(1).getName());
+            assertEquals("Model", "Model", csv.getColumn(2).getName());
+            assertEquals("Description", "Description", csv.getColumn(3).getName());
+            assertEquals("Price", "Price", csv.getColumn(4).getName());
 
-            assertSame("ColumnCount", 5, md.getColumnCount());
+            assertSame("ColumnCount", 5, csv.getColumnCount());
             assertSame("RowCount", 1, csv.getRowCount());
 
             Row r = csv.getRow(0);
-            StringColumn desc = (StringColumn) md.getColumn("Description");
+            StringColumn desc = (StringColumn) csv.getColumn("Description");
 
             assertEquals("ac, abs, moon", "ac, abs, moon", r.getString(desc));
         }
@@ -389,19 +382,18 @@ public class CSVTest {
             // Name,Class,Dorm,Room,GPA
             CSV csv = new CSV();
             csv.readFile(getResource("quote_none.csv"));
-            MetaData md = csv.getMetaData();
-            assertEquals("Name", "Name", md.getColumn(0).getName());
-            assertEquals("Class", "Class", md.getColumn(1).getName());
-            assertEquals("Dorm", "Dorm", md.getColumn(2).getName());
-            assertEquals("Room", "Room", md.getColumn(3).getName());
-            assertEquals("GPA", "GPA", md.getColumn(4).getName());
+            assertEquals("Name", "Name", csv.getColumn(0).getName());
+            assertEquals("Class", "Class", csv.getColumn(1).getName());
+            assertEquals("Dorm", "Dorm", csv.getColumn(2).getName());
+            assertEquals("Room", "Room", csv.getColumn(3).getName());
+            assertEquals("GPA", "GPA", csv.getColumn(4).getName());
 
-            assertSame("ColumnCount", 5, md.getColumnCount());
+            assertSame("ColumnCount", 5, csv.getColumnCount());
             assertSame("RowCount", 4, csv.getRowCount());
 
             Row r = csv.getRow(3);
 
-            StringColumn col = (StringColumn) md.getColumn("GPA");
+            StringColumn col = (StringColumn) csv.getColumn("GPA");
 
             assertEquals("GPA", "3.48", r.getString(col));
         }
@@ -414,78 +406,79 @@ public class CSVTest {
     public void readInvalid() throws IOException {
             CSV csv = new CSV();
             csv.readFile(getResource("invalid.csv"));
-            MetaData md = csv.getMetaData();
-            assertEquals("First", "First", md.getColumn(0).getName());
-            assertEquals("Last", "Last", md.getColumn(1).getName());
-            assertSame("ColumnCount", 2, md.getColumnCount());
+        assertEquals("First", "First", csv.getColumn(0).getName());
+        assertEquals("Last", "Last", csv.getColumn(1).getName());
+        assertSame("ColumnCount", 2, csv.getColumnCount());
     }
 
     @Test
     public void readWithoutSeparator() throws IOException {
         CSV csv = new CSV();
         csv.readFile( getResource("separator_comma.csv")  );
-        MetaData md = csv.getMetaData();
-        assertEquals(3,md.getColumnCount());
-        assertEquals(2,csv.getRowCount());
+        assertEquals(3, csv.getColumnCount());
+        assertEquals(2, csv.getRowCount());
     }
 
     @Test
     public void readCommaSeparated() throws IOException {
         CSV csv = new CSV();
-        csv.readFile( getResource("separator_comma.csv"), CSV.COMMA );
-        MetaData md = csv.getMetaData();
-        assertEquals(3,md.getColumnCount());
-        assertEquals(2,csv.getRowCount());
+        csv.setSeparator(CSV.COMMA);
+        csv.readFile(getResource("separator_comma.csv"));
+        assertEquals(3, csv.getColumnCount());
+        assertEquals(2, csv.getRowCount());
     }
 
     @Test
     public void readSemiColonSeparated() throws IOException {
         CSV csv = new CSV();
-        csv.readFile( getResource("separator_semi.csv"), CSV.SEMICOLON  );
-        MetaData md = csv.getMetaData();
-        assertEquals(3,md.getColumnCount());
-        assertEquals(1,csv.getRowCount());
+        csv.setSeparator(CSV.SEMICOLON);
+        csv.readFile(getResource("separator_semi.csv"));
+        assertEquals(3, csv.getColumnCount());
+        assertEquals(1, csv.getRowCount());
     }
 
     @Test
     public void readTabSeparated() throws IOException {
         CSV csv = new CSV();
-        csv.readFile( getResource("separator_tab.csv"), CSV.TAB  );
-        MetaData md = csv.getMetaData();
-        assertEquals(3,md.getColumnCount());
+        csv.setSeparator(CSV.TAB);
+        csv.readFile(getResource("separator_tab.csv"));
+        assertEquals(3, csv.getColumnCount());
         assertEquals(1,csv.getRowCount());
     }
 
     @Test
     public void readPipeSeparated() throws IOException {
         CSV csv = new CSV();
-        csv.readFile( getResource("separator_pipe.csv"), CSV.PIPE  );
-        MetaData md = csv.getMetaData();
-        assertEquals(3,md.getColumnCount());
+        csv.setSeparator(CSV.PIPE);
+        csv.readFile(getResource("separator_pipe.csv"));
+        assertEquals(3, csv.getColumnCount());
         assertEquals(1,csv.getRowCount());
     }
 
     @Test
     public void readSingleQuote() throws IOException {
         CSV csv = new CSV();
-        csv.readFile( getResource("quote_single.csv"), CSV.COMMA, CSV.SINGLE_QUOTE );
-        MetaData md = csv.getMetaData();
-        assertEquals(3,md.getColumnCount());
+        csv.setSeparator(CSV.COMMA);
+        csv.setQuoteChar(CSV.SINGLE_QUOTE);
+        csv.setAutoDetectCharset(true);
+        csv.readFile(getResource("quote_single.csv"));
+        assertEquals(3, csv.getColumnCount());
         assertEquals(2,csv.getRowCount());
-        StringColumn sc = (StringColumn) md.getColumn(0);
-        assertEquals("Heading1",md.getColumn(0).getName());
+        StringColumn sc = (StringColumn) csv.getColumn(0);
+        assertEquals("Heading1", csv.getColumn(0).getName());
         assertEquals("first", csv.getRow(0).getString(sc));
     }
 
     @Test
     public void readDoubleQuote() throws IOException {
         CSV csv = new CSV();
-        csv.readFile( getResource("quote_double.csv"), CSV.COMMA, CSV.DOUBLE_QUOTE );
-        MetaData md = csv.getMetaData();
-        assertEquals(3,md.getColumnCount());
+        csv.setSeparator(CSV.COMMA);
+        csv.setQuoteChar(CSV.DOUBLE_QUOTE);
+        csv.readFile(getResource("quote_double.csv"));
+        assertEquals(3, csv.getColumnCount());
         assertEquals(2,csv.getRowCount());
-        StringColumn sc = (StringColumn) md.getColumn(0);
-        assertEquals("Heading1",md.getColumn(0).getName());
+        StringColumn sc = (StringColumn) csv.getColumn(0);
+        assertEquals("Heading1", csv.getColumn(0).getName());
         assertEquals("first", csv.getRow(0).getString(sc));
     }
 
@@ -515,7 +508,7 @@ public class CSVTest {
     public void shouldReadWords() throws IOException {
         CSV csv = new CSV();
         csv.readWordCountFile( getResource("words.txt") );
-        assertEquals(2, csv.getMetaData().getColumnCount());
+        assertEquals(2, csv.getColumnCount());
         assertEquals(8, csv.getRowCount());
     }
 

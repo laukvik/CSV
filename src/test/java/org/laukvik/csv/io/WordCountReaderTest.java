@@ -1,8 +1,7 @@
 package org.laukvik.csv.io;
 
 import org.junit.Test;
-import org.laukvik.csv.MetaData;
-import org.laukvik.csv.Row;
+import org.laukvik.csv.CSV;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
@@ -23,15 +22,12 @@ public class WordCountReaderTest {
 
     @Test
     public void shouldReadWords() throws FileNotFoundException {
+        CSV csv = new CSV();
         WordCountReader reader = new WordCountReader();
-        reader.readFile(getResource("words.txt"));
-        MetaData metaData = reader.getMetaData();
-        assertEquals(2, metaData.getColumnCount());
-        StringColumn wordColumn = (StringColumn) metaData.getColumn(0);
-        StringColumn countColumn = (StringColumn) metaData.getColumn(1);
-        while (reader.hasNext()){
-            Row row = reader.next();
-        }
+        reader.readFile(getResource("words.txt"), csv);
+        assertEquals(2, csv.getColumnCount());
+        StringColumn wordColumn = (StringColumn) csv.getColumn(0);
+        StringColumn countColumn = (StringColumn) csv.getColumn(1);
     }
 
 }

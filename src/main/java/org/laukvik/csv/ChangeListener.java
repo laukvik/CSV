@@ -70,13 +70,6 @@ public interface ChangeListener {
     void rowsRemoved(int fromRowIndex, int toRowIndex);
 
     /**
-     * Indicates the MetaData was read.
-     *
-     * @param metaData the metaData
-     */
-    void metaDataRead(MetaData metaData);
-
-    /**
      * The cell at the specified column index and row index was updated.
      *
      * @param columnIndex the column index

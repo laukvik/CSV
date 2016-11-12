@@ -1,6 +1,7 @@
 package org.laukvik.csv.io;
 
 import org.junit.Test;
+import org.laukvik.csv.CSV;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,7 +23,8 @@ public class ResourceBundleReaderTest {
         ResourceBundleReader r = new ResourceBundleReader();
         File file = getResource("testlang.properties");
         assertEquals(true, file.exists());
-        r.readFile(file);
+        CSV csv = new CSV();
+        r.readFile(file, csv);
     }
 
 

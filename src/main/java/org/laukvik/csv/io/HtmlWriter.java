@@ -45,7 +45,7 @@ public final class HtmlWriter implements DatasetFileWriter {
      * @param csv the CSV to write
      * @param file the file
      */
-    public void writeCSV(final CSV csv, final File file) {
+    public void writeCSV(final File file, final CSV csv) {
         try (FileOutputStream out = new FileOutputStream(file)) {
             writeCSV(csv, out);
         } catch (final IOException e) {
@@ -61,7 +61,7 @@ public final class HtmlWriter implements DatasetFileWriter {
      * @throws IOException when the csv could not be written
      */
     public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
-        Charset charset = csv.getMetaData().getCharset();
+        Charset charset = csv.getCharset();
 
         out.write("<html>\n".getBytes());
         out.write("<head>\n".getBytes());
@@ -74,8 +74,8 @@ public final class HtmlWriter implements DatasetFileWriter {
 
         // Header
         out.write("<thead>\n<tr>\n".getBytes());
-        for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
-            Column col = csv.getMetaData().getColumn(x);
+        for (int x = 0; x < csv.getColumnCount(); x++) {
+            Column col = csv.getColumn(x);
             out.write("<th>".getBytes());
             out.write(col.getName().getBytes());
             out.write("</th>".getBytes());
@@ -88,9 +88,9 @@ public final class HtmlWriter implements DatasetFileWriter {
             out.write("<tr>\n".getBytes());
 
             Row r = csv.getRow(y);
-            for (int x = 0; x < csv.getMetaData().getColumnCount(); x++) {
+            for (int x = 0; x < csv.getColumnCount(); x++) {
                 out.write("<td>".getBytes());
-                Column col = csv.getMetaData().getColumn(x);
+                Column col = csv.getColumn(x);
                 String s = r.getAsString(col);
                 if (s != null) {
                     out.write(s.getBytes());

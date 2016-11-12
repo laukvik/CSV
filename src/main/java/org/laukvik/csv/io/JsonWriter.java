@@ -16,7 +16,6 @@
 package org.laukvik.csv.io;
 
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.MetaData;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
@@ -82,10 +81,10 @@ public final class JsonWriter implements DatasetFileWriter {
     /**
      * Writes the CSV to the file.
      *
-     * @param csv the CSV to write
      * @param file the file
+     * @param csv the CSV to write
      */
-    public void writeCSV(final CSV csv, final File file) {
+    public void writeCSV(final File file, final CSV csv) {
         try (FileOutputStream out = new FileOutputStream(file)) {
             writeCSV(csv, out);
         } catch (final IOException e) {
@@ -101,7 +100,6 @@ public final class JsonWriter implements DatasetFileWriter {
      * @throws IOException when the file could not be written to
      */
     public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
-        MetaData md = csv.getMetaData();
         out.write(BRACKET_LEFT);
         out.write(LINEFEED);
         for (int y = 0; y < csv.getRowCount(); y++) {
@@ -113,8 +111,8 @@ public final class JsonWriter implements DatasetFileWriter {
             out.write(SPACE);
             out.write(CURLY_LEFT);
             out.write(LINEFEED);
-            for (int x = 0; x < md.getColumnCount(); x++) {
-                Column c = md.getColumn(x);
+            for (int x = 0; x < csv.getColumnCount(); x++) {
+                Column c = csv.getColumn(x);
                 if (x > 0) {
                     out.write(COMMA);
                     out.write(LINEFEED);
@@ -122,7 +120,7 @@ public final class JsonWriter implements DatasetFileWriter {
                 out.write(SPACE);
                 out.write(SPACE);
                 out.write(DOUBLE_QUOTE);
-                writeString(md.getColumn(x).getName(), out);
+                writeString(csv.getColumn(x).getName(), out);
                 out.write(DOUBLE_QUOTE);
                 out.write(SEMICOLON);
                 out.write(DOUBLE_QUOTE);

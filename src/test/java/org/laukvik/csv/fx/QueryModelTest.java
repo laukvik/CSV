@@ -27,8 +27,8 @@ public class QueryModelTest {
     @Test
     public void shouldAddSelection() throws IOException {
         CSV csv = findCSV();
-        StringColumn homeState = (StringColumn) csv.getMetaData().getColumn("Home State");
-        StringColumn party = (StringColumn) csv.getMetaData().getColumn("Party");
+        StringColumn homeState = (StringColumn) csv.getColumn("Home State");
+        StringColumn party = (StringColumn) csv.getColumn("Party");
         QueryModel model = new QueryModel(csv, null);
         model.addSelection(homeState, "New York");
         Assert.assertNotNull(model.findSelectionByColumn(homeState));

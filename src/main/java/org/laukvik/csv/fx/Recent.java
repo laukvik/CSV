@@ -89,7 +89,7 @@ public final class Recent {
      */
     private void load() {
         if (!file.exists() || file.length() == 0) {
-            csv.getMetaData().addColumn("filename");
+            csv.addColumn("filename");
         } else {
             try {
                 csv.readFile(file);
@@ -118,7 +118,7 @@ public final class Recent {
      * @return the list
      */
     public List<File> getList() {
-        StringColumn c = (StringColumn) csv.getMetaData().getColumn(0);
+        StringColumn c = (StringColumn) csv.getColumn(0);
         List<File> list = new ArrayList<>();
         for (int y = 0; y < csv.getRowCount(); y++) {
             Row r = csv.getRow(y);
@@ -133,7 +133,7 @@ public final class Recent {
      * @param fileToRemember the file
      */
     public void open(final File fileToRemember) {
-        StringColumn c = (StringColumn) csv.getMetaData().getColumn(0);
+        StringColumn c = (StringColumn) csv.getColumn(0);
         csv.addRow().setString(c, fileToRemember.getAbsolutePath());
         if (csv.getRowCount() > limit) {
             int extra = csv.getRowCount() - limit;

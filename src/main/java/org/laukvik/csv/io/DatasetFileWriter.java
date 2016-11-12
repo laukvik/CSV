@@ -18,6 +18,7 @@ package org.laukvik.csv.io;
 import org.laukvik.csv.CSV;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * An interface for writing data sets.
@@ -29,9 +30,10 @@ public interface DatasetFileWriter {
     /**
      * Writes the CSV to the file.
      *
-     * @param csv the CSV to write
      * @param file the file
+     * @param csv the CSV to write
+     * @throws IOException when the file can't be fully written
      */
-    void writeCSV(CSV csv, File file);
+    void writeCSV(File file, CSV csv) throws IOException;
 
 }
