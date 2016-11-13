@@ -15,6 +15,8 @@
  */
 package org.laukvik.csv.columns;
 
+import org.laukvik.csv.CSV;
+
 import java.text.SimpleDateFormat;
 
 /**
@@ -58,6 +60,13 @@ public abstract class Column<T> implements Comparable {
     /** The name of the date format attribute. */
     static final String FORMAT = "format";
 
+    /** The CSV the column belongs to. */
+    private CSV csv;
+
+    /**
+     * The name of the column.
+     */
+    private String name;
     /**
      * Returns if the column is a primary key.
      */
@@ -74,10 +83,6 @@ public abstract class Column<T> implements Comparable {
      * The default value.
      */
     private String defaultValue;
-    /**
-     * The name of the column.
-     */
-    private String name;
     /**
      * Returns the visibility.
      * TODO - Remove visibility - this is only interesting in JavaFX app
@@ -101,6 +106,24 @@ public abstract class Column<T> implements Comparable {
     }
 
     /**
+     * Returns the CSV the column belongs to.
+     *
+     * @return the csv
+     */
+    public final CSV getCSV() {
+        return csv;
+    }
+
+    /**
+     * Sets the CSV the column belongs to.
+     *
+     * @param csv the csv
+     */
+    public final void setCSV(final CSV csv) {
+        this.csv = csv;
+    }
+
+    /**
      * Parses a column name with support for optional metadata about the column. The supported format of metadata is
      * like this:
      * <pre>
@@ -121,7 +144,7 @@ public abstract class Column<T> implements Comparable {
      * @param columnDefinition the columnDefinition
      * @return the column
      */
-    public static Column parseColumnDefinition(final ColumnDefinition columnDefinition) {
+    public static final Column parseColumnDefinition(final ColumnDefinition columnDefinition) {
         ColumnDefinition.Attribute attrType = columnDefinition.get(TYPE);
         String columnName = columnDefinition.getColumnName();
         Column c = null;
@@ -167,7 +190,6 @@ public abstract class Column<T> implements Comparable {
                         throw new IllegalColumnDefinitionException(attr.getValue());
                     }
                 }
-
             } else if (typeName.equalsIgnoreCase(TYPE_STRING)) {
                 StringColumn sc = new StringColumn(columnName);
                 String w = attrType.getOptional();
@@ -183,18 +205,14 @@ public abstract class Column<T> implements Comparable {
             } else {
                 c = new StringColumn(columnName);
             }
-
             boolean allowsNull = columnDefinition.getBoolean(ALLOW_NULLS);
             c.setAllowNulls(allowsNull);
-
             boolean primaryKey = columnDefinition.getBoolean(PRIMARY_KEY);
             c.setPrimaryKey(primaryKey);
-
             ColumnDefinition.Attribute attrFk = columnDefinition.get(FOREIGN_KEY);
             if (attrFk != null) {
                 c.setForeignKey(new ForeignKey(attrFk.getValue(), attrFk.getOptional()));
             }
-
             ColumnDefinition.Attribute attrDefault = columnDefinition.get(DEFAULT_VALUE);
             if (attrDefault != null) {
                 c.setDefaultValue(attrDefault.getValue());
@@ -361,6 +379,9 @@ public abstract class Column<T> implements Comparable {
      * Fired when the column is changed.
      */
     private void fireColumnChanged() {
+        if (csv != null) {
+            csv.fireColumnUpdated(this);
+        }
     }
 
     /**

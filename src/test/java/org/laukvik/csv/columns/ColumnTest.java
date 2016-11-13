@@ -16,6 +16,7 @@
 package org.laukvik.csv.columns;
 
 import org.junit.Test;
+import org.laukvik.csv.CSV;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -139,6 +140,7 @@ public class ColumnTest {
     @Test
     public void settersGetters() {
         Column c = Column.parseName("first");
+        assertEquals("first", c.getName());
         c.setVisible(true);
         c.setWidth(10);
         c.setAllowNulls(true);
@@ -173,6 +175,11 @@ public class ColumnTest {
         assertEquals(-1, a.compareTo(b));
         assertEquals(1, b.compareTo(null));
         assertEquals(-1, b.compareTo(""));
+    }
+
+    public void test(){
+        CSV csv = new CSV();
+        Column c = csv.addColumn("last");
     }
 
 }

@@ -116,12 +116,7 @@
                         </ignores>
                         <excludes>
                             <exclude>org/laukvik/csv/**/*Exception.class</exclude>
-                            <ignore>org/laukvik/csv/javafx/*.*</ignore>
-                            <ignore>org/laukvik/csv/swing/**/*.*</ignore>
-                            <ignore>org/laukvik/csv/sql/**/*.*</ignore>
-                            <ignore>org/laukvik/csv/annotation/*.*</ignore>
-                            <ignore>org/laukvik/csv/columns/*.*</ignore>
-                            <ignore>org/laukvik/csv/jdbc/**/*.*</ignore>
+                            <ignore>org/laukvik/csv/fx/*.*</ignore>
                         </excludes>
                     </instrumentation>
                     <check>

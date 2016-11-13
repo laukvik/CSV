@@ -165,15 +165,15 @@ public final class CSV implements Serializable {
      */
     private Character quoteChar;
     /**
-     * Automatically detects charset
+     * Automatically detects charset.
      */
     private boolean autoDetectCharset;
     /**
-     * Automatically detects separator
+     * Automatically detects separator.
      */
     private boolean autoDetectSeparator;
     /**
-     * Automatically detects quote
+     * Automatically detects quote.
      */
     private boolean autoDetectQuote;
     /**
@@ -241,31 +241,56 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Returns true
+     * Automatically detects charset using BOM (Byte Order Mark).
      *
-     * @return
+     * @return true when automatic detection
      */
     public boolean isAutoDetectCharset() {
         return autoDetectCharset;
     }
 
-    public void setAutoDetectCharset(boolean autoDetectCharset) {
+    /**
+     * Set automatic detection of charset using BOM.
+     *
+     * @param autoDetectCharset use automatic when set to true
+     */
+    public void setAutoDetectCharset(final boolean autoDetectCharset) {
         this.autoDetectCharset = autoDetectCharset;
     }
 
+    /**
+     * Automatically detects separator based.
+     *
+     * @return true when automatic detection
+     */
     public boolean isAutoDetectSeparator() {
         return autoDetectSeparator;
     }
 
-    public void setAutoDetectSeparator(boolean autoDetectSeparator) {
+    /**
+     * Sets automatic detection of separator.
+     *
+     * @param autoDetectSeparator use automatic when set to true
+     */
+    public void setAutoDetectSeparator(final boolean autoDetectSeparator) {
         this.autoDetectSeparator = autoDetectSeparator;
     }
 
+    /**
+     * Automatically detects quote character.
+     *
+     * @return true when automatic detection
+     */
     public boolean isAutoDetectQuote() {
         return autoDetectQuote;
     }
 
-    public void setAutoDetectQuote(boolean autoDetectQuote) {
+    /**
+     * Set automatic detection of quotes.
+     *
+     * @param autoDetectQuote use automatic when set to true
+     */
+    public void setAutoDetectQuote(final boolean autoDetectQuote) {
         this.autoDetectQuote = autoDetectQuote;
     }
 
@@ -323,6 +348,7 @@ public final class CSV implements Serializable {
      * @return the added column
      */
     public Column addColumn(final Column column) {
+        column.setCSV(this);
         columns.add(column);
         fireColumnCreated(column);
         return column;
@@ -334,6 +360,7 @@ public final class CSV implements Serializable {
      * @param column the column to remove
      */
     public void removeColumn(final Column column) {
+        column.setCSV(null);
         columns.remove(column);
         for (Row r : getRows()) {
             r.remove(column);
@@ -764,7 +791,7 @@ public final class CSV implements Serializable {
     /**
      * Reads the CSV file with the specified separator and quote character.
      *
-     * @param csvFile   the file to read
+     * @param csvFile the file to read
      * @throws IOException when the file could not be read
      */
     public void readFile(final File csvFile) throws IOException {
