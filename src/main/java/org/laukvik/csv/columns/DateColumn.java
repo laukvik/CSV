@@ -35,11 +35,11 @@ public final class DateColumn extends Column<Date> {
     /**
      * The DateFormat to use when reading and writing.
      */
-    private final DateFormat dateFormat;
+    private DateFormat dateFormat;
     /**
      * The dateFormat as a String.
      */
-    private final String format;
+    private String format;
 
     /**
      * Creates a new column with the columnName and dateFormat.
@@ -65,6 +65,15 @@ public final class DateColumn extends Column<Date> {
     }
 
     /**
+     * Sets the new dateformat pattern.
+     * @param dateFormatPattern the pattern
+     */
+    public void setFormat(final String dateFormatPattern) {
+        this.format = dateFormatPattern;
+        this.dateFormat = new SimpleDateFormat(format);
+    }
+
+    /**
      * Compares date one and another.
      *
      * @param one     one column
@@ -74,9 +83,9 @@ public final class DateColumn extends Column<Date> {
     public static int compareDates(final Date one, final Date another) {
         if (one == null && another == null) {
             return 0;
-        } else if (one == null) {
+        } else if (one == null && another != null) {
             return -1;
-        } else if (another == null) {
+        } else if (one != null && another == null) {
             return 1;
         }
         return one.compareTo(another);
@@ -276,14 +285,6 @@ public final class DateColumn extends Column<Date> {
     }
 
     /**
-     * Returns the DateFormat instance.
-     * @return the DateFormat instance
-     */
-    public DateFormat getDateFormat() {
-        return dateFormat;
-    }
-
-    /**
      * Returns the value as a String.
      *
      * @param value the value
@@ -306,7 +307,6 @@ public final class DateColumn extends Column<Date> {
         try {
             return dateFormat.parse(value);
         } catch (ParseException ex) {
-            ex.printStackTrace();
             return null;
         }
     }

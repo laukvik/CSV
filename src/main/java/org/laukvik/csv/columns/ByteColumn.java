@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv.columns;
 
-import java.util.Arrays;
+import java.util.Base64;
 
 /**
  * Column with byte array as the data type.
@@ -38,7 +38,7 @@ public final class ByteColumn extends Column<byte[]> {
      * @return the value as a String
      */
     public String asString(final byte[] value) {
-        return value.toString();
+        return new String(Base64.getMimeEncoder().encode(value));
     }
 
     /**
@@ -48,7 +48,7 @@ public final class ByteColumn extends Column<byte[]> {
      * @return byte array
      */
     public byte[] parse(final String value) {
-        return value.getBytes();
+        return Base64.getMimeDecoder().decode(value);
     }
 
     /**
@@ -59,10 +59,13 @@ public final class ByteColumn extends Column<byte[]> {
      * @return the comparable value
      */
     public int compare(final byte[] one, final byte[] another) {
-        if (Arrays.equals(one, another)) {
+        if (one.length == another.length) {
             return 0;
+        } else if (one.length < another.length) {
+            return -1;
+        } else {
+            return 1;
         }
-        return 1;
     }
 
 }

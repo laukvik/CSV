@@ -16,7 +16,6 @@
 package org.laukvik.csv.columns;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 /**
  * An abstract class for Columns.
@@ -24,6 +23,40 @@ import java.util.List;
  * @param <T> the data type of Column
  */
 public abstract class Column<T> implements Comparable {
+
+    /** Identifies the type attribute. */
+    static final String TYPE = "type";
+    /** Identifies BigDecimalColumn. */
+    static final String TYPE_BIGDECIMAL = "bigdecimal";
+    /** Identifies BooleanColumn. */
+    static final String TYPE_BOOLEAN = "boolean";
+    /** Identifies ByteColumn. */
+    static final String TYPE_BYTE = "byte";
+    /** Identifies DateColumn. */
+    static final String TYPE_DATE = "date";
+    /** Identifies DoubleColumn. */
+    static final String TYPE_DOUBLE = "double";
+    /** Identifies FloatColumn. */
+    static final String TYPE_FLOAT = "float";
+    /** Identifies IntegerColumn. */
+    static final String TYPE_INTEGER = "int";
+    /** Identifies StringColumn. */
+    static final String TYPE_STRING = "varchar";
+    /** Identifies UrlColumn. */
+    static final String TYPE_URL = "url";
+
+    /** The name of the width attribute. */
+    static final String WIDTH = "width";
+    /** The name of the allowNulls attribute. */
+    static final String ALLOW_NULLS = "allowNulls";
+    /** The name of the primary key attribute. */
+    static final String PRIMARY_KEY = "primaryKey";
+    /** The name of the foreign key attribute. */
+    static final String FOREIGN_KEY = "foreignKey";
+    /** The name of the default attribute. */
+    static final String DEFAULT_VALUE = "default";
+    /** The name of the date format attribute. */
+    static final String FORMAT = "format";
 
     /**
      * Returns if the column is a primary key.
@@ -68,24 +101,6 @@ public abstract class Column<T> implements Comparable {
     }
 
     /**
-     * Finds the value of the named key.
-     *
-     * @param key    the key to find
-     * @param keys   the keys to look in
-     * @param values the values belonging to the key
-     * @return the value
-     */
-    private static String findValue(final String key, final List<String> keys, final List<String> values) {
-        for (int x = 0; x < keys.size(); x++) {
-            String k = keys.get(x);
-            if (k.equalsIgnoreCase(key)) {
-                return values.get(x);
-            }
-        }
-        return null;
-    }
-
-    /**
      * Parses a column name with support for optional metadata about the column. The supported format of metadata is
      * like this:
      * <pre>
@@ -107,7 +122,7 @@ public abstract class Column<T> implements Comparable {
      * @return the column
      */
     public static Column parseColumnDefinition(final ColumnDefinition columnDefinition) {
-        ColumnDefinition.Attribute attrType = columnDefinition.get("type");
+        ColumnDefinition.Attribute attrType = columnDefinition.get(TYPE);
         String columnName = columnDefinition.getColumnName();
         Column c = null;
 
@@ -117,20 +132,30 @@ public abstract class Column<T> implements Comparable {
             String typeName = attrType.getValue();
             if (typeName == null) {
                 c = new StringColumn(columnName);
-            } else if (typeName.equalsIgnoreCase("INT")) {
+
+            } else if (typeName.equalsIgnoreCase(TYPE_INTEGER)) {
                 c = new IntegerColumn(columnName);
-            } else if (typeName.equalsIgnoreCase("FLOAT")) {
+
+            } else if (typeName.equalsIgnoreCase(TYPE_FLOAT)) {
                 c = new FloatColumn(columnName);
-            } else if (typeName.equalsIgnoreCase("DOUBLE")) {
+
+            } else if (typeName.equalsIgnoreCase(TYPE_DOUBLE)) {
                 c = new DoubleColumn(columnName);
-            } else if (typeName.equalsIgnoreCase("BIGDECIMAL")) {
+
+            } else if (typeName.equalsIgnoreCase(TYPE_BIGDECIMAL)) {
                 c = new BigDecimalColumn(columnName);
-            } else if (typeName.equalsIgnoreCase("URL")) {
+
+            } else if (typeName.equalsIgnoreCase(TYPE_URL)) {
                 c = new UrlColumn(columnName);
-            } else if (typeName.equalsIgnoreCase("BOOLEAN")) {
+
+            } else if (typeName.equalsIgnoreCase(TYPE_BOOLEAN)) {
                 c = new BooleanColumn(columnName);
-            } else if (typeName.equalsIgnoreCase("DATE")) {
-                ColumnDefinition.Attribute attr = columnDefinition.get("format");
+
+            } else if (typeName.equalsIgnoreCase(TYPE_BYTE)) {
+                c = new ByteColumn(columnName);
+
+            } else if (typeName.equalsIgnoreCase(TYPE_DATE)) {
+                ColumnDefinition.Attribute attr = columnDefinition.get(FORMAT);
 
                 if (attr == null || attr.getValue().isEmpty()) {
                     throw new IllegalColumnDefinitionException("");
@@ -143,7 +168,7 @@ public abstract class Column<T> implements Comparable {
                     }
                 }
 
-            } else if (typeName.startsWith("VARCHAR")) {
+            } else if (typeName.equalsIgnoreCase(TYPE_STRING)) {
                 StringColumn sc = new StringColumn(columnName);
                 String w = attrType.getOptional();
                 if (w != null) {
@@ -155,19 +180,22 @@ public abstract class Column<T> implements Comparable {
                     }
                 }
                 c = sc;
+            } else {
+                c = new StringColumn(columnName);
             }
-            boolean allowsNull = columnDefinition.getBoolean("allowNulls");
+
+            boolean allowsNull = columnDefinition.getBoolean(ALLOW_NULLS);
             c.setAllowNulls(allowsNull);
 
-            boolean primaryKey = columnDefinition.getBoolean("primaryKey");
+            boolean primaryKey = columnDefinition.getBoolean(PRIMARY_KEY);
             c.setPrimaryKey(primaryKey);
 
-            ColumnDefinition.Attribute attrFk = columnDefinition.get("foreignKey");
+            ColumnDefinition.Attribute attrFk = columnDefinition.get(FOREIGN_KEY);
             if (attrFk != null) {
                 c.setForeignKey(new ForeignKey(attrFk.getValue(), attrFk.getOptional()));
             }
 
-            ColumnDefinition.Attribute attrDefault = columnDefinition.get("default");
+            ColumnDefinition.Attribute attrDefault = columnDefinition.get(DEFAULT_VALUE);
             if (attrDefault != null) {
                 c.setDefaultValue(attrDefault.getValue());
             }
@@ -344,10 +372,9 @@ public abstract class Column<T> implements Comparable {
      */
     public final int compareTo(final Object o) {
         if (o == null) {
-            return -1;
+            return 1;
         } else if (o instanceof Column) {
             Column c = (Column) o;
-//            return Integer.compare(indexOf(), c.indexOf());
             return getName().compareTo(c.getName());
         }
         return -1;
@@ -360,22 +387,46 @@ public abstract class Column<T> implements Comparable {
      */
     public final ColumnDefinition toColumnDefinition() {
         ColumnDefinition cd = new ColumnDefinition(getName());
-        cd.setAttribute("type", "BigDecimal");
+        if (this instanceof StringColumn) {
+            cd.setAttribute(TYPE, TYPE_STRING);
+            StringColumn sc = (StringColumn) this;
+            if (sc.getSize() > 0) {
+                cd.setAttribute(TYPE, TYPE_STRING, sc.getSize() + "");
+            }
+        } else if (this instanceof BigDecimalColumn) {
+            cd.setAttribute(TYPE, TYPE_BIGDECIMAL);
+        } else if (this instanceof BooleanColumn) {
+            cd.setAttribute(TYPE, TYPE_BOOLEAN);
+        } else if (this instanceof ByteColumn) {
+            cd.setAttribute(TYPE, TYPE_BYTE);
+        } else if (this instanceof DateColumn) {
+            cd.setAttribute(TYPE, TYPE_DATE);
+            DateColumn dc = (DateColumn) this;
+            cd.setAttribute(FORMAT, dc.getFormat());
+        } else if (this instanceof DoubleColumn) {
+            cd.setAttribute(TYPE, TYPE_DOUBLE);
+        } else if (this instanceof FloatColumn) {
+            cd.setAttribute(TYPE, TYPE_FLOAT);
+        } else if (this instanceof IntegerColumn) {
+            cd.setAttribute(TYPE, TYPE_INTEGER);
+        } else if (this instanceof UrlColumn) {
+            cd.setAttribute(TYPE, TYPE_URL);
+        }
         if (getDefaultValue() != null) {
-            cd.setAttribute("default", getDefaultValue());
+            cd.setAttribute(DEFAULT_VALUE, getDefaultValue());
         }
         ForeignKey fk = getForeignKey();
         if (fk != null) {
-            cd.setAttribute("foreignKey", fk.getTable(), fk.getColumn());
+            cd.setAttribute(FOREIGN_KEY, fk.getTable(), fk.getColumn());
         }
         if (getWidth() > 0) {
-            cd.setAttribute("width", getWidth() + "");
+            cd.setAttribute(WIDTH, getWidth() + "");
         }
-        if (!isAllowNulls()) {
-            cd.setAttribute("allowNulls", "false");
+        if (isAllowNulls()) {
+            cd.setAttribute(ALLOW_NULLS, "false");
         }
         if (isPrimaryKey()) {
-            cd.setAttribute("primaryKey", "true");
+            cd.setAttribute(PRIMARY_KEY, "true");
         }
         return cd;
     }

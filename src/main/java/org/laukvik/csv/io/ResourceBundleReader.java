@@ -76,14 +76,15 @@ public final class ResourceBundleReader extends AbstractResourceBundle implement
     /**
      * Reads the file and extracts all used property values.
      *
-     * @param file the file
-     * @param csv the csv
-     * @param lang the language
+     * @param file   the file
+     * @param csv    the csv
+     * @param lang   the language
      * @param keySet the keys to read
      * @return the Properties
      * @throws IOException when the file could not be read
      */
-    private Properties addFile(final File file, final CSV csv, final String lang, final Set<String> keySet) throws IOException {
+    private Properties addFile(final File file, final CSV csv,
+                               final String lang, final Set<String> keySet) throws IOException {
         csv.addColumn(new StringColumn(lang));
         Properties p = new Properties();
         p.load(new FileInputStream(file));

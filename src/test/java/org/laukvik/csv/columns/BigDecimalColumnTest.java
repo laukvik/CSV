@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  *
@@ -56,7 +57,7 @@ public class BigDecimalColumnTest {
         assertEquals("customer", cd.get("foreignKey").getValue());
         assertEquals("customer_id", cd.get("foreignKey").getOptional());
         assertEquals("true", cd.get("primaryKey").getValue());
-        assertEquals("false", cd.get("allowNulls").getValue());
+        assertNull(cd.get("allowNulls"));
         assertEquals("32", cd.get("default").getValue());
     }
 

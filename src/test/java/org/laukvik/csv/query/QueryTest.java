@@ -105,7 +105,7 @@ public class QueryTest {
     @Test
     public void isDate() throws ParseException {
         DateColumn tookOffice = (DateColumn) csv.getColumn("Took office");
-        Date date = tookOffice.getDateFormat().parse("20/01/2009");
+        Date date = tookOffice.parse("20/01/2009");
         List<Row> rows = csv.findByQuery().where().column(tookOffice).isDate(date).getResultList();
         Assert.assertEquals("Should be 1", 1, rows.size());
     }
