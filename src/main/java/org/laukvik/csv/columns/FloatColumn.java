@@ -36,6 +36,9 @@ public final class FloatColumn extends Column<Float> {
      * @return the value as a String
      */
     public String asString(final Float value) {
+        if (value == null) {
+            return "";
+        }
         return value.toString();
     }
 
@@ -46,6 +49,9 @@ public final class FloatColumn extends Column<Float> {
      * @return the float value
      */
     public Float parse(final String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         return Float.parseFloat(value);
     }
 
@@ -57,6 +63,13 @@ public final class FloatColumn extends Column<Float> {
      * @return the comparison
      */
     public int compare(final Float one, final Float another) {
+        if (one == null && another == null) {
+            return 0;
+        } else if (one == null && another != null) {
+            return -1;
+        } else if (one != null && another == null) {
+            return 1;
+        }
         return one.compareTo(another);
     }
 

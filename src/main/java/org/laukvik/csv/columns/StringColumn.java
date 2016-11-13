@@ -59,6 +59,9 @@ public final class StringColumn extends Column<String> {
      * @return the value
      */
     public String asString(final String value) {
+        if (value == null) {
+            return "";
+        }
         return value;
     }
 
@@ -69,6 +72,9 @@ public final class StringColumn extends Column<String> {
      * @return the value
      */
     public String parse(final String value) {
+        if (value == null) {
+            return "";
+        }
         return value;
     }
 
@@ -80,6 +86,13 @@ public final class StringColumn extends Column<String> {
      * @return the compare value
      */
     public int compare(final String one, final String another) {
+        if (one == null && another == null) {
+            return 0;
+        } else if (one == null && another != null) {
+            return -1;
+        } else if (one != null && another == null) {
+            return 1;
+        }
         return one.compareTo(another);
     }
 

@@ -36,6 +36,9 @@ public final class DoubleColumn extends Column<Double> {
      * @return the String
      */
     public String asString(final Double value) {
+        if (value == null) {
+            return "";
+        }
         return value.toString();
     }
 
@@ -46,6 +49,9 @@ public final class DoubleColumn extends Column<Double> {
      * @return the double value
      */
     public Double parse(final String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         return Double.parseDouble(value);
     }
 
@@ -57,6 +63,13 @@ public final class DoubleColumn extends Column<Double> {
      * @return the comparison
      */
     public int compare(final Double one, final Double another) {
+        if (one == null && another == null) {
+            return 0;
+        } else if (one == null && another != null) {
+            return -1;
+        } else if (one != null && another == null) {
+            return 1;
+        }
         return one.compareTo(another);
     }
 

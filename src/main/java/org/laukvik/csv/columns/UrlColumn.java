@@ -39,6 +39,9 @@ public final class UrlColumn extends Column<URL> {
      * @return the value as String
      */
     public String asString(final URL value) {
+        if (value == null) {
+            return "";
+        }
         return value.toExternalForm();
     }
 
@@ -64,6 +67,13 @@ public final class UrlColumn extends Column<URL> {
      * @return a comparison value
      */
     public int compare(final URL one, final URL another) {
+        if (one == null && another == null) {
+            return 0;
+        } else if (one == null && another != null) {
+            return -1;
+        } else if (one != null && another == null) {
+            return 1;
+        }
         return one.toExternalForm().compareTo(another.toExternalForm());
     }
 

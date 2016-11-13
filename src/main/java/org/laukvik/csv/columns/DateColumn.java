@@ -30,7 +30,7 @@ public final class DateColumn extends Column<Date> {
     /**
      * The default date format.
      */
-    public static final String DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
+    public static final String DEFAULT_DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
 
     /**
      * The DateFormat to use when reading and writing.
@@ -60,8 +60,8 @@ public final class DateColumn extends Column<Date> {
      */
     public DateColumn(final String columnName) {
         super(columnName);
-        this.format = DATE_FORMAT;
-        this.dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        this.format = DEFAULT_DATE_FORMAT;
+        this.dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
     }
 
     /**
@@ -316,9 +316,16 @@ public final class DateColumn extends Column<Date> {
      *
      * @param one     one column
      * @param another another column
-     * @return the comparison
+     * @return the comparisond
      */
     public int compare(final Date one, final Date another) {
+        if (one == null && another == null) {
+            return 0;
+        } else if (one == null) {
+            return -1;
+        } else if (another == null) {
+            return 1;
+        }
         return one.compareTo(another);
     }
 

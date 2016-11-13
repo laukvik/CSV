@@ -23,6 +23,13 @@ public class DateColumnTest {
     }
 
     @Test
+    public void constructor() throws Exception {
+        DateColumn c = new DateColumn("created");
+        assertEquals("created", c.getName());
+        assertEquals(DateColumn.DEFAULT_DATE_FORMAT, c.getFormat());
+    }
+
+    @Test
     public void compareDates() throws Exception {
         DateColumn c = new DateColumn("created");
         Calendar cal = new GregorianCalendar();
@@ -32,6 +39,9 @@ public class DateColumnTest {
         assertEquals(-1, c.compare(today, tomorrow));
         assertEquals(1, c.compare(tomorrow, today));
         assertEquals(0, c.compare(tomorrow, cal.getTime()));
+        assertEquals(1, c.compare(tomorrow, null));
+        assertEquals(-1, c.compare(null, cal.getTime()));
+        assertEquals(0, c.compare(null, null));
     }
 
     @Test
@@ -169,5 +179,11 @@ public class DateColumnTest {
         assertNull(dateString, c.parse(null));
     }
 
+    @Test
+    public void setFormat() throws Exception {
+        DateColumn dc = new DateColumn("created");
+        dc.setFormat("dd.MM.YYYY HH.mm.ss");
+        assertEquals("dd.MM.YYYY HH.mm.ss", dc.getFormat());
+    }
 
 }

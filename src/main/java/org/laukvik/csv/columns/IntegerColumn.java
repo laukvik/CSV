@@ -36,6 +36,9 @@ public final class IntegerColumn extends Column<Integer> {
      * @return the value as a String
      */
     public String asString(final Integer value) {
+        if (value == null) {
+            return "";
+        }
         return value.toString();
     }
 
@@ -46,6 +49,9 @@ public final class IntegerColumn extends Column<Integer> {
      * @return the integer value
      */
     public Integer parse(final String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         return Integer.parseInt(value);
     }
 
@@ -57,7 +63,15 @@ public final class IntegerColumn extends Column<Integer> {
      * @return the compare value
      */
     public int compare(final Integer one, final Integer another) {
+        if (one == null && another == null) {
+            return 0;
+        } else if (one == null && another != null) {
+            return -1;
+        } else if (one != null && another == null) {
+            return 1;
+        }
         return one.compareTo(another);
     }
+
 
 }
