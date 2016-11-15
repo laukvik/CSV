@@ -33,6 +33,7 @@ public class IntegerColumnTest {
         assertEquals(1, dc.compare( 10, 5 ));
         assertEquals(1, dc.compare( 10, null ));
         assertEquals(-1, dc.compare( null, 5 ));
+        assertEquals(0, dc.compare( null, null ));
     }
 
 }

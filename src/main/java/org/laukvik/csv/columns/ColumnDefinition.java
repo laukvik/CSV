@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Defines the features of a column. In simplest form it's only the column name. It more complex it can contain
  * one or more attributes. An attribute is a key and a value.
- *
+ * <p>
  * <pre>
  * President(type=VARCHAR[20],primaryKey=true,increment=true,foreignKey=table[id])
  * </pre>
@@ -89,8 +89,12 @@ public final class ColumnDefinition {
                     if (keyValue.contains("=")) {
                         String[] arr = keyValue.split("=");
                         String key = arr[0];
-                        String value = arr[1];
-                        setAttribute(key, value);
+                        if (arr.length > 1) {
+                            String value = arr[1];
+                            setAttribute(key, value);
+                        } else {
+                            setAttribute(key, "");
+                        }
                     } else {
                         setAttribute(keyValue, "");
                     }
@@ -212,6 +216,9 @@ public final class ColumnDefinition {
          */
         Attribute(final String value) {
             this.value = value;
+            if (value == null) {
+                return;
+            }
             int firstIndex = value.indexOf("[");
             if (firstIndex > -1) {
                 int lastIndex = value.lastIndexOf("]");
@@ -282,7 +289,6 @@ public final class ColumnDefinition {
             this.optional = optional;
         }
     }
-
 
 
 }

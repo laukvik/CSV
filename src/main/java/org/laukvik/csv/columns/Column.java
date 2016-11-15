@@ -397,8 +397,9 @@ public abstract class Column<T> implements Comparable {
         } else if (o instanceof Column) {
             Column c = (Column) o;
             return getName().compareTo(c.getName());
+        } else {
+            return -1;
         }
-        return -1;
     }
 
     /**
@@ -444,7 +445,7 @@ public abstract class Column<T> implements Comparable {
             cd.setAttribute(WIDTH, getWidth() + "");
         }
         if (isAllowNulls()) {
-            cd.setAttribute(ALLOW_NULLS, "false");
+            cd.setAttribute(ALLOW_NULLS, "true");
         }
         if (isPrimaryKey()) {
             cd.setAttribute(PRIMARY_KEY, "true");

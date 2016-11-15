@@ -32,6 +32,7 @@ public class FloatColumnTest {
         assertEquals(1, dc.compare( 10f, 5f ));
         assertEquals(1, dc.compare( 10f, null ));
         assertEquals(-1, dc.compare( null, 5f ));
+        assertEquals(0, dc.compare( null, null ));
     }
 
 }

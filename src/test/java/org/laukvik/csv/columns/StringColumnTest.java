@@ -32,7 +32,13 @@ public class StringColumnTest {
 
     @Test
     public void compare() throws Exception {
-
+        StringColumn c = new StringColumn("hospital");
+        assertEquals(-1, c.compare("A","B"));
+        assertEquals(0, c.compare("A","A"));
+        assertEquals(1, c.compare("B","A"));
+        assertEquals(-1, c.compare(null,"A"));
+        assertEquals(1, c.compare("B",null));
+        assertEquals(0, c.compare(null,null));
     }
 
 }

@@ -32,6 +32,7 @@ public class DoubleColumnTest {
         assertEquals(1, dc.compare( 10d, 5d ));
         assertEquals(1, dc.compare( 10d, null ));
         assertEquals(-1, dc.compare( null, 5d ));
+        assertEquals(0, dc.compare( null, null ));
     }
 
 }

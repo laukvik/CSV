@@ -30,7 +30,7 @@ public class DateColumnTest {
     }
 
     @Test
-    public void compareDates() throws Exception {
+    public void compare() throws Exception {
         DateColumn c = new DateColumn("created");
         Calendar cal = new GregorianCalendar();
         Date today = cal.getTime();
@@ -174,7 +174,6 @@ public class DateColumnTest {
         String dateString = "2000-01-01 00:00:00";
         Date d = c.parse(dateString);
         assertEquals(dateString, c.asString(d));
-
         assertNull(dateString, c.parse(""));
         assertNull(dateString, c.parse(null));
     }
@@ -184,6 +183,21 @@ public class DateColumnTest {
         DateColumn dc = new DateColumn("created");
         dc.setFormat("dd.MM.YYYY HH.mm.ss");
         assertEquals("dd.MM.YYYY HH.mm.ss", dc.getFormat());
+    }
+
+    @Test
+    public void compareDates() throws Exception {
+        DateColumn c = new DateColumn("created");
+        Calendar cal = new GregorianCalendar();
+        Date today = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        Date tomorrow = getTomorrow();
+        assertEquals(-1, DateColumn.compareDates(today, tomorrow));
+        assertEquals(1, DateColumn.compareDates(tomorrow, today));
+        assertEquals(0, DateColumn.compareDates(tomorrow, cal.getTime()));
+        assertEquals(1, DateColumn.compareDates(tomorrow, null));
+        assertEquals(-1, DateColumn.compareDates(null, cal.getTime()));
+        assertEquals(0, DateColumn.compareDates(null, null));
     }
 
 }

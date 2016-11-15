@@ -99,4 +99,9 @@ public class BOMTest {
         assertFalse(BOM.UTF8.is());
     }
 
+    @Test
+    public void test() throws IOException {
+        assertNull(BOM.findBom( new File("doesnt_exist") ));
+    }
+
 }

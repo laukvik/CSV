@@ -18,6 +18,7 @@ package org.laukvik.csv.io;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -73,7 +74,7 @@ public enum BOM {
             byte[] bytes = new byte[MAX_BOM_SIZE];
             is.read(bytes, 0, MAX_BOM_SIZE);
             return BOM.parse(bytes);
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         }
     }
