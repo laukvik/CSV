@@ -127,4 +127,18 @@ public enum BOM {
     public byte[] getBytes() {
         return bytes;
     }
+
+    /**
+     *
+     * @param charset
+     * @return
+     */
+    public static BOM findBomByCharset(final Charset charset) {
+        for (BOM bom : values()){
+            if (bom.getCharset().equals(charset)){
+                return bom;
+            }
+        }
+        return null;
+    }
 }

@@ -15,11 +15,14 @@
  */
 package org.laukvik.csv;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 import org.junit.Assert;
 import org.junit.Test;
 import org.laukvik.csv.columns.BigDecimalColumn;
 import org.laukvik.csv.columns.BooleanColumn;
 import org.laukvik.csv.columns.ByteColumn;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DateColumn;
 import org.laukvik.csv.columns.DoubleColumn;
 import org.laukvik.csv.columns.FloatColumn;
@@ -28,15 +31,19 @@ import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 
@@ -47,11 +54,55 @@ public class CSVTest {
         return new File(classLoader.getResource(filename).getFile());
     }
 
+    @Test
+    public void setAutoDetectSeparator() throws IOException {
+        CSV csv = new CSV();
+        csv.setAutoDetectSeparator(true);
+        csv.setAutoDetectQuote(true);
+        csv.readFile(getResource("separator_pipe.csv"));
+        assertEquals(3, csv.getColumnCount());
+        assertEquals(1,csv.getRowCount());
+        assertTrue(csv.isAutoDetectQuote());
+        assertTrue(csv.isAutoDetectSeparator());
+    }
+
+    @Test
+    public void autodetection(){
+        CSV csv = new CSV();
+        assertEquals(true, csv.isAutoDetectCharset());
+        assertEquals(true, csv.isAutoDetectQuote());
+        assertEquals(true, csv.isAutoDetectSeparator());
+        csv.setAutoDetectCharset(false);
+        csv.setAutoDetectQuote(false);
+        csv.setAutoDetectSeparator(false);
+        assertEquals(false, csv.isAutoDetectCharset());
+        assertEquals(false, csv.isAutoDetectQuote());
+        assertEquals(false, csv.isAutoDetectSeparator());
+    }
+
+    @Test
+    public void settersGetters(){
+        CSV csv = new CSV();
+
+        Charset cs = Charset.forName("utf-8");
+
+        assertEquals( Charset.defaultCharset(), csv.getCharset());
+        assertNull(  csv.getSeparatorChar());
+        assertNull( csv.getQuoteChar());
+
+        csv.setCharset(cs);
+        csv.setQuoteChar(CSV.QUOTE_SINGLE);
+        csv.setSeparator(CSV.PIPE);
+
+        assertEquals(cs, csv.getCharset());
+        assertEquals( (Character) CSV.PIPE, csv.getSeparatorChar());
+        assertEquals( (Character) CSV.QUOTE_SINGLE, csv.getQuoteChar());
+    }
 
     // ------ Columns ------
 
     @Test
-    public void shouldAddColumnTypes() {
+    public void addColumnByType() {
         CSV csv = new CSV();
         BigDecimalColumn bdc = csv.addBigDecimalColumn("bigDecimal");
         BooleanColumn bc = csv.addBooleanColumn("boolean");
@@ -74,7 +125,7 @@ public class CSVTest {
     }
 
     @Test
-    public void shouldInsertHeaders() throws IOException {
+    public void insertColumns() throws IOException {
         CSV csv = new CSV(getResource("noheaders.csv"));
         assertEquals(1, csv.getRowCount());
         assertEquals(2, csv.getColumnCount());
@@ -84,13 +135,15 @@ public class CSVTest {
     }
 
     @Test
-    public void shouldRemoveColum() throws IOException {
+    public void removeColumn() throws IOException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
-        StringColumn c = (StringColumn) csv.getColumn(0);
+        StringColumn presidency = (StringColumn) csv.getColumn(0);
         int cols = csv.getColumnCount();
-        csv.removeColumn(0);
+        csv.removeColumn(presidency);
         assertEquals(cols - 1, csv.getColumnCount());
+        csv.removeColumn(2);
+        assertEquals(cols - 2, csv.getColumnCount());
     }
 
     @Test
@@ -106,7 +159,7 @@ public class CSVTest {
     // ------ Rows ------
 
     @Test
-    public void shouldBuildDistinctSet() throws IOException {
+    public void buildDistinctValues() throws IOException {
         CSV csv = new CSV();
         StringColumn president = csv.addStringColumn("President");
         csv.addRow().setString(president, "Hillary");
@@ -119,11 +172,12 @@ public class CSVTest {
     }
 
     @Test
-    public void shouldInsertRow() throws IOException {
+    public void addRowAt() throws IOException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         StringColumn president = csv.addStringColumn("President");
-        csv.addRow(0).setString(president, "Barak Obama");
+        Row r = csv.addRow(10);
+        assertEquals(r, csv.getRow(10));
     }
 
     @Test
@@ -164,11 +218,13 @@ public class CSVTest {
     }
 
     @Test
-    public void shouldFindIndexOf() throws IOException {
+    public void indexOf() throws IOException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         Row r = csv.getRow(10);
         assertEquals(10, csv.indexOf(r));
+        assertEquals(0, csv.indexOf("Presidency"));
+        assertEquals(-1, csv.indexOf("DontExist"));
     }
 
     @Test
@@ -185,6 +241,14 @@ public class CSVTest {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         csv.clear();
+        assertEquals(0, csv.getRowCount());
+    }
+
+    @Test
+    public void removeRows() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(getResource("presidents.csv"));
+        csv.removeRows();
         assertEquals(0, csv.getRowCount());
     }
 
@@ -226,21 +290,16 @@ public class CSVTest {
     }
 
     @Test
-    public void shouldWrite() throws Exception {
-
+    public void writeFile() throws Exception {
         File file = File.createTempFile("ShouldWrite", ".csv");
-
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
         assertSame(csv.getColumnCount(), 2);
-
         assertEquals("First should be 0", 0, csv.indexOf(first));
         assertEquals("Last should be 1", 1, csv.indexOf(last));
-
         csv.addRow().setString(first, "Bill").setString(last, "Gates");
         csv.addRow().setString(first, "Steve").setString(last, "Jobs");
-
         assertSame("RowCount", csv.getRowCount(), 2);
         try {
             csv.writeFile(file);
@@ -249,12 +308,83 @@ public class CSVTest {
             e.printStackTrace();
             fail(e.getMessage());
         }
-
         CSV csv2 = new CSV();
         csv2.readFile(file);
-
         assertEquals(2, csv2.getRowCount());
+    }
 
+    /**
+     * todo - Improve this test
+     *
+     * @throws Exception
+     */
+    @Test
+    public void writeXML() throws Exception {
+        File file = File.createTempFile("writeXML", ".xml");
+        CSV csv = new CSV();
+        StringColumn first = csv.addStringColumn("First");
+        StringColumn last = csv.addStringColumn("Last");
+        csv.addRow().setString(first, "Bill").setString(last, "Gates");
+        csv.writeXML(file);
+        assertNotNull(file);
+    }
+
+    @Test
+    public void writeJSON() throws Exception {
+        File file = File.createTempFile("writeJSON", ".json");
+        CSV csv = new CSV();
+        StringColumn first = csv.addStringColumn("First");
+        StringColumn last = csv.addStringColumn("Last");
+        csv.addRow().setString(first, "Bill").setString(last, "Gates");
+        csv.addRow().setString(first, "Steve").setString(last, "Jobs");
+        csv.writeJSON(file);
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(new FileReader(file));
+        JSONArray jsonArray = (JSONArray) obj;
+        assertNotNull(jsonArray);
+    }
+
+    /**
+     * todo - Improve this test
+     *
+     * @throws Exception
+     */
+    @Test
+    public void writeHTML() throws Exception {
+        File file = File.createTempFile("writeJSON", ".json");
+        CSV csv = new CSV();
+        StringColumn first = csv.addStringColumn("First");
+        StringColumn last = csv.addStringColumn("Last");
+        csv.addRow().setString(first, "Bill").setString(last, "Gates");
+        csv.writeHtml(file);
+        assertNotNull(file);
+    }
+
+    /**
+     * todo -  Improve this test
+     * @throws Exception
+     */
+    @Test
+    public void writeResourceBundle() throws Exception {
+        File file = File.createTempFile("writeJSON", ".json");
+        CSV csv = new CSV();
+        StringColumn first = csv.addStringColumn("First");
+        StringColumn last = csv.addStringColumn("Last");
+        csv.addRow().setString(first, "Bill").setString(last, "Gates");
+        csv.writeResourceBundle(file);
+        assertNotNull(file);
+    }
+
+    @Test
+    public void buildFrequencyDistribution() throws Exception {
+        CSV csv = new CSV();
+        StringColumn first = csv.addStringColumn("First");
+        csv.addRow().setString(first, "Gates");
+        csv.addRow().setString(first, "Jobs");
+        FrequencyDistribution fd1 = csv.buildFrequencyDistribution(first);
+        FrequencyDistribution fd2 = csv.buildFrequencyDistribution(0);
+        assertNotNull(fd1);
+        assertNotNull(fd2);
     }
 
     @Test
@@ -459,12 +589,13 @@ public class CSVTest {
     public void readSingleQuote() throws IOException {
         CSV csv = new CSV();
         csv.setSeparator(CSV.COMMA);
-        csv.setQuoteChar(CSV.SINGLE_QUOTE);
+        csv.setQuoteChar(CSV.QUOTE_SINGLE);
         csv.setAutoDetectCharset(true);
         csv.readFile(getResource("quote_single.csv"));
         assertEquals(3, csv.getColumnCount());
         assertEquals(2,csv.getRowCount());
         StringColumn sc = (StringColumn) csv.getColumn(0);
+        assertTrue(csv.isAutoDetectCharset());
         assertEquals("Heading1", csv.getColumn(0).getName());
         assertEquals("first", csv.getRow(0).getString(sc));
     }
@@ -473,7 +604,7 @@ public class CSVTest {
     public void readDoubleQuote() throws IOException {
         CSV csv = new CSV();
         csv.setSeparator(CSV.COMMA);
-        csv.setQuoteChar(CSV.DOUBLE_QUOTE);
+        csv.setQuoteChar(CSV.QUOTE_DOUBLE);
         csv.readFile(getResource("quote_double.csv"));
         assertEquals(3, csv.getColumnCount());
         assertEquals(2,csv.getRowCount());
@@ -557,6 +688,48 @@ public class CSVTest {
         assertEquals(0, l.finishWrite);
     }
 
+    @Test
+    public void addChangeListener(){
+        CSV csv = new CSV();
+        ChangeListen cl = new ChangeListen();
+        csv.addChangeListener(cl);
+        StringColumn first = (StringColumn) csv.addColumn("First");
+        assertEquals(1, cl.columnCreated);
+        first.setName("first");
+        assertEquals(1, cl.columnUpdated);
+        StringColumn last = (StringColumn) csv.addColumn("Last");
+        assertEquals(2, cl.columnCreated);
+        csv.removeColumn(first);
+        assertEquals(1, cl.columnRemoved);
+
+        csv.addRow();
+        assertEquals(1, cl.rowCreated);
+        csv.removeRow(0);
+        assertEquals(1, cl.rowRemoved);
+
+        csv.addRow();
+        csv.addRow();
+        csv.moveRow(0,1);
+        assertEquals(1, cl.rowMoved);
+        csv.removeRows();
+        assertEquals(1, cl.rowsRemoved);
+        csv.removeChangeListener(cl);
+        csv.addColumn("email");
+        assertEquals(2, cl.columnCreated);
+
+    }
+
+    @Test
+    public void hasQuery(){
+        CSV csv = new CSV();
+        StringColumn c = (StringColumn) csv.addColumn("first");
+        assertNull(csv.getQuery());
+        assertFalse(csv.hasQuery());
+        csv.findByQuery().getResultList();
+        assertTrue(csv.hasQuery());
+        assertNotNull(csv.getQuery());
+    }
+
     static class Employee {
         public String name;
         public int age;
@@ -570,8 +743,62 @@ public class CSVTest {
     }
 
     // ------ Events -----
-    class ChangeListen {
+    class ChangeListen implements ChangeListener{
 
+        public int columnCreated;
+        public int columnUpdated;
+        public int columnRemoved;
+        public int columnMoved;
+        public int rowRemoved;
+        public int rowCreated;
+        public int rowMoved;
+        public int rowsRemoved;
+        public int cellUpdated;
+
+        @Override
+        public void columnCreated(Column column) {
+            columnCreated++;
+        }
+
+        @Override
+        public void columnUpdated(Column column) {
+            columnUpdated++;
+        }
+
+        @Override
+        public void columnRemoved(int columnIndex) {
+            columnRemoved++;
+        }
+
+        @Override
+        public void columnMoved(int fromRowIndex, int toRowIndex) {
+            columnMoved++;
+        }
+
+        @Override
+        public void rowRemoved(int rowIndex, Row row) {
+            rowRemoved++;
+        }
+
+        @Override
+        public void rowCreated(int rowIndex, Row row) {
+            rowCreated++;
+        }
+
+        @Override
+        public void rowMoved(int fromRowIndex, int toRowIndex) {
+            rowMoved++;
+        }
+
+        @Override
+        public void rowsRemoved(int fromRowIndex, int toRowIndex) {
+            rowsRemoved++;
+        }
+
+        @Override
+        public void cellUpdated(int columnIndex, int rowIndex) {
+            cellUpdated++;
+        }
     }
 
     class FileListen implements FileListener {
@@ -601,5 +828,6 @@ public class CSVTest {
             finishWrite++;
         }
     }
+
 
 }

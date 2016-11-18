@@ -25,7 +25,6 @@ import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
-import org.laukvik.csv.io.BOM;
 import org.laukvik.csv.io.CsvReader;
 import org.laukvik.csv.io.CsvWriter;
 import org.laukvik.csv.io.DatasetFileReader;
@@ -133,12 +132,12 @@ public final class CSV implements Serializable {
     /**
      * The character representing DOUBLE QUOTE.
      */
-    public static final char DOUBLE_QUOTE = 34;
+    public static final char QUOTE_DOUBLE = 34;
 
     /**
      * The character representing SINGLE QUOTE.
      */
-    public static final char SINGLE_QUOTE = 39;
+    public static final char QUOTE_SINGLE = 39;
 
     /**
      * The list of columns.
@@ -222,22 +221,6 @@ public final class CSV implements Serializable {
      */
     public static char[] listSupportedSeparatorChars() {
         return new char[]{COMMA, SEMICOLON, PIPE, TAB};
-    }
-
-    /**
-     * Looks for a BOM in a file and returns its Charsets or returns the
-     * System charset.
-     *
-     * @param file the file to analyze
-     * @return the Charset
-     */
-    private static Charset findCharsetByBOM(final File file) {
-        BOM bom = BOM.findBom(file);
-        if (bom == null) {
-            return Charset.defaultCharset();
-        } else {
-            return bom.getCharset();
-        }
     }
 
     /**
@@ -365,6 +348,7 @@ public final class CSV implements Serializable {
         for (Row r : getRows()) {
             r.remove(column);
         }
+        fireColumnRemoved(column);
     }
 
     /**
@@ -408,7 +392,7 @@ public final class CSV implements Serializable {
      * @param columnName the column
      * @return the index
      */
-    private int indexOf(final String columnName) {
+    public int indexOf(final String columnName) {
         int x = 0;
         for (Column c : columns) {
             if (c.getName().equalsIgnoreCase(columnName)) {
@@ -453,7 +437,7 @@ public final class CSV implements Serializable {
      *
      * @return the quote character
      */
-    public char getQuoteChar() {
+    public Character getQuoteChar() {
         return quoteChar;
     }
 
@@ -464,23 +448,6 @@ public final class CSV implements Serializable {
      */
     public void setQuoteChar(final char quoteChar) {
         this.quoteChar = quoteChar;
-    }
-
-    /**
-     * Returns the BOM for the charset used.
-     *
-     * @return the BOM
-     */
-    public BOM getBOM() {
-        if (charset == null) {
-            return null;
-        }
-        for (BOM b : BOM.values()) {
-            if (charset.equals(b)) {
-                return b;
-            }
-        }
-        return null;
     }
 
     /**
@@ -544,16 +511,6 @@ public final class CSV implements Serializable {
      */
     public int indexOf(final Row row) {
         return rows.indexOf(row);
-    }
-
-    /**
-     * Builds a new empty Row that is not connected.
-     *
-     * @return the row
-     */
-    public Row buildRow() {
-        Row r = new Row();
-        return r;
     }
 
     /**
@@ -797,22 +754,6 @@ public final class CSV implements Serializable {
     public void readFile(final File csvFile) throws IOException {
         CsvReader reader = new CsvReader(charset, separatorChar, quoteChar);
         readDatasetFile(csvFile, reader);
-    }
-
-    /**
-     * Imports Java beans property values from the list.
-     *
-     * @param list the list of Java beans
-     */
-    public void readJava(final List<Class> list) {
-        clear();
-        if (!list.isEmpty()) {
-//            JavaReader<Class> reader = new JavaReader<Class>(this, list);
-//            while (reader.hasNext()) {
-//                Row row = reader.next();
-//                addRow(row);
-//            }
-        }
     }
 
     /**

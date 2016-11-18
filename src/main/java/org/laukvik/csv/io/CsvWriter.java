@@ -64,6 +64,8 @@ public final class CsvWriter implements DatasetFileWriter {
     /**
      * Writes the CSV to the file.
      *
+     * todo - Write bom
+     *
      * @param csv  the CSV to write
      * @param file the file
      * @throws IOException when the file could not be written
@@ -71,9 +73,11 @@ public final class CsvWriter implements DatasetFileWriter {
     public void writeCSV(final File file, final CSV csv) throws IOException {
         try (FileOutputStream out = new FileOutputStream(file)) {
             // BOM
-            BOM bom = csv.getBOM();
-            if (bom != null) {
-                out.write(bom.getBytes());
+            if (csv.getCharset() != null){
+                BOM bom = BOM.findBomByCharset(csv.getCharset());
+                if (bom != null) {
+//                    out.write(bom.getBytes());
+                }
             }
             // Columns
             List<String> columns = buildColumns(csv);
@@ -117,7 +121,7 @@ public final class CsvWriter implements DatasetFileWriter {
         List<String> items = new ArrayList<>();
         for (int x = 0; x < csv.getColumnCount(); x++) {
             Column c = csv.getColumn(x);
-            String header = c.getName() + "(" + c.getName() + ")";
+            String header = c.getName();
             items.add(header);
         }
         return items;
@@ -137,23 +141,23 @@ public final class CsvWriter implements DatasetFileWriter {
             }
             String column = values.get(x);
             if (column == null) {
-                out.write(CSV.DOUBLE_QUOTE);
-                out.write(CSV.DOUBLE_QUOTE);
+                out.write(CSV.QUOTE_DOUBLE);
+                out.write(CSV.QUOTE_DOUBLE);
             } else if (isDigitsOnly(column)) {
                 /* Digits only */
                 out.write(column.getBytes());
             } else {
                 /* Text */
-                out.write(CSV.DOUBLE_QUOTE);
+                out.write(CSV.QUOTE_DOUBLE);
                 for (int n = 0; n < column.length(); n++) {
                     char ch = column.charAt(n);
-                    if (ch == CSV.DOUBLE_QUOTE) {
+                    if (ch == CSV.QUOTE_DOUBLE) {
                         /* Encode quotes - writeCSV an extra quote */
-                        out.write(CSV.DOUBLE_QUOTE);
+                        out.write(CSV.QUOTE_DOUBLE);
                     }
                     out.write(ch);
                 }
-                out.write(CSV.DOUBLE_QUOTE);
+                out.write(CSV.QUOTE_DOUBLE);
             }
         }
         out.write(CSV.RETURN);

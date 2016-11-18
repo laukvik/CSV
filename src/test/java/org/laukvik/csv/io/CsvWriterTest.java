@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 
 public class CsvWriterTest {
@@ -37,27 +36,22 @@ public class CsvWriterTest {
     @Test
     public void writeAndRead() throws IOException {
         File f = File.createTempFile("CsvWriter", ".csv");
+        f = new File("/Users/morten/Desktop/writer.csv");
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
         csv.addRow().set(first, "Bill").set(last, "Gates");
         csv.addRow().set(first, "Steve").set(last, "Jobs");
-
         CsvWriter w = new CsvWriter();
         w.writeCSV(f, csv);
 
-        try {
-            CSV csv2 = new CSV();
-            csv2.readFile(f);
-            assertEquals("Correct row count", 2, csv2.getRowCount());
-            assertEquals("First", "First", csv2.getColumn(0).getName());
-            assertEquals("Last", "Last", csv2.getColumn(1).getName());
-            assertEquals("Find by row index and index", "Bill", csv2.getRow(0).getString(first));
-            assertEquals("Find by row index and column name", "Gates", csv2.getRow(0).getString(last));
-        }
-        catch (IOException ex) {
-            fail("Failed to readFile CSV file!");
-        }
+        CSV csv2 = new CSV();
+        csv2.readFile(f);
+        assertEquals(2, csv2.getRowCount());
+        assertEquals("First", csv2.getColumn(0).getName());
+        assertEquals("Last", csv2.getColumn(1).getName());
+        assertEquals("Bill", csv2.getRow(0).getString(first));
+        assertEquals("Gates", csv2.getRow(0).getString(last));
     }
 
     @Test

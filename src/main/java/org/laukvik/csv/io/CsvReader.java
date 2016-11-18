@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * <h2>Reads a data set in the CSV format.</h2>
- *
+ * <p>
  * <h3>Reading a file with auto detect on:</h3>
  * <pre>
  * try (CsvReader r = new CsvReader( new File("presidents.csv"), Charset.forName(charset)) )) {
@@ -37,31 +37,39 @@ import java.util.List;
  *     e.printStacktrace();
  * }
  * </pre>
- *
- * TODO - Remove File from constructor. Should only be from readFile();
+ * <p>
  */
 public final class CsvReader implements DatasetFileReader {
 
+    /**
+     * Automatically detect charset through BOM.
+     */
     private boolean autoDetectCharset;
     /**
      * The bufferedReader.
      */
     private BufferedReader reader;
-    /** The quote character to use. */
+    /**
+     * The quote character to use.
+     */
     private Character quoteChar;
-    /** Whether column separator should be automatically detected or not. */
+    /**
+     * Whether column separator should be automatically detected or not.
+     */
     private boolean autoDetectColumnSeparator;
-    /** The number of bytes read. */
-    private int bytesRead;
-    /** The number of lines read. */
+    /**
+     * The number of lines read.
+     */
     private int lineCounter;
-    /** The column separator character. */
+    /**
+     * The column separator character.
+     */
     private Character columnSeparatorChar;
 
     /**
      * Reads CSV from the specified reader using the separator and quote characters.
      *
-     * @param charset the charset
+     * @param charset   the charset
      * @param separator the separator character
      * @param quote     the quote character
      */
@@ -72,7 +80,7 @@ public final class CsvReader implements DatasetFileReader {
             this.columnSeparatorChar = separator;
         }
         if (quote == null) {
-            this.quoteChar = CSV.DOUBLE_QUOTE;
+            this.quoteChar = CSV.QUOTE_DOUBLE;
         } else {
             this.quoteChar = quote;
         }
@@ -80,19 +88,24 @@ public final class CsvReader implements DatasetFileReader {
 
     /**
      * Reads the file.
-     * todo - Re insert auto detection of charsets
      *
      * @param file the file
-     * @param csv the csv
+     * @param csv  the csv
      * @throws IOException when the file could not be read
      */
     public void readFile(final File file, final CSV csv) throws IOException {
         this.lineCounter = 0;
-        this.bytesRead = 0;
-        reader = Files.newBufferedReader(file.toPath());
-
         if (autoDetectCharset) {
+            BOM bom = BOM.findBom(file);
+            if (bom == null) {
+                reader = Files.newBufferedReader(file.toPath());
+            } else {
+                reader = Files.newBufferedReader(file.toPath(), bom.getCharset());
+                csv.setCharset(bom.getCharset());
+            }
 
+        } else {
+            reader = Files.newBufferedReader(file.toPath(), csv.getCharset());
         }
         csv.setSeparator(columnSeparatorChar);
         csv.setQuoteChar(this.quoteChar);
@@ -113,15 +126,11 @@ public final class CsvReader implements DatasetFileReader {
      * @throws IOException when the row could not be read
      */
     private boolean readRow(final CSV csv) throws IOException {
-        if (!reader.ready()) {
-            return false;
-        }
         Row row = csv.addRow();
         List<String> values = parseRow(csv);
         if (values.isEmpty()) {
             return false;
         }
-
         for (int x = 0; x < values.size(); x++) {
             String value = values.get(x);
             if (x < csv.getColumnCount()) {
@@ -147,9 +156,6 @@ public final class CsvReader implements DatasetFileReader {
         /* Current value */
         StringBuilder currentValue = new StringBuilder();
 
-        /* The raw chars being read */
-        final StringBuilder rawLine = new StringBuilder();
-
         boolean isWithinQuote = false;
         int quoteCount = 0;
 
@@ -162,8 +168,6 @@ public final class CsvReader implements DatasetFileReader {
             char currentChar = (char) intChar;
 
             boolean foundBom = false;
-            // Increase number of bytes read
-            bytesRead++;
 
             // Determines whether or not to add char
             boolean addChar = false;
@@ -199,11 +203,10 @@ public final class CsvReader implements DatasetFileReader {
 
             } else if (currentChar == this.quoteChar) {
                 addChar = true;
-
                 isWithinQuote = true;
                 while (reader.ready()) {
                     currentChar = (char) reader.read();
-                    rawLine.append(currentChar);
+//                    rawLine.append(currentChar);
                     if (currentChar == this.quoteChar) {
                         quoteCount++;
                         break;
@@ -211,9 +214,7 @@ public final class CsvReader implements DatasetFileReader {
                         currentValue.append(currentChar);
                     }
                 }
-
                 quoteCount--;
-
             } else if (columnSeparatorChar != null && currentChar == columnSeparatorChar) {
                 addChar = false;
                 addValue = true;
@@ -222,22 +223,15 @@ public final class CsvReader implements DatasetFileReader {
                     currentValue.deleteCharAt(currentValue.length() - 1);
                     isWithinQuote = false;
                 }
-
             } else {
                 addChar = true;
             }
-
             if (addChar) {
                 currentValue.append(currentChar);
             }
-            if (!isNextLine) {
-                rawLine.append(currentChar);
-            }
-
             if (!reader.ready()) {
                 addValue = true;
             }
-
             if (addValue) {
                 if (!reader.ready()) {
                     if (isWithinQuote) {

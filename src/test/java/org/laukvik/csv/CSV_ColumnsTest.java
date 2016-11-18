@@ -92,10 +92,10 @@ public class CSV_ColumnsTest {
     public void properties() {
         CSV csv = new CSV();
         csv.setCharset(Charset.forName("utf-8"));
-        csv.setQuoteChar(CSV.DOUBLE_QUOTE);
+        csv.setQuoteChar(CSV.QUOTE_DOUBLE);
         csv.setSeparator(CSV.COMMA);
         assertEquals("UTF-8", csv.getCharset().name());
-        assertEquals(CSV.DOUBLE_QUOTE, csv.getQuoteChar());
+        assertEquals( (Character) CSV.QUOTE_DOUBLE, csv.getQuoteChar());
 //        assertEquals(CSV.COMMA,csv.getSeparatorChar());
 
     }
