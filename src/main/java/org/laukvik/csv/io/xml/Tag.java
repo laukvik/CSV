@@ -36,6 +36,23 @@ public final class Tag {
     }
 
     /**
+     * Returns all its children.
+     * @return the children
+     */
+    public List<Tag> getChildren() {
+        return children;
+    }
+
+    /**
+     * Returns the name of the tag.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
      * Returns the text value.
      *
      * @return the text
@@ -186,6 +203,20 @@ public final class Tag {
 //            }
             return b.toString();
         }
+    }
+
+    /**
+     * Returns an attribute by it's name.
+     * @param name the attribute name
+     * @return the attribute
+     */
+    public Attribute getAttribute(final String name) {
+        for (Attribute a : attributeList) {
+            if (a.getName().equalsIgnoreCase(name)){
+                return a;
+            }
+        }
+        return null;
     }
 }
 

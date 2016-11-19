@@ -64,7 +64,11 @@ public final class HtmlWriter implements DatasetFileWriter {
 
         out.write("<html>\n".getBytes());
         out.write("<head>\n".getBytes());
-
+        if (charset != null){
+            out.write("<meta http-equiv=\"Content-Type\" content=\"".getBytes());
+            out.write(charset.name().getBytes());
+            out.write("\">\n".getBytes());
+        }
         out.write("</head>\n".getBytes());
         out.write("<body>\n".getBytes());
 

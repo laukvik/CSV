@@ -131,10 +131,10 @@ public class XmlParser {
     private void foundTag(final String tagValue) {
         if (!tagValue.isEmpty() && tagValue.charAt(0) == '/') {
             current = current.getParent();
+            fireFoundTag(current);
         } else {
             current = current.addTag(tagValue);
         }
-        fireFoundTag(current);
     }
 
     /**
@@ -187,22 +187,6 @@ public class XmlParser {
                 }
                 textBuilder = new StringBuilder();
                 break;
-            case TAG:
-                break; // Invalid  <<
-            case BODY:
-                break; // < <
-            case ATTR:
-                break; // class<
-            case EQ:
-                break; // <=<
-            case QUOTE_OPEN:
-                break;
-            case VALUE:
-                break; // class="<
-            case QUOTE_STOP:
-                break;
-            case CLOSE:
-                break; // </>
             default:
                 break;
         }
@@ -213,10 +197,6 @@ public class XmlParser {
      */
     private void parseCloseSymbol() {
         switch (mode) {
-            case EMPTY:
-                break; // Syntax error.. Cant start with >
-            case TEXT:
-                break; // Syntax error.
             case TAG:
                 mode = EMPTY;
                 foundTag(tagBuilder.toString());
@@ -231,10 +211,6 @@ public class XmlParser {
                 mode = TEXT;
                 attrBuilder = new StringBuilder();
                 break;
-            case EQ:
-                break;
-            case QUOTE_OPEN:
-                break;
             case VALUE:
                 mode = TEXT;
                 foundValue(valueBuilder.toString());
@@ -244,8 +220,6 @@ public class XmlParser {
                 foundValue(valueBuilder.toString());
                 valueBuilder = new StringBuilder();
                 mode = EMPTY;
-                break;
-            case CLOSE:
                 break;
             default:
                 break;
@@ -264,8 +238,6 @@ public class XmlParser {
             case TEXT:
                 textBuilder.append('=');
                 break;
-            case TAG:
-                break; // Not allowed in tag name <tag=
             case BODY:
                 mode = EQ;
                 break;
@@ -274,17 +246,9 @@ public class XmlParser {
                 foundAttr(attrBuilder.toString());
                 attrBuilder = new StringBuilder();
                 break; // Not allowed in attribute name
-            case EQ:
-                break;
-            case QUOTE_OPEN:
-                break;
             case VALUE:
                 valueBuilder.append('=');
                 break;
-            case QUOTE_STOP:
-                break;
-            case CLOSE:
-                break; // Not allowed
             default:
                 break;
         }
@@ -302,13 +266,9 @@ public class XmlParser {
             case TEXT:
                 textBuilder.append('"');
                 break;
-            case TAG:
-                break; // Quote not allowed in tag name
             case BODY:
                 mode = ATTR;
                 break; // attr="   attr ="    attr =  "
-            case ATTR:
-                break;
             case EQ:
                 mode = QUOTE_OPEN;
                 break;
@@ -323,8 +283,6 @@ public class XmlParser {
             case QUOTE_STOP:
                 mode = BODY;
                 break;
-            case CLOSE:
-                break; // Quote not allowed in close tag
             default:
                 break;
         }
@@ -350,25 +308,17 @@ public class XmlParser {
                 foundTag(tagBuilder.toString());
                 tagBuilder = new StringBuilder();
                 break; // tag name ends
-            case BODY:
-                break; // ignore white space
             case ATTR:
                 mode = BODY;
                 foundAttr(attrBuilder.toString());
                 attrBuilder = new StringBuilder();
                 break; // attribute without value e.g <input checked>
-            case EQ:
-                break;
-            case QUOTE_OPEN:
-                break;
             case VALUE:
                 valueBuilder.append(c);
                 break;
             case QUOTE_STOP:
                 mode = BODY;
                 foundValue(valueBuilder.toString());
-                break;
-            case CLOSE:
                 break;
             default:
                 break;
@@ -399,18 +349,12 @@ public class XmlParser {
             case ATTR:
                 attrBuilder.append(c);
                 break;
-            case EQ:
-                break;
             case QUOTE_OPEN:
                 valueBuilder.append(c);
                 mode = VALUE;
                 break;
             case VALUE:
                 valueBuilder.append(c);
-                break;
-            case QUOTE_STOP:
-                break;
-            case CLOSE:
                 break;
             default:
                 break;
@@ -453,7 +397,7 @@ public class XmlParser {
                 parseEverything(c);
             }
         }
-        return root;
+        return root.getChildren().get(0);
     }
 
 }

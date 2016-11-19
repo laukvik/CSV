@@ -71,19 +71,26 @@ public class TagTest {
         assertEquals(2, div.getAttributes().size());
     }
 
-    /**
-     *
-     * @throws Exception
-     */
     @Test
-    public void toHtml() throws Exception {
+    public void toHtml_IMG() throws Exception {
         Tag img = new Tag("img");
-        assertEquals("<img>", img.toHtml());
+        img.addAttribute("src").setValue("thumb.gif");
+        assertEquals("<img src=\"thumb.gif\">", img.toHtml());
+        //
+    }
+    @Test
+    public void toHtml_DIV() throws Exception {
         Tag div = new Tag("div");
         div.addAttribute("align").setValue("left");
         div.addAttribute("style").setValue("display: none");
         assertEquals("<div align=\"left\" style=\"display: none\"></div>", div.toHtml());
+    }
 
+    @Test
+    public void toHtml_DIV2() throws Exception {
+        Tag div = new Tag("div");
+        div.addTag("text").setText("Hello world");
+        assertEquals("<div>Hello world</div>", div.toHtml());
     }
 
 }
