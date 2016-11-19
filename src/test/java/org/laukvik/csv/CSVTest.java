@@ -711,10 +711,14 @@ public class CSVTest {
         assertEquals(1, cl.rowMoved);
         csv.removeRows();
         assertEquals(1, cl.rowsRemoved);
+
+        csv.addColumn("Test");
+        csv.moveColumn(0,1);
+        assertEquals(1, cl.columnMoved);
+
         csv.removeChangeListener(cl);
         csv.addColumn("email");
-        assertEquals(2, cl.columnCreated);
-
+        assertEquals(3, cl.columnCreated);
     }
 
     @Test
@@ -726,6 +730,9 @@ public class CSVTest {
         csv.findByQuery().getResultList();
         assertTrue(csv.hasQuery());
         assertNotNull(csv.getQuery());
+        csv.clearQuery();
+        assertNull(csv.getQuery());
+
     }
 
     static class Employee {

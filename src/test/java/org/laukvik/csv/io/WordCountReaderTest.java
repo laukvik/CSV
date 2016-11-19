@@ -30,4 +30,9 @@ public class WordCountReaderTest {
         StringColumn countColumn = (StringColumn) csv.getColumn(1);
     }
 
+    @Test
+    public void test(){
+        WordCountReader reader = new WordCountReader();
+    }
+
 }

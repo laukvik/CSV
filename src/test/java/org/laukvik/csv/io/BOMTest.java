@@ -7,10 +7,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -101,6 +103,14 @@ public class BOMTest {
     @Test
     public void test() throws IOException {
         assertNull(BOM.findBom( new File("doesnt_exist") ));
+    }
+
+    @Test
+    public void findBomByCharset() throws IOException {
+        Charset utf =  Charset.forName("utf-8");
+        Charset ascii =  Charset.forName("US-ASCII");
+        assertNotNull(BOM.findBomByCharset(utf));
+        assertNull(BOM.findBomByCharset(ascii));
     }
 
 }

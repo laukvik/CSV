@@ -433,7 +433,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         final ChoiceBox separatorBox = new ChoiceBox();
         List<String> items = new ArrayList<>();
         items.add(bundle.getString("metadata.separator.autodetect"));
-        for (char c : CSV.listSupportedSeparatorChars()) {
+        for (char c : listSupportedSeparatorChars()) {
             items.add(Builder.getSeparatorString(c));
         }
         separatorBox.getItems().addAll(items);
@@ -482,6 +482,15 @@ public class Main extends Application implements ChangeListener, FileListener {
                 loadFile(selectedFile, separator, charset);
             }
         }
+    }
+
+    /**
+     * Returns an array of the supported separator characters.
+     *
+     * @return separator characters
+     */
+    public static char[] listSupportedSeparatorChars() {
+        return new char[]{CSV.COMMA, CSV.SEMICOLON, CSV.PIPE, CSV.TAB};
     }
 
     /**

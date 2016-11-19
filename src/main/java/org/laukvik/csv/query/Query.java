@@ -231,7 +231,7 @@ public final class Query {
          * @return the where
          */
         public Where isBetween(final int min, final int max) {
-            matcher = new IntBetween((IntegerColumn) col, min, max);
+            matcher = new IntBetweenMatcher((IntegerColumn) col, min, max);
             return where;
         }
 

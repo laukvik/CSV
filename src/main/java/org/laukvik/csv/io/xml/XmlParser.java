@@ -131,9 +131,9 @@ public class XmlParser {
     private void foundTag(final String tagValue) {
         if (!tagValue.isEmpty() && tagValue.charAt(0) == '/') {
             current = current.getParent();
-            fireFoundTag(current);
         } else {
             current = current.addTag(tagValue);
+            fireFoundTag(current);
         }
     }
 

@@ -153,7 +153,7 @@ public abstract class Column<T> implements Comparable {
             c = new StringColumn(columnName);
         } else {
             String typeName = attrType.getValue();
-            if (typeName == null) {
+            if (typeName == null || typeName.trim().isEmpty()) {
                 c = new StringColumn(columnName);
 
             } else if (typeName.equalsIgnoreCase(TYPE_INTEGER)) {

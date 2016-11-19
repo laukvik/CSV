@@ -74,9 +74,6 @@ public final class CsvWriter implements DatasetFileWriter {
             // BOM
             if (csv.getCharset() != null) {
                 BOM bom = BOM.findBomByCharset(csv.getCharset());
-                if (bom != null) {
-//                    out.write(bom.getBytes());
-                }
             }
             // Columns
             List<String> columns = buildColumns(csv);

@@ -25,6 +25,11 @@ import org.laukvik.csv.columns.Column;
  */
 public final class IsInMatcher<T> extends RowMatcher {
 
+    /** The column.  */
+    private Column<T> column;
+    /** The values. */
+    private T[] values;
+
     /**
      * The value of the column must be in the values.
      *
@@ -33,11 +38,8 @@ public final class IsInMatcher<T> extends RowMatcher {
      */
     public IsInMatcher(final Column<T> column, final T... values) {
         super();
-        final Column<T> column1 = column;
-        final T[] values1 = values;
-        if (values == null) {
-            throw new IllegalArgumentException("isIn() value cant be null " + values);
-        }
+        this.column = column;
+        this.values = values;
     }
 
     /**
@@ -47,17 +49,18 @@ public final class IsInMatcher<T> extends RowMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-
-//        Object o = row.get(column);
-//        if (o == null) {
-//            return false;
-//        }
-//        for (T value : values) {
-//            if (value == null) {
-//            } else if (o.equals(value)) {
-//                return true;
-//            }
-//        }
+        if (values == null || values.length == 0) {
+            return true;
+        }
+        Object o = row.get(column);
+        if (o == null) {
+            return false;
+        }
+        for (T value : values) {
+            if (value != null && o.equals(value)) {
+                return true;
+            }
+        }
         return false;
     }
 

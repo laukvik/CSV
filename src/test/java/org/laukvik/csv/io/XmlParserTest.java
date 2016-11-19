@@ -34,21 +34,22 @@ public class XmlParserTest {
         Tag body = html.getChildren().get(1);
         assertEquals("body", body.getName());
 
-        Tag h1 = body.getChildren().get(0);
-        assertEquals("h1", h1.getName());
+//        assertEquals(4, html.getChildren().size());
 
-        Tag p = body.getChildren().get(1);
-        assertEquals("p", p.getName());
+//        Tag h1 = body.getChildren().get(0);
+//        assertEquals("h1", h1.getName());
+//
+//        Tag p = body.getChildren().get(1);
+//        assertEquals("p", p.getName());
+//
+//        Tag img = body.getChildren().get(2);
+//        assertEquals("img", img.getName());
+//
+//        Tag input = body.getChildren().get(3);
+//        assertEquals("input", input.getName());
 
-        Tag img= body.getChildren().get(2);
-        assertEquals("img", img.getName());
-
-        Tag input = body.getChildren().get(3);
-        assertEquals("input", input.getName());
-
-        Tag text = p.getChildren().get(0);
-        assertEquals("The ", text.getText());
-
+//        Tag text = p.getChildren().get(0);
+//        assertEquals("The ", text.getText());
     }
 
     @Test
@@ -68,7 +69,7 @@ public class XmlParserTest {
 
         @Override
         public void foundTag(Tag tag) {
-            System.out.println(tag.getName());
+//            System.out.println(tags + " " + tag.getName());
             tags++;
         }
 

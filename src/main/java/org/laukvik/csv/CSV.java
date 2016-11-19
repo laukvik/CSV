@@ -215,15 +215,6 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Returns an array of the supported separator characters.
-     *
-     * @return separator characters
-     */
-    public static char[] listSupportedSeparatorChars() {
-        return new char[]{COMMA, SEMICOLON, PIPE, TAB};
-    }
-
-    /**
      * Automatically detects charset using BOM (Byte Order Mark).
      *
      * @return true when automatic detection

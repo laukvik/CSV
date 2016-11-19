@@ -34,6 +34,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import static org.junit.Assert.assertNotNull;
+
 
 public class QueryTest {
 
@@ -51,11 +53,22 @@ public class QueryTest {
             format = new SimpleDateFormat("dd/MM/yyyy");
             csv = new CSV();
             csv.readFile(getResource("metadata.csv"));
-            for (int x = 0; x < csv.getColumnCount(); x++) {
-            }
         }
         catch (Exception ex) {
         }
+    }
+
+    @Test
+    public void select(){
+        Query q = new Query(csv);
+        assertNotNull(q.select());
+    }
+
+    @Test
+    public void selectColumns(){
+        IntegerColumn presidency = (IntegerColumn) csv.getColumn("Presidency");
+        Query q = new Query(csv);
+        assertNotNull(q.select(presidency));
     }
 
     @Test
@@ -63,7 +76,7 @@ public class QueryTest {
         IntegerColumn presidency = (IntegerColumn) csv.getColumn("Presidency");
         DateColumn tookOffice = (DateColumn) csv.getColumn("Took office");
         UrlColumn wikipedia = (UrlColumn) csv.getColumn("Wikipedia Entry");
-        Assert.assertNotNull(presidency);
+        assertNotNull(presidency);
     }
 
     @Test
@@ -102,11 +115,21 @@ public class QueryTest {
     }
 
     @Test
+    public void isIn_2() {
+        IntegerColumn presidency = (IntegerColumn) csv.getColumn("Presidency");
+        Query q = new Query(csv);
+//        q.where().column(presidency).isIn( 2f );
+//        q.where().column(presidency).isIn( 2d );
+//        fail("Sjekk float og double");
+    }
+
+    @Test
     public void isDate() throws ParseException {
         DateColumn tookOffice = (DateColumn) csv.getColumn("Took office");
         Date date = tookOffice.parse("20/01/2009");
         List<Row> rows = csv.findByQuery().where().column(tookOffice).isDate(date).getResultList();
         Assert.assertEquals("Should be 1", 1, rows.size());
+//        fail("Lag isDate");
     }
 
     @Test

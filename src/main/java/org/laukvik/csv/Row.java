@@ -257,6 +257,15 @@ public final class Row implements Serializable {
         map.remove(column);
     }
 
+    /**
+     * Returns the value of the column.
+     *
+     * @param column the column
+     * @return the value
+     */
+    public Object get(final Column column) {
+        return map.get(column);
+    }
 
     /**
      * Returns the value of the column.
