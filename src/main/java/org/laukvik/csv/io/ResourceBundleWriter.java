@@ -92,7 +92,6 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
                 writer.write("\r\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

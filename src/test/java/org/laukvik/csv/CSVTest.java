@@ -305,7 +305,6 @@ public class CSVTest {
             csv.writeFile(file);
         }
         catch (IOException e) {
-            e.printStackTrace();
             fail(e.getMessage());
         }
         CSV csv2 = new CSV();
@@ -475,7 +474,6 @@ public class CSVTest {
             assertEquals("ac, abs, moon", "ac, abs, moon", r.getString(desc));
         }
         catch (Exception e) {
-            e.printStackTrace();
             fail(e.getMessage());
         }
     }

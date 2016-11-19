@@ -129,9 +129,10 @@ public enum BOM {
     }
 
     /**
+     * Finds the BOM by specifying its charset.
      *
-     * @param charset
-     * @return
+     * @param charset the charset
+     * @return the BOM
      */
     public static BOM findBomByCharset(final Charset charset) {
         for (BOM bom : values()){

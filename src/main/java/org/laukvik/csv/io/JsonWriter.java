@@ -88,7 +88,6 @@ public final class JsonWriter implements DatasetFileWriter {
         try (FileOutputStream out = new FileOutputStream(file)) {
             writeCSV(csv, out);
         } catch (final IOException e) {
-            e.printStackTrace();
         }
     }
 

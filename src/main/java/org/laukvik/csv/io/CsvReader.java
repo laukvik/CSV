@@ -14,7 +14,6 @@ import java.util.List;
 
 /**
  * <h2>Reads a data set in the CSV format.</h2>
- * <p>
  * <h3>Reading a file with auto detect on:</h3>
  * <pre>
  * try (CsvReader r = new CsvReader( new File("presidents.csv"), Charset.forName(charset)) )) {
@@ -37,7 +36,6 @@ import java.util.List;
  *     e.printStacktrace();
  * }
  * </pre>
- * <p>
  */
 public final class CsvReader implements DatasetFileReader {
 

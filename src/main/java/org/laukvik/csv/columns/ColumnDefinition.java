@@ -7,7 +7,6 @@ import java.util.Set;
 /**
  * Defines the features of a column. In simplest form it's only the column name. It more complex it can contain
  * one or more attributes. An attribute is a key and a value.
- * <p>
  * <pre>
  * President(type=VARCHAR[20],primaryKey=true,increment=true,foreignKey=table[id])
  * </pre>

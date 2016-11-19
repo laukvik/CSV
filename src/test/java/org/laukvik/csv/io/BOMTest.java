@@ -63,7 +63,6 @@ public class BOMTest {
             bufferedWriter.write("ABA");
             bufferedWriter.newLine();
         } catch (IOException e){
-            e.printStackTrace();
         }
         return file;
     }

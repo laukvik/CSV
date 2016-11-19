@@ -52,6 +52,7 @@ public final class WordCountReader implements DatasetFileReader {
      * Parses the file.
      *
      * @param file the file
+     * @return a map of the word and its frequency
      * @throws FileNotFoundException when the file cant be found
      */
     public static Map<String, Integer> parse(final File file) throws FileNotFoundException {

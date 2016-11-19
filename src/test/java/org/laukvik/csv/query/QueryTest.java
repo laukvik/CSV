@@ -55,7 +55,6 @@ public class QueryTest {
             }
         }
         catch (Exception ex) {
-            ex.printStackTrace();
         }
     }
 

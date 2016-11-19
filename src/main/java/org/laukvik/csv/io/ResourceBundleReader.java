@@ -68,7 +68,6 @@ public final class ResourceBundleReader extends AbstractResourceBundle implement
 
                 index = -1;
             } catch (final IOException e) {
-                e.printStackTrace();
             }
         }
     }

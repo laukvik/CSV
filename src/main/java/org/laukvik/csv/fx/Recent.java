@@ -94,7 +94,6 @@ public final class Recent {
             try {
                 csv.readFile(file);
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }

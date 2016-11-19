@@ -18,7 +18,6 @@ package org.laukvik.csv.io;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -73,7 +72,7 @@ public final class CsvWriter implements DatasetFileWriter {
     public void writeCSV(final File file, final CSV csv) throws IOException {
         try (FileOutputStream out = new FileOutputStream(file)) {
             // BOM
-            if (csv.getCharset() != null){
+            if (csv.getCharset() != null) {
                 BOM bom = BOM.findBomByCharset(csv.getCharset());
                 if (bom != null) {
 //                    out.write(bom.getBytes());
@@ -96,10 +95,11 @@ public final class CsvWriter implements DatasetFileWriter {
 
 
     /**
-     * Writes the row to File.
+     * Builds a list of String for each value in the row.
      *
      * @param row the row
      * @param csv the csv
+     * @return a list of columns
      * @throws IOException when the file could not be written to.
      */
     private List<String> buildRow(final Row row, final CSV csv) throws IOException {
@@ -113,15 +113,15 @@ public final class CsvWriter implements DatasetFileWriter {
 
     /**
      * Writes the column headers.
-     *
      * @param csv the csv
+     * @return a list of columns
      * @throws IOException when the MetaData could not be written
      */
     private List<String> buildColumns(final CSV csv) throws IOException {
         List<String> items = new ArrayList<>();
         for (int x = 0; x < csv.getColumnCount(); x++) {
             Column c = csv.getColumn(x);
-            String header = c.getName();
+            String header = c.toCSV();
             items.add(header);
         }
         return items;

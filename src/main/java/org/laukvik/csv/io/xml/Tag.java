@@ -137,14 +137,6 @@ public final class Tag {
     }
 
     /**
-     * Returns the name of the tag.
-     * @return the name
-     */
-    public String toString() {
-        return name;
-    }
-
-    /**
      * Returns the tag and all its children as HTML.
      *
      * @return HTML
@@ -169,17 +161,17 @@ public final class Tag {
             } else {
                 b.append(text);
             }
-            b.append("---/>");
+            b.append(">");
             return b.toString();
 
         } else {
-            if (parent != null) {
+//            if (parent != null) {
                 b.append("<").append(name);
                 for (Attribute a : attributeList) {
                     b.append(" ").append(a.toHtml());
                 }
                 b.append(">");
-            }
+//            }
 
             if (text == null) {
                 for (Tag t : children) {
@@ -189,9 +181,9 @@ public final class Tag {
                 b.append(text);
             }
 
-            if (parent != null) {
-                b.append("\n</").append(name).append(">");
-            }
+//            if (parent != null) {
+                b.append("</").append(name).append(">");
+//            }
             return b.toString();
         }
     }
