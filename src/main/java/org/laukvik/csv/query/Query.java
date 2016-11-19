@@ -281,7 +281,7 @@ public final class Query {
          * @return the where
          */
         public Where isLessThan(final int value) {
-            matcher = new IntLessThan((IntegerColumn) col, value);
+            matcher = new IntLessThanMatcher((IntegerColumn) col, value);
             return where;
 
         }
@@ -309,7 +309,7 @@ public final class Query {
             if (!(col instanceof DateColumn)) {
                 throw new IllegalArgumentException("Column " + col + " is not a date column!");
             }
-            matcher = new DateGreaterThan((DateColumn) col, value);
+            matcher = new DateGreaterThanMatcher((DateColumn) col, value);
             return where;
         }
 
@@ -319,7 +319,7 @@ public final class Query {
          * @return the where
          */
         public Where isDateLessThan(final Date value) {
-            matcher = new DateLessThan((DateColumn) col, value);
+            matcher = new DateLessThanMatcher((DateColumn) col, value);
             return where;
         }
 

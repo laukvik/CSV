@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
 /**
  * TODO - Tests should be moved to DateColumn instead
  */
-public class DateLessThanTest {
+public class DateLessThanMatcherTest {
 
     public Date createDate(int year, int month, int day) {
         GregorianCalendar cal = new GregorianCalendar();

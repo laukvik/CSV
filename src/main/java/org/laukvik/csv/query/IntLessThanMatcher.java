@@ -16,24 +16,30 @@
 package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
-import org.laukvik.csv.columns.DateColumn;
-
-import java.util.Date;
+import org.laukvik.csv.columns.IntegerColumn;
 
 /**
- * Compares a DateColumn to be less than a date.
+ * Compares a IntegerColumn to be less than a value.
  */
-public final class DateLessThan extends AbstractDateMatcher {
-
+public final class IntLessThanMatcher extends RowMatcher {
 
     /**
-     * Compares a DateColumn to be less than the value.
-     *
-     * @param column the dateColumn
-     * @param value  the date
+     * The value to match.
      */
-    public DateLessThan(final DateColumn column, final Date value) {
-        super(column, value);
+    private final int value;
+    /** The column to match. */
+    private final IntegerColumn column;
+
+    /**
+     * The value of the column must be value.
+     *
+     * @param integerColumn the column
+     * @param value         the value
+     */
+    public IntLessThanMatcher(final IntegerColumn integerColumn, final int value) {
+        super();
+        this.column = integerColumn;
+        this.value = value;
     }
 
     /**
@@ -43,8 +49,8 @@ public final class DateLessThan extends AbstractDateMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        Date d = row.getDate(getColumn());
-        return DateColumn.isLessThan(d, getValue());
+        Integer i = row.getInteger(column);
+        return i != null && i < value;
     }
 
 }
