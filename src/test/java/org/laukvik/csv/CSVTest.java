@@ -34,8 +34,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -612,48 +610,11 @@ public class CSVTest {
     }
 
     @Test
-    public void shouldFindByStringQuery() throws IOException {
-        CSV csv = new CSV();
-        csv.readFile( getResource("presidents.csv") );
-        List<Row> rows = csv.findByQuery().where().column("Party").is("Whig").getResultList();
-        assertEquals(4, rows.size());
-
-        rows = csv.findByQuery().where().column("Home State").is("Ohio").getResultList();
-        assertEquals(7, rows.size());
-
-        rows = csv.findByQuery().where().column("Home State").is("Ohio").column("Party").is("Whig").getResultList();
-        assertEquals(1, rows.size());
-    }
-
-    @Test
-    public void shouldFindByIntQuery() throws IOException {
-        CSV csv = new CSV();
-        csv.readFile( getResource("presidents.csv") );
-        List<Row> rows = csv.findByQuery().where().column("Presidency").in("29","30").getResultList();
-        assertEquals(2, rows.size());
-    }
-
-    @Test
     public void shouldReadWords() throws IOException {
         CSV csv = new CSV();
         csv.readWordCountFile( getResource("words.txt") );
         assertEquals(2, csv.getColumnCount());
         assertEquals(8, csv.getRowCount());
-    }
-
-
-    // ------ Read Java -----
-
-    @Test
-    public void shouldReadPojo() {
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee("Bob", 25, false));
-        employees.add(new Employee("Jane", 24, true));
-        employees.add(new Employee("Yay", 32, false));
-        CSV csv = new CSV();
-//        csv.readJava(employees);
-//        assertEquals(3, csv.getRowCount());
-//        csv.addRow().setDate(president, "");
     }
 
     @Test
@@ -727,12 +688,6 @@ public class CSVTest {
         StringColumn c = (StringColumn) csv.addColumn("first");
         assertNull(csv.getQuery());
         assertFalse(csv.hasQuery());
-        csv.findByQuery().getResultList();
-        assertTrue(csv.hasQuery());
-        assertNotNull(csv.getQuery());
-        csv.clearQuery();
-        assertNull(csv.getQuery());
-
     }
 
     static class Employee {

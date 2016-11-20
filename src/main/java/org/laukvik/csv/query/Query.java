@@ -17,11 +17,6 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
-import org.laukvik.csv.columns.DateColumn;
-import org.laukvik.csv.columns.DoubleColumn;
-import org.laukvik.csv.columns.FloatColumn;
-import org.laukvik.csv.columns.IntegerColumn;
-import org.laukvik.csv.columns.StringColumn;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,507 +25,188 @@ import java.util.List;
 
 /**
  * The query contains the criteria to be used when filtering the data set.
- *
- * TODO - Add query examples here.
- *
+ * <p>
+ * csv.addFilter
+ * <p>
+ * <p>
  * <pre>
  * query.count().where().column("BookID").is(5);
  * </pre>
- *
+ * <p>
  * <pre>
  * query.select().where().column("BookID").is(5);
  * </pre>
- *
+ * <p>
  * <pre>
  * query.select().orderBy().asc("BookID");
  * </pre>
- *
+ * <p>
  * csv.getRows(query);
- *
  */
 public final class Query {
 
     /**
-     * The CSV data.
+     * Contains all matchers.
      */
-    private final CSV csv;
-    /** Contains all the row matchers. */
-    private Where where;
-    /** Contains all column selections. */
-    private Select select;
+    private final List<RowMatcher> matchers;
+    /**
+     * Contains all sort orders.
+     */
+    private final List<SortOrder> sorters;
 
     /**
      * Builds a new empty query.
      *
-     * @param csv the CSV
      */
-    public Query(final CSV csv) {
-        this.csv = csv;
-        this.select = new Select();
-        this.select.where = this.where();
+    public Query() {
+        matchers = new ArrayList<>();
+        sorters = new ArrayList<>();
+    }
+
+    public Query greaterThan(final org.laukvik.csv.columns.DateColumn column, final Date date) {
+        addRowMatcher(new DateGreaterThanMatcher(column, date));
+        return this;
+    }
+
+    public Query contains(final org.laukvik.csv.columns.DateColumn column, final Date... dates) {
+        addRowMatcher(new DateIsInMatcher(column, dates));
+        return this;
+    }
+
+    public Query is(final org.laukvik.csv.columns.DateColumn column, final Date date) {
+        addRowMatcher(new DateIsMatcher(column, date));
+        return this;
+    }
+
+    public Query is(final org.laukvik.csv.columns.StringColumn column, final String value) {
+        addRowMatcher(new StringIsMatcher(column, value));
+        return this;
+    }
+
+    public Query in(final org.laukvik.csv.columns.StringColumn column, final String... values) {
+        addRowMatcher(new StringInMatcher(column, values));
+        return this;
+    }
+
+    public Query lessThan(final org.laukvik.csv.columns.DateColumn column, final Date date) {
+        addRowMatcher(new DateLessThanMatcher(column, date));
+        return this;
+    }
+
+    public Query isEmpty(final org.laukvik.csv.columns.Column column) {
+        addRowMatcher(new EmptyMatcher(column));
+        return this;
+    }
+
+    public Query isBetween(final org.laukvik.csv.columns.IntegerColumn column, final int min, final int max) {
+        addRowMatcher(new IntBetweenMatcher(column, min, max));
+        return this;
+    }
+
+    public Query isGreaterThan(final org.laukvik.csv.columns.IntegerColumn column, final int value) {
+        addRowMatcher(new IntGreaterThanMatcher(column, value));
+        return this;
+    }
+
+    public Query isIn(final org.laukvik.csv.columns.IntegerColumn column, final Integer... values) {
+        addRowMatcher(new IntIsInMatcher(column, values));
+        return this;
+    }
+
+    public Query is(final org.laukvik.csv.columns.IntegerColumn column, final int value) {
+        addRowMatcher(new IntIsMatcher(column, value));
+        return this;
+    }
+
+    public Query lessThan(final org.laukvik.csv.columns.IntegerColumn column, final int value) {
+        addRowMatcher(new IntLessThanMatcher(column, value));
+        return this;
+    }
+
+    public Query in(final org.laukvik.csv.columns.Column column, final Float... values) {
+        addRowMatcher(new IsInMatcher<Float>(column, values));
+        return this;
+    }
+
+    public Query notEmpty(final org.laukvik.csv.columns.Column column) {
+        addRowMatcher(new NotEmptyMatcher(column));
+        return this;
+    }
+
+    public Query isYear(final org.laukvik.csv.columns.DateColumn column, final int value) {
+        addRowMatcher(new YearIsMatcher(column, value));
+        return this;
     }
 
     /**
-     * Selects all columns.
+     * Adds the matcher.
      *
-     * @return the select instance
+     * @param matcher the matcher
      */
-    public Select select() {
-        select = new Select();
-        select.where = where;
-        return select;
+    public void addRowMatcher(final RowMatcher matcher) {
+        matchers.add(matcher);
     }
 
     /**
-     * Selects one or more columns.
+     * Remoes the matcher.
      *
-     * @param columns the columns
-     * @return the select instance
+     * @param matcher the matcher
      */
-    public Select select(final org.laukvik.csv.columns.Column... columns) {
-        select.columns = columns;
-        return select;
+    public void removeRowMatcher(final RowMatcher matcher) {
+        matchers.remove(matcher);
+    }
+
+    public Query ascending(final org.laukvik.csv.columns.Column column){
+        addSort(column, SortDirection.ASC);
+        return this;
+    }
+
+    public Query descending(final org.laukvik.csv.columns.Column column){
+        addSort(column, SortDirection.DESC);
+        return this;
     }
 
     /**
-     * Builds a new Where.
+     * Adds the sortOrder.
      *
-     * @return the new instance
+     * @param column the column to sort
+     * @param direction the direction
      */
-    public Where where() {
-        where = new Where();
-        where.query = this;
-        return where;
+    public void addSort(final org.laukvik.csv.columns.Column column, final SortDirection direction) {
+        sorters.add(new SortOrder(column, direction));
     }
 
     /**
-     * Returns the OrderBy controller.
-     * @return the OrderBy
-     */
-    public OrderBy orderBy() {
-        return this.where().orderBy();
-    }
-
-    /**
-     * Returns the list of Rows.
+     * Removes the sortOrder.
      *
-     * @return the rows
+     * @param sortOrder the sortOrder to add
      */
-    public List<Row> getResultList() {
+    public void removeSort(final SortOrder sortOrder) {
+        sorters.remove(sortOrder);
+    }
+
+    public boolean matches(final Row row){
+        int matchCount = 0;
+        for (RowMatcher matcher : matchers){
+            if (matcher.matches(row)){
+                matchCount++;
+            }
+        }
+        return matchCount == matchers.size();
+    }
+
+    public List<Row> getRows(final CSV csv) {
         List<Row> filteredRows = new ArrayList<>();
-        int matchesRequired = where.columns.size();
         for (int rowIndex = 0; rowIndex < csv.getRowCount(); rowIndex++) {
             Row r = csv.getRow(rowIndex);
-            if (matchesRequired == 0) {
-                /* Dont use filters - add all */
+            if (matches(r)){
                 filteredRows.add(r);
-            } else {
-                /* Use filtering */
-                int matchCount = 0;
-                for (Column c : where.columns) {
-                    if (c.matcher.matches(r)) {
-                        matchCount++;
-                    }
-                }
-                if (matchCount == matchesRequired) {
-                    filteredRows.add(r);
-                }
             }
         }
-        if (!where.orderBy.sortOrders.isEmpty()) {
-            Collections.sort(filteredRows, new RowSorter(where.orderBy.sortOrders));
+        if (!sorters.isEmpty()) {
+            Collections.sort(filteredRows, new RowSorter(sorters));
         }
         return filteredRows;
-    }
-
-    /**
-     * Controls how to map columns with matchers.
-     *
-     * column().isEmpty();
-     *
-     */
-    public final class Column {
-
-        /**
-         * The column to match.
-         */
-        private final org.laukvik.csv.columns.Column col;
-        /**
-         * The where controller.
-         */
-        private Where where;
-        /**
-         * The RowMatcher to use with this column.
-         */
-        private RowMatcher matcher;
-
-        /**
-         * Builds a new column matcher.
-         *
-         * @param column the column
-         */
-        public Column(final org.laukvik.csv.columns.Column column) {
-            this.col = column;
-        }
-
-        /**
-         * The value must not be empty.
-         *
-         * @return the where
-         */
-        public Where isNotEmpty() {
-            matcher = new NotEmptyMatcher(col);
-            return where;
-        }
-
-        /**
-         * The value must be empty.
-         *
-         * @return the where
-         */
-        public Where isEmpty() {
-            matcher = new EmptyMatcher(col);
-            return where;
-        }
-
-        /**
-         * The value must be the specified value.
-         * @param value the value
-         * @return the where
-         */
-        public Where is(final String value) {
-            matcher = new StringInMatcher((StringColumn) col, value);
-            return where;
-        }
-
-        /**
-         * The value must be among the values.
-         *
-         * @param values the values
-         * @return the where
-         */
-        public Where isIn(final String... values) {
-            matcher = new StringInMatcher((StringColumn) col, values);
-            return where;
-        }
-
-        /**
-         * The value must be equal to the value.
-         * @param value the value
-         * @return the where
-         */
-        public Where is(final int value) {
-            matcher = new IntIsMatcher((IntegerColumn) col, value);
-            return where;
-        }
-
-        /**
-         * The value must be between the minimum and maximum (inclusive).
-         * @param min the minimum
-         * @param max the minimum
-         * @return the where
-         */
-        public Where isBetween(final int min, final int max) {
-            matcher = new IntBetweenMatcher((IntegerColumn) col, min, max);
-            return where;
-        }
-
-        /**
-         * The value must be one among the values.
-         * @param values the values
-         * @return the where
-         */
-        public Where isIn(final Integer... values) {
-            matcher = new IntIsInMatcher((IntegerColumn) col, values);
-            return where;
-        }
-
-        /**
-         * The value must be one among the values.
-         * @param values the values
-         * @return the where
-         */
-        public Where isIn(final Float... values) {
-            matcher = new IsInMatcher<>((FloatColumn) col, values);
-            return where;
-        }
-
-        /**
-         * The value must be one among the values.
-         * @param values the values
-         * @return the where
-         */
-        public Where isIn(final Double... values) {
-            matcher = new IsInMatcher<>((DoubleColumn) col, values);
-            return where;
-        }
-
-        /**
-         * The value must be greater than the value.
-         * @param value the value
-         * @return the where
-         */
-        public Where isGreaterThan(final int value) {
-            matcher = new IntGreaterThanMatcher((IntegerColumn) col, value);
-            return where;
-        }
-
-        /**
-         * The value must be less than the value.
-         * @param value the value
-         * @return the where
-         */
-        public Where isLessThan(final int value) {
-            matcher = new IntLessThanMatcher((IntegerColumn) col, value);
-            return where;
-
-        }
-
-        /**
-         * The date must equal to the value.
-         * @param value the value
-         * @return the where
-         */
-        public Where isDate(final Date value) {
-            if (col instanceof DateColumn) {
-                matcher = new DateIsMatcher((DateColumn) col, value);
-            } else {
-                throw new IllegalArgumentException("Column " + col + " is not a date column!");
-            }
-            return where;
-        }
-
-        /**
-         * The date must be greater than the value.
-         * @param value the value
-         * @return the where
-         */
-        public Where isDateGreaterThan(final Date value) {
-            if (!(col instanceof DateColumn)) {
-                throw new IllegalArgumentException("Column " + col + " is not a date column!");
-            }
-            matcher = new DateGreaterThanMatcher((DateColumn) col, value);
-            return where;
-        }
-
-        /**
-         * The date must be less than the value.
-         * @param value the value
-         * @return the where
-         */
-        public Where isDateLessThan(final Date value) {
-            matcher = new DateLessThanMatcher((DateColumn) col, value);
-            return where;
-        }
-
-        /**
-         * The year part of the date must be equal to the value.
-         * @param value the value
-         * @return the where
-         */
-        public Where isYear(final int value) {
-            if (col instanceof DateColumn) {
-                matcher = new YearIsMatcher((DateColumn) col, value);
-            } else {
-                throw new IllegalArgumentException("Column " + col + " is not dateformat!");
-            }
-            return where;
-        }
-
-        /**
-         * The value must be among the values.
-         *
-         * @param values the value
-         * @return the where
-         */
-        public Where in(final String... values) {
-            matcher = new StringInMatcher((StringColumn) col, values);
-            return where;
-        }
-
-        /**
-         * The value must be among the values.
-         * @param values the value
-         * @return the where
-         */
-        public Where isIn(final Date... values) {
-            if (col instanceof DateColumn) {
-                DateColumn dc = (DateColumn) col;
-                matcher = new DateIsInMatcher(dc, values);
-            } else {
-                throw new IllegalArgumentException("Column " + col + " is not dateformat!");
-            }
-            return where;
-        }
-
-    }
-
-    /**
-     * Controls the row matchers.
-     *
-     */
-    public final class Where {
-
-        /**
-         * The list of columns.
-         */
-        private final List<Column> columns;
-        /** The query it belongs to. */
-        private final OrderBy orderBy;
-        /** The query it belongs to. */
-        private Query query;
-
-        /**
-         * Builds a new Where instance.
-         */
-        public Where() {
-            columns = new ArrayList<>();
-            orderBy = new OrderBy(this);
-            query = null;
-        }
-
-        /**
-         * Adds a new column with the columnName.
-         *
-         * @param columnName the column
-         * @return the new instance
-         */
-        public Column column(final String columnName) {
-            org.laukvik.csv.columns.Column col = csv.getColumn(columnName);
-            Column c = new Column(col);
-            c.where = this;
-            columns.add(c);
-            return c;
-        }
-
-        /**
-         * Adds a new column.
-         *
-         * @param col the column
-         * @return the new instance
-         */
-        public Column column(final org.laukvik.csv.columns.Column col) {
-            Column c = new Column(col);
-            c.where = this;
-            columns.add(c);
-            return c;
-        }
-
-        /**
-         * Returns the OrderBy instance.
-         *
-         * @return the OrderBy
-         */
-        public OrderBy orderBy() {
-            return orderBy;
-        }
-
-        /**
-         * Returns the results.
-         *
-         * @return the results
-         */
-        public List<Row> getResultList() {
-            return query.getResultList();
-        }
-
-    }
-
-    /**
-     * Controls the list of sort orders.
-     *
-     */
-    public final class OrderBy {
-
-        /** The Where instance it belongs to. */
-        private final Where where;
-        /**
-         * The list of sort orders.
-         */
-        private final List<SortOrder> sortOrders;
-
-        /**
-         * Builds a new OrderBy control.
-         *
-         * @param where the Where instance.
-         */
-        public OrderBy(final Where where) {
-            this.where = where;
-            sortOrders = new ArrayList<>();
-        }
-
-        /**
-         * Returns true if there are no sort orders.
-         *
-         * @return true if no sort orders
-         */
-        public boolean isEmpty() {
-            return sortOrders.isEmpty();
-        }
-
-        /**
-         * Sorts using ascending order.
-         *
-         * @param column the column to sort
-         * @return OrderBy
-         */
-        public OrderBy asc(final org.laukvik.csv.columns.Column column) {
-            sortOrders.add(new SortOrder(column, SortOrder.ASC));
-            return this;
-        }
-
-        /**
-         * Sorts using descending order.
-         *
-         * @param column the column to sort
-         * @return OrderBy
-         */
-        public OrderBy desc(final org.laukvik.csv.columns.Column column) {
-            sortOrders.add(new SortOrder(column, SortOrder.DESC));
-            return this;
-        }
-
-        /**
-         * Returns the results.
-         *
-         * @return the results
-         */
-        public List<Row> getResultList() {
-            return where.query.getResultList();
-        }
-
-    }
-
-    /**
-     * Decides whether or not to include a column in a resultset.
-     *
-     */
-    public final class Select {
-
-        /** The columns. */
-        private org.laukvik.csv.columns.Column[] columns;
-        /**
-         * The where control.
-         */
-        private Where where;
-
-        /**
-         * Includes only the columns in the results.
-         *
-         * @param columns the columns
-         */
-        public Select(final org.laukvik.csv.columns.Column... columns) {
-            this.columns = columns;
-        }
-
-        /**
-         * Returns the Where control.
-         *
-         * @return where
-         */
-        public Where where() {
-            return where;
-        }
     }
 
 }

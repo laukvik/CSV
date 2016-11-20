@@ -17,11 +17,10 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
-
 import java.util.Date;
 
 /**
- * Compares a DateColumn to be greater than a date.
+ * Matches rows with date greater than the value.
  */
 public final class DateGreaterThanMatcher extends AbstractDateMatcher {
 

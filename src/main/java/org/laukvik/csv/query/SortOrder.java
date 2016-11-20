@@ -25,15 +25,15 @@ public final class SortOrder {
     /**
      * Ascending sort order.
      */
-    public static final Type ASC = Type.ASC;
+    public static final SortDirection ASC = SortDirection.ASC;
     /**
      * Descending sort order.
      */
-    public static final Type DESC = Type.DESC;
+    public static final SortDirection DESC = SortDirection.DESC;
     /**
      * Natural sort order.
      */
-    public static final Type NONE = Type.NONE;
+    public static final SortDirection NONE = SortDirection.NONE;
 
     /**
      * The column.
@@ -42,17 +42,17 @@ public final class SortOrder {
     /**
      * The order type.
      */
-    private final Type type;
+    private final SortDirection direction;
 
     /**
      * Creates a new instance.
      *
      * @param column the column
-     * @param type   the type
+     * @param direction the direction
      */
-    public SortOrder(final Column column, final Type type) {
+    public SortOrder(final Column column, final SortDirection direction) {
         this.column = column;
-        this.type = type;
+        this.direction = direction;
     }
 
     /**
@@ -67,27 +67,10 @@ public final class SortOrder {
      * Returns the order type.
      * @return the order type.
      */
-    public Type getType() {
-        return type;
+    public SortDirection getType() {
+        return direction;
     }
 
-    /**
-     * Indicates what sort order to use.
-     */
-    public enum Type {
 
-        /**
-         * Ascending sort order.
-         */
-        ASC,
-        /**
-         * Descending sort order.
-         */
-        DESC,
-        /**
-         * No sort order.
-         */
-        NONE
-    }
 
 }

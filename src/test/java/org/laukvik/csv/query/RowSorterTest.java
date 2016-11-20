@@ -22,7 +22,7 @@ public class RowSorterTest {
         StringColumn first = csv.addStringColumn("first");
 
         List<SortOrder> order1 = new ArrayList<>();
-        order1.add( new SortOrder(first, SortOrder.Type.ASC) );
+        order1.add( new SortOrder(first, SortOrder.ASC) );
 
         RowSorter sort1 = new RowSorter(order1);
 

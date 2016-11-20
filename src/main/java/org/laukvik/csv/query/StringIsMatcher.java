@@ -21,7 +21,7 @@ import org.laukvik.csv.columns.StringColumn;
 /**
  * Compares a StringColumn to have the specified value.
  */
-public final class StringEqualMatcher extends RowMatcher {
+public final class StringIsMatcher extends RowMatcher {
 
     /**
      * The value to compare.
@@ -35,7 +35,7 @@ public final class StringEqualMatcher extends RowMatcher {
      * @param stringColumn the column
      * @param value the value
      */
-    public StringEqualMatcher(final StringColumn stringColumn, final String value) {
+    public StringIsMatcher(final StringColumn stringColumn, final String value) {
         super();
         this.column = stringColumn;
         this.value = value;

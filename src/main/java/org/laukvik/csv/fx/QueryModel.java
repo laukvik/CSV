@@ -3,6 +3,7 @@ package org.laukvik.csv.fx;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.query.Query;
 
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public final class QueryModel {
             }
         } else {
             buildQuery();
-            for (Row r : csv.getQuery().getResultList()) {
+            for (Row r : csv.getRowsByQuery(csv.getQuery())) {
                 list.add(new ObservableRow(r, csv, main));
             }
         }
@@ -70,7 +71,8 @@ public final class QueryModel {
      * Builds a new query.
      */
     private void buildQuery() {
-        Query.Where where = csv.findByQuery().where();
+//        Query.Where where = csv.findByQuery().where();
+        Query q = csv.getQuery();
         for (Selection s : selections) {
             String[] arr = new String[s.getValues().size()];
             int x = 0;
@@ -78,7 +80,8 @@ public final class QueryModel {
                 arr[x] = v;
                 x++;
             }
-            where = where.column(s.getColumn()).in(arr);
+//            where = where.column(s.getColumn()).in(arr);
+            q.in((StringColumn)s.getColumn(), arr);
         }
     }
 

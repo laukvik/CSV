@@ -23,7 +23,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
-public class StringEqualMatcherTest {
+public class StringIsMatcherTest {
 
     @Test
     public void matches() throws Exception {
@@ -31,7 +31,7 @@ public class StringEqualMatcherTest {
         StringColumn first = csv.addStringColumn("first");
         Row r1 = csv.addRow().setString(first, "Steve");
         Row r2 = csv.addRow().setString(first, "Bill");
-        StringEqualMatcher m = new StringEqualMatcher(first, "Steve");
+        StringIsMatcher m = new StringIsMatcher(first, "Steve");
         assertTrue(m.matches(r1));
         assertFalse(m.matches(r2));
     }

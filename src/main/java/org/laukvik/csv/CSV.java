@@ -178,7 +178,7 @@ public final class CSV implements Serializable {
     /**
      * The list of Rows.
      */
-    private List<Row> rows;
+    private final List<Row> rows;
     /**
      * The Query to use.
      */
@@ -194,7 +194,7 @@ public final class CSV implements Serializable {
     public CSV() {
         columns = new ArrayList<>();
         rows = new ArrayList<>();
-        query = null;
+//        query = null;
         changeListeners = new ArrayList<>();
         fileListeners = new ArrayList<>();
         charset = Charset.defaultCharset();
@@ -472,6 +472,10 @@ public final class CSV implements Serializable {
         return rows;
     }
 
+    public List<Row> getRowsByQuery(final Query query){
+        return query.getRows(this);
+    }
+
     /**
      * Returns the amount of rows.
      *
@@ -576,8 +580,7 @@ public final class CSV implements Serializable {
     public void clear() {
         columns.clear();
         rows.clear();
-
-        query = null;
+//        query = null;
     }
 
     /**
@@ -692,6 +695,19 @@ public final class CSV implements Serializable {
      */
     public DateColumn addDateColumn(final String columnName) {
         DateColumn c = new DateColumn(columnName);
+        addColumn(c);
+        return c;
+    }
+
+    /**
+     * Adds a new DateColumn.
+     *
+     * @param columnName the name
+     * @param format the date pattern
+     * @return the DateColumn being created
+     */
+    public DateColumn addDateColumn(final String columnName, final String format) {
+        DateColumn c = new DateColumn(columnName, format);
         addColumn(c);
         return c;
     }
@@ -840,16 +856,16 @@ public final class CSV implements Serializable {
     public Query getQuery() {
         return query;
     }
-
-    /**
-     * Filters the row based on typed queries.
-     *
-     * @return the query being created
-     */
-    public Query findByQuery() {
-        this.query = new Query(this);
-        return this.query;
-    }
+//
+//    /**
+//     * Filters the row based on typed queries.
+//     *
+//     * @return the query being created
+//     */
+//    public Query findByQuery() {
+//        this.query = new Query();
+//        return this.query;
+//    }
 
     /**
      * Returns true if there is already a query.

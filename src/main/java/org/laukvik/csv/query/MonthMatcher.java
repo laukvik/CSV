@@ -21,29 +21,36 @@ import org.laukvik.csv.columns.DateColumn;
 import java.util.Date;
 
 /**
- * Compares a DateColumn to specified Date.
+ * Compares a DateColumn to have the year to be the specified value.
+ *
  */
-public final class DateIsMatcher extends AbstractDateMatcher {
+public final class MonthMatcher extends AbstractDateMatcher {
 
     /**
-     * Compares a DateColumn to specified Date.
-     *
-     * @param column the dateColumn
-     * @param value  the date
+     * The year.
      */
-    public DateIsMatcher(final DateColumn column, final Date value) {
-        super(column, value);
+    private final int monthIndex;
+
+    /**
+     * Matches the value of the dateColumn to have the specified month.
+     *
+     * @param dateColumn the dateColumn
+     * @param month       the month
+     */
+    public MonthMatcher(final DateColumn dateColumn, final int month) {
+        super(dateColumn, null);
+        this.monthIndex = month;
     }
 
     /**
-     * Returns true when the row matches.
+     * Matches the row.
      *
-     * @param row the row
-     * @return true when the row matches
+     * @param row the row to compare
+     * @return true if it matches
      */
     public boolean matches(final Row row) {
-        Date d = row.getDate(getColumn());
-        return DateColumn.isEqualDate(getValue(), d);
+        Date v = row.getDate(getColumn());
+        return DateColumn.isMonth(v, monthIndex);
     }
 
 }

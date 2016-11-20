@@ -134,7 +134,7 @@ final class Builder {
         resultsTableView.getItems().clear();
         if (csv.hasQuery()) {
             Query query = csv.getQuery();
-            List<Row> rows = query.where().getResultList();
+            List<Row> rows = csv.getRowsByQuery(query);
             for (int y = 0; y < rows.size(); y++) {
                 resultsTableView.getItems().add(new ObservableRow(rows.get(y), csv, main));
             }
