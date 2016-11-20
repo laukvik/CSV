@@ -18,6 +18,7 @@ package org.laukvik.csv.columns;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 
 public class ForeignKeyTest {
@@ -26,6 +27,7 @@ public class ForeignKeyTest {
     public void shouldTable() {
         ForeignKey fk = new ForeignKey("employee");
         assertEquals("employee", fk.getTable());
+        assertNull(fk.getColumn());
     }
 
     @Test

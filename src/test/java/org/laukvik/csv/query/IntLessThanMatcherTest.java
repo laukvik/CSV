@@ -22,7 +22,7 @@ public class IntLessThanMatcherTest {
         Row r4 = csv.addRow();
         IntLessThanMatcher m = new IntLessThanMatcher(created, 4);
         assertTrue( m.matches(r1) );
-        assertTrue( m.matches(r2) );
+        assertFalse( m.matches(r2) );
         assertFalse( m.matches(r3) );
         assertFalse( m.matches(r4) );
     }

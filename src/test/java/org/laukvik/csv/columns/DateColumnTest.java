@@ -39,7 +39,6 @@ public class DateColumnTest {
         Date tomorrow = getTomorrow();
         assertEquals(-1, c.compare(today, tomorrow));
         assertEquals(1, c.compare(tomorrow, today));
-//        assertEquals(0, c.compare(tomorrow, cal.getTime()));
         assertEquals(1, c.compare(tomorrow, null));
         assertEquals(-1, c.compare(null, cal.getTime()));
         assertEquals(0, c.compare(null, null));

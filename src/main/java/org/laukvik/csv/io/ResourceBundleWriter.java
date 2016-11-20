@@ -22,7 +22,6 @@ import org.laukvik.csv.columns.StringColumn;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * Writes the data set to the ResourceBundle.
@@ -49,24 +48,11 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
      *
      * @param file the file
      * @param csv the CSV
+     * @throws IOException when the resourcebundle could not be written
      */
-    public void writeCSV(final File file, final CSV csv) {
+    public void writeCSV(final File file, final CSV csv) throws IOException{
         this.folder = file.getParentFile();
         this.basename = getBasename(file);
-        for (int x = 1; x < csv.getColumnCount(); x++) {
-            StringColumn column = (StringColumn) csv.getColumn(x);
-            writeBundle(csv, column);
-        }
-    }
-
-    /**
-     * Writes the ResourceBundle to files.
-     *
-     * @param csv the CSV to write
-     * @param out the outputStream
-     * @throws IOException when the files could not be written
-     */
-    public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
         for (int x = 1; x < csv.getColumnCount(); x++) {
             StringColumn column = (StringColumn) csv.getColumn(x);
             writeBundle(csv, column);
@@ -78,22 +64,20 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
      *
      * @param csv    the CSV
      * @param column the column with the language
+     * @throws IOException when the file could not be written
      */
-    private void writeBundle(final CSV csv, final StringColumn column) {
+    private void writeBundle(final CSV csv, final StringColumn column) throws IOException {
         String filename = getFilename(column, basename);
         File bundleFile = new File(folder, filename);
         StringColumn keyColumn = (StringColumn) csv.getColumn(0);
-        try (FileWriter writer = new FileWriter(bundleFile)) {
-            for (int y = 0; y < csv.getRowCount(); y++) {
-                Row r = csv.getRow(y);
-                writer.write(r.getString(keyColumn));
-                writer.write("=");
-                writer.write(r.getString(column));
-                writer.write("\r\n");
-            }
-        } catch (IOException e) {
+        FileWriter writer = new FileWriter(bundleFile);
+        for (int y = 0; y < csv.getRowCount(); y++) {
+            Row r = csv.getRow(y);
+            writer.write(r.getString(keyColumn));
+            writer.write("=");
+            writer.write(r.getString(column));
+            writer.write("\r\n");
         }
     }
-
 
 }
