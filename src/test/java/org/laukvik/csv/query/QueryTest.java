@@ -149,21 +149,8 @@ public class QueryTest {
         assertEquals(2, rows.size());
     }
 
-    @Test
-    public void sortDesc() throws ParseException {
-        Query q = new Query();
-        q.descending(president);
-        List<Row> rows = csv.getRowsByQuery(q);
-        assertEquals("Zachary Taylor", rows.get(0).getString(president));
-    }
 
-    @Test
-    public void sortAsc() throws ParseException, IOException {
-        Query q = new Query();
-        q.ascending(president);
-        List<Row> rows = csv.getRowsByQuery(q);
-        assertEquals("Abraham Lincoln", rows.get(0).getString(president));
-    }
+
 
     @Test
     public void sortDate() throws ParseException {
@@ -198,8 +185,19 @@ public class QueryTest {
     }
 
     @Test
-    public void sortAscending() throws IOException {
+    public void ascending() throws IOException {
         Query q = new Query();
+        q.ascending(leftOffice);
+        List<Row> rows = csv.getRowsByQuery(q);
+        assertEquals( (Integer)44, rows.get(0).getInteger(presidency));
+    }
+
+    @Test
+    public void descending() throws ParseException {
+        Query q = new Query();
+        q.descending(president);
+        List<Row> rows = csv.getRowsByQuery(q);
+        assertEquals("Zachary Taylor", rows.get(0).getString(president));
     }
 
 
@@ -215,6 +213,26 @@ public class QueryTest {
         Query q = new Query();
         q.after(leftOffice, leftOffice.parse("01/01/2005")); // dd/MM/yyyy
         assertEquals(1, q.getRows(csv).size());
+    }
+
+    @Test
+    public void getMatchers() throws IOException {
+        Query q = new Query();
+        IntLessThanMatcher m = new IntLessThanMatcher(presidency, 5);
+        q.addRowMatcher(m);
+        assertEquals(1, q.getMatchers().size());
+        q.removeRowMatcher(m);
+        assertEquals(0, q.getMatchers().size());
+    }
+
+    @Test
+    public void getSorters() throws IOException {
+        Query q = new Query();
+        SortOrder so = new SortOrder(presidency,SortDirection.ASC);
+        q.addSort(so);
+        assertEquals( 1, q.getSorters().size());
+        q.removeSort(so);
+        assertEquals( 0, q.getSorters().size());
     }
 
 }

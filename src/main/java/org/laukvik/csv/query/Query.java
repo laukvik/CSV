@@ -25,7 +25,6 @@ import java.util.List;
 
 /**
  * The query contains the criteria to be used when filtering the data set.
- *
  */
 public final class Query {
 
@@ -40,7 +39,6 @@ public final class Query {
 
     /**
      * Builds a new empty query.
-     *
      */
     public Query() {
         matchers = new ArrayList<>();
@@ -51,7 +49,7 @@ public final class Query {
      * The value in the column must be after the date.
      *
      * @param column the column
-     * @param date the date
+     * @param date   the date
      * @return the same query instance
      */
     public Query after(final org.laukvik.csv.columns.DateColumn column, final Date date) {
@@ -63,7 +61,7 @@ public final class Query {
      * The value in the column must match either of the dates.
      *
      * @param column the column
-     * @param dates the dates
+     * @param dates  the dates
      * @return the same query instance
      */
     public Query contains(final org.laukvik.csv.columns.DateColumn column, final Date... dates) {
@@ -75,7 +73,7 @@ public final class Query {
      * The value in the column must be the same as the date.
      *
      * @param column the column
-     * @param date the date
+     * @param date   the date
      * @return the same query instance
      */
     public Query is(final org.laukvik.csv.columns.DateColumn column, final Date date) {
@@ -87,7 +85,7 @@ public final class Query {
      * The value in the column must be the same as the value.
      *
      * @param column the column
-     * @param value the value
+     * @param value  the value
      * @return the same query instance
      */
     public Query is(final org.laukvik.csv.columns.StringColumn column, final String value) {
@@ -99,7 +97,7 @@ public final class Query {
      * The value in the column must be in the list.
      *
      * @param column the column
-     * @param list the list of values
+     * @param list   the list of values
      * @return the same query instance
      */
     public Query in(final org.laukvik.csv.columns.StringColumn column, final String... list) {
@@ -111,7 +109,7 @@ public final class Query {
      * The value in the column must be lessThan the date.
      *
      * @param column the column
-     * @param date the date
+     * @param date   the date
      * @return the same query instance
      */
     public Query lessThan(final org.laukvik.csv.columns.DateColumn column, final Date date) {
@@ -134,8 +132,8 @@ public final class Query {
      * The value in the column must be same or more than minimum and less than or same as maximum.
      *
      * @param column the column
-     * @param min the minimum value
-     * @param max the maximum value
+     * @param min    the minimum value
+     * @param max    the maximum value
      * @return the same query instance
      */
     public Query isBetween(final org.laukvik.csv.columns.IntegerColumn column, final int min, final int max) {
@@ -147,7 +145,7 @@ public final class Query {
      * The value in the column must be greater than the value.
      *
      * @param column the column
-     * @param value the value
+     * @param value  the value
      * @return the same query instance
      */
     public Query isGreaterThan(final org.laukvik.csv.columns.IntegerColumn column, final int value) {
@@ -159,7 +157,7 @@ public final class Query {
      * The value in the column must be in the list.
      *
      * @param column the column
-     * @param list the list of integers
+     * @param list   the list of integers
      * @return the same query instance
      */
     public Query isIn(final org.laukvik.csv.columns.IntegerColumn column, final Integer... list) {
@@ -171,7 +169,7 @@ public final class Query {
      * The value in the column must be same as the value.
      *
      * @param column the column
-     * @param value the value
+     * @param value  the value
      * @return the same query instance
      */
     public Query is(final org.laukvik.csv.columns.IntegerColumn column, final Integer value) {
@@ -183,7 +181,7 @@ public final class Query {
      * The value in the column must be less thn the value.
      *
      * @param column the column
-     * @param value the value
+     * @param value  the value
      * @return the same query instance
      */
     public Query lessThan(final org.laukvik.csv.columns.IntegerColumn column, final int value) {
@@ -195,7 +193,7 @@ public final class Query {
      * The value in the column must be in the list.
      *
      * @param column the column
-     * @param list the list of Float
+     * @param list   the list of Float
      * @return the same query instance
      */
     public Query in(final org.laukvik.csv.columns.Column column, final Float... list) {
@@ -218,7 +216,7 @@ public final class Query {
      * The year in the column must be the same as year.
      *
      * @param column the column
-     * @param year the year
+     * @param year   the year
      * @return the same query instance
      */
     public Query isYear(final org.laukvik.csv.columns.DateColumn column, final Integer year) {
@@ -250,8 +248,8 @@ public final class Query {
      * @param column the column
      * @return the same query instance
      */
-    public Query ascending(final org.laukvik.csv.columns.Column column){
-        addSort(column, SortDirection.ASC);
+    public Query ascending(final org.laukvik.csv.columns.Column column) {
+        addSort(new SortOrder(column, SortDirection.ASC));
         return this;
     }
 
@@ -261,19 +259,18 @@ public final class Query {
      * @param column the column
      * @return the same query instance
      */
-    public Query descending(final org.laukvik.csv.columns.Column column){
-        addSort(column, SortDirection.DESC);
+    public Query descending(final org.laukvik.csv.columns.Column column) {
+        addSort(new SortOrder(column, SortDirection.DESC));
         return this;
     }
 
     /**
      * Adds the sortOrder.
      *
-     * @param column the column to sort
-     * @param direction the direction
+     * @param sortOrder the column to sort
      */
-    public void addSort(final org.laukvik.csv.columns.Column column, final SortDirection direction) {
-        sorters.add(new SortOrder(column, direction));
+    public void addSort(final SortOrder sortOrder) {
+        sorters.add(sortOrder);
     }
 
     /**
@@ -286,14 +283,33 @@ public final class Query {
     }
 
     /**
+     * Returns all matchers.
+     *
+     * @return the matchers
+     */
+    public List<RowMatcher> getMatchers() {
+        return matchers;
+    }
+
+    /**
+     * Returns all sort orders.
+     *
+     * @return the sort orders
+     */
+    public List<SortOrder> getSorters() {
+        return sorters;
+    }
+
+    /**
      * Returns true if the row matches the query.
+     *
      * @param row the row
      * @return true when matches
      */
-    public boolean matches(final Row row){
+    public boolean matches(final Row row) {
         int matchCount = 0;
-        for (RowMatcher matcher : matchers){
-            if (matcher.matches(row)){
+        for (RowMatcher matcher : matchers) {
+            if (matcher.matches(row)) {
                 matchCount++;
             }
         }
@@ -310,7 +326,7 @@ public final class Query {
         List<Row> filteredRows = new ArrayList<>();
         for (int rowIndex = 0; rowIndex < csv.getRowCount(); rowIndex++) {
             Row r = csv.getRow(rowIndex);
-            if (matches(r)){
+            if (matches(r)) {
                 filteredRows.add(r);
             }
         }
