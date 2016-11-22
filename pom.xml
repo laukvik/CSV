@@ -188,7 +188,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <!-- required before build-native -->
+                        <!-- required lessThan build-native -->
                         <id>create-jfxjar</id>
                         <phase>package</phase>
                         <goals>
