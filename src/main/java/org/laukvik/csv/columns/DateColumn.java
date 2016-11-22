@@ -329,4 +329,20 @@ public final class DateColumn extends Column<Date> {
         return one.compareTo(another);
     }
 
+    /**
+     * Returns true when the value is between the first and last date.
+     * @param value the value
+     * @param first the first date
+     * @param last the last date
+     * @return true when between
+     */
+    public static boolean isBetweeen(final Date value, final Date first, final Date last) {
+        if (value == null || first == null || last == null){
+            return false;
+        }
+        long time = value.getTime();
+        long start = first.getTime();
+        long finish = last.getTime();
+        return time >= start && time <= finish;
+    }
 }

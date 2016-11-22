@@ -34,28 +34,40 @@ public enum BOM {
      * BOM for UTF32BE.
      */
     UTF32BE("utf-32be", (byte) 0x00, (byte) 0x00, (byte) 0xFE, (byte) 0xFF),
-    /** BOM for UTF32LE. */
+    /**
+     * BOM for UTF32LE.
+     */
     UTF32LE("utf-32le", (byte) 0xFF, (byte) 0xFE, (byte) 0x00, (byte) 0x00),
-    /** BOM for UTF16BE. */
+    /**
+     * BOM for UTF16BE.
+     */
     UTF16BE("utf-16be", (byte) 0xFE, (byte) 0xFF),
-    /** BOM for UTF16LE. */
+    /**
+     * BOM for UTF16LE.
+     */
     UTF16LE("utf-16le", (byte) 0xFF, (byte) 0xFE),
-    /** BOM for UTF8. */
+    /**
+     * BOM for UTF8.
+     */
     UTF8("utf-8", (byte) 0xEF, (byte) 0xBB, (byte) 0xBF);
     /**
      * Maximum BOM size.
      */
     private static final int MAX_BOM_SIZE = 8;
-    /** The bytes that recognizes the BOM. */
+    /**
+     * The bytes that recognizes the BOM.
+     */
     private final byte[] bytes;
-    /** The associated Charset for the BOM. */
+    /**
+     * The associated Charset for the BOM.
+     */
     private final String charset;
 
     /**
      * Creates a new BOM with the specified BOM and bytes.
      *
      * @param charsetName the charset
-     * @param chars   the chars
+     * @param chars       the chars
      * @see Charset
      */
     BOM(final String charsetName, final byte... chars) {
@@ -80,7 +92,6 @@ public enum BOM {
     }
 
 
-
     /**
      * Parses and detects any BOM if present.
      *
@@ -90,6 +101,21 @@ public enum BOM {
     private static BOM parse(final byte... bytes) {
         for (BOM bom : values()) {
             if (bom.is(bytes)) {
+                return bom;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Finds the BOM by specifying its charset.
+     *
+     * @param charset the charset
+     * @return the BOM
+     */
+    public static BOM findBomByCharset(final Charset charset) {
+        for (BOM bom : values()) {
+            if (bom.getCharset().equals(charset)) {
                 return bom;
             }
         }
@@ -126,20 +152,5 @@ public enum BOM {
      */
     public byte[] getBytes() {
         return bytes;
-    }
-
-    /**
-     * Finds the BOM by specifying its charset.
-     *
-     * @param charset the charset
-     * @return the BOM
-     */
-    public static BOM findBomByCharset(final Charset charset) {
-        for (BOM bom : values()){
-            if (bom.getCharset().equals(charset)){
-                return bom;
-            }
-        }
-        return null;
     }
 }

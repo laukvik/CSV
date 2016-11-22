@@ -54,13 +54,13 @@ public final class QueryModel {
     public List<ObservableRow> buildObservableRows() {
         List<ObservableRow> list = new ArrayList<>();
         if (this.isEmpty()) {
-            csv.clearQuery();
+            main.setQuery(new Query());
             for (int y = 0; y < csv.getRowCount(); y++) {
                 list.add(new ObservableRow(csv.getRow(y), csv, main));
             }
         } else {
             buildQuery();
-            for (Row r : csv.getRowsByQuery(csv.getQuery())) {
+            for (Row r : csv.getRowsByQuery(main.getQuery())) {
                 list.add(new ObservableRow(r, csv, main));
             }
         }
@@ -72,7 +72,7 @@ public final class QueryModel {
      */
     private void buildQuery() {
 //        Query.Where where = csv.findByQuery().where();
-        Query q = csv.getQuery();
+        Query q = main.getQuery();
         for (Selection s : selections) {
             String[] arr = new String[s.getValues().size()];
             int x = 0;

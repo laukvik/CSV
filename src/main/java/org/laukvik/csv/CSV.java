@@ -179,10 +179,10 @@ public final class CSV implements Serializable {
      * The list of Rows.
      */
     private final List<Row> rows;
-    /**
-     * The Query to use.
-     */
-    private Query query;
+//    /**
+//     * The Query to use.
+//     */
+//    private Query query;
     /**
      * The file opened.
      */
@@ -472,6 +472,12 @@ public final class CSV implements Serializable {
         return rows;
     }
 
+    /**
+     * Returns the rows that matches the query.
+     *
+     * @param query the query
+     * @return the rows
+     */
     public List<Row> getRowsByQuery(final Query query){
         return query.getRows(this);
     }
@@ -848,14 +854,14 @@ public final class CSV implements Serializable {
         write(new ResourceBundleWriter(), resourceBundleFile);
     }
 
-    /**
-     * Returns the query.
-     *
-     * @return the query
-     */
-    public Query getQuery() {
-        return query;
-    }
+//    /**
+//     * Returns the query.
+//     *
+//     * @return the query
+//     */
+//    public Query getQuery() {
+//        return query;
+//    }
 //
 //    /**
 //     * Filters the row based on typed queries.
@@ -867,21 +873,21 @@ public final class CSV implements Serializable {
 //        return this.query;
 //    }
 
-    /**
-     * Returns true if there is already a query.
-     *
-     * @return true when a query has been started
-     */
-    public boolean hasQuery() {
-        return this.query != null;
-    }
+//    /**
+//     * Returns true if there is already a query.
+//     *
+//     * @return true when a query has been started
+//     */
+//    public boolean hasQuery() {
+//        return this.query != null;
+//    }
 
-    /**
-     * Removes any query.
-     */
-    public void clearQuery() {
-        this.query = null;
-    }
+//    /**
+//     * Removes any query.
+//     */
+//    public void clearQuery() {
+//        this.query = null;
+//    }
 
     /**
      * Builds a FrequencyDistribution table for the specified column index.

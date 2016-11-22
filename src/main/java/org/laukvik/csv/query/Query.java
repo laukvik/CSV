@@ -25,23 +25,7 @@ import java.util.List;
 
 /**
  * The query contains the criteria to be used when filtering the data set.
- * <p>
- * csv.addFilter
- * <p>
- * <p>
- * <pre>
- * query.count().where().column("BookID").is(5);
- * </pre>
- * <p>
- * <pre>
- * query.select().where().column("BookID").is(5);
- * </pre>
- * <p>
- * <pre>
- * query.select().orderBy().asc("BookID");
- * </pre>
- * <p>
- * csv.getRows(query);
+ *
  */
 public final class Query {
 
@@ -63,78 +47,182 @@ public final class Query {
         sorters = new ArrayList<>();
     }
 
-    public Query greaterThan(final org.laukvik.csv.columns.DateColumn column, final Date date) {
+    /**
+     * The value in the column must be after the date.
+     *
+     * @param column the column
+     * @param date the date
+     * @return the same query instance
+     */
+    public Query after(final org.laukvik.csv.columns.DateColumn column, final Date date) {
         addRowMatcher(new DateGreaterThanMatcher(column, date));
         return this;
     }
 
+    /**
+     * The value in the column must match either of the dates.
+     *
+     * @param column the column
+     * @param dates the dates
+     * @return the same query instance
+     */
     public Query contains(final org.laukvik.csv.columns.DateColumn column, final Date... dates) {
         addRowMatcher(new DateIsInMatcher(column, dates));
         return this;
     }
 
+    /**
+     * The value in the column must be the same as the date.
+     *
+     * @param column the column
+     * @param date the date
+     * @return the same query instance
+     */
     public Query is(final org.laukvik.csv.columns.DateColumn column, final Date date) {
         addRowMatcher(new DateIsMatcher(column, date));
         return this;
     }
 
+    /**
+     * The value in the column must be the same as the value.
+     *
+     * @param column the column
+     * @param value the value
+     * @return the same query instance
+     */
     public Query is(final org.laukvik.csv.columns.StringColumn column, final String value) {
         addRowMatcher(new StringIsMatcher(column, value));
         return this;
     }
 
-    public Query in(final org.laukvik.csv.columns.StringColumn column, final String... values) {
-        addRowMatcher(new StringInMatcher(column, values));
+    /**
+     * The value in the column must be in the list.
+     *
+     * @param column the column
+     * @param list the list of values
+     * @return the same query instance
+     */
+    public Query in(final org.laukvik.csv.columns.StringColumn column, final String... list) {
+        addRowMatcher(new StringInMatcher(column, list));
         return this;
     }
 
+    /**
+     * The value in the column must be lessThan the date.
+     *
+     * @param column the column
+     * @param date the date
+     * @return the same query instance
+     */
     public Query lessThan(final org.laukvik.csv.columns.DateColumn column, final Date date) {
         addRowMatcher(new DateLessThanMatcher(column, date));
         return this;
     }
 
+    /**
+     * The value in the column must be empty.
+     *
+     * @param column the column
+     * @return the same query instance
+     */
     public Query isEmpty(final org.laukvik.csv.columns.Column column) {
         addRowMatcher(new EmptyMatcher(column));
         return this;
     }
 
+    /**
+     * The value in the column must be same or more than minimum and less than or same as maximum.
+     *
+     * @param column the column
+     * @param min the minimum value
+     * @param max the maximum value
+     * @return the same query instance
+     */
     public Query isBetween(final org.laukvik.csv.columns.IntegerColumn column, final int min, final int max) {
         addRowMatcher(new IntBetweenMatcher(column, min, max));
         return this;
     }
 
+    /**
+     * The value in the column must be greater than the value.
+     *
+     * @param column the column
+     * @param value the value
+     * @return the same query instance
+     */
     public Query isGreaterThan(final org.laukvik.csv.columns.IntegerColumn column, final int value) {
         addRowMatcher(new IntGreaterThanMatcher(column, value));
         return this;
     }
 
-    public Query isIn(final org.laukvik.csv.columns.IntegerColumn column, final Integer... values) {
-        addRowMatcher(new IntIsInMatcher(column, values));
+    /**
+     * The value in the column must be in the list.
+     *
+     * @param column the column
+     * @param list the list of integers
+     * @return the same query instance
+     */
+    public Query isIn(final org.laukvik.csv.columns.IntegerColumn column, final Integer... list) {
+        addRowMatcher(new IntIsInMatcher(column, list));
         return this;
     }
 
-    public Query is(final org.laukvik.csv.columns.IntegerColumn column, final int value) {
+    /**
+     * The value in the column must be same as the value.
+     *
+     * @param column the column
+     * @param value the value
+     * @return the same query instance
+     */
+    public Query is(final org.laukvik.csv.columns.IntegerColumn column, final Integer value) {
         addRowMatcher(new IntIsMatcher(column, value));
         return this;
     }
 
+    /**
+     * The value in the column must be less thn the value.
+     *
+     * @param column the column
+     * @param value the value
+     * @return the same query instance
+     */
     public Query lessThan(final org.laukvik.csv.columns.IntegerColumn column, final int value) {
         addRowMatcher(new IntLessThanMatcher(column, value));
         return this;
     }
 
-    public Query in(final org.laukvik.csv.columns.Column column, final Float... values) {
-        addRowMatcher(new IsInMatcher<Float>(column, values));
+    /**
+     * The value in the column must be in the list.
+     *
+     * @param column the column
+     * @param list the list of Float
+     * @return the same query instance
+     */
+    public Query in(final org.laukvik.csv.columns.Column column, final Float... list) {
+        addRowMatcher(new IsInMatcher<Float>(column, list));
         return this;
     }
 
+    /**
+     * The value in the column must be non null.
+     *
+     * @param column the column
+     * @return the same query instance
+     */
     public Query notEmpty(final org.laukvik.csv.columns.Column column) {
         addRowMatcher(new NotEmptyMatcher(column));
         return this;
     }
 
-    public Query isYear(final org.laukvik.csv.columns.DateColumn column, final int value) {
-        addRowMatcher(new YearIsMatcher(column, value));
+    /**
+     * The year in the column must be the same as year.
+     *
+     * @param column the column
+     * @param year the year
+     * @return the same query instance
+     */
+    public Query isYear(final org.laukvik.csv.columns.DateColumn column, final Integer year) {
+        addRowMatcher(new YearIsMatcher(column, year));
         return this;
     }
 
@@ -156,11 +244,23 @@ public final class Query {
         matchers.remove(matcher);
     }
 
+    /**
+     * Sorts the rows in ascending order for the column.
+     *
+     * @param column the column
+     * @return the same query instance
+     */
     public Query ascending(final org.laukvik.csv.columns.Column column){
         addSort(column, SortDirection.ASC);
         return this;
     }
 
+    /**
+     * Sorts the rows in descending order for the column.
+     *
+     * @param column the column
+     * @return the same query instance
+     */
     public Query descending(final org.laukvik.csv.columns.Column column){
         addSort(column, SortDirection.DESC);
         return this;
@@ -185,6 +285,11 @@ public final class Query {
         sorters.remove(sortOrder);
     }
 
+    /**
+     * Returns true if the row matches the query.
+     * @param row the row
+     * @return true when matches
+     */
     public boolean matches(final Row row){
         int matchCount = 0;
         for (RowMatcher matcher : matchers){
@@ -195,6 +300,12 @@ public final class Query {
         return matchCount == matchers.size();
     }
 
+    /**
+     * Returns the matching rows.
+     *
+     * @param csv the csv
+     * @return the rows
+     */
     public List<Row> getRows(final CSV csv) {
         List<Row> filteredRows = new ArrayList<>();
         for (int rowIndex = 0; rowIndex < csv.getRowCount(); rowIndex++) {

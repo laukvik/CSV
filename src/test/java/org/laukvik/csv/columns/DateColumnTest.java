@@ -200,4 +200,22 @@ public class DateColumnTest {
         assertEquals(0, DateColumn.compareDates(null, null));
     }
 
+    @Test
+    public void between() throws Exception {
+        DateColumn dc = new DateColumn("created", "dd.MM.YYYY");
+        Date value = dc.parse("01.01.2002");
+        Date d1 = dc.parse("01.01.2001");
+        Date d2 = dc.parse("01.01.2002");
+        Date d3 = dc.parse("01.01.2003");
+
+
+        assertTrue( DateColumn.isBetweeen(value, d1, d2) );
+        assertTrue( DateColumn.isBetweeen(value, d2, d2) );
+        assertTrue( DateColumn.isBetweeen(value, d2, d3) );
+        assertFalse( DateColumn.isBetweeen(value, d1, null) );
+        assertFalse( DateColumn.isBetweeen(value, null, d2) );
+        assertFalse( DateColumn.isBetweeen(value, null, null) );
+        assertFalse( DateColumn.isBetweeen(null, null, null) );
+    }
+
 }

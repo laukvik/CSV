@@ -37,7 +37,6 @@ import java.nio.charset.Charset;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -680,14 +679,6 @@ public class CSVTest {
         csv.removeChangeListener(cl);
         csv.addColumn("email");
         assertEquals(3, cl.columnCreated);
-    }
-
-    @Test
-    public void hasQuery(){
-        CSV csv = new CSV();
-        StringColumn c = (StringColumn) csv.addColumn("first");
-        assertNull(csv.getQuery());
-        assertFalse(csv.hasQuery());
     }
 
     static class Employee {

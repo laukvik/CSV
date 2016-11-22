@@ -40,6 +40,7 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.io.BOM;
+import org.laukvik.csv.query.Query;
 
 import java.io.File;
 import java.io.IOException;
@@ -96,6 +97,8 @@ public class Main extends Application implements ChangeListener, FileListener {
      * The CSV model.
      */
     private CSV csv;
+    /** Contains the query */
+    private Query query;
     /**
      * The JavaFX stage.
      */
@@ -1293,5 +1296,12 @@ public class Main extends Application implements ChangeListener, FileListener {
         viewMode = ViewMode.Search;
     }
 
+    public Query getQuery() {
+        return query;
+    }
+
+    public void setQuery(Query query) {
+        this.query = query;
+    }
 
 }
