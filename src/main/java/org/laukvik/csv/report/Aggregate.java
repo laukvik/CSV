@@ -22,4 +22,6 @@ public abstract class Aggregate {
 
     public abstract Object getValue();
 
+    public abstract void reset();
+
 }

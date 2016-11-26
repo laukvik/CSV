@@ -25,6 +25,11 @@ public class Max extends Aggregate {
         return max;
     }
 
+    @Override
+    public void reset() {
+        max = 0;
+    }
+
     public void aggregate(final Row row) {
         Integer value = row.getInteger((IntegerColumn) getColumn());
         if (max == null) {

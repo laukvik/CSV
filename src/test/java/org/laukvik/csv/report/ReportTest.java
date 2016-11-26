@@ -3,6 +3,7 @@ package org.laukvik.csv.report;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.columns.IntegerColumn;
+import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
 
@@ -41,7 +42,10 @@ public class ReportTest {
         CSV csv = new CSV();
         csv.readFile(getResource("metadata.csv"));
         IntegerColumn presidency = (IntegerColumn) csv.getColumn("presidency");
+        StringColumn party = (StringColumn) csv.getColumn("Party");
+
         Report r = new Report();
+        r.addGroup(party);
 
         Name name = new Name(presidency);
         Count count = new Count(presidency);
@@ -60,6 +64,19 @@ public class ReportTest {
 
         CSV c = r.buildReport(csv);
 
+        for (int x=0; x<c.getColumnCount(); x++){
+            System.out.print( c.getColumn(x).getName() + "\t\t");
+        }
+        System.out.println();
+        for (int y= 0; y<c.getRowCount(); y++){
+            for (int x=0; x<c.getColumnCount(); x++){
+                System.out.print( c.getRow(y).get( c.getColumn(x) ) + "\t\t");
+            }
+            System.out.println();
+        }
+
     }
+
+
 
 }

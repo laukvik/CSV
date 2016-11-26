@@ -26,6 +26,11 @@ public final class Min extends Aggregate {
         return min;
     }
 
+    @Override
+    public void reset() {
+        min = 0;
+    }
+
     public void aggregate(final Row row) {
         Integer value = row.getInteger((IntegerColumn) getColumn());
         if (min == null) {

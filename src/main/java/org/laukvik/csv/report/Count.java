@@ -9,7 +9,7 @@ import org.laukvik.csv.columns.Column;
  */
 public final class Count extends Aggregate {
 
-    private long count;
+    private int count;
 
     public Count(final Column column) {
         super(column);
@@ -20,8 +20,13 @@ public final class Count extends Aggregate {
         count++;
     }
 
-    public Long getValue() {
+    public Integer getValue() {
         return count;
+    }
+
+    @Override
+    public void reset() {
+        count = 0;
     }
 
 }

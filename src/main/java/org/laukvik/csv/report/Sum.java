@@ -38,4 +38,9 @@ public final class Sum extends Aggregate {
         return sum;
     }
 
+    @Override
+    public void reset() {
+        sum = new BigDecimal(0);
+    }
+
 }

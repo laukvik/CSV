@@ -38,7 +38,17 @@ public final class Avg extends Aggregate {
      * @return
      */
     public BigDecimal getValue() {
+        if (count == 0){
+            return new BigDecimal(0);
+        }
         return sum.divideToIntegralValue(new BigDecimal(count));
     }
+
+    @Override
+    public void reset() {
+        count = 0;
+        sum = new BigDecimal(0);
+    }
+
 
 }
