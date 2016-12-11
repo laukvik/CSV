@@ -275,7 +275,11 @@ public final class CSV implements Serializable {
      * @return the column
      */
     public Column getColumn(final String name) {
-        return columns.get(indexOf(name));
+        int index = indexOf(name);
+        if (index < 0){
+            return null;
+        }
+        return columns.get(index);
     }
 
     /**
@@ -478,7 +482,7 @@ public final class CSV implements Serializable {
      * @param query the query
      * @return the rows
      */
-    public List<Row> getRowsByQuery(final Query query){
+    public List<Row> getRowsByQuery(final Query query) {
         return query.getRows(this);
     }
 
