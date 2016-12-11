@@ -410,9 +410,9 @@ public abstract class Column<T> implements Comparable {
     public final ColumnDefinition toColumnDefinition() {
         ColumnDefinition cd = new ColumnDefinition(getName());
         if (this instanceof StringColumn) {
-            cd.setAttribute(TYPE, TYPE_STRING);
             StringColumn sc = (StringColumn) this;
             if (sc.getSize() > 0) {
+                cd.setAttribute(TYPE, TYPE_STRING);
                 cd.setAttribute(TYPE, TYPE_STRING, sc.getSize() + "");
             }
         } else if (this instanceof BigDecimalColumn) {
