@@ -1,6 +1,11 @@
 package org.laukvik.csv.report;
 
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.IntegerColumn;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -22,6 +27,13 @@ public final class Node {
     private int count;
     /** The parent node. */
     private Node parent;
+    /** */
+    private List<Aggregate> aggregateList;
+
+    private BigDecimal min;
+    private BigDecimal max;
+    private BigDecimal sum;
+
 
     /**
      * Creates a new node.
@@ -33,7 +45,7 @@ public final class Node {
         map = new TreeMap<>();
         this.value = value;
         this.column = column;
-
+        this.aggregateList = new ArrayList<>();
     }
 
     /**
@@ -70,6 +82,49 @@ public final class Node {
         return map.isEmpty();
     }
 
+
+    public void doSUM(final Object v, final Column column){
+        if (column instanceof IntegerColumn && v instanceof Integer) {
+            IntegerColumn ic = (IntegerColumn) column;
+            Integer i = (Integer) v;
+            if (sum == null) {
+                sum = new BigDecimal(i);
+            } else {
+                sum = sum.add(new BigDecimal(i));
+            }
+        }
+    }
+
+    public void doMin(final Object v, final Column column){
+        if (column instanceof IntegerColumn && v instanceof Integer) {
+            IntegerColumn ic = (IntegerColumn) column;
+            Integer i = (Integer) v;
+            if (min == null) {
+                min = new BigDecimal(i);
+            } else {
+                BigDecimal bd = new BigDecimal(i);
+                if (min.compareTo(bd) > 0) {
+                    min = bd;
+                }
+            }
+        }
+    }
+
+    public void doMax(final Object v, final Column column){
+        if (column instanceof IntegerColumn && v instanceof Integer) {
+            IntegerColumn ic = (IntegerColumn) column;
+            Integer i = (Integer) v;
+            if (max == null) {
+                max = new BigDecimal(i);
+            } else {
+                BigDecimal bd = new BigDecimal(i);
+                if (max.compareTo(bd) < 0) {
+                    max = bd;
+                }
+            }
+        }
+    }
+
     /**
      * Adds a new node if it doesn't exits.
      * @param value the value
@@ -77,14 +132,16 @@ public final class Node {
      * @return the node added
      */
     public Node add(final Object value, final Column column) {
-        count++;
         if (!map.containsKey(value)) {
             Node n = new Node(value, column);
+            n.count++;
             n.parent = this;
             map.put(value, n);
             return n;
         } else {
-            return map.get(value);
+            Node n = map.get(value);
+            n.count++;
+            return n;
         }
     }
 
@@ -110,5 +167,37 @@ public final class Node {
      */
     public int getCount() {
         return count;
+    }
+
+    /**
+     * Adds aggregated value
+     *
+     * @param aggregate doSUM
+     */
+    public void addAggregate(final Aggregate aggregate) {
+        this.aggregateList.add(aggregate);
+    }
+
+    public List<Aggregate> getAggregates() {
+        return aggregateList;
+    }
+
+    public BigDecimal getMin() {
+        return min;
+    }
+
+    public BigDecimal getMax() {
+        return max;
+    }
+
+    public BigDecimal getSum() {
+        return sum;
+    }
+
+    public BigDecimal getAverage() {
+        if (sum == null || sum.intValue() == 0){
+            return new BigDecimal(0);
+        }
+        return sum.divide(new BigDecimal(count), BigDecimal.ROUND_DOWN);
     }
 }

@@ -20,7 +20,7 @@ import org.laukvik.csv.Row;
 /**
  * An interface for excluding rows that doesn't matches the criteria.
  */
-abstract class RowMatcher {
+public abstract class RowMatcher {
 
     /**
      * Returns true if the row matches.

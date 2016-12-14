@@ -25,7 +25,6 @@ public class Max extends Aggregate {
         return max;
     }
 
-    @Override
     public void reset() {
         max = 0;
     }

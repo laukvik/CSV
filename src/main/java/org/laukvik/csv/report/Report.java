@@ -8,11 +8,11 @@ import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.query.RowMatcher;
 import org.laukvik.csv.query.SortOrder;
 
+import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Report.
@@ -20,7 +20,7 @@ import java.util.Set;
 public final class Report {
 
     /**
-     * Columns to aggregate.
+     * Columns to doSUM.
      */
     private final List<Aggregate> aggregateList;
     /**
@@ -50,14 +50,14 @@ public final class Report {
     /**
      * Adds a new aggregated column feature.
      *
-     * @param aggregate the aggregate feature
+     * @param aggregate the doSUM feature
      */
     public void addColumn(final Aggregate aggregate) {
         aggregateList.add(aggregate);
     }
 
     /**
-     * Adds a new column to aggregate by.
+     * Adds a new column to doSUM by.
      *
      * @param column the column
      */
@@ -90,48 +90,9 @@ public final class Report {
      * @return the new csv
      */
     public CSV buildReport(final CSV csv) {
-        CSV newCSV = new CSV();
-
-        StringColumn sc = (StringColumn) groups.get(0);
-        Set<String> unique = csv.buildDistinctValues(sc);
-
-        StringColumn sc2 = newCSV.addStringColumn(sc.getName());
-
-        List<IntegerColumn> cols = new ArrayList<>();
-        for (Aggregate a : aggregateList) {
-            IntegerColumn ic = new IntegerColumn(a.getColumn().getName());
-            newCSV.addColumn(ic);
-            cols.add(ic);
-        }
-        // Iterate through each unique
-        for (String value : unique) {
-            // Add unique
-            Row newRow = newCSV.addRow();
-            newRow.setString(sc2, value);
-            // Iterate all value matching each unique
-            for (int y = 0; y < csv.getRowCount(); y++) {
-                Row row = csv.getRow(y);
-                String s = row.getString(sc);
-                if (s != null && s.equals(value)) {
-                    int z = 0;
-                    for (Aggregate a : aggregateList) {
-                        a.aggregate(row);
-                        if (a.getValue() instanceof Integer) {
-                            Integer i = (Integer) a.getValue();
-//                            System.out.println("Setting: " + i + " for " + value);
-                            newRow.setInteger(cols.get(z), i);
-                        }
-                        z++;
-                    }
-                }
-            }
-            // Reset aggregate after each unique
-            for (Aggregate a : aggregateList) {
-//                a.reset();
-            }
-        }
-
-        System.out.println();
+        // Build unique node hierarchy
+        Node root = buildNode(csv);
+        CSV newCSV = buildCSV(root);
         return newCSV;
     }
 
@@ -159,8 +120,21 @@ public final class Report {
                     Column c = groups.get(x);
                     Object o = r.get(c);
                     extra = extra.add(o, c);
-//                    IntegerColumn ic = null;
-//                    r.setInteger(ic, extra.getCount());
+                }
+                for (Aggregate a : aggregateList) {
+                    Column c = a.getColumn();
+                    Object v = r.get(c);
+                    if (a instanceof Sum) {
+                        extra.doSUM(v, c);
+                    } else if (a instanceof Min) {
+                        extra.doMin(v, c);
+                    } else if (a instanceof Max) {
+                        extra.doMax(v, c);
+                    } else if (a instanceof Count) {
+//                        extra.doCount(v, c);
+                    }
+
+
                 }
             }
         }
@@ -175,21 +149,14 @@ public final class Report {
      */
     public CSV buildCSV(final Node node) {
         CSV csv = new CSV();
-        System.out.println("aggregateList: " + aggregateList.size());
-        for (Aggregate a : aggregateList) {
-            if (a instanceof Name) {
-                Name n = (Name) a;
-                StringColumn sc = new StringColumn(a.getColumn().getName());
-//                a.setAggregateColumn(sc);
-                csv.addColumn(sc);
-            } else {
-                IntegerColumn ic = new IntegerColumn(a.getClass().getSimpleName()+ ":" + a.getColumn().getName());
-                a.setAggregateColumn(ic);
-                csv.addColumn(ic);
-            }
+        for (Column c : groups) {
+            csv.addColumn(c);
         }
-        Deque<Object> list = new ArrayDeque<>();
-        build(node, csv, list);
+        for (Aggregate a : aggregateList) {
+            IntegerColumn ic = csv.addIntegerColumn(a.getClass().getSimpleName());
+            a.setAggregateColumn(ic);
+        }
+        build(node, csv, new ArrayDeque<>());
         return csv;
     }
 
@@ -205,22 +172,19 @@ public final class Report {
         if (!n.isRoot()) {
             deque.add(n.getValue());
         }
-
-
-        if (!n.isRoot()){
-            Column c = csv.getColumn(n.getColumn().getName());
-            if (c == null){
-                c = csv.addColumn(n.getColumn().getName());
+        if (!n.isRoot()) {
+            Column c = null;
+            if (csv.indexOf(n.getColumn()) < 0) {
+                c = csv.addColumn(n.getColumn());
             } else {
                 c = n.getColumn();
             }
-
-            if (n.isEmpty()){
+            if (n.isEmpty()) {
                 // Display path
-                for (Object o : deque){
-                    System.out.print(o + " -> ");
-                }
-                System.out.println(n.getCount() + "\tColumns " + csv.getColumnCount() + " "  + c);
+//                for (Object o : deque){
+//                    System.out.print(o + " -> ");
+//                }
+//                System.out.println(n.getCount() + "\tColumns " + csv.getColumnCount() + " "  + c);
                 Row r = csv.addRow();
 
                 int x = 0;
@@ -231,31 +195,46 @@ public final class Report {
                     }
                     x++;
                 }
-    //            for (Aggregate a : aggregateList) {
-    //                if (a instanceof Count) {
-    //                    Count c = (Count) a;
-    //                    IntegerColumn ic = c.getAggregateColumn();
-    //                    r.setInteger(a.getAggregateColumn(), n.getCount());
-    //                }
-    //            }
-    //        if (n.isEmpty()) {
-    //            for (Aggregate a : aggregateList) {
-    //                if (a instanceof Count) {
-    //                    Count c = (Count) a;
-    //                    IntegerColumn ic = c.getAggregateColumn();
-    //                    r.setInteger(a.getAggregateColumn(), n.getCount());
-    //                }
-    //            }
-    //        }
+
+                for (Aggregate a : aggregateList) {
+                    IntegerColumn ic = a.getAggregateColumn();
+
+                    if (a instanceof Count) {
+                        r.setInteger(ic, n.getCount());
+
+                    } else if (a instanceof Min) {
+                        BigDecimal bd = n.getMin();
+                        if (bd != null) {
+                            r.setInteger(ic, bd.intValue());
+                        }
+                    } else if (a instanceof Max) {
+                        BigDecimal bd = n.getMax();
+                        if (bd != null) {
+                            r.setInteger(ic, bd.intValue());
+                        }
+                    } else if (a instanceof Sum) {
+                        BigDecimal bd = n.getSum();
+                        if (bd != null) {
+                            r.setInteger(ic, bd.intValue());
+                        }
+                    } else if (a instanceof Avg) {
+                        BigDecimal bd = n.getAverage();
+                        if (bd != null) {
+                            r.setInteger(ic, bd.intValue());
+                        }
+//                    } else if (a instanceof Name) {
+//                        Name name = (Name) a;
+//                        r.setString((StringColumn) a.getAggregateColumn(), name.getValue());
+
+                    }
+                }
             }
         }
-
         // Iterate the rest of the hierarchy
         for (Object key : n.getMap().keySet()) {
             Node subNode = n.getMap().get(key);
             build(subNode, csv, deque);
         }
-
         if (!n.isRoot()) {
             deque.removeLast();
         }

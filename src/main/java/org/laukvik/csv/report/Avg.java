@@ -30,7 +30,7 @@ public final class Avg extends Aggregate {
     @Override
     public void aggregate(final Row row) {
         Integer value = row.getInteger((IntegerColumn) getColumn());
-        sum = sum.add(new BigDecimal(value));
+        sum = sum.add(new BigDecimal(value == null ? 0 : value));
         count++;
     }
 

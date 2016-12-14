@@ -44,40 +44,34 @@ public class ReportTest {
     public void buildReport() throws Exception {
         CSV csv = new CSV();
         csv.readFile(getResource("metadata.csv"));
+        StringColumn homeState = (StringColumn) csv.getColumn("Home state");
         IntegerColumn presidency = (IntegerColumn) csv.getColumn("presidency");
         StringColumn party = (StringColumn) csv.getColumn("Party");
 
         Report r = new Report();
         r.addGroup(party);
+        r.addGroup(homeState);
 
-        Name name = new Name(presidency);
-        Count count = new Count(presidency);
-        Max max = new Max(presidency);
-        Min min = new Min(presidency);
-        Sum sum = new Sum(presidency);
-        Avg avg = new Avg(presidency);
+        r.addColumn(new Name(homeState));
+        r.addColumn(new Count(presidency));
 
-
-        r.addColumn(name);
-        r.addColumn(count);
-        r.addColumn(max);
-        r.addColumn(min);
-        r.addColumn(sum);
-        r.addColumn(avg);
+        r.addColumn(new Min(presidency));
+        r.addColumn(new Max(presidency));
+        r.addColumn(new Sum(presidency));
+        r.addColumn(new Avg(presidency));
 
         CSV c = r.buildReport(csv);
 
         for (int x=0; x<c.getColumnCount(); x++){
-            System.out.print( c.getColumn(x).getName() + "\t\t");
+            System.out.print( c.getColumn(x).getName() + "\t");
         }
         System.out.println();
         for (int y= 0; y<c.getRowCount(); y++){
             for (int x=0; x<c.getColumnCount(); x++){
-                System.out.print( c.getRow(y).get( c.getColumn(x) ) + "\t\t");
+                System.out.print( c.getRow(y).get( c.getColumn(x) ) + "\t");
             }
             System.out.println();
         }
-
     }
 
     @Test
@@ -99,13 +93,13 @@ public class ReportTest {
         assertEquals( land.getName(), csv.getColumn(0).getName() );
         assertEquals( by.getName(), csv.getColumn(1).getName() );
 
-        System.out.println("TABELL:");
-        for (int y=0; y < csv.getRowCount(); y++){
-            for (int x=0; x<csv.getColumnCount(); x++){
-                System.out.print( csv.getRow(y).get( csv.getColumn(x)) + "\t");
-            }
-            System.out.println();
-        }
+//        System.out.println("TABELL:");
+//        for (int y=0; y < csv.getRowCount(); y++){
+//            for (int x=0; x<csv.getColumnCount(); x++){
+//                System.out.print( csv.getRow(y).get( csv.getColumn(x)) + "\t");
+//            }
+//            System.out.println();
+//        }
 
         assertEquals( 6, csv.getRowCount() );
 
