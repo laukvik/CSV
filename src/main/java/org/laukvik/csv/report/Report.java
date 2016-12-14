@@ -131,10 +131,10 @@ public final class Report {
                     } else if (a instanceof Max) {
                         extra.doMax(v, c);
                     } else if (a instanceof Count) {
-//                        extra.doCount(v, c);
+                        extra.doCount(v, c);
+                    } else if (a instanceof Name) {
+//                        extra.doName(v, c);
                     }
-
-
                 }
             }
         }
@@ -153,8 +153,13 @@ public final class Report {
             csv.addColumn(c);
         }
         for (Aggregate a : aggregateList) {
-            IntegerColumn ic = csv.addIntegerColumn(a.getClass().getSimpleName());
-            a.setAggregateColumn(ic);
+            if (a instanceof Name) {
+                StringColumn ic = csv.addStringColumn(a.getColumn().getName());
+                a.setAggregateColumn(ic);
+            } else {
+                IntegerColumn ic = csv.addIntegerColumn(a.getClass().getSimpleName());
+                a.setAggregateColumn(ic);
+            }
         }
         build(node, csv, new ArrayDeque<>());
         return csv;
@@ -180,11 +185,6 @@ public final class Report {
                 c = n.getColumn();
             }
             if (n.isEmpty()) {
-                // Display path
-//                for (Object o : deque){
-//                    System.out.print(o + " -> ");
-//                }
-//                System.out.println(n.getCount() + "\tColumns " + csv.getColumnCount() + " "  + c);
                 Row r = csv.addRow();
 
                 int x = 0;
@@ -197,34 +197,39 @@ public final class Report {
                 }
 
                 for (Aggregate a : aggregateList) {
-                    IntegerColumn ic = a.getAggregateColumn();
+                    Column col = a.getAggregateColumn();
 
                     if (a instanceof Count) {
+                        IntegerColumn ic = (IntegerColumn) col;
                         r.setInteger(ic, n.getCount());
 
                     } else if (a instanceof Min) {
+                        IntegerColumn ic = (IntegerColumn) col;
                         BigDecimal bd = n.getMin();
                         if (bd != null) {
                             r.setInteger(ic, bd.intValue());
                         }
                     } else if (a instanceof Max) {
+                        IntegerColumn ic = (IntegerColumn) col;
                         BigDecimal bd = n.getMax();
                         if (bd != null) {
                             r.setInteger(ic, bd.intValue());
                         }
                     } else if (a instanceof Sum) {
+                        IntegerColumn ic = (IntegerColumn) col;
                         BigDecimal bd = n.getSum();
                         if (bd != null) {
                             r.setInteger(ic, bd.intValue());
                         }
                     } else if (a instanceof Avg) {
+                        IntegerColumn ic = (IntegerColumn) col;
                         BigDecimal bd = n.getAverage();
                         if (bd != null) {
                             r.setInteger(ic, bd.intValue());
                         }
-//                    } else if (a instanceof Name) {
-//                        Name name = (Name) a;
-//                        r.setString((StringColumn) a.getAggregateColumn(), name.getValue());
+                    } else if (a instanceof Name) {
+                        Name name = (Name) a;
+                        r.setString((StringColumn) a.getAggregateColumn(), (String) n.getValue());
 
                     }
                 }

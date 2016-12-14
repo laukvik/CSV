@@ -24,8 +24,4 @@ public final class Name extends Aggregate {
         return getColumn().getName();
     }
 
-    @Override
-    public void reset() {
-    }
-
 }

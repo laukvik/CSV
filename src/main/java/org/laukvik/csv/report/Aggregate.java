@@ -16,7 +16,7 @@ public abstract class Aggregate {
     /**
      * The new column with the aggregated data.
      */
-    private IntegerColumn aggregateColumn;
+    private Column aggregateColumn;
 
     /**
      * Creates a new instance with the column.
@@ -47,13 +47,11 @@ public abstract class Aggregate {
     public abstract Object getValue();
 
 
-    public abstract void reset();
-
-    public void setAggregateColumn(IntegerColumn aggregateColumn) {
+    public void setAggregateColumn(Column aggregateColumn) {
         this.aggregateColumn = aggregateColumn;
     }
 
-    public IntegerColumn getAggregateColumn() {
+    public Column getAggregateColumn() {
         return aggregateColumn;
     }
 }

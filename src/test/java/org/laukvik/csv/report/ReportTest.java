@@ -50,15 +50,16 @@ public class ReportTest {
 
         Report r = new Report();
         r.addGroup(party);
-        r.addGroup(homeState);
+//        r.addGroup(homeState);
 
-        r.addColumn(new Name(homeState));
-        r.addColumn(new Count(presidency));
+//        r.addColumn(new Name(homeState));
+        r.addColumn(new Name(party));
+//        r.addColumn(new Count(presidency));
 
-        r.addColumn(new Min(presidency));
-        r.addColumn(new Max(presidency));
+//        r.addColumn(new Min(presidency));
+//        r.addColumn(new Max(presidency));
         r.addColumn(new Sum(presidency));
-        r.addColumn(new Avg(presidency));
+//        r.addColumn(new Avg(presidency));
 
         CSV c = r.buildReport(csv);
 

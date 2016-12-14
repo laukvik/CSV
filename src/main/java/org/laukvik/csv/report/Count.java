@@ -24,9 +24,4 @@ public final class Count extends Aggregate {
         return count;
     }
 
-    @Override
-    public void reset() {
-        count = 0;
-    }
-
 }
