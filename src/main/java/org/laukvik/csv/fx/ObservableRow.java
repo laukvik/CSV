@@ -22,8 +22,10 @@ import org.laukvik.csv.CSV;
 import org.laukvik.csv.ChangeListener;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.DateColumn;
 import org.laukvik.csv.columns.StringColumn;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,9 +62,17 @@ public class ObservableRow implements javafx.beans.value.ChangeListener<String> 
         this.csv = csv;
         for (int x = 0; x < csv.getColumnCount(); x++) {
             Column col = csv.getColumn(x);
-            SimpleStringProperty ssp = new SimpleStringProperty(row.getAsString(col));
-            ssp.addListener(this);
-            items.add(ssp);
+            if (col instanceof DateColumn){
+                DateColumn dc = (DateColumn) col;
+                Date d = row.getDate(dc);
+                SimpleStringProperty ssp = new SimpleStringProperty(DateColumn.formatDefaultDate(d));
+                ssp.addListener(this);
+                items.add(ssp);
+            } else {
+                SimpleStringProperty ssp = new SimpleStringProperty(row.getAsString(col));
+                ssp.addListener(this);
+                items.add(ssp);
+            }
         }
     }
 

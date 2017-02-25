@@ -18,28 +18,39 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Compares a DateColumn to have the year to be the specified value.
  *
  */
-public final class MonthMatcher extends AbstractDateMatcher {
+public final class MonthMatcher extends RowMatcher implements ValueMatcher<Date> {
 
     /**
-     * The year.
+     * The value to compare.
      */
-    private final int monthIndex;
+    private final List<Integer> values;
+    /**
+     * The column to compare.
+     */
+    private final DateColumn column;
 
     /**
      * Matches the value of the dateColumn to have the specified month.
      *
      * @param dateColumn the dateColumn
-     * @param month       the month
+     * @param value       the month
      */
-    public MonthMatcher(final DateColumn dateColumn, final int month) {
-        super(dateColumn, null);
-        this.monthIndex = month;
+    public MonthMatcher(final DateColumn dateColumn, final Integer... value) {
+        this(dateColumn, Arrays.asList(value));
+    }
+
+    public MonthMatcher(final DateColumn dateColumn, final List<Integer> values) {
+        super();
+        this.column = dateColumn;
+        this.values = values;
     }
 
     /**
@@ -49,8 +60,22 @@ public final class MonthMatcher extends AbstractDateMatcher {
      * @return true if it matches
      */
     public boolean matches(final Row row) {
-        Date v = row.getDate(getColumn());
-        return DateColumn.isMonth(v, monthIndex);
+        Date v = row.getDate(column);
+        return matches(v);
     }
 
+    @Override
+    public boolean matches(final Date value) {
+        Integer month = DateColumn.getMonth(value);
+        for (Integer v : values){
+            if (month == null){
+                if (v == null){
+                    return true;
+                }
+            } else if (month.equals(v)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

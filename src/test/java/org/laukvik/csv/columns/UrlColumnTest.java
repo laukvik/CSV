@@ -2,6 +2,7 @@ package org.laukvik.csv.columns;
 
 import org.junit.Test;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
@@ -46,7 +47,60 @@ public class UrlColumnTest {
         assertTrue(dc.compare( u1, null ) > 0);
         assertTrue(dc.compare( null, u2 ) < 0);
         assertTrue(dc.compare( null, null ) == 0);
-
     }
-    
+
+    @Test
+    public void getFilename() throws MalformedURLException {
+        URL u1 = new URL("http://en.wikipedia.org/wiki/Barack_Obama.html");
+        URL u2 = new URL("http://en.wikipedia.org");
+        URL u3 = new URL("http://en.wikipedia.org/wiki/Barack_Obama");
+        URL u4 = new URL("http://en.wikipedia.org/Barack_Obama");
+        URL u5 = new URL("http://en.wikipedia.org/Barack_Obama.html");
+        assertEquals("Barack_Obama.html", UrlColumn.getFilename(u1));
+        assertEquals("", UrlColumn.getFilename(u2));
+        assertEquals("Barack_Obama", UrlColumn.getFilename(u3));
+        assertEquals("Barack_Obama", UrlColumn.getFilename(u4));
+        assertEquals("Barack_Obama.html", UrlColumn.getFilename(u5));
+        assertEquals(null, UrlColumn.getFilename(null));
+    }
+
+    @Test
+    public void getPrefix() throws MalformedURLException {
+        URL u1 = new URL("http://en.wikipedia.org/wiki/Barack_Obama.html");
+        URL u2 = new URL("http://en.wikipedia.org");
+        URL u3 = new URL("http://en.wikipedia.org/wiki/Barack_Obama");
+        URL u4 = new URL("http://en.wikipedia.org/Barack_Obama");
+        URL u5 = new URL("http://en.wikipedia.org/Barack_Obama.html");
+        assertEquals("Barack_Obama", UrlColumn.getPrefix(u1));
+        assertEquals(null, UrlColumn.getPrefix(u2));
+        assertEquals("Barack_Obama", UrlColumn.getPrefix(u3));
+        assertEquals("Barack_Obama", UrlColumn.getPrefix(u4));
+        assertEquals("Barack_Obama", UrlColumn.getPrefix(u5));
+        assertEquals(null, UrlColumn.getPrefix(null));
+    }
+
+    @Test
+    public void getPostfix() throws MalformedURLException {
+        URL u1 = new URL("http://en.wikipedia.org/wiki/Barack_Obama.html");
+        URL u2 = new URL("http://en.wikipedia.org");
+        URL u3 = new URL("http://en.wikipedia.org/wiki/Barack_Obama");
+        URL u4 = new URL("http://en.wikipedia.org/Barack_Obama");
+        URL u5 = new URL("http://en.wikipedia.org/Barack_Obama.html");
+        assertEquals("html", UrlColumn.getPostfix(u1));
+        assertEquals(null, UrlColumn.getPostfix(u2));
+        assertEquals(null, UrlColumn.getPostfix(u3));
+        assertEquals(null, UrlColumn.getPostfix(u4));
+        assertEquals("html", UrlColumn.getPostfix(u5));
+        assertEquals(null, UrlColumn.getPostfix(null));
+    }
+
+    @Test
+    public void getAnchor() throws MalformedURLException {
+        URL u1 = new URL("http://en.wikipedia.org/wiki/Barack_Obama#history");
+        URL u2 = new URL("http://en.wikipedia.org/wiki/Barack_Obama");
+        assertEquals("history", UrlColumn.getAnchor(u1));
+        assertEquals(null, UrlColumn.getAnchor(u2));
+        assertEquals(null, UrlColumn.getAnchor(null));
+    }
+
 }

@@ -64,11 +64,15 @@ public final class FrequencyDistributionTableView extends TableView<ObservableFr
         selectUniqueColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectUniqueColumn));
         selectUniqueColumn.setEditable(true);
         getColumns().add(selectUniqueColumn);
+
+
         final TableColumn valueUniqueColumn = new TableColumn(bundle.getString("table.unique.values"));
         valueUniqueColumn.setCellValueFactory(
-                new PropertyValueFactory<ObservableFrequencyDistribution, String>("value")
+                new PropertyValueFactory<ObservableFrequencyDistribution, String>("label")
         );
         getColumns().add(valueUniqueColumn);
+
+
         final TableColumn countUniqueColumn = new TableColumn("");
         countUniqueColumn.setCellValueFactory(
                 new PropertyValueFactory<ObservableFrequencyDistribution, Integer>("count")

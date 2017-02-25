@@ -1,19 +1,4 @@
-/*
- * Copyright 2015 Laukviks Bedrifter.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package org.laukvik.csv;
+package org.laukvik.csv.statistics;
 
 import org.laukvik.csv.columns.Column;
 
@@ -21,13 +6,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-
 /**
  * Frequency distribution is a table that shows the frequency of values found in a
  * column. Each entry contains the value and the count of occurrences of that value.
  *
+ * @param <T> the type of data
+ *
  */
-public final class FrequencyDistribution {
+public class FreqDistribution<T> {
+
 
     /**
      * The column.
@@ -36,7 +23,12 @@ public final class FrequencyDistribution {
     /**
      * The map with string value and the frequency.
      */
-    private final Map<String, Integer> map;
+    private final Map<T, Integer> map;
+
+    /**
+     * the frequency of null values.
+     */
+    private int nullCount;
 
     /**
      * Creates a new FrequencyDistribution with empty values for the
@@ -44,7 +36,7 @@ public final class FrequencyDistribution {
      *
      * @param column the column
      */
-    public FrequencyDistribution(final Column column) {
+    public FreqDistribution(final Column column) {
         this.column = column;
         this.map = new TreeMap<>();
     }
@@ -63,7 +55,7 @@ public final class FrequencyDistribution {
      *
      * @return the set of keys
      */
-    public Set<String> getKeys() {
+    public Set<T> getKeys() {
         return map.keySet();
     }
 
@@ -73,8 +65,17 @@ public final class FrequencyDistribution {
      * @param key the key
      * @return the frequency
      */
-    public Integer getCount(final String key) {
+    public int getCount(final T key) {
         return map.get(key);
+    }
+
+    /**
+     * Returns the frequency of null values.
+     *
+     * @return the frequency of null values
+     */
+    public int getNullCount() {
+        return nullCount;
     }
 
     /**
@@ -82,16 +83,16 @@ public final class FrequencyDistribution {
      *
      * @param word the value to add
      */
-    public void addValue(final String word) {
-        String newWord = word;
+    public void addValue(final T word) {
         if (word == null) {
-            newWord = "";
+            nullCount++;
+            return;
         }
-        if (map.containsKey(newWord)) {
-            Integer count = map.get(newWord) + 1;
-            map.put(newWord, count);
+        if (map.containsKey(word)) {
+            Integer count = map.get(word) + 1;
+            map.put(word, count);
         } else {
-            map.put(newWord, 1);
+            map.put(word, 1);
         }
     }
 

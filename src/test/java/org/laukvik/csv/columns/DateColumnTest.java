@@ -26,7 +26,7 @@ public class DateColumnTest {
     public void constructor() throws Exception {
         DateColumn c = new DateColumn("created");
         assertEquals("created", c.getName());
-        assertEquals(DateColumn.DEFAULT_DATE_FORMAT, c.getFormat());
+        assertEquals(DateColumn.DEFAULT_FORMAT, c.getFormat());
     }
 
     @Test
@@ -217,5 +217,17 @@ public class DateColumnTest {
         assertFalse( DateColumn.isBetweeen(value, null, null) );
         assertFalse( DateColumn.isBetweeen(null, null, null) );
     }
+
+
+    @Test
+    public void getDayOfWeek() throws Exception {
+        DateColumn dc = new DateColumn("created", "dd.MM.YYYY HH.mm.ss");
+        Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.YEAR, 2017);
+        cal.set(Calendar.DAY_OF_YEAR, 1);
+//        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        assertEquals((Integer)Calendar.SUNDAY, DateColumn.getDayOfWeek(cal.getTime()) );
+    }
+
 
 }

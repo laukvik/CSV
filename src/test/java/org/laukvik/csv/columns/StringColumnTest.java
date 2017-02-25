@@ -41,4 +41,12 @@ public class StringColumnTest {
         assertEquals(0, c.compare(null,null));
     }
 
+    @Test
+    public void getFirstLetter() throws Exception {
+        assertEquals(null, StringColumn.getFirstLetter(null));
+        assertEquals("a", StringColumn.getFirstLetter("a"));
+        assertEquals("b", StringColumn.getFirstLetter("ba"));
+        assertEquals(null, StringColumn.getFirstLetter(""));
+    }
+
 }

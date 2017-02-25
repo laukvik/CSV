@@ -19,9 +19,11 @@ public class IntIsInMatcherTest {
         IntegerColumn first = csv.addIntegerColumn("first");
         Row r1 = csv.addRow().setInteger(first, 12);
         Row r2 = csv.addRow();
+        Row r3 = csv.addRow().setInteger(first, 10);
         IntIsInMatcher m = new IntIsInMatcher(first, 12, 13, 14);
         assertTrue(m.matches(r1));
         assertFalse(m.matches(r2));
+        assertFalse(m.matches(r3));
     }
 
 }

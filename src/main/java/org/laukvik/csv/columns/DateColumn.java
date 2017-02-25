@@ -15,6 +15,7 @@
  */
 package org.laukvik.csv.columns;
 
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,7 +31,11 @@ public final class DateColumn extends Column<Date> {
     /**
      * The default date format.
      */
-    public static final String DEFAULT_DATE_FORMAT = "yyyy.MM.dd HH:mm:ss";
+    public static final String DEFAULT_FORMAT = "yyyy.MM.dd HH:mm:ss";
+    public static final String DEFAULT_DATE_FORMAT = "yyyy.MM.dd";
+    public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
+
+    private static final DateFormat DEFAULT_FORMATTER = new SimpleDateFormat(DEFAULT_FORMAT);
 
     /**
      * The DateFormat to use when reading and writing.
@@ -60,8 +65,8 @@ public final class DateColumn extends Column<Date> {
      */
     public DateColumn(final String columnName) {
         super(columnName);
-        this.format = DEFAULT_DATE_FORMAT;
-        this.dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+        this.format = DEFAULT_FORMAT;
+        this.dateFormat = new SimpleDateFormat(DEFAULT_FORMAT);
     }
 
     /**
@@ -345,4 +350,102 @@ public final class DateColumn extends Column<Date> {
         long finish = last.getTime();
         return time >= start && time <= finish;
     }
+
+    public static String formatDefaultDate(final Date date){
+        if (date == null){
+            return "";
+        } else {
+            return DEFAULT_FORMATTER.format(date);
+        }
+    }
+
+    public String formatDate(final Date date){
+        if (date == null){
+            return "";
+        } else {
+            return dateFormat.format(date);
+        }
+    }
+
+    public static Integer getYear(final Date value) {
+        if (value == null){
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.YEAR);
+    }
+
+    public static Integer getMonth(final Date value) {
+        if (value == null){
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.MONTH);
+    }
+
+    public static Integer getDayOfMonth(final Date value) {
+        if (value == null){
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static Integer getWeekOfYear(final Date value) {
+        if (value == null){
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    public static Integer getDayOfWeek(final Date value) {
+        if (value == null){
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    public static Integer getHour(final Date value) {
+        if (value == null){
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.HOUR_OF_DAY);
+    }
+
+    public static Integer getMinutes(final Date value) {
+        if (value == null){
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.MINUTE);
+    }
+
+    public static Integer getSeconds(final Date value) {
+        if (value == null){
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.SECOND);
+    }
+
+    public static Integer getMilliseconds(final Date value) {
+        if (value == null){
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.MILLISECOND);
+    }
+
 }

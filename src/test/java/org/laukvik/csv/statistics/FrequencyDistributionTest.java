@@ -1,4 +1,4 @@
-package org.laukvik.csv;
+package org.laukvik.csv.statistics;
 
 import org.junit.Test;
 import org.laukvik.csv.columns.StringColumn;

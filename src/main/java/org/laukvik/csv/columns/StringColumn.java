@@ -34,6 +34,32 @@ public final class StringColumn extends Column<String> {
         super(name);
     }
 
+    public static String getPrefix(final String s) {
+        if (s == null) {
+            return null;
+        } else {
+            int index = s.lastIndexOf(".");
+            if (index < 0) {
+                return null;
+            } else {
+                return s.substring(0, index);
+            }
+        }
+    }
+
+    public static String getPostfix(final String s) {
+        if (s == null) {
+            return null;
+        } else {
+            int index = s.lastIndexOf(".");
+            if (index < 0) {
+                return null;
+            } else {
+                return s.substring(index+ 1);
+            }
+        }
+    }
+
     /**
      * Returns the size.
      *
@@ -94,6 +120,25 @@ public final class StringColumn extends Column<String> {
             return 1;
         }
         return one.compareTo(another);
+    }
+
+    public static Integer getWordCount(final String s) {
+        if (s == null){
+            return 0;
+        }
+        return s.split("\\s+").length;
+    }
+
+    public static String getFirstLetter(final String value){
+        if (value == null || value.length() == 0){
+            return null;
+        } else {
+            return value.substring(0, 1);
+        }
+    }
+
+    public static int getLength(final String value){
+        return value == null ? 0 : value.length();
     }
 
 }

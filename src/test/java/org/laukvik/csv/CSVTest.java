@@ -29,6 +29,7 @@ import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
+import org.laukvik.csv.statistics.FrequencyDistribution;
 
 import java.io.File;
 import java.io.FileReader;

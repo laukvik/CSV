@@ -18,6 +18,9 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Compares a StringColumn to have one or more of the specified values.
  */
@@ -26,7 +29,7 @@ public final class StringInMatcher extends RowMatcher {
     /**
      * The values to match.
      */
-    private final String[] value;
+    private final List<String> values;
     /** The Column to match. */
     private final StringColumn column;
 
@@ -37,9 +40,13 @@ public final class StringInMatcher extends RowMatcher {
      * @param values       the values
      */
     public StringInMatcher(final StringColumn stringColumn, final String... values) {
+        this(stringColumn, Arrays.asList(values));
+    }
+
+    public StringInMatcher(final StringColumn stringColumn, final List<String> values) {
         super();
         this.column = stringColumn;
-        this.value = values;
+        this.values = values;
     }
 
     /**
@@ -80,7 +87,7 @@ public final class StringInMatcher extends RowMatcher {
         if (val == null) {
             return false;
         }
-        for (String v : value) {
+        for (String v : values) {
             if (isAny(val, v)) {
                 return true;
             }
