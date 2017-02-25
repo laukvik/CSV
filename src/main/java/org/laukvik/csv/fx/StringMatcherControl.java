@@ -1,9 +1,11 @@
 package org.laukvik.csv.fx;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Side;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Tab;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.statistics.FreqDistribution;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.query.FirstLetterMatcher;
@@ -13,6 +15,7 @@ import org.laukvik.csv.query.RowMatcher;
 import org.laukvik.csv.query.StringInMatcher;
 import org.laukvik.csv.query.StringLengthMatcher;
 import org.laukvik.csv.query.WordCountMatcher;
+import org.laukvik.csv.statistics.FreqDistribution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +70,30 @@ public class StringMatcherControl extends ColumnMatcherControl {
         getTabs().addAll(uniqueTab, firstLetterTab, prefixTab, postfixTab, lengthTab, wordsTab);
     }
 
+//    public FrequencyDistributionTableView getTableView(int index){
+//        switch (index){
+//            case 0 : return uniqueView;
+//            case 1 : return firstLetterView;
+//            case 2 : return lengthView;
+//            case 3 : return prefixView;
+//            case 4 : return postfixView;
+//            case 5 : return wordsView;
+//            default : return null;
+//        }
+//    }
+
+//    @Override
+//    public PieChart buildPieChart(final ColumnMatcherControl columnMatcherControl) {
+//        getSelectionModel().getSelectedIndex();
+//        List<PieChart.Data> dataset = new ArrayList<>();
+//        int max = uniqueView.getItems().size();
+//        for (int y= 0; y< max; y++){
+//            ObservableFrequencyDistribution ofd = uniqueView.getItems().get(y);
+//            dataset.add(new PieChart.Data(ofd.labelProperty().getName(), ofd.countProperty().intValue()));
+//        }
+//        ObservableList<PieChart.Data> data = FXCollections.observableArrayList(dataset);
+//        return new PieChart(data);
+//    }
 
     public List<RowMatcher> getMatchers() {
         StringColumn sc = (StringColumn) getColumn();

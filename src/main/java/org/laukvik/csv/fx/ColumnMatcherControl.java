@@ -1,6 +1,9 @@
 package org.laukvik.csv.fx;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Side;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.TabPane;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.columns.Column;
@@ -32,6 +35,17 @@ public abstract class ColumnMatcherControl extends TabPane {
         setSide(Side.BOTTOM);
         setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
         this.column = column;
+    }
+
+    public ObservableFrequencyDistribution getSelectedObservableFrequencyDistribution() {
+        int tabIndex = getSelectionModel().getSelectedIndex();
+        FrequencyDistributionTableView tableView = getFrequencyDistributionTableView(tabIndex);
+        int rowIndex = tableView.getSelectionModel().getSelectedIndex();
+        return rowIndex > -1 ? tableView.getItems().get(rowIndex) : null;
+    }
+
+    public FrequencyDistributionTableView getFrequencyDistributionTableView(int tabIndex){
+        return (FrequencyDistributionTableView) getTabs().get(tabIndex).getContent();
     }
 
     public String getLanguage(String key){
@@ -171,5 +185,6 @@ public abstract class ColumnMatcherControl extends TabPane {
         }
         return list;
     }
+
 
 }

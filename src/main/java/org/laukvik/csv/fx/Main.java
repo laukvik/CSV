@@ -1,7 +1,7 @@
 package org.laukvik.csv.fx;
 
 import javafx.application.Application;
-import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -9,6 +9,7 @@ import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -18,14 +19,19 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToolBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.laukvik.csv.CSV;
@@ -47,6 +53,8 @@ import org.laukvik.csv.query.RowMatcher;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -105,11 +113,10 @@ public final class Main extends Application implements ChangeListener, FileListe
      * The TableView for column selection.
      */
     private ColumnsTableView columnsTableView;
-    /**
-     * The TableView for FrequencyDistribution.
-     */
-//    private FrequencyDistributionTableView frequencyDistributionTableView;
 
+    /**
+     * The ColumnMatcherControl to use with selections
+     */
     private ColumnMatcherControl columnMatcherControl;
 
     /**
@@ -378,14 +385,7 @@ public final class Main extends Application implements ChangeListener, FileListe
      */
     private void setSelectedColumnIndex(final int selectedColumnIndex) {
         if (selectedColumnIndex > -1) {
-//            frequencyDistributionTableView.setItems(
-//                    createFrequencyDistributionObservableList(
-//                            selectedColumnIndex,
-//                            csv,
-//                            this));
-
             tableSplit.getItems().remove(1);
-
 
             Column c = csv.getColumn(selectedColumnIndex);
             if (c instanceof StringColumn){
@@ -416,6 +416,11 @@ public final class Main extends Application implements ChangeListener, FileListe
             } else {
                 columnMatcherControl = null;
             }
+
+            columnMatcherControl.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
+                handleTabChanged();
+            });
+
 
             tableSplit.getItems().add(columnMatcherControl);
 
@@ -1254,19 +1259,35 @@ public final class Main extends Application implements ChangeListener, FileListe
         buildFrequencyDistribution();
     }
 
+    public void handleTabChanged(){
+        if (viewMode == ViewMode.Results){
+            handleViewResultsAction();
+        } else if (viewMode == ViewMode.Chart){
+            handleViewChartAction();
+        } else if (viewMode == ViewMode.Maps){
+            handleViewGoogleMapsAction();
+        } else if (viewMode == ViewMode.Preview){
+            handleViewPreviewAction();
+        } else if (viewMode == ViewMode.Search){
+            handleViewGoogleSearchAction();
+        } else if (viewMode == ViewMode.Wikipedia){
+            handleViewWikipediaAction();
+        }
+    }
+
     /**
      * Handles chart action.
      */
-    public final void handleViewChartAction() {
-//        final PieChart chart = buildPieChart(frequencyDistributionTableView);
-//        resultsScroll.setContent(chart);
-//        viewMode = ViewMode.Chart;
+    public void handleViewChartAction() {
+        final PieChart chart = ChartBuilder.buildPieChart(columnMatcherControl);
+        resultsScroll.setContent(chart);
+        viewMode = ViewMode.Chart;
     }
 
     /**
      * Handles view results action.
      */
-    public final void handleViewResultsAction() {
+    public void handleViewResultsAction() {
         resultsScroll.setContent(resultsTableView);
         viewMode = ViewMode.Results;
     }
@@ -1274,84 +1295,113 @@ public final class Main extends Application implements ChangeListener, FileListe
     /**
      * Handles preview action.
      */
-    public final void handleViewPreviewAction() {
-//        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
-//        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
-//            String filename = ofd.getValue();
-//            if (filename == null || filename.trim().isEmpty()) {
-//                resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
-//            } else if (filename.startsWith("http")) {
-//                WebView v = new WebView();
-//                WebEngine webEngine = v.getEngine();
-//                resultsScroll.setContent(v);
-//                webEngine.load(filename);
-//
-//            } else if (filename.endsWith(".gif") || filename.endsWith(".jpg") || filename.endsWith(".png")) {
-//                if (filename.indexOf('\\') > -1) {
-//                    filename = filename.replace('\\', '/');
-//                }
-//                Path p = Paths.get(csv.getFile().getParent(), filename);
-//                File f = p.toFile();
-//                if (f.exists()) {
-//                    resultsScroll.setContent(new ImageView(new Image(f.toURI().toString())));
-//                }
-//            } else {
-//                resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
-//            }
-//        }
-//        viewMode = ViewMode.Preview;
+    public void handleViewPreviewAction() {
+        ObservableFrequencyDistribution ofd = columnMatcherControl.getSelectedObservableFrequencyDistribution();
+        if (ofd == null){
+            resultsScroll.setContent(getPreviewNothingSelectedNode());
+        } else {
+            String filename = ofd.labelProperty().getValue();
+            if (filename == null || filename.trim().isEmpty()) {
+                resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
+            } else if (filename.startsWith("http")) {
+                WebView v = new WebView();
+                WebEngine webEngine = v.getEngine();
+                resultsScroll.setContent(v);
+                webEngine.load(filename);
+
+            } else if (filename.endsWith(".gif") || filename.endsWith(".jpg") || filename.endsWith(".png")) {
+                if (filename.indexOf('\\') > -1) {
+                    filename = filename.replace('\\', '/');
+                }
+                Path p = Paths.get(csv.getFile().getParent(), filename);
+                File f = p.toFile();
+                if (f.exists()) {
+                    resultsScroll.setContent(new ImageView(new Image(f.toURI().toString())));
+                }
+            } else {
+                resultsScroll.setContent(getPreviewEmptyNode());
+            }
+        }
+        viewMode = ViewMode.Preview;
     }
 
     /**
      * Handles Wikipedia action.
      */
-    public final void handleViewWikipediaAction() {
-//        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
-//        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
-//            String value = ofd.getValue();
-//            WebView v = new WebView();
-//            WebEngine webEngine = v.getEngine();
-//            resultsScroll.setContent(v);
-//            webEngine.load("https://en.wikipedia.org/wiki/" + value);
-//        } else {
-//            resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
-//        }
-//        viewMode = ViewMode.Wikipedia;
+    public void handleViewWikipediaAction() {
+        ObservableFrequencyDistribution ofd = columnMatcherControl.getSelectedObservableFrequencyDistribution();
+        if (ofd == null){
+            resultsScroll.setContent(getPreviewNothingSelectedNode());
+        } else {
+            String value = ofd.labelProperty().getValue();
+            if (value != null && !value.isEmpty()) {
+                WebView v = new WebView();
+                WebEngine webEngine = v.getEngine();
+                resultsScroll.setContent(v);
+                webEngine.load("https://en.wikipedia.org/wiki/" + value);
+            } else {
+                resultsScroll.setContent(getPreviewEmptyNode());
+            }
+        }
+        viewMode = ViewMode.Wikipedia;
     }
 
     /**
      * Handles Maps action.
      */
-    public final void handleViewGoogleMapsAction() {
-//        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
-//        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
-//            String value = ofd.getValue();
-//            WebView v = new WebView();
-//            WebEngine webEngine = v.getEngine();
-//            resultsScroll.setContent(v);
-//            webEngine.load("https://www.google.com/maps?q=" + value);
-//        } else {
-//            resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
-//        }
-//        viewMode = ViewMode.Maps;
+    public void handleViewGoogleMapsAction() {
+        ObservableFrequencyDistribution ofd = columnMatcherControl.getSelectedObservableFrequencyDistribution();
 
+        if (ofd == null){
+            resultsScroll.setContent(getPreviewNothingSelectedNode());
+        } else {
+            String value = ofd.labelProperty().getValue();
+            if (value != null && !value.isEmpty()) {
+                WebView v = new WebView();
+                WebEngine webEngine = v.getEngine();
+                resultsScroll.setContent(v);
+                webEngine.load("https://www.google.com/maps?q=" + value);
+            } else {
+                resultsScroll.setContent(getPreviewEmptyNode());
+            }
+        }
+
+        viewMode = ViewMode.Maps;
     }
 
     /**
      * Handles Search action.
      */
-    public final void handleViewGoogleSearchAction() {
-//        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
-//        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
-//            String value = ofd.getValue();
-//            WebView v = new WebView();
-//            WebEngine webEngine = v.getEngine();
-//            resultsScroll.setContent(v);
-//            webEngine.load("https://www.google.no/?q=" + value);
-//        } else {
-//            resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
-//        }
-//        viewMode = ViewMode.Search;
+    public void handleViewGoogleSearchAction() {
+        ObservableFrequencyDistribution ofd = columnMatcherControl.getSelectedObservableFrequencyDistribution();
+
+        if (ofd == null){
+            resultsScroll.setContent(getPreviewNothingSelectedNode());
+        } else {
+            String value = ofd.labelProperty().getValue();
+            if (value != null && !value.isEmpty()) {
+                WebView v = new WebView();
+                WebEngine webEngine = v.getEngine();
+                resultsScroll.setContent(v);
+                webEngine.load("https://www.google.no/?q=" + value);
+            } else {
+                resultsScroll.setContent(getPreviewEmptyNode());
+            }
+        }
+
+        viewMode = ViewMode.Search;
+    }
+
+    public Node getPreviewEmptyNode(){
+        BorderPane pane = new BorderPane();
+        pane.centerProperty().setValue(new Label(bundle.getString("view.preview.empty")));
+        return pane;
+    }
+
+    public Node getPreviewNothingSelectedNode(){
+        BorderPane pane = new BorderPane();
+        pane.centerProperty().setValue(new Label(bundle.getString("view.preview.nothing.selected")));
+        return pane;
     }
 
     public Query getQuery() {

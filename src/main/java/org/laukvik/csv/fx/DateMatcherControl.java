@@ -281,6 +281,8 @@ public class DateMatcherControl extends ColumnMatcherControl {
 
     }
 
+
+
     public List<RowMatcher> getMatchers() {
         DateColumn dc = (DateColumn) getColumn();
         List<RowMatcher> matchers = new ArrayList<>();
