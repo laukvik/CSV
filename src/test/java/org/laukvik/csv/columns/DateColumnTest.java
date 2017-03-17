@@ -113,7 +113,8 @@ public class DateColumnTest {
     @Test
     public void isYearLessThan() throws Exception {
         Calendar cal = new GregorianCalendar();
-        assertFalse(DateColumn.isYearLessThan(new Date(), cal.get(Calendar.YEAR)));
+
+        assertFalse(DateColumn.isYearLessThan(cal.getTime(), cal.get(Calendar.YEAR)));
 
         cal.add(Calendar.YEAR, -1);
         assertFalse(DateColumn.isYearLessThan(new Date(), cal.get(Calendar.YEAR)));
@@ -264,7 +265,7 @@ public class DateColumnTest {
     public void formatDate() throws Exception {
         Date cal = getDate(2017, 2, 25, 16, 15, 12, 123 );
         DateColumn dc = new DateColumn("created", "dd.MM.YYYY HH.mm.ss");
-        assertEquals("25.02.2017 16.15.12", dc.formatDate(cal));
+        assertEquals("25.03.2017 16.15.12", dc.formatDate(cal));
     }
 
 }

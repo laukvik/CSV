@@ -26,7 +26,7 @@ public abstract class Aggregate {
     }
 
     /**
-     * Returns the column it aggregates
+     * Returns the column it aggregates.
      * @return the column
      */
     public Column getColumn() {
@@ -34,22 +34,30 @@ public abstract class Aggregate {
     }
 
     /**
-     * Aggregate the column in the row
+     * Aggregate the column in the row.
      * @param row the row
      */
     public abstract void aggregate(Row row);
 
     /**
-     * Returns the aggregated value
+     * Returns the aggregated value.
      * @return the aggregated value
      */
     public abstract Object getValue();
 
 
-    public void setAggregateColumn(Column aggregateColumn) {
+    /**
+     * Sets the column to aggregate.
+     * @param aggregateColumn the column
+     */
+    public void setAggregateColumn(final Column aggregateColumn) {
         this.aggregateColumn = aggregateColumn;
     }
 
+    /**
+     * Returns the column to aggregate.
+     * @return the column
+     */
     public Column getAggregateColumn() {
         return aggregateColumn;
     }

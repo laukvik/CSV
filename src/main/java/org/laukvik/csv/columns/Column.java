@@ -463,5 +463,21 @@ public abstract class Column<T> implements Comparable {
         return cd.toCompressed();
     }
 
+//    /**
+//     * Compares a value with another
+//     * @param one a value
+//     * @param another a value
+//     * @return comparable value
+//     */
+//    public int compareTos(final <T extends Comparable> one, final <T extends Comparable> another){
+//        if (one == null || another == null) {
+//            if (one == null){
+//                return -1;
+//            } else {
+//                return 1;
+//            }
+//        }
+//        return one.compareTo(another);
+//    }
 
 }

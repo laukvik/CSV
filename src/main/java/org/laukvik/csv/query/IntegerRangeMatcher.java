@@ -3,14 +3,14 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.statistics.IntegerRange;
+
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Matches Integers in the specified ranges.
- *
  */
-public class IntegerRangeMatcher extends RowMatcher implements ValueMatcher<Integer>{
+public class IntegerRangeMatcher extends RowMatcher implements ValueMatcher<Integer> {
 
     /**
      * The IntegerColumn to match.
@@ -63,8 +63,8 @@ public class IntegerRangeMatcher extends RowMatcher implements ValueMatcher<Inte
      */
     @Override
     public boolean matches(final Integer value) {
-        for (IntegerRange r : ranges){
-            if (r.contains(value)){
+        for (IntegerRange r : ranges) {
+            if (r.contains(value)) {
                 return true;
             }
         }

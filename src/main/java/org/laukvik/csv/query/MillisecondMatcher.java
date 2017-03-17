@@ -37,15 +37,21 @@ public final class MillisecondMatcher extends RowMatcher implements ValueMatcher
     private final DateColumn column;
 
     /**
-     * The value of the column must be.
+     * Compares the date against one or more values.
      *
      * @param dateColumn the column
-     * @param value     the value
+     * @param value      the value
      */
     public MillisecondMatcher(final DateColumn dateColumn, final Integer... value) {
         this(dateColumn, Arrays.asList(value));
     }
 
+    /**
+     * Compares the date against one or more values.
+     *
+     * @param dateColumn the column
+     * @param values      the values
+     */
     public MillisecondMatcher(final DateColumn dateColumn, final List<Integer> values) {
         super();
         this.column = dateColumn;
@@ -63,11 +69,17 @@ public final class MillisecondMatcher extends RowMatcher implements ValueMatcher
         return matches(v);
     }
 
+    /**
+     * Returns true when the value matches.
+     *
+     * @param value the value
+     * @return true when the row matches
+     */
     public boolean matches(final Date value) {
         Integer port = DateColumn.getMilliseconds(value);
         for (Integer v : values) {
-            if (port == null){
-                if (v == null){
+            if (port == null) {
+                if (v == null) {
                     return true;
                 }
             } else if (port.equals(v)) {

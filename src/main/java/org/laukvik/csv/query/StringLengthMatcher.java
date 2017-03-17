@@ -30,13 +30,16 @@ public final class StringLengthMatcher extends RowMatcher {
      * The value to compare.
      */
     private final List<Integer> values;
-    /** The column to compare. */
+    /**
+     * The column to compare.
+     */
     private final StringColumn column;
 
     /**
      * The value of the column must be.
+     *
      * @param stringColumn the column
-     * @param value the value
+     * @param value        the value
      */
     public StringLengthMatcher(final StringColumn stringColumn, final Integer... value) {
         super();
@@ -58,12 +61,12 @@ public final class StringLengthMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         String v = row.getString(column);
-        if (v == null){
+        if (v == null) {
             return false;
         } else {
-            for (int i : values){
+            for (int i : values) {
                 System.out.println(i + " = " + StringColumn.getLength(v));
-                if (i == StringColumn.getLength(v)){
+                if (i == StringColumn.getLength(v)) {
                     return true;
                 }
             }

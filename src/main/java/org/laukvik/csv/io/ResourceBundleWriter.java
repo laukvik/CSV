@@ -32,7 +32,9 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
      * The folder to read from.
      */
     private File folder;
-    /** The base filename to read. The bundle name. */
+    /**
+     * The base filename to read. The bundle name.
+     */
     private String basename;
 
     /**
@@ -47,10 +49,10 @@ public final class ResourceBundleWriter extends AbstractResourceBundle implement
      * Writes the CSV to the file.
      *
      * @param file the file
-     * @param csv the CSV
+     * @param csv  the CSV
      * @throws IOException when the resourcebundle could not be written
      */
-    public void writeCSV(final File file, final CSV csv) throws IOException{
+    public void writeCSV(final File file, final CSV csv) throws IOException {
         this.folder = file.getParentFile();
         this.basename = getBasename(file);
         for (int x = 1; x < csv.getColumnCount(); x++) {

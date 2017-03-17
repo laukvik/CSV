@@ -32,13 +32,16 @@ public final class UrlQueryMatcher extends RowMatcher {
      * The value to compare.
      */
     private final List<String> values;
-    /** The column to compare. */
+    /**
+     * The column to compare.
+     */
     private final UrlColumn column;
 
     /**
      * The value of the column must be.
+     *
      * @param urlColumn the column
-     * @param value the value
+     * @param value     the value
      */
     public UrlQueryMatcher(final UrlColumn urlColumn, final String... value) {
         super();
@@ -68,15 +71,15 @@ public final class UrlQueryMatcher extends RowMatcher {
 
 
         URL v = row.getURL(column);
-        if (v == null){
+        if (v == null) {
             return false;
         } else {
             String q = v.getQuery();
-            if (q == null){
+            if (q == null) {
                 return false;
             }
-            for (String s : values){
-                if (q.equals(s)){
+            for (String s : values) {
+                if (q.equals(s)) {
                     return true;
                 }
             }

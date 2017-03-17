@@ -40,7 +40,7 @@ public final class SecondMatcher extends RowMatcher implements ValueMatcher<Date
      * The value of the column must be.
      *
      * @param dateColumn the column
-     * @param value     the value
+     * @param value      the value
      */
     public SecondMatcher(final DateColumn dateColumn, final Integer... value) {
         this(dateColumn, Arrays.asList(value));
@@ -66,8 +66,8 @@ public final class SecondMatcher extends RowMatcher implements ValueMatcher<Date
     public boolean matches(final Date value) {
         Integer port = DateColumn.getSeconds(value);
         for (Integer v : values) {
-            if (port == null){
-                if (v == null){
+            if (port == null) {
+                if (v == null) {
                     return true;
                 }
             } else if (port.equals(v)) {

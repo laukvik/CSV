@@ -29,6 +29,9 @@ public final class BooleanMatcher extends RowMatcher {
      */
     private final Boolean value;
 
+    /**
+     * The column.
+     */
     private final BooleanColumn column;
 
     /**
@@ -49,8 +52,11 @@ public final class BooleanMatcher extends RowMatcher {
      * @return true if it matches
      */
     public boolean matches(final Row row) {
+        if (value == null){
+            return row.getBoolean(column) == null;
+        }
         Boolean v = row.getBoolean(column);
-        if (v == null){
+        if (v == null) {
             return value == null;
         }
         return value.equals(v);

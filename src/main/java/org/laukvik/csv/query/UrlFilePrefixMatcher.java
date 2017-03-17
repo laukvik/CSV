@@ -31,13 +31,16 @@ public final class UrlFilePrefixMatcher extends RowMatcher {
      * The value to compare.
      */
     private final List<String> values;
-    /** The column to compare. */
+    /**
+     * The column to compare.
+     */
     private final UrlColumn column;
 
     /**
      * The value of the column must be.
+     *
      * @param urlColumn the column
-     * @param value the value
+     * @param value     the value
      */
     public UrlFilePrefixMatcher(final UrlColumn urlColumn, final String... value) {
         super();
@@ -59,15 +62,15 @@ public final class UrlFilePrefixMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         URL v = row.getURL(column);
-        if (v == null){
+        if (v == null) {
             return false;
         } else {
             String filename = UrlColumn.getPrefix(v);
-            if (filename == null){
+            if (filename == null) {
                 return false;
             }
-            for (String s : values){
-                if (filename.equals(s)){
+            for (String s : values) {
+                if (filename.equals(s)) {
                     return true;
                 }
             }

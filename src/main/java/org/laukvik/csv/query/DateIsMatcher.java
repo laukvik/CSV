@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Compares a DateColumn to specified Date.
  */
-public final class DateIsMatcher extends AbstractDateMatcher implements ValueMatcher<Date>{
+public final class DateIsMatcher extends AbstractDateMatcher implements ValueMatcher<Date> {
 
     /**
      * The value to compare.
@@ -44,6 +44,12 @@ public final class DateIsMatcher extends AbstractDateMatcher implements ValueMat
         values.add(value);
     }
 
+    /**
+     * Compares a DateColumn to multiple dates.
+     *
+     * @param column the dateColumn
+     * @param values the dates
+     */
     public DateIsMatcher(final DateColumn column, final List<Date> values) {
         super(column, null);
         this.values = values;
@@ -62,9 +68,9 @@ public final class DateIsMatcher extends AbstractDateMatcher implements ValueMat
 
     @Override
     public boolean matches(final Date v) {
-        for (Date d : values){
-            if (v == null){
-                if (d == null){
+        for (Date d : values) {
+            if (v == null) {
+                if (d == null) {
                     return true;
                 }
             } else if (v.equals(d)) {

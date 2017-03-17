@@ -30,13 +30,16 @@ public final class PrefixMatcher extends RowMatcher {
      * The value to compare.
      */
     private final List<String> values;
-    /** The column to compare. */
+    /**
+     * The column to compare.
+     */
     private final StringColumn column;
 
     /**
      * The value of the column must be.
+     *
      * @param stringColumn the column
-     * @param value the value
+     * @param value        the value
      */
     public PrefixMatcher(final StringColumn stringColumn, final String... value) {
         super();
@@ -57,12 +60,12 @@ public final class PrefixMatcher extends RowMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        String v = StringColumn.getPrefix(row.getString(column) );
-        if (v == null){
+        String v = StringColumn.getPrefix(row.getString(column));
+        if (v == null) {
             return false;
         } else {
-            for (String s : values){
-                if (v.equals(s)){
+            for (String s : values) {
+                if (v.equals(s)) {
                     return true;
                 }
             }

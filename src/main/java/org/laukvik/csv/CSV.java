@@ -142,6 +142,11 @@ public final class CSV implements Serializable {
     public static final char QUOTE_SINGLE = 39;
 
     /**
+     * Indicates when the column could not be found.
+     */
+    public static final int COLUMN_NOT_FOUND = -1;
+
+    /**
      * The list of columns.
      */
     private final List<Column> columns;
@@ -153,6 +158,10 @@ public final class CSV implements Serializable {
      * The List of all FileListeners.
      */
     private final List<FileListener> fileListeners;
+    /**
+     * The list of Rows.
+     */
+    private final List<Row> rows;
     /**
      * The Character set.
      */
@@ -177,10 +186,6 @@ public final class CSV implements Serializable {
      * Automatically detects quote.
      */
     private boolean autoDetectQuote;
-    /**
-     * The list of Rows.
-     */
-    private final List<Row> rows;
 //    /**
 //     * The Query to use.
 //     */
@@ -278,7 +283,7 @@ public final class CSV implements Serializable {
      */
     public Column getColumn(final String name) {
         int index = indexOf(name);
-        if (index < 0){
+        if (index == COLUMN_NOT_FOUND) {
             return null;
         }
         return columns.get(index);
@@ -397,7 +402,7 @@ public final class CSV implements Serializable {
             }
             x++;
         }
-        return -1;
+        return COLUMN_NOT_FOUND;
     }
 
     /**
@@ -715,7 +720,7 @@ public final class CSV implements Serializable {
      * Adds a new DateColumn.
      *
      * @param columnName the name
-     * @param format the date pattern
+     * @param format     the date pattern
      * @return the DateColumn being created
      */
     public DateColumn addDateColumn(final String columnName, final String format) {
@@ -1119,23 +1124,10 @@ public final class CSV implements Serializable {
      * @return the matching rorws
      */
     public List<Row> getRowsByMatchers(final List<RowMatcher> matchers) {
-        List<Row> newRows = new ArrayList<>();
-
-        int required = matchers.size();
-
-        for (int y= 0; y< getRowCount(); y++){
-            Row r = getRow(y);
-            int found = 0;
-            for (RowMatcher m : matchers){
-                if (m.matches(r)){
-                    found++;
-                }
-            }
-            if (found == required){
-                newRows.add(r);
-            }
+        Query q = new Query();
+        for (RowMatcher m : matchers){
+            q.addRowMatcher(m);
         }
-
-        return newRows;
+        return getRowsByQuery(q);
     }
 }

@@ -29,12 +29,16 @@ import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
+import org.laukvik.csv.query.RowMatcher;
+import org.laukvik.csv.query.StringInMatcher;
 import org.laukvik.csv.statistics.FrequencyDistribution;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -225,12 +229,12 @@ public class CSVTest {
         assertEquals(-1, csv.indexOf("DontExist"));
     }
 
-    @Test
-    public void findRows() throws IOException {
-        CSV csv = new CSV();
-        csv.readFile(getResource("countries.csv"));
-        assertEquals(249, csv.getRowCount());
-    }
+//    @Test
+//    public void findRows() throws IOException {
+//        CSV csv = new CSV();
+//        csv.readFile(getResource("countries.csv"));
+//        assertEquals(249, csv.getRowCount());
+//    }
 
     // ------ div ------
 
@@ -520,6 +524,33 @@ public class CSVTest {
         assertEquals("First", "First", csv.getColumn(0).getName());
         assertEquals("Last", "Last", csv.getColumn(1).getName());
         assertSame("ColumnCount", 2, csv.getColumnCount());
+    }
+
+    @Test
+    public void getColumn() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(getResource("separator_comma.csv"));
+        assertEquals(-1, csv.getColumn("DOESNT_EXIST"));
+    }
+
+    @Test
+    public void writeXml() throws IOException {
+        CSV csv = new CSV();
+        csv.addColumn("first");
+        File file = File.createTempFile("csvxmltest", "xml");
+        csv.writeXML(file);
+    }
+
+    @Test
+    public void getRowsByMatchers() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile( getResource("separator_comma.csv")  );
+        StringColumn c = (StringColumn) csv.getColumn("Heading1");
+
+        List<RowMatcher> matchers = new ArrayList<>();
+        matchers.add( new StringInMatcher(c, "First"));
+
+        csv.getRowsByMatchers(matchers);
     }
 
     @Test

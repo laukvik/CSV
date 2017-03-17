@@ -28,12 +28,23 @@ import java.util.GregorianCalendar;
 public final class DateColumn extends Column<Date> {
 
     /**
-     * The default date format.
+     * The default timestamp format.
      */
     public static final String DEFAULT_FORMAT = "yyyy.MM.dd HH:mm:ss";
+
+    /**
+     * The default date format.
+     */
     public static final String DEFAULT_DATE_FORMAT = "yyyy.MM.dd";
+
+    /**
+     * The default time format.
+     */
     public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
 
+    /**
+     * The default timestamp formatter.
+     */
     private static final DateFormat DEFAULT_FORMATTER = new SimpleDateFormat(DEFAULT_FORMAT);
 
     /**
@@ -48,7 +59,7 @@ public final class DateColumn extends Column<Date> {
     /**
      * Creates a new column with the columnName and dateFormat.
      *
-     * @param columnName   the name of the column
+     * @param columnName        the name of the column
      * @param dateFormatPattern the data format
      */
     public DateColumn(final String columnName, final String dateFormatPattern) {
@@ -66,15 +77,6 @@ public final class DateColumn extends Column<Date> {
         super(columnName);
         this.format = DEFAULT_FORMAT;
         this.dateFormat = new SimpleDateFormat(DEFAULT_FORMAT);
-    }
-
-    /**
-     * Sets the new dateformat pattern.
-     * @param dateFormatPattern the pattern
-     */
-    public void setFormat(final String dateFormatPattern) {
-        this.format = dateFormatPattern;
-        this.dateFormat = new SimpleDateFormat(format);
     }
 
     /**
@@ -177,6 +179,9 @@ public final class DateColumn extends Column<Date> {
      * @return true if the date is the year
      */
     public static boolean isYear(final Date v, final int year) {
+        if (v == null) {
+            return false;
+        }
         return getYear(v) == year;
     }
 
@@ -188,6 +193,9 @@ public final class DateColumn extends Column<Date> {
      * @return true if date has the year greater than the year.
      */
     public static boolean isYearGreaterThan(final Date v, final int year) {
+        if (v == null) {
+            return false;
+        }
         return getYear(v) > year;
     }
 
@@ -199,7 +207,10 @@ public final class DateColumn extends Column<Date> {
      * @return true if date has the year less than the year.
      */
     public static boolean isYearLessThan(final Date v, final int year) {
-        return getYear(v) <= year;
+        if (v == null) {
+            return false;
+        }
+        return getYear(v) < year;
     }
 
     /**
@@ -249,12 +260,189 @@ public final class DateColumn extends Column<Date> {
     }
 
     /**
+     * Returns true when the value is between the first and last date.
+     *
+     * @param value the value
+     * @param first the first date
+     * @param last  the last date
+     * @return true when between
+     */
+    public static boolean isBetweeen(final Date value, final Date first, final Date last) {
+        if (value == null || first == null || last == null) {
+            return false;
+        }
+        long time = value.getTime();
+        long start = first.getTime();
+        long finish = last.getTime();
+        return time >= start && time <= finish;
+    }
+
+    /**
+     * Formats the date using the default date pattern.
+     *
+     * @param date the date
+     * @return formatted value
+     */
+    public static String formatDefaultDate(final Date date) {
+        if (date == null) {
+            return "";
+        } else {
+            return DEFAULT_FORMATTER.format(date);
+        }
+    }
+
+    /**
+     * Returns the year part of the date.
+     *
+     * @param value the date
+     * @return the year
+     */
+    public static Integer getYear(final Date value) {
+        if (value == null) {
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.YEAR);
+    }
+
+    /**
+     * Returns the month part of the date.
+     *
+     * @param value the date
+     * @return the month
+     */
+    public static Integer getMonth(final Date value) {
+        if (value == null) {
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.MONTH);
+    }
+
+    /**
+     * Returns the day of month of the date.
+     *
+     * @param value the date
+     * @return the day of month
+     */
+    public static Integer getDayOfMonth(final Date value) {
+        if (value == null) {
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
+     * Returns the week part of the date.
+     *
+     * @param value the date
+     * @return the week
+     */
+    public static Integer getWeekOfYear(final Date value) {
+        if (value == null) {
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    /**
+     * Returns the day of week part of the date.
+     *
+     * @param value the date
+     * @return the day of week
+     */
+    public static Integer getDayOfWeek(final Date value) {
+        if (value == null) {
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    /**
+     * Returns the hour part of the date.
+     *
+     * @param value the date
+     * @return the hours
+     */
+    public static Integer getHour(final Date value) {
+        if (value == null) {
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.HOUR_OF_DAY);
+    }
+
+    /**
+     * Returns the minutes part of the date.
+     *
+     * @param value the date
+     * @return the minutes
+     */
+    public static Integer getMinutes(final Date value) {
+        if (value == null) {
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.MINUTE);
+    }
+
+    /**
+     * Returns the seconds part of the date.
+     *
+     * @param value the date
+     * @return the seconds
+     */
+    public static Integer getSeconds(final Date value) {
+        if (value == null) {
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.SECOND);
+    }
+
+    /**
+     * Returns the milliseconds part of the date.
+     *
+     * @param value the date
+     * @return the milliseconds
+     */
+    public static Integer getMilliseconds(final Date value) {
+        if (value == null) {
+            return null;
+        }
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        return calendar.get(Calendar.MILLISECOND);
+    }
+
+    /**
      * Returns the date format.
      *
      * @return the date format
      */
     public String getFormat() {
         return format;
+    }
+
+    /**
+     * Sets the new dateformat pattern.
+     *
+     * @param dateFormatPattern the pattern
+     */
+    public void setFormat(final String dateFormatPattern) {
+        this.format = dateFormatPattern;
+        this.dateFormat = new SimpleDateFormat(format);
     }
 
     /**
@@ -292,196 +480,28 @@ public final class DateColumn extends Column<Date> {
      * @return the comparisond
      */
     public int compare(final Date one, final Date another) {
-        if (one == null && another == null) {
-            return 0;
-        }
-        if (one != null && another == null) {
-            return 1;
-        }
-        if (one == null && another != null) {
-            return -1;
+        if (one == null || another == null) {
+            if (one == null){
+                return -1;
+            } else {
+                return 1;
+            }
         }
         return one.compareTo(another);
     }
 
     /**
-     * Returns true when the value is between the first and last date.
-     * @param value the value
-     * @param first the first date
-     * @param last the last date
-     * @return true when between
-     */
-    public static boolean isBetweeen(final Date value, final Date first, final Date last) {
-        if (value == null || first == null || last == null){
-            return false;
-        }
-        long time = value.getTime();
-        long start = first.getTime();
-        long finish = last.getTime();
-        return time >= start && time <= finish;
-    }
-
-    /**
-     * Formats the date using the default date pattern
+     * Formats the date using the pattern.
      *
      * @param date the date
      * @return formatted value
      */
-    public static String formatDefaultDate(final Date date){
-        if (date == null){
-            return "";
-        } else {
-            return DEFAULT_FORMATTER.format(date);
-        }
-    }
-
-    /**
-     * Formats the date using the pattern
-     *
-     * @param date the date
-     * @return formatted value
-     */
-    public String formatDate(final Date date){
-        if (date == null){
+    public String formatDate(final Date date) {
+        if (date == null) {
             return "";
         } else {
             return dateFormat.format(date);
         }
-    }
-
-    /**
-     * Returns the year part of the date.
-     *
-     * @param value the date
-     * @return the year
-     */
-    public static Integer getYear(final Date value) {
-        if (value == null){
-            return null;
-        }
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(value);
-        return calendar.get(Calendar.YEAR);
-    }
-
-    /**
-     * Returns the month part of the date.
-     *
-     * @param value the date
-     * @return the month
-     */
-    public static Integer getMonth(final Date value) {
-        if (value == null){
-            return null;
-        }
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(value);
-        return calendar.get(Calendar.MONTH);
-    }
-
-    /**
-     * Returns the day of month of the date.
-     *
-     * @param value the date
-     * @return the day of month
-     */
-    public static Integer getDayOfMonth(final Date value) {
-        if (value == null){
-            return null;
-        }
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(value);
-        return calendar.get(Calendar.DAY_OF_MONTH);
-    }
-
-    /**
-     * Returns the week part of the date.
-     *
-     * @param value the date
-     * @return the week
-     */
-    public static Integer getWeekOfYear(final Date value) {
-        if (value == null){
-            return null;
-        }
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(value);
-        return calendar.get(Calendar.WEEK_OF_YEAR);
-    }
-
-    /**
-     * Returns the day of week part of the date.
-     *
-     * @param value the date
-     * @return the day of week
-     */
-    public static Integer getDayOfWeek(final Date value) {
-        if (value == null){
-            return null;
-        }
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(value);
-        return calendar.get(Calendar.DAY_OF_WEEK);
-    }
-
-    /**
-     * Returns the hour part of the date.
-     *
-     * @param value the date
-     * @return the hours
-     */
-    public static Integer getHour(final Date value) {
-        if (value == null){
-            return null;
-        }
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(value);
-        return calendar.get(Calendar.HOUR_OF_DAY);
-    }
-
-    /**
-     * Returns the minutes part of the date.
-     *
-     * @param value the date
-     * @return the minutes
-     */
-    public static Integer getMinutes(final Date value) {
-        if (value == null){
-            return null;
-        }
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(value);
-        return calendar.get(Calendar.MINUTE);
-    }
-
-    /**
-     * Returns the seconds part of the date.
-     *
-     * @param value the date
-     * @return the seconds
-     */
-    public static Integer getSeconds(final Date value) {
-        if (value == null){
-            return null;
-        }
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(value);
-        return calendar.get(Calendar.SECOND);
-    }
-
-    /**
-     * Returns the milliseconds part of the date.
-     *
-     * @param value the date
-     * @return the milliseconds
-     */
-    public static Integer getMilliseconds(final Date value) {
-        if (value == null){
-            return null;
-        }
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(value);
-        return calendar.get(Calendar.MILLISECOND);
     }
 
 }

@@ -14,21 +14,26 @@ public class Max extends Aggregate {
     private Integer max;
 
     /**
-     *
-     * @param column
+     * Creates a new Max instance for with the column.
+     * @param column the column
      */
     public Max(final IntegerColumn column) {
         super(column);
     }
 
+    /**
+     * Returns the aggregated value.
+     * @return the maximum value found
+     */
     public Integer getValue() {
         return max;
     }
 
-    public void reset() {
-        max = 0;
-    }
-
+    /**
+     * Checks the value in the column.
+     *
+     * @param row the row.
+     */
     public void aggregate(final Row row) {
         Integer value = row.getInteger((IntegerColumn) getColumn());
         if (max == null) {

@@ -37,15 +37,21 @@ public final class HourMatcher extends RowMatcher implements ValueMatcher<Date> 
     private final DateColumn column;
 
     /**
-     * The value of the column must be.
+     * The hour of the column must in the collection of values.
      *
      * @param dateColumn the column
-     * @param value     the value
+     * @param value      the value
      */
     public HourMatcher(final DateColumn dateColumn, final Integer... value) {
         this(dateColumn, Arrays.asList(value));
     }
 
+    /**
+     * The hour of the column must in the collection of values.
+     *
+     * @param dateColumn the column
+     * @param values      the values
+     */
     public HourMatcher(final DateColumn dateColumn, final List<Integer> values) {
         super();
         this.column = dateColumn;
@@ -63,11 +69,17 @@ public final class HourMatcher extends RowMatcher implements ValueMatcher<Date> 
         return matches(v);
     }
 
+    /**
+     * Returns true when the value matches.
+     *
+     * @param value the value
+     * @return true when the row matches
+     */
     public boolean matches(final Date value) {
         Integer port = DateColumn.getHour(value);
         for (Integer v : values) {
-            if (port == null){
-                if (v == null){
+            if (port == null) {
+                if (v == null) {
                     return true;
                 }
             } else if (port.equals(v)) {

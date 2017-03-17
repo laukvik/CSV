@@ -26,14 +26,16 @@ import java.util.List;
  */
 public final class ParityMatcher extends RowMatcher {
 
-    public final static String ODD = "Odd";
-    public final static String EVEN = "Even";
+    public static final String ODD = "Odd";
+    public static final String EVEN = "Even";
 
     /**
      * The value to match.
      */
     private final List<Boolean> values;
-    /** The column to match. */
+    /**
+     * The column to match.
+     */
     private final IntegerColumn column;
 
     /**

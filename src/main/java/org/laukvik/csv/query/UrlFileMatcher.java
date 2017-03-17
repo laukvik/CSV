@@ -25,19 +25,22 @@ import java.util.List;
 /**
  * Compares a StringColumn to have the specified value.
  */
-public final class UrlFileMatcher extends RowMatcher implements ValueMatcher<URL>{
+public final class UrlFileMatcher extends RowMatcher implements ValueMatcher<URL> {
 
     /**
      * The value to compare.
      */
     private final List<String> values;
-    /** The column to compare. */
+    /**
+     * The column to compare.
+     */
     private final UrlColumn column;
 
     /**
      * The value of the column must be.
+     *
      * @param urlColumn the column
-     * @param value the value
+     * @param value     the value
      */
     public UrlFileMatcher(final UrlColumn urlColumn, final String... value) {
         this(urlColumn, Arrays.asList(value));
@@ -64,12 +67,12 @@ public final class UrlFileMatcher extends RowMatcher implements ValueMatcher<URL
     @Override
     public boolean matches(final URL v) {
         String filename = UrlColumn.getFilename(v);
-        for (String s : values){
-            if (filename == null){
-                if (s == null){
+        for (String s : values) {
+            if (filename == null) {
+                if (s == null) {
                     return true;
                 }
-            } else if (filename.equals(s)){
+            } else if (filename.equals(s)) {
                 return true;
             }
         }

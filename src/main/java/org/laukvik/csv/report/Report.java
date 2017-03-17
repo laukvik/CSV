@@ -132,8 +132,6 @@ public final class Report {
                         extra.doMax(v, c);
                     } else if (a instanceof Count) {
                         extra.doCount(v, c);
-                    } else if (a instanceof Name) {
-//                        extra.doName(v, c);
                     }
                 }
             }

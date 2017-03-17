@@ -66,8 +66,8 @@ public final class UrlPortMatcher extends RowMatcher implements ValueMatcher<URL
     public boolean matches(final URL value) {
         Integer port = UrlColumn.getPort(value);
         for (Integer v : values) {
-            if (port == null){
-                if (v == null){
+            if (port == null) {
+                if (v == null) {
                     return true;
                 }
             } else if (port.equals(v)) {

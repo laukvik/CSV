@@ -69,12 +69,12 @@ public final class BigDecimalMatcher extends RowMatcher {
             return true;
         }
         for (BigDecimal v : values) {
-            if (v == null){
-                if (d == null){
+            if (v == null) {
+                if (d == null) {
                     return true;
                 }
             } else {
-                if (v.equals(d)){
+                if (v.equals(d)) {
                     return true;
                 }
             }

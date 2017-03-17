@@ -32,7 +32,7 @@ public final class Sum extends Aggregate {
     }
 
     /**
-     * Returns the value
+     * Returns the value.
      *
      * @return the value
      */

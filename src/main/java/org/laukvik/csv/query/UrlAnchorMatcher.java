@@ -70,9 +70,9 @@ public final class UrlAnchorMatcher extends RowMatcher implements ValueMatcher<U
     public boolean matches(final URL value) {
         String anchor = UrlColumn.getAnchor(value);
         for (String s : values) {
-            if (anchor == null){
+            if (anchor == null) {
                 return s == null;
-            } else if (anchor.equals(s)){
+            } else if (anchor.equals(s)) {
                 return true;
             }
         }

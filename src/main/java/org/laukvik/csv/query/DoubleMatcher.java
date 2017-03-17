@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Compares a DoubleColumn to a list of values;
+ * Compares a DoubleColumn to a list of values.
  */
 public final class DoubleMatcher extends RowMatcher {
 
@@ -36,16 +36,22 @@ public final class DoubleMatcher extends RowMatcher {
     private List<Double> values;
 
     /**
-     * Compares a DateColumn to specified Date.
+     * Compares a DoubleColumn to specified doubles.
      *
      * @param doubleColumn the doubleColumn
-     * @param doubles  the values
+     * @param doubles      the values
      */
     public DoubleMatcher(final DoubleColumn doubleColumn, final Double... doubles) {
         this.column = doubleColumn;
         this.values = Arrays.asList(doubles);
     }
 
+    /**
+     * Compares a DoubleColumn to specified doubles.
+     *
+     * @param doubleColumn the doubleColumn
+     * @param doubles      the values
+     */
     public DoubleMatcher(final DoubleColumn doubleColumn, final List<Double> doubles) {
         this.column = doubleColumn;
         this.values = doubles;
@@ -59,11 +65,11 @@ public final class DoubleMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         Double d = row.getDouble(column);
-        for (Double v : values){
-            if (d == null){
+        for (Double v : values) {
+            if (d == null) {
                 return v == null;
             } else {
-                if (d.equals(v)){
+                if (d.equals(v)) {
                     return true;
                 }
             }

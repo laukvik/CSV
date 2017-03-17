@@ -33,8 +33,8 @@ public class BooleanColumnTest {
         assertEquals(0, c.compare(Boolean.TRUE, Boolean.TRUE));
         assertEquals(1, c.compare(Boolean.TRUE, Boolean.FALSE));
         assertEquals(0, c.compare(Boolean.FALSE, Boolean.FALSE));
-        assertEquals(-1, c.compare(Boolean.TRUE, null));
-        assertEquals(1, c.compare(null, Boolean.FALSE));
+        assertEquals(1, c.compare(Boolean.TRUE, null));
+        assertEquals(-1, c.compare(null, Boolean.FALSE));
         assertEquals(0, c.compare(null, null));
     }
 

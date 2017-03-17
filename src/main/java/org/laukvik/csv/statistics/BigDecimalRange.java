@@ -20,13 +20,13 @@ public final class BigDecimalRange extends Range<BigDecimal> {
     }
 
     /**
-     * Adds a value
+     * Adds a value.
      *
-     * @param value
+     * @param value the value
      */
     @Override
     public void addValue(final BigDecimal value) {
-        if (contains(value)){
+        if (contains(value)) {
             count++;
         }
     }
@@ -39,10 +39,10 @@ public final class BigDecimalRange extends Range<BigDecimal> {
      */
     @Override
     public boolean contains(final BigDecimal value) {
-        if (value == null){
+        if (value == null) {
             return false;
         }
-        return value.compareTo(from) >= 0 && value.compareTo(to) < 0;
+        return value.compareTo(from) >= 0 && value.compareTo(to) <= 0;
     }
 
 }

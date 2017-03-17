@@ -5,7 +5,6 @@ import java.util.List;
 
 /**
  * Contains zero or more tags.
- *
  */
 public final class Tag {
 
@@ -13,15 +12,25 @@ public final class Tag {
      * All tags that doesn't have an ending tag.
      */
     private static final String[] SINGLE_TAGS = {"IMG", "BR", "INPUT"};
-    /** The name. */
+    /**
+     * The name.
+     */
     private final String name;
-    /** All children tags. */
+    /**
+     * All children tags.
+     */
     private final List<Tag> children;
-    /** All attributes. */
+    /**
+     * All attributes.
+     */
     private final List<Attribute> attributeList;
-    /** The parent tag. */
+    /**
+     * The parent tag.
+     */
     private Tag parent;
-    /** The text value. */
+    /**
+     * The text value.
+     */
     private String text;
 
     /**
@@ -37,6 +46,7 @@ public final class Tag {
 
     /**
      * Returns all its children.
+     *
      * @return the children
      */
     public List<Tag> getChildren() {
@@ -124,6 +134,7 @@ public final class Tag {
 
     /**
      * Returns true if the tag is a text node.
+     *
      * @return true if text node
      */
     public boolean isText() {
@@ -183,11 +194,11 @@ public final class Tag {
 
         } else {
 //            if (parent != null) {
-                b.append("<").append(name);
-                for (Attribute a : attributeList) {
-                    b.append(" ").append(a.toHtml());
-                }
-                b.append(">");
+            b.append("<").append(name);
+            for (Attribute a : attributeList) {
+                b.append(" ").append(a.toHtml());
+            }
+            b.append(">");
 //            }
 
             if (text == null) {
@@ -199,7 +210,7 @@ public final class Tag {
             }
 
 //            if (parent != null) {
-                b.append("</").append(name).append(">");
+            b.append("</").append(name).append(">");
 //            }
             return b.toString();
         }
@@ -207,12 +218,13 @@ public final class Tag {
 
     /**
      * Returns an attribute by it's name.
+     *
      * @param name the attribute name
      * @return the attribute
      */
     public Attribute getAttribute(final String name) {
         for (Attribute a : attributeList) {
-            if (a.getName().equalsIgnoreCase(name)){
+            if (a.getName().equalsIgnoreCase(name)) {
                 return a;
             }
         }

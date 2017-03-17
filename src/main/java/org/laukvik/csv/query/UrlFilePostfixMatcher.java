@@ -64,9 +64,9 @@ public final class UrlFilePostfixMatcher extends RowMatcher {
         URL v = row.getURL(column);
         String postfix = UrlColumn.getPostfix(v);
         for (String s : values) {
-            if (postfix == null){
+            if (postfix == null) {
                 return s == null;
-            } else if (postfix.equals(s)){
+            } else if (postfix.equals(s)) {
                 return true;
             }
         }

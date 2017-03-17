@@ -60,8 +60,8 @@ public abstract class RangedDistribution<T extends Range, V extends Number> {
                 // 0.xxx
 //                index = right.indexOf("^[1-9]*");
 
-                for (int x= 0; x< right.length(); x++){
-                    if (right.charAt(x) != 48){
+                for (int x = 0; x < right.length(); x++) {
+                    if (right.charAt(x) != 48) {
 //                        x = right.length(); // exit loop
                         return (x * -1) - 1;
                     }
@@ -80,7 +80,7 @@ public abstract class RangedDistribution<T extends Range, V extends Number> {
     }
 
     /**
-     * Adds a new IntegerRange
+     * Adds a new IntegerRange.
      *
      * @param range the IntegerRange
      */

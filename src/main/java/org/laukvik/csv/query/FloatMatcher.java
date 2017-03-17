@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Compares a FloatColumn to a list of values;
+ * Compares a FloatColumn to a list of values.
  */
 public final class FloatMatcher extends RowMatcher {
 
@@ -36,16 +36,22 @@ public final class FloatMatcher extends RowMatcher {
     private List<Float> values;
 
     /**
-     * Compares a DateColumn to specified Date.
+     * The value of the floatColumn must be in the collection of floats.
      *
      * @param floatColumn the floatColumn
-     * @param floats  the values
+     * @param floats      the values
      */
     public FloatMatcher(final FloatColumn floatColumn, final Float... floats) {
         this.column = floatColumn;
         this.values = Arrays.asList(floats);
     }
 
+    /**
+     * The value of the floatColumn must be in the collection of floats.
+     *
+     * @param floatColumn the floatColumn
+     * @param floats      the values
+     */
     public FloatMatcher(final FloatColumn floatColumn, final List<Float> floats) {
         this.column = floatColumn;
         this.values = floats;
@@ -59,11 +65,11 @@ public final class FloatMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         Float d = row.getFloat(column);
-        for (Float v : values){
-            if (d == null){
+        for (Float v : values) {
+            if (d == null) {
                 return v == null;
             } else {
-                if (d.equals(v)){
+                if (d.equals(v)) {
                     return true;
                 }
             }

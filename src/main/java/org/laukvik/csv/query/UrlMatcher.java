@@ -31,13 +31,16 @@ public final class UrlMatcher extends RowMatcher {
      * The value to compare.
      */
     private final List<URL> values;
-    /** The column to compare. */
+    /**
+     * The column to compare.
+     */
     private final UrlColumn column;
 
     /**
      * The value of the column must be.
+     *
      * @param urlColumn the column
-     * @param value the value
+     * @param value     the value
      */
     public UrlMatcher(final UrlColumn urlColumn, final URL... value) {
         super();
@@ -59,11 +62,11 @@ public final class UrlMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         URL v = row.getURL(column);
-        if (v == null){
+        if (v == null) {
             return false;
         } else {
-            for (URL s : values){
-                if (v.equals(s)){
+            for (URL s : values) {
+                if (v.equals(s)) {
                     return true;
                 }
             }

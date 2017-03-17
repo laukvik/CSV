@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Morten Laukvik
  */
-public class WeekdayMatcher extends RowMatcher implements ValueMatcher<Date> {
+public final class WeekdayMatcher extends RowMatcher implements ValueMatcher<Date> {
 
     /**
      * The value to compare.
