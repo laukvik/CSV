@@ -35,6 +35,44 @@ public final class StringColumn extends Column<String> {
     }
 
     /**
+     * Returns the text before the last period in the value.
+     *
+     * @param value the value
+     * @return the text before the last period
+     */
+    public static String getPrefix(final String value) {
+        if (value == null) {
+            return null;
+        } else {
+            int index = value.lastIndexOf(".");
+            if (index < 0) {
+                return null;
+            } else {
+                return value.substring(0, index);
+            }
+        }
+    }
+
+    /**
+     * Returns the text after the last period in the value.
+     *
+     * @param value the value
+     * @return the text after the last period
+     */
+    public static String getPostfix(final String value) {
+        if (value == null) {
+            return null;
+        } else {
+            int index = value.lastIndexOf(".");
+            if (index < 0) {
+                return null;
+            } else {
+                return value.substring(index+ 1);
+            }
+        }
+    }
+
+    /**
      * Returns the size.
      *
      * @return the size
@@ -88,12 +126,48 @@ public final class StringColumn extends Column<String> {
     public int compare(final String one, final String another) {
         if (one == null && another == null) {
             return 0;
-        } else if (one == null && another != null) {
-            return -1;
-        } else if (one != null && another == null) {
+        }
+        if (one != null && another == null) {
             return 1;
         }
+        if (one == null && another != null) {
+            return -1;
+        }
         return one.compareTo(another);
+    }
+
+    /**
+     * Returns the amount of words in the string
+     * @param value the string
+     * @return the amount of words
+     */
+    public static Integer getWordCount(final String value) {
+        if (value == null || value.length() == 0){
+            return 0;
+        }
+        return value.split("\\s+").length;
+    }
+
+    /**
+     * Returns the first letter of the value
+     * @param value the value
+     * @return the first letter
+     */
+    public static String getFirstLetter(final String value){
+        if (value == null || value.length() == 0){
+            return null;
+        } else {
+            return value.substring(0, 1);
+        }
+    }
+
+    /**
+     * Returns the length of the string
+     * @param value the string
+     * @return the length
+     */
+    public static int getLength(final String value){
+        return value == null ? 0 : value.length();
     }
 
 }

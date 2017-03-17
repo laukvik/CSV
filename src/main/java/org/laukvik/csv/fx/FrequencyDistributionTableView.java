@@ -44,6 +44,11 @@ public final class FrequencyDistributionTableView extends TableView<ObservableFr
      */
     private static final int MAX_WIDTH = 120;
 
+
+    final TableColumn selectUniqueColumn;
+    final TableColumn valueUniqueColumn;
+    final TableColumn countUniqueColumn;
+
     /**
      * Creates a new instance.
      */
@@ -54,7 +59,7 @@ public final class FrequencyDistributionTableView extends TableView<ObservableFr
         setEditable(true);
         setPlaceholder(new Label(bundle.getString("table.unique.empty")));
 
-        final TableColumn selectUniqueColumn = new TableColumn("");
+        selectUniqueColumn = new TableColumn("");
         selectUniqueColumn.setSortable(false);
         selectUniqueColumn.setMinWidth(SELECT_WIDTH);
         selectUniqueColumn.setMaxWidth(SELECT_WIDTH);
@@ -64,12 +69,16 @@ public final class FrequencyDistributionTableView extends TableView<ObservableFr
         selectUniqueColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectUniqueColumn));
         selectUniqueColumn.setEditable(true);
         getColumns().add(selectUniqueColumn);
-        final TableColumn valueUniqueColumn = new TableColumn(bundle.getString("table.unique.values"));
+
+
+        valueUniqueColumn = new TableColumn(bundle.getString("table.unique.values"));
         valueUniqueColumn.setCellValueFactory(
-                new PropertyValueFactory<ObservableFrequencyDistribution, String>("value")
+                new PropertyValueFactory<ObservableFrequencyDistribution, String>("label")
         );
         getColumns().add(valueUniqueColumn);
-        final TableColumn countUniqueColumn = new TableColumn("");
+
+
+        countUniqueColumn = new TableColumn("");
         countUniqueColumn.setCellValueFactory(
                 new PropertyValueFactory<ObservableFrequencyDistribution, Integer>("count")
         );
@@ -81,5 +90,17 @@ public final class FrequencyDistributionTableView extends TableView<ObservableFr
         selectUniqueColumn.prefWidthProperty().bind(widthProperty().multiply(SELECT_RATIO));
         valueUniqueColumn.prefWidthProperty().bind(widthProperty().multiply(VALUE_RATIO));
         countUniqueColumn.prefWidthProperty().bind(widthProperty().multiply(COUNT_RATIO));
+    }
+
+    public TableColumn getValueColumn() {
+        return valueUniqueColumn;
+    }
+
+    public TableColumn getCountColumn() {
+        return countUniqueColumn;
+    }
+
+    public TableColumn getSelectColumn() {
+        return selectUniqueColumn;
     }
 }

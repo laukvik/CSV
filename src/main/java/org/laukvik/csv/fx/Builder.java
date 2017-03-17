@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.FrequencyDistribution;
+import org.laukvik.csv.statistics.FrequencyDistribution;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.query.Query;
@@ -116,7 +116,7 @@ final class Builder {
         Column c = csv.getColumn(columnIndex);
         for (String key : d.getKeys()) {
             boolean selected = main.getQueryModel().isSelected(c, key);
-            list.add(new ObservableFrequencyDistribution(selected, key, d.getCount(key), c, main));
+            list.add(new ObservableFrequencyDistribution(selected, key, key, d.getCount(key), c, main));
         }
         return FXCollections.observableArrayList(list);
     }

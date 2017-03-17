@@ -65,13 +65,60 @@ public final class IntegerColumn extends Column<Integer> {
     public int compare(final Integer one, final Integer another) {
         if (one == null && another == null) {
             return 0;
-        } else if (one == null && another != null) {
-            return -1;
-        } else if (one != null && another == null) {
+        }
+        if (one != null && another == null) {
             return 1;
+        }
+        if (one == null && another != null) {
+            return -1;
         }
         return one.compareTo(another);
     }
 
+
+    public static Boolean isOdd(Integer value) {
+        if (value == null){
+            return false;
+        } else {
+            return (value % 2) != 0;
+        }
+    }
+
+    public static boolean isNegative(Integer value) {
+        if (value == null){
+            return false;
+        } else {
+            return (value < 0);
+        }
+    }
+
+    public static Integer getMods(Integer value, int q) {
+        if (value == null){
+            return 0;
+        } else {
+            return ((value/q)% 10) * q;
+        }
+    }
+
+    public static Integer getTen(Integer value) {
+        return getMods(value, 10);
+    }
+
+    public static Integer getHundred(Integer value) {
+        return getMods(value, 100);
+    }
+
+
+    public static Integer getThousand(Integer value) {
+        return getMods(value, 1000);
+    }
+
+    public static Integer getMillion(Integer value) {
+        return getMods(value, 1000000);
+    }
+
+    public static Integer getBillion(Integer value) {
+        return getMods(value, 1000000000);
+    }
 
 }

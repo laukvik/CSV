@@ -17,6 +17,8 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Compares a IntegerColumn to be in an array of values.
@@ -26,7 +28,7 @@ public final class IntIsInMatcher extends RowMatcher {
     /**
      * The values to compare to.
      */
-    private final Integer[] values;
+    private final List<Integer> values;
     /** The column to use. */
     private final IntegerColumn column;
 
@@ -37,6 +39,12 @@ public final class IntIsInMatcher extends RowMatcher {
      * @param values the values
      */
     public IntIsInMatcher(final IntegerColumn integerColumn, final Integer... values) {
+        super();
+        this.column = integerColumn;
+        this.values = Arrays.asList(values);
+    }
+
+    public IntIsInMatcher(final IntegerColumn integerColumn, final List<Integer> values) {
         super();
         this.column = integerColumn;
         this.values = values;
@@ -53,8 +61,13 @@ public final class IntIsInMatcher extends RowMatcher {
         if (value == null) {
             return false;
         }
+
         for (Integer v : values) {
-            if (v != null && value.intValue() == v.intValue()) {
+//            if (v == null){
+//                return value == null;
+//            }
+            if (value.intValue() == v.intValue()) {
+                System.out.println(value.intValue() + " = " +  v.intValue());
                 return true;
             }
         }

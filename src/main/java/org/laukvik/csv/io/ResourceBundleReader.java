@@ -25,14 +25,6 @@ public final class ResourceBundleReader extends AbstractResourceBundle implement
      * The current row.
      */
     private Row currentRow;
-    /**
-     * The list of property files.
-     */
-    private List<Properties> propertiesList;
-    /** The current row index. */
-    private int index;
-    /** The list of keys. */
-    private List<String> keys;
 
     /**
      * Reads the file.
@@ -50,7 +42,10 @@ public final class ResourceBundleReader extends AbstractResourceBundle implement
         File[] files = home.listFiles(bf);
         if (files != null) {
             try {
-                propertiesList = new ArrayList<>();
+                /*
+      The list of property files.
+     */
+                List<Properties> propertiesList = new ArrayList<>();
                 // Build files list
                 csv.addColumn(ResourceBundleWriter.COLUMN_PROPERTY);
                 final Set<String> keySet = new HashSet<>();
@@ -63,10 +58,12 @@ public final class ResourceBundleReader extends AbstractResourceBundle implement
                     String lang = getLocale(f.getName(), base);
                     propertiesList.add(addFile(f, csv, lang, keySet));
                 }
-                keys = new ArrayList<>();
+                /* The list of keys. */
+                List<String> keys = new ArrayList<>();
                 keys.addAll(keySet);
 
-                index = -1;
+                /* The current row index. */
+                int index = -1;
             } catch (final IOException e) {
             }
         }

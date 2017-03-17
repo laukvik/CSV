@@ -46,6 +46,9 @@ public class BigDecimalColumnTest {
         assertEquals(-1, c.compare(new BigDecimal("153"), new BigDecimal("200")));
         assertEquals(0, c.compare(new BigDecimal("200"), new BigDecimal("200")));
         assertEquals(1, c.compare(new BigDecimal("200"), new BigDecimal("153")));
+        assertEquals(0, c.compare(null, null));
+        assertEquals(1, c.compare(new BigDecimal("200"), null));
+        assertEquals(-1, c.compare(null, new BigDecimal("200")));
     }
 
     @Test

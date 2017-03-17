@@ -29,6 +29,7 @@ import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
+import org.laukvik.csv.statistics.FrequencyDistribution;
 
 import java.io.File;
 import java.io.FileReader;
@@ -309,12 +310,6 @@ public class CSVTest {
         assertEquals(2, csv2.getRowCount());
     }
 
-    /**
-     * todo - Improve this test
-     *
-     * @throws Exception
-     */
-    @Test
     public void writeXML() throws Exception {
         File file = File.createTempFile("writeXML", ".xml");
         CSV csv = new CSV();
@@ -340,11 +335,6 @@ public class CSVTest {
         assertNotNull(jsonArray);
     }
 
-    /**
-     * todo - Improve this test
-     *
-     * @throws Exception
-     */
     @Test
     public void writeHTML() throws Exception {
         File file = File.createTempFile("writeJSON", ".json");
@@ -356,10 +346,6 @@ public class CSVTest {
         assertNotNull(file);
     }
 
-    /**
-     * todo -  Improve this test
-     * @throws Exception
-     */
     @Test
     public void writeResourceBundle() throws Exception {
         File file = File.createTempFile("writeJSON", ".json");

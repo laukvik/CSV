@@ -144,7 +144,7 @@ public abstract class Column<T> implements Comparable {
      * @param columnDefinition the columnDefinition
      * @return the column
      */
-    public static final Column parseColumnDefinition(final ColumnDefinition columnDefinition) {
+    public static Column parseColumnDefinition(final ColumnDefinition columnDefinition) {
         ColumnDefinition.Attribute attrType = columnDefinition.get(TYPE);
         String columnName = columnDefinition.getColumnName();
         Column c = null;
@@ -410,9 +410,9 @@ public abstract class Column<T> implements Comparable {
     public final ColumnDefinition toColumnDefinition() {
         ColumnDefinition cd = new ColumnDefinition(getName());
         if (this instanceof StringColumn) {
-            cd.setAttribute(TYPE, TYPE_STRING);
             StringColumn sc = (StringColumn) this;
             if (sc.getSize() > 0) {
+                cd.setAttribute(TYPE, TYPE_STRING);
                 cd.setAttribute(TYPE, TYPE_STRING, sc.getSize() + "");
             }
         } else if (this instanceof BigDecimalColumn) {

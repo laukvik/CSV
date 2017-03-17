@@ -65,10 +65,12 @@ public final class FloatColumn extends Column<Float> {
     public int compare(final Float one, final Float another) {
         if (one == null && another == null) {
             return 0;
-        } else if (one == null && another != null) {
-            return -1;
-        } else if (one != null && another == null) {
+        }
+        if (one != null && another == null) {
             return 1;
+        }
+        if (one == null && another != null) {
+            return -1;
         }
         return one.compareTo(another);
     }

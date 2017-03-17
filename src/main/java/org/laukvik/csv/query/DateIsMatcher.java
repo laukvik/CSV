@@ -18,12 +18,19 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Compares a DateColumn to specified Date.
  */
-public final class DateIsMatcher extends AbstractDateMatcher {
+public final class DateIsMatcher extends AbstractDateMatcher implements ValueMatcher<Date>{
+
+    /**
+     * The value to compare.
+     */
+    private final List<Date> values;
 
     /**
      * Compares a DateColumn to specified Date.
@@ -33,6 +40,13 @@ public final class DateIsMatcher extends AbstractDateMatcher {
      */
     public DateIsMatcher(final DateColumn column, final Date value) {
         super(column, value);
+        values = new ArrayList<>();
+        values.add(value);
+    }
+
+    public DateIsMatcher(final DateColumn column, final List<Date> values) {
+        super(column, null);
+        this.values = values;
     }
 
     /**
@@ -42,8 +56,21 @@ public final class DateIsMatcher extends AbstractDateMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        Date d = row.getDate(getColumn());
-        return DateColumn.isEqualDate(getValue(), d);
+        Date v = row.getDate(getColumn());
+        return matches(v);
     }
 
+    @Override
+    public boolean matches(final Date v) {
+        for (Date d : values){
+            if (v == null){
+                if (d == null){
+                    return true;
+                }
+            } else if (v.equals(d)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

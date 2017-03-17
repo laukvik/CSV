@@ -1,7 +1,6 @@
 package org.laukvik.csv.fx;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -37,10 +36,17 @@ import org.laukvik.csv.CSV;
 import org.laukvik.csv.ChangeListener;
 import org.laukvik.csv.FileListener;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.BigDecimalColumn;
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.DateColumn;
+import org.laukvik.csv.columns.DoubleColumn;
+import org.laukvik.csv.columns.FloatColumn;
+import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.columns.UrlColumn;
 import org.laukvik.csv.io.BOM;
 import org.laukvik.csv.query.Query;
+import org.laukvik.csv.query.RowMatcher;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,21 +62,19 @@ import java.util.ResourceBundle;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import static org.laukvik.csv.fx.Builder.createAllObservableList;
-import static org.laukvik.csv.fx.Builder.createFrequencyDistributionObservableList;
 import static org.laukvik.csv.fx.Builder.createResultsColumns;
 import static org.laukvik.csv.fx.Builder.createResultsRows;
 import static org.laukvik.csv.fx.Builder.getPercentSize;
 import static org.laukvik.csv.fx.Builder.getSeparatorCharByString;
 import static org.laukvik.csv.fx.Builder.getSeparatorString;
 import static org.laukvik.csv.fx.Builder.toKb;
-import static org.laukvik.csv.fx.ChartBuilder.buildPieChart;
 
 /**
  * The JavaFX desktop application for opening and displaying the data sets.
  *
  * @author Morten Laukvik
  */
-public class Main extends Application implements ChangeListener, FileListener {
+public final class Main extends Application implements ChangeListener, FileListener {
 
     /**
      * The horizontal divider position.
@@ -97,7 +101,9 @@ public class Main extends Application implements ChangeListener, FileListener {
      * The CSV model.
      */
     private CSV csv;
-    /** Contains the query */
+    /**
+     * Contains the query
+     */
     private Query query;
     /**
      * The JavaFX stage.
@@ -107,10 +113,12 @@ public class Main extends Application implements ChangeListener, FileListener {
      * The TableView for column selection.
      */
     private ColumnsTableView columnsTableView;
+
     /**
-     * The TableView for FrequencyDistribution.
+     * The ColumnMatcherControl to use with selections
      */
-    private FrequencyDistributionTableView frequencyDistributionTableView;
+    private ColumnMatcherControl columnMatcherControl;
+
     /**
      * The TableView for results columns.
      */
@@ -164,6 +172,8 @@ public class Main extends Application implements ChangeListener, FileListener {
      */
     private QueryModel queryModel;
 
+    private SplitPane tableSplit;
+
     /**
      * Can be run from commandline.
      *
@@ -195,9 +205,9 @@ public class Main extends Application implements ChangeListener, FileListener {
     }
 
 
-
     /**
      * Returns the formatted file size.
+     *
      * @param file the file
      * @return the formatted size
      */
@@ -211,6 +221,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     /**
      * Returns the formatted file type.
+     *
      * @param file the file
      * @return the formatted file type
      */
@@ -258,6 +269,15 @@ public class Main extends Application implements ChangeListener, FileListener {
     }
 
     /**
+     * Returns an array of the supported separator characters.
+     *
+     * @return separator characters
+     */
+    public static char[] listSupportedSeparatorChars() {
+        return new char[]{CSV.COMMA, CSV.SEMICOLON, CSV.PIPE, CSV.TAB};
+    }
+
+    /**
      * Starts the JavaFX application.
      *
      * @param primaryStage the stage
@@ -265,32 +285,35 @@ public class Main extends Application implements ChangeListener, FileListener {
     public final void start(final Stage primaryStage) {
         this.stage = primaryStage;
         columnsTableView = new ColumnsTableView();
-        frequencyDistributionTableView = new FrequencyDistributionTableView();
-        frequencyDistributionTableView.getSelectionModel().getSelectedIndices().addListener(
-                new ListChangeListener<Integer>() {
-                    @Override
-                    public void onChanged(final Change<? extends Integer> c) {
-                        int rowIndex = frequencyDistributionTableView.getSelectionModel().getSelectedIndex();
-                        if (viewMode == ViewMode.Preview) {
-                            handleViewPreviewAction();
-                        } else if (viewMode == ViewMode.Wikipedia) {
-                            handleViewWikipediaAction();
-                        } else if (viewMode == ViewMode.Maps) {
-                            handleViewGoogleMapsAction();
-                        } else if (viewMode == ViewMode.Search) {
-                            handleViewGoogleSearchAction();
-                        }
-                    }
-                });
+
+        columnMatcherControl = new DateMatcherControl(null, this);
+
+//        frequencyDistributionTableView = new FrequencyDistributionTableView();
+//        frequencyDistributionTableView.getSelectionModel().getSelectedIndices().addListener(
+//                new ListChangeListener<Integer>() {
+//                    @Override
+//                    public void onChanged(final Change<? extends Integer> c) {
+//                        int rowIndex = frequencyDistributionTableView.getSelectionModel().getSelectedIndex();
+//                        if (viewMode == ViewMode.Preview) {
+//                            handleViewPreviewAction();
+//                        } else if (viewMode == ViewMode.Wikipedia) {
+//                            handleViewWikipediaAction();
+//                        } else if (viewMode == ViewMode.Maps) {
+//                            handleViewGoogleMapsAction();
+//                        } else if (viewMode == ViewMode.Search) {
+//                            handleViewGoogleSearchAction();
+//                        }
+//                    }
+//                });
         resultsTableView = new ResultsTableView();
 
         final ScrollPane columnsScroll = new ScrollPane(columnsTableView);
         columnsScroll.setFitToHeight(true);
         columnsScroll.setFitToWidth(true);
 
-        final ScrollPane uniqueScroll = new ScrollPane(frequencyDistributionTableView);
-        uniqueScroll.setFitToHeight(true);
-        uniqueScroll.setFitToWidth(true);
+//        final ScrollPane uniqueScroll = new ScrollPane(frequencyDistributionTableView);
+//        uniqueScroll.setFitToHeight(true);
+//        uniqueScroll.setFitToWidth(true);
 
         columnsTableView.getSelectionModel().getSelectedIndices().addListener(new ListChangeListener<Integer>() {
             @Override
@@ -305,8 +328,7 @@ public class Main extends Application implements ChangeListener, FileListener {
         resultsScroll.setFitToWidth(true);
 
 
-
-        final SplitPane tableSplit = new SplitPane(columnsScroll, uniqueScroll);
+        tableSplit = new SplitPane(columnsScroll, columnMatcherControl);
         tableSplit.setOrientation(Orientation.VERTICAL);
         tableSplit.setDividerPosition(0, DIVIDER_POSITION_H);
         final SplitPane mainSplit = new SplitPane(tableSplit, resultsScroll);
@@ -361,7 +383,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      *
      * @return the QueryModel
      */
-    public final QueryModel getQueryModel() {
+    public QueryModel getQueryModel() {
         return queryModel;
     }
 
@@ -372,11 +394,46 @@ public class Main extends Application implements ChangeListener, FileListener {
      */
     private void setSelectedColumnIndex(final int selectedColumnIndex) {
         if (selectedColumnIndex > -1) {
-            frequencyDistributionTableView.setItems(
-                    createFrequencyDistributionObservableList(
-                            selectedColumnIndex,
-                            csv,
-                            this));
+            tableSplit.getItems().remove(1);
+
+            Column c = csv.getColumn(selectedColumnIndex);
+            if (c instanceof StringColumn) {
+                columnMatcherControl = new StringMatcherControl((StringColumn) c, this);
+                columnMatcherControl.loadCSV(csv);
+            } else if (c instanceof IntegerColumn) {
+                columnMatcherControl = new IntegerMatcherControl((IntegerColumn) c, this);
+                columnMatcherControl.loadCSV(csv);
+
+            } else if (c instanceof DoubleColumn) {
+                columnMatcherControl = new DoubleMatcherControl((DoubleColumn) c, this);
+                columnMatcherControl.loadCSV(csv);
+
+            } else if (c instanceof FloatColumn) {
+                columnMatcherControl = new FloatMatcherControl((FloatColumn) c, this);
+                columnMatcherControl.loadCSV(csv);
+
+            } else if (c instanceof BigDecimalColumn) {
+                columnMatcherControl = new BigDecimalMatcherControl((BigDecimalColumn) c, this);
+                columnMatcherControl.loadCSV(csv);
+
+            } else if (c instanceof DateColumn) {
+                columnMatcherControl = new DateMatcherControl((DateColumn) c, this);
+                columnMatcherControl.loadCSV(csv);
+            } else if (c instanceof UrlColumn) {
+                columnMatcherControl = new UrlMatcherControl((UrlColumn) c, this);
+                columnMatcherControl.loadCSV(csv);
+            } else {
+                columnMatcherControl = null;
+            }
+
+            columnMatcherControl.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
+                handleTabChanged();
+            });
+
+
+            tableSplit.getItems().add(columnMatcherControl);
+
+
             if (viewMode == ViewMode.Results) {
                 handleViewResultsAction();
             } else if (viewMode == ViewMode.Chart) {
@@ -488,24 +545,15 @@ public class Main extends Application implements ChangeListener, FileListener {
     }
 
     /**
-     * Returns an array of the supported separator characters.
-     *
-     * @return separator characters
-     */
-    public static char[] listSupportedSeparatorChars() {
-        return new char[]{CSV.COMMA, CSV.SEMICOLON, CSV.PIPE, CSV.TAB};
-    }
-
-    /**
      * Clears all existing data in the model.
      */
-    public final void newFile() {
+    public void newFile() {
         csv = new CSV();
         queryModel = new QueryModel(csv, this);
         csv.addChangeListener(this);
         csv.addFileListener(this);
         columnsTableView.setItems(observableArrayList());
-        frequencyDistributionTableView.setItems(observableArrayList());
+//        frequencyDistributionTableView.setItems(observableArrayList());
         resultsTableView.clearRows();
         updateToolbar();
     }
@@ -517,7 +565,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * @param separatorChar the separator char to use
      * @param charset       the charset to use
      */
-    public final void loadFile(final File file, final Character separatorChar, final Charset charset) {
+    public void loadFile(final File file, final Character separatorChar, final Charset charset) {
         newFile();
         csv.setAutoDetectCharset(true);
         csv.setAutoDetectQuote(true);
@@ -601,6 +649,7 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     /**
      * Shows a dialog box with the error message.
+     *
      * @param message the error message
      */
     private void alert(final String message) {
@@ -647,7 +696,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * Implemented by ChangeListener.
      *
      * @param fromIndex the index to move from
-     * @param toIndex the destination
+     * @param toIndex   the destination
      * @see ChangeListener
      */
     public final void columnMoved(final int fromIndex, final int toIndex) {
@@ -658,7 +707,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * Implemented by ChangeListener.
      *
      * @param rowIndex the index which was removed
-     * @param row the row
+     * @param row      the row
      * @see ChangeListener
      */
     public final void rowRemoved(final int rowIndex, final Row row) {
@@ -670,7 +719,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * Implemented by ChangeListener.
      *
      * @param rowIndex the index which was removed
-     * @param row the row
+     * @param row      the row
      * @see ChangeListener
      */
     public final void rowCreated(final int rowIndex, final Row row) {
@@ -686,7 +735,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * Implemented by ChangeListener.
      *
      * @param fromRowIndex the old index
-     * @param toRowIndex the new index
+     * @param toRowIndex   the new index
      * @see ChangeListener
      */
     public final void rowMoved(final int fromRowIndex, final int toRowIndex) {
@@ -697,7 +746,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * Implemented by ChangeListener.
      *
      * @param fromRowIndex the from index
-     * @param toRowIndex the to index
+     * @param toRowIndex   the to index
      * @see ChangeListener
      */
     public final void rowsRemoved(final int fromRowIndex, final int toRowIndex) {
@@ -708,7 +757,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * Implemented by ChangeListener.
      *
      * @param columnIndex the column
-     * @param rowIndex the row
+     * @param rowIndex    the row
      * @see ChangeListener
      */
     public final void cellUpdated(final int columnIndex, final int rowIndex) {
@@ -719,15 +768,14 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     /**
      * Builds FrequencyDistribution data.
-     *
      */
     public final void buildFrequencyDistribution() {
-        int selectedColumnIndex = frequencyDistributionTableView.getSelectionModel().getSelectedIndex();
-        if (selectedColumnIndex > -1) {
-            frequencyDistributionTableView.getItems().clear();
-            frequencyDistributionTableView.setItems(
-                    createFrequencyDistributionObservableList(selectedColumnIndex, csv, this));
-        }
+//        int selectedColumnIndex = frequencyDistributionTableView.getSelectionModel().getSelectedIndex();
+//        if (selectedColumnIndex > -1) {
+//            frequencyDistributionTableView.getItems().clear();
+//            frequencyDistributionTableView.setItems(
+//                    createFrequencyDistributionObservableList(selectedColumnIndex, csv, this));
+//        }
     }
 
     /**
@@ -760,7 +808,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * @param total the total of bytes in the file
      */
     public final void readBytes(final long count, final long total) {
-        Platform.runLater(() -> progressBar.setProgress(count / (total * 1f)));
+//        Platform.runLater(() -> progressBar.setProgress(count / (total * 1f)));
     }
 
     /**
@@ -790,20 +838,20 @@ public class Main extends Application implements ChangeListener, FileListener {
             handleDeleteRow(resultsTableView.getSelectionModel().getSelectedIndex());
         } else if (owner == columnsTableView) {
             handleDeleteColumn(columnsTableView.getSelectionModel().getSelectedIndex());
-        } else if (owner == frequencyDistributionTableView) {
-            handleDeleteUnique(frequencyDistributionTableView.getSelectionModel().getSelectedIndex());
+//        } else if (owner == frequencyDistributionTableView) {
+//            handleDeleteUnique(frequencyDistributionTableView.getSelectionModel().getSelectedIndex());
         }
     }
 
     /**
      * Handles the deletion of a unqiue value.
-     *
+     * <p>
      * todo - Should it be possible to delete rows with this values
      *
      * @param columnIndex the index of the column to delete
      */
     private void handleDeleteUnique(final int columnIndex) {
-        ObservableFrequencyDistribution u = frequencyDistributionTableView.getItems().get(columnIndex);
+//        ObservableFrequencyDistribution u = frequencyDistributionTableView.getItems().get(columnIndex);
     }
 
     /**
@@ -828,7 +876,6 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     /**
      * Builds the results table.
-     *
      */
     private void buildResultsTable() {
         resultsTableView.columnsChanged(csv, this);
@@ -882,7 +929,6 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     /**
      * Handles printing action.
-     *
      */
     public final void handlePrintAction() {
         TextInputDialog dialog = new TextInputDialog("");
@@ -914,7 +960,6 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     /**
      * Handles new column action.
-     *
      */
     public final void handleNewColumnAction() {
         TextInputDialog dialog = new TextInputDialog("");
@@ -930,7 +975,6 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     /**
      * Handles new row action.
-     *
      */
     public final void handleNewRowAction() {
         int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
@@ -943,7 +987,6 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     /**
      * Handles insert new headers action.
-     *
      */
     public final void handleNewHeaders() {
         csv.insertColumns();
@@ -965,7 +1008,6 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     /**
      * Handles paste action.
-     *
      */
     public final void handlePasteAction() {
         int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
@@ -1036,7 +1078,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     /**
      * Moves the row to a new index.
      *
-     * @param index the row to move
+     * @param index   the row to move
      * @param toIndex the new index
      */
     private void moveRow(final int index, final int toIndex) {
@@ -1048,7 +1090,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * Changes the sort order of a column.
      *
      * @param fromIndex the old index
-     * @param toIndex the new index
+     * @param toIndex   the new index
      */
     private void moveColumn(final int fromIndex, final int toIndex) {
         csv.moveColumn(fromIndex, toIndex);
@@ -1138,7 +1180,6 @@ public class Main extends Application implements ChangeListener, FileListener {
 
     /**
      * Handles save as action.
-     *
      */
     public final void handleSaveAsAction() {
         final FileChooser fileChooser = new FileChooser();
@@ -1153,11 +1194,26 @@ public class Main extends Application implements ChangeListener, FileListener {
         }
     }
 
+    public void handleSelectionChanged(final Column column) {
+        List<RowMatcher> matchers = columnMatcherControl.getMatchers();
+        List<Row> rows = csv.getRowsByMatchers(matchers);
+        List<ObservableRow> list = new ArrayList<>();
+        for (int y = 0; y < rows.size(); y++) {
+            list.add(new ObservableRow(rows.get(y), csv, this));
+        }
+        resultsTableView.getItems().clear();
+        resultsTableView.getItems().addAll(list);
+
+        if (viewMode == ViewMode.Chart) {
+            handleViewChartAction();
+        }
+    }
+
     /**
      * Adds a new selection with the value in that column.
      *
      * @param column the column
-     * @param value the value of the column
+     * @param value  the value of the column
      */
     public final void handleSelected(final Column column, final String value) {
         getQueryModel().addSelection(column, value);
@@ -1173,7 +1229,7 @@ public class Main extends Application implements ChangeListener, FileListener {
      * Removes the selection with the value in that column.
      *
      * @param column the column
-     * @param value the value of the column
+     * @param value  the value of the column
      */
     public final void handleUnselected(final Column column, final String value) {
         getQueryModel().removeSelection(column, value);
@@ -1196,11 +1252,27 @@ public class Main extends Application implements ChangeListener, FileListener {
         buildFrequencyDistribution();
     }
 
+    public void handleTabChanged() {
+        if (viewMode == ViewMode.Results) {
+            handleViewResultsAction();
+        } else if (viewMode == ViewMode.Chart) {
+            handleViewChartAction();
+        } else if (viewMode == ViewMode.Maps) {
+            handleViewGoogleMapsAction();
+        } else if (viewMode == ViewMode.Preview) {
+            handleViewPreviewAction();
+        } else if (viewMode == ViewMode.Search) {
+            handleViewGoogleSearchAction();
+        } else if (viewMode == ViewMode.Wikipedia) {
+            handleViewWikipediaAction();
+        }
+    }
+
     /**
      * Handles chart action.
      */
-    public final void handleViewChartAction() {
-        final PieChart chart = buildPieChart(frequencyDistributionTableView);
+    public void handleViewChartAction() {
+        final PieChart chart = ChartBuilder.buildPieChart(columnMatcherControl);
         resultsScroll.setContent(chart);
         viewMode = ViewMode.Chart;
     }
@@ -1208,7 +1280,7 @@ public class Main extends Application implements ChangeListener, FileListener {
     /**
      * Handles view results action.
      */
-    public final void handleViewResultsAction() {
+    public void handleViewResultsAction() {
         resultsScroll.setContent(resultsTableView);
         viewMode = ViewMode.Results;
     }
@@ -1216,10 +1288,12 @@ public class Main extends Application implements ChangeListener, FileListener {
     /**
      * Handles preview action.
      */
-    public final void handleViewPreviewAction() {
-        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
-        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
-            String filename = ofd.getValue();
+    public void handleViewPreviewAction() {
+        ObservableFrequencyDistribution ofd = columnMatcherControl.getSelectedObservableFrequencyDistribution();
+        if (ofd == null) {
+            resultsScroll.setContent(getPreviewNothingSelectedNode());
+        } else {
+            String filename = ofd.labelProperty().getValue();
             if (filename == null || filename.trim().isEmpty()) {
                 resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
             } else if (filename.startsWith("http")) {
@@ -1238,7 +1312,7 @@ public class Main extends Application implements ChangeListener, FileListener {
                     resultsScroll.setContent(new ImageView(new Image(f.toURI().toString())));
                 }
             } else {
-                resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
+                resultsScroll.setContent(getPreviewEmptyNode());
             }
         }
         viewMode = ViewMode.Preview;
@@ -1247,16 +1321,20 @@ public class Main extends Application implements ChangeListener, FileListener {
     /**
      * Handles Wikipedia action.
      */
-    public final void handleViewWikipediaAction() {
-        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
-        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
-            String value = ofd.getValue();
-            WebView v = new WebView();
-            WebEngine webEngine = v.getEngine();
-            resultsScroll.setContent(v);
-            webEngine.load("https://en.wikipedia.org/wiki/" + value);
+    public void handleViewWikipediaAction() {
+        ObservableFrequencyDistribution ofd = columnMatcherControl.getSelectedObservableFrequencyDistribution();
+        if (ofd == null) {
+            resultsScroll.setContent(getPreviewNothingSelectedNode());
         } else {
-            resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
+            String value = ofd.labelProperty().getValue();
+            if (value != null && !value.isEmpty()) {
+                WebView v = new WebView();
+                WebEngine webEngine = v.getEngine();
+                resultsScroll.setContent(v);
+                webEngine.load("https://en.wikipedia.org/wiki/" + value);
+            } else {
+                resultsScroll.setContent(getPreviewEmptyNode());
+            }
         }
         viewMode = ViewMode.Wikipedia;
     }
@@ -1264,43 +1342,66 @@ public class Main extends Application implements ChangeListener, FileListener {
     /**
      * Handles Maps action.
      */
-    public final void handleViewGoogleMapsAction() {
-        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
-        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
-            String value = ofd.getValue();
-            WebView v = new WebView();
-            WebEngine webEngine = v.getEngine();
-            resultsScroll.setContent(v);
-            webEngine.load("https://www.google.com/maps?q=" + value);
-        } else {
-            resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
-        }
-        viewMode = ViewMode.Maps;
+    public void handleViewGoogleMapsAction() {
+        ObservableFrequencyDistribution ofd = columnMatcherControl.getSelectedObservableFrequencyDistribution();
 
+        if (ofd == null) {
+            resultsScroll.setContent(getPreviewNothingSelectedNode());
+        } else {
+            String value = ofd.labelProperty().getValue();
+            if (value != null && !value.isEmpty()) {
+                WebView v = new WebView();
+                WebEngine webEngine = v.getEngine();
+                resultsScroll.setContent(v);
+                webEngine.load("https://www.google.com/maps?q=" + value);
+            } else {
+                resultsScroll.setContent(getPreviewEmptyNode());
+            }
+        }
+
+        viewMode = ViewMode.Maps;
     }
 
     /**
      * Handles Search action.
      */
-    public final void handleViewGoogleSearchAction() {
-        ObservableFrequencyDistribution ofd = frequencyDistributionTableView.getSelectionModel().getSelectedItem();
-        if (ofd != null && ofd.getValue() != null && !ofd.getValue().isEmpty()) {
-            String value = ofd.getValue();
-            WebView v = new WebView();
-            WebEngine webEngine = v.getEngine();
-            resultsScroll.setContent(v);
-            webEngine.load("https://www.google.no/?q=" + value);
+    public void handleViewGoogleSearchAction() {
+        ObservableFrequencyDistribution ofd = columnMatcherControl.getSelectedObservableFrequencyDistribution();
+
+        if (ofd == null) {
+            resultsScroll.setContent(getPreviewNothingSelectedNode());
         } else {
-            resultsScroll.setContent(new Label(bundle.getString("view.preview.empty")));
+            String value = ofd.labelProperty().getValue();
+            if (value != null && !value.isEmpty()) {
+                WebView v = new WebView();
+                WebEngine webEngine = v.getEngine();
+                resultsScroll.setContent(v);
+                webEngine.load("https://www.google.no/?q=" + value);
+            } else {
+                resultsScroll.setContent(getPreviewEmptyNode());
+            }
         }
+
         viewMode = ViewMode.Search;
+    }
+
+    public Node getPreviewEmptyNode() {
+        BorderPane pane = new BorderPane();
+        pane.centerProperty().setValue(new Label(bundle.getString("view.preview.empty")));
+        return pane;
+    }
+
+    public Node getPreviewNothingSelectedNode() {
+        BorderPane pane = new BorderPane();
+        pane.centerProperty().setValue(new Label(bundle.getString("view.preview.nothing.selected")));
+        return pane;
     }
 
     public Query getQuery() {
         return query;
     }
 
-    public void setQuery(Query query) {
+    public void setQuery(final Query query) {
         this.query = query;
     }
 

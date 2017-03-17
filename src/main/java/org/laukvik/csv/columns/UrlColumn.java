@@ -69,12 +69,114 @@ public final class UrlColumn extends Column<URL> {
     public int compare(final URL one, final URL another) {
         if (one == null && another == null) {
             return 0;
-        } else if (one == null && another != null) {
-            return -1;
-        } else if (one != null && another == null) {
+        }
+        if (one != null && another == null) {
             return 1;
+        }
+        if (one == null && another != null) {
+            return -1;
         }
         return one.toExternalForm().compareTo(another.toExternalForm());
     }
 
+    /**
+     * Returns the path from the URL
+     *
+     * @param url the url
+     * @return the path
+     */
+    public static String getPath(final URL url){
+        if (url == null){
+            return null;
+        }
+        String p = url.getPath();
+        return p.isEmpty() ? null : p;
+    }
+
+    /**
+     * Returns the filename from the URL
+     *
+     * @param url the url
+     * @return the filename
+     */
+    public static String getFilename(final URL url){
+        if (url == null){
+            return null;
+        }
+        String p = url.getPath();
+        String filename = p.substring(p.lastIndexOf("/") + 1);
+        return filename.isEmpty() ? null : filename;
+    }
+
+    public static String getPostfix(final URL url){
+        String filename = getFilename(url);
+        if (filename == null){
+            return null;
+        }
+        if (filename.isEmpty()){
+            return null;
+        }
+        int index = filename.lastIndexOf(".");
+        if (index < 0){
+            return null;
+        } else {
+            return filename.substring(index + 1);
+        }
+    }
+
+    public static String getPrefix(final URL url){
+        String filename = getFilename(url);
+        if (filename == null || filename.isEmpty()){
+            return null;
+        }
+        int index = filename.lastIndexOf(".");
+        if (index < 0){
+            return filename;
+        } else {
+            return filename.substring(0, index);
+        }
+    }
+
+    /**
+     * Returns the anchor from the URL
+     * @param url the url
+     * @return the protocol
+     */
+    public static String getAnchor(final URL url) {
+        if (url == null){
+            return null;
+        } else {
+            return url.getRef();
+        }
+    }
+
+    /**
+     * Returns the port from the URL
+     * @param url the url
+     * @return the protocol
+     */
+    public static Integer getPort(final URL url) {
+        if (url == null){
+            return null;
+        } else {
+            return url.getPort() == -1 ? null : url.getPort();
+        }
+    }
+
+    /**
+     * Returns the protocol from the URL
+     * @param url the url
+     * @return the protocol
+     */
+    public static String getProtocol(final URL url) {
+        if (url == null){
+            return null;
+        }
+        String protocol = url.getProtocol();
+        if (protocol == null || protocol.isEmpty()){
+            return null;
+        } else {
+            return protocol;
+        }
+    }
 }

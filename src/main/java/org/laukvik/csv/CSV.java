@@ -36,6 +36,8 @@ import org.laukvik.csv.io.ResourceBundleWriter;
 import org.laukvik.csv.io.WordCountReader;
 import org.laukvik.csv.io.XmlWriter;
 import org.laukvik.csv.query.Query;
+import org.laukvik.csv.query.RowMatcher;
+import org.laukvik.csv.statistics.FrequencyDistribution;
 
 import java.io.File;
 import java.io.IOException;
@@ -275,7 +277,11 @@ public final class CSV implements Serializable {
      * @return the column
      */
     public Column getColumn(final String name) {
-        return columns.get(indexOf(name));
+        int index = indexOf(name);
+        if (index < 0){
+            return null;
+        }
+        return columns.get(index);
     }
 
     /**
@@ -478,7 +484,7 @@ public final class CSV implements Serializable {
      * @param query the query
      * @return the rows
      */
-    public List<Row> getRowsByQuery(final Query query){
+    public List<Row> getRowsByQuery(final Query query) {
         return query.getRows(this);
     }
 
@@ -1106,4 +1112,30 @@ public final class CSV implements Serializable {
         }
     }
 
+    /**
+     * Returns all rows that the matchers accepts.
+     *
+     * @param matchers the macthers
+     * @return the matching rorws
+     */
+    public List<Row> getRowsByMatchers(final List<RowMatcher> matchers) {
+        List<Row> newRows = new ArrayList<>();
+
+        int required = matchers.size();
+
+        for (int y= 0; y< getRowCount(); y++){
+            Row r = getRow(y);
+            int found = 0;
+            for (RowMatcher m : matchers){
+                if (m.matches(r)){
+                    found++;
+                }
+            }
+            if (found == required){
+                newRows.add(r);
+            }
+        }
+
+        return newRows;
+    }
 }

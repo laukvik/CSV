@@ -41,10 +41,6 @@ import java.util.TreeMap;
 public final class Row implements Serializable {
 
     /**
-     * The timestamp it was created. Used only internally to separate rows.
-     */
-    private final long timestamp;
-    /**
      * The Map containing the column data.
      */
     private final Map<Column, Object> map;
@@ -53,7 +49,10 @@ public final class Row implements Serializable {
      * Creates a new Row.
      */
     public Row() {
-        timestamp = System.nanoTime();
+        /*
+      The timestamp it was created. Used only internally to separate rows.
+     */
+        long timestamp = System.nanoTime();
         this.map = new TreeMap<>();
     }
 
