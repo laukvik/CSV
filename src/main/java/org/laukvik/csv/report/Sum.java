@@ -16,6 +16,7 @@ public final class Sum extends Aggregate {
     private BigDecimal sum;
 
     /**
+     * Creates a new SUM for the column.
      *
      * @param column the column
      */
@@ -31,8 +32,9 @@ public final class Sum extends Aggregate {
     }
 
     /**
+     * Returns the value
      *
-     * @return
+     * @return the value
      */
     public BigDecimal getValue() {
         return sum;

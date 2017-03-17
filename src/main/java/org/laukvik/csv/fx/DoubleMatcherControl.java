@@ -11,7 +11,6 @@ import org.laukvik.csv.statistics.DoubleDistribution;
 import org.laukvik.csv.statistics.DoubleRange;
 import org.laukvik.csv.statistics.FreqDistribution;
 import org.laukvik.csv.statistics.Range;
-import org.laukvik.csv.statistics.RangedDistribution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +22,6 @@ import java.util.List;
  */
 public class DoubleMatcherControl extends ColumnMatcherControl {
 
-    private final Tab uniqueTab;
-    private final Tab rangeTab;
     private final FrequencyDistributionTableView uniqueView;
     private final FrequencyDistributionTableView rangeView;
     private final List<RowMatcher> matchers;
@@ -38,9 +35,9 @@ public class DoubleMatcherControl extends ColumnMatcherControl {
 
         //
         uniqueView = new FrequencyDistributionTableView();
-        uniqueTab = new Tab("Values", uniqueView);
+        Tab uniqueTab = new Tab("Values", uniqueView);
         rangeView = new FrequencyDistributionTableView();
-        rangeTab = new Tab("Range", rangeView);
+        Tab rangeTab = new Tab("Range", rangeView);
 
         // Add tabs
         getTabs().addAll(uniqueTab, rangeTab);

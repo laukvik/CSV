@@ -17,9 +17,6 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.BooleanColumn;
-import org.laukvik.csv.columns.DateColumn;
-
-import java.util.Date;
 
 /**
  * Compares a DateColumn to have the year to be the specified value.

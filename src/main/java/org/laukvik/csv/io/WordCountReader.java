@@ -23,8 +23,6 @@ public final class WordCountReader implements DatasetFileReader {
     private final StringColumn wordColumn;
     /** The count column. */
     private final StringColumn countColumn;
-    /** The list of words. */
-    private List<String> list;
 
     /**
      * Creates a new instance.
@@ -90,7 +88,8 @@ public final class WordCountReader implements DatasetFileReader {
         csv.addColumn(countColumn);
         parse(file);
         Map<String, Integer> map = parse(file);
-        list = new ArrayList<>();
+        /* The list of words. */
+        List<String> list = new ArrayList<>();
         list.addAll(map.keySet());
         Collections.sort(list);
         int index = 0;

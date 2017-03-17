@@ -2,7 +2,6 @@ package org.laukvik.csv.report;
 
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
-import org.laukvik.csv.columns.IntegerColumn;
 
 /**
  * An abstract class that aggregates a column.

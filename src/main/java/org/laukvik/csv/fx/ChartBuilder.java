@@ -3,7 +3,6 @@ package org.laukvik.csv.fx;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.TableView;
 import org.laukvik.csv.CSV;
 
 import java.util.ArrayList;
@@ -40,12 +39,12 @@ public final class ChartBuilder {
         int selectCount = 0;
 
         for (int y= 0; y< max; y++){
-            ObservableFrequencyDistribution ofd = (ObservableFrequencyDistribution) uniqueView.getItems().get(y);
+            ObservableFrequencyDistribution ofd = uniqueView.getItems().get(y);
             selectCount += ofd.isSelected() ? 1 : 0;
         }
 
         for (int y= 0; y< max; y++){
-            ObservableFrequencyDistribution ofd = (ObservableFrequencyDistribution) uniqueView.getItems().get(y);
+            ObservableFrequencyDistribution ofd = uniqueView.getItems().get(y);
             if (selectCount > 0 && ofd.isSelected() || selectCount == 0){
                 if (y < PIE_CHART_MAX){
                     dataset.add(new PieChart.Data(ofd.labelProperty().getValue(), ofd.countProperty().intValue()));

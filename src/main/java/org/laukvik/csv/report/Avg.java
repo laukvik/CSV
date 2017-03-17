@@ -6,7 +6,7 @@ import org.laukvik.csv.columns.IntegerColumn;
 import java.math.BigDecimal;
 
 /**
- * Shows the average of all values.
+ * Calculates the average of all values.
  */
 public final class Avg extends Aggregate {
 
@@ -14,12 +14,14 @@ public final class Avg extends Aggregate {
      * Container for the total.
      */
     private BigDecimal sum;
+
     /**
      * The amount of values.
      */
     private long count;
 
     /**
+     *
      * @param column the column
      */
     public Avg(final IntegerColumn column) {
@@ -27,6 +29,11 @@ public final class Avg extends Aggregate {
         sum = new BigDecimal(0);
     }
 
+    /**
+     * Creates a new average based on the value in the row.
+     *
+     * @param row the row
+     */
     @Override
     public void aggregate(final Row row) {
         Integer value = row.getInteger((IntegerColumn) getColumn());
@@ -35,7 +42,9 @@ public final class Avg extends Aggregate {
     }
 
     /**
-     * @return
+     * Returns the value
+     *
+     * @return the value
      */
     public BigDecimal getValue() {
         if (count == 0){

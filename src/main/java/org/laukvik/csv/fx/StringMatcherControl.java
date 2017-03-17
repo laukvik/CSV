@@ -1,9 +1,6 @@
 package org.laukvik.csv.fx;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Side;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.Tab;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
@@ -26,13 +23,6 @@ import java.util.List;
  */
 public class StringMatcherControl extends ColumnMatcherControl {
 
-    private final Tab uniqueTab;
-    private final Tab firstLetterTab;
-    private final Tab lengthTab;
-    private final Tab prefixTab;
-    private final Tab postfixTab;
-    private final Tab wordsTab;
-
     private final FrequencyDistributionTableView uniqueView;
     private final FrequencyDistributionTableView firstLetterView;
     private final FrequencyDistributionTableView lengthView;
@@ -49,22 +39,22 @@ public class StringMatcherControl extends ColumnMatcherControl {
         setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
         this.main = main;
         uniqueView = new FrequencyDistributionTableView();
-        uniqueTab = new Tab("Values");
+        Tab uniqueTab = new Tab("Values");
         uniqueTab.setContent(uniqueView);
         firstLetterView = new FrequencyDistributionTableView();
-        firstLetterTab = new Tab("Letter");
+        Tab firstLetterTab = new Tab("Letter");
         firstLetterTab.setContent(firstLetterView);
         lengthView = new FrequencyDistributionTableView();
-        lengthTab = new Tab("Length");
+        Tab lengthTab = new Tab("Length");
         lengthTab.setContent(lengthView);
         prefixView = new FrequencyDistributionTableView();
-        prefixTab = new Tab("Prefix");
+        Tab prefixTab = new Tab("Prefix");
         prefixTab.setContent(prefixView);
         postfixView = new FrequencyDistributionTableView();
-        postfixTab = new Tab("Postfix");
+        Tab postfixTab = new Tab("Postfix");
         postfixTab.setContent(postfixView);
         wordsView = new FrequencyDistributionTableView();
-        wordsTab = new Tab("Words");
+        Tab wordsTab = new Tab("Words");
         wordsTab.setContent(wordsView);
         matchers = new ArrayList<>();
         getTabs().addAll(uniqueTab, firstLetterTab, prefixTab, postfixTab, lengthTab, wordsTab);

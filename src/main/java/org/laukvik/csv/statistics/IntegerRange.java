@@ -20,7 +20,7 @@ public final class IntegerRange extends Range<Integer> {
     /**
      * Adds a value
      *
-     * @param value
+     * @param value a value
      */
     @Override
     public void addValue(final Integer value) {

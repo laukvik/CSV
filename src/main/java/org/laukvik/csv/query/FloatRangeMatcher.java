@@ -2,7 +2,6 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.FloatColumn;
-import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.statistics.FloatRange;
 
 import java.util.Arrays;

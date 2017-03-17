@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Matches Floats in the specified ranges.
+ * Matches BigDecimal in the specified ranges.
  *
  */
 public class BigDecimalRangeMatcher extends RowMatcher implements ValueMatcher<BigDecimal>{
@@ -25,7 +25,7 @@ public class BigDecimalRangeMatcher extends RowMatcher implements ValueMatcher<B
     private final List<BigDecimalRange> ranges;
 
     /**
-     * Creates a new instance with the specified bigDecimalColumn and range(s).
+     * Creates a new instance with the specified BigDecimalColumn and range(s).
      *
      * @param bigDecimalColumn the column
      * @param range         the ranges

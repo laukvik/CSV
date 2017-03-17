@@ -20,7 +20,7 @@ public final class FloatRange extends Range<Float> {
     /**
      * Adds a value
      *
-     * @param value
+     * @param value the value
      */
     @Override
     public void addValue(final Float value) {

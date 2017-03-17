@@ -37,18 +37,6 @@ import java.util.List;
 public class DateMatcherControl extends ColumnMatcherControl {
 
 
-    private final Tab uniqueTab;
-    private final Tab yearTab;
-    private final Tab monthTab;
-    private final Tab dateTab;
-    private final Tab weekTab;
-    private final Tab weekdayTab;
-
-    private final Tab hourTab;
-    private final Tab minuteTab;
-    private final Tab secondTab;
-    private final Tab millisecondTab;
-
     private final FrequencyDistributionTableView uniqueView;
     private final FrequencyDistributionTableView yearView;
     private final FrequencyDistributionTableView monthView;
@@ -67,25 +55,25 @@ public class DateMatcherControl extends ColumnMatcherControl {
         super(column);
         this.main = main;
         uniqueView = new FrequencyDistributionTableView();
-        uniqueTab = new Tab("Values", uniqueView);
+        Tab uniqueTab = new Tab("Values", uniqueView);
         yearView = new FrequencyDistributionTableView();
-        yearTab = new Tab("Year", yearView);
+        Tab yearTab = new Tab("Year", yearView);
         monthView = new FrequencyDistributionTableView();
-        monthTab = new Tab("Month", monthView);
+        Tab monthTab = new Tab("Month", monthView);
         dateView = new FrequencyDistributionTableView();
-        dateTab = new Tab("Date", dateView);
+        Tab dateTab = new Tab("Date", dateView);
         weekView = new FrequencyDistributionTableView();
-        weekTab = new Tab("Week", weekView);
+        Tab weekTab = new Tab("Week", weekView);
         weekdayView = new FrequencyDistributionTableView();
-        weekdayTab = new Tab("Weekday", weekdayView);
+        Tab weekdayTab = new Tab("Weekday", weekdayView);
         hourView = new FrequencyDistributionTableView();
-        hourTab = new Tab("Hour", hourView);
+        Tab hourTab = new Tab("Hour", hourView);
         minuteView = new FrequencyDistributionTableView();
-        minuteTab = new Tab("Hour", minuteView);
+        Tab minuteTab = new Tab("Hour", minuteView);
         secondView = new FrequencyDistributionTableView();
-        secondTab = new Tab("Second", secondView);
+        Tab secondTab = new Tab("Second", secondView);
         millisecondView = new FrequencyDistributionTableView();
-        millisecondTab = new Tab("Millis", millisecondView);
+        Tab millisecondTab = new Tab("Millis", millisecondView);
         getTabs().addAll(uniqueTab, yearTab, monthTab, dateTab, weekTab, weekdayTab,
                 hourTab, minuteTab, secondTab, millisecondTab);
     }
@@ -154,7 +142,7 @@ public class DateMatcherControl extends ColumnMatcherControl {
         }
         for (Date key : uniqueDistribution.getKeys()) {
             uniqueView.getItems().add(new ObservableFrequencyDistribution(false,
-                    dc.formatDefaultDate(key), key, uniqueDistribution.getCount(key),
+                    DateColumn.formatDefaultDate(key), key, uniqueDistribution.getCount(key),
                     getColumn(),
                     main));
         }

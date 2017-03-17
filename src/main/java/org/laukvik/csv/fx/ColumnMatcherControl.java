@@ -1,9 +1,6 @@
 package org.laukvik.csv.fx;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Side;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.TabPane;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.columns.Column;

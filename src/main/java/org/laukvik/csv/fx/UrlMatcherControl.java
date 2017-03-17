@@ -27,18 +27,6 @@ import java.util.List;
  */
 public class UrlMatcherControl extends ColumnMatcherControl {
 
-    private final Tab uniqueTab;
-
-    private final Tab protocolTab;
-    private final Tab hostTab;
-    private final Tab portTab;
-    private final Tab pathTab;
-    private final Tab fileTab;
-    private final Tab postfixTab;
-    private final Tab prefixTab;
-    private final Tab queryTab;
-    private final Tab anchorTab;
-
 
     private final FrequencyDistributionTableView uniqueView;
 
@@ -60,26 +48,26 @@ public class UrlMatcherControl extends ColumnMatcherControl {
         this.main = main;
         matchers = new ArrayList<>();
         uniqueView = new FrequencyDistributionTableView();
-        uniqueTab = new Tab("Values", uniqueView);
+        Tab uniqueTab = new Tab("Values", uniqueView);
         protocolView = new FrequencyDistributionTableView();
-        protocolTab = new Tab("Protocol", protocolView);
+        Tab protocolTab = new Tab("Protocol", protocolView);
         hostView = new FrequencyDistributionTableView();
-        hostTab = new Tab("Host");
+        Tab hostTab = new Tab("Host");
         hostTab.setContent(hostView);
         portView = new FrequencyDistributionTableView();
-        portTab = new Tab("Port", portView);
+        Tab portTab = new Tab("Port", portView);
         pathView = new FrequencyDistributionTableView();
-        pathTab = new Tab("Path", pathView);
+        Tab pathTab = new Tab("Path", pathView);
         fileView = new FrequencyDistributionTableView();
-        fileTab = new Tab("File", fileView);
+        Tab fileTab = new Tab("File", fileView);
         postfixView = new FrequencyDistributionTableView();
-        postfixTab = new Tab("Postfix", postfixView);
+        Tab postfixTab = new Tab("Postfix", postfixView);
         prefixView = new FrequencyDistributionTableView();
-        prefixTab = new Tab("Prefix", prefixView);
+        Tab prefixTab = new Tab("Prefix", prefixView);
         queryView = new FrequencyDistributionTableView();
-        queryTab = new Tab("Query", queryView);
+        Tab queryTab = new Tab("Query", queryView);
         anchorView = new FrequencyDistributionTableView();
-        anchorTab = new Tab("Anchor", anchorView);
+        Tab anchorTab = new Tab("Anchor", anchorView);
         getTabs().addAll(uniqueTab, hostTab, pathTab, fileTab, prefixTab, postfixTab, queryTab, anchorTab, protocolTab, portTab);
     }
 

@@ -59,6 +59,15 @@ public final class BigDecimalColumn extends Column<BigDecimal> {
      * @return the compare value
      */
     public int compare(final BigDecimal one, final BigDecimal another) {
+        if (one == null && another == null) {
+            return 0;
+        }
+        if (one != null && another == null) {
+            return 1;
+        }
+        if (one == null && another != null) {
+            return -1;
+        }
         return one.compareTo(another);
     }
 

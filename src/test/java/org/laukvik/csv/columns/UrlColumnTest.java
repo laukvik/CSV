@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -57,7 +58,7 @@ public class UrlColumnTest {
         URL u4 = new URL("http://en.wikipedia.org/Barack_Obama");
         URL u5 = new URL("http://en.wikipedia.org/Barack_Obama.html");
         assertEquals("Barack_Obama.html", UrlColumn.getFilename(u1));
-        assertEquals("", UrlColumn.getFilename(u2));
+        assertEquals(null, UrlColumn.getFilename(u2));
         assertEquals("Barack_Obama", UrlColumn.getFilename(u3));
         assertEquals("Barack_Obama", UrlColumn.getFilename(u4));
         assertEquals("Barack_Obama.html", UrlColumn.getFilename(u5));
@@ -101,6 +102,29 @@ public class UrlColumnTest {
         assertEquals("history", UrlColumn.getAnchor(u1));
         assertEquals(null, UrlColumn.getAnchor(u2));
         assertEquals(null, UrlColumn.getAnchor(null));
+    }
+
+    @Test
+    public void getPath() throws MalformedURLException {
+        URL u1 = new URL("http://en.wikipedia.org/wiki/Barack_Obama.jpg");
+        assertEquals("/wiki/Barack_Obama.jpg", UrlColumn.getPath(u1));
+        assertNull(UrlColumn.getPath(null));
+    }
+
+    @Test
+    public void getPort() throws MalformedURLException {
+        URL u1 = new URL("http://en.wikipedia.org:8080/wiki/Barack_Obama.jpg");
+        URL u2 = new URL("http://en.wikipedia.org/wiki/Barack_Obama.jpg");
+        assertEquals((Integer) 8080, UrlColumn.getPort(u1));
+        assertNull(UrlColumn.getPort(null));
+        assertNull(UrlColumn.getPort(u2));
+    }
+
+    @Test
+    public void getProtocol() throws MalformedURLException {
+        URL u1 = new URL("http://en.wikipedia.org/wiki/Barack_Obama.jpg");
+        assertEquals("http", UrlColumn.getProtocol(u1));
+        assertNull(UrlColumn.getProtocol(null));
     }
 
 }

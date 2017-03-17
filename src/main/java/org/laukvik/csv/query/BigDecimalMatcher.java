@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Compares a BigDecimalColumn to a list of values;
+ * Compares a BigDecimalColumn to a list of values.
  */
 public final class BigDecimalMatcher extends RowMatcher {
 
@@ -37,16 +37,21 @@ public final class BigDecimalMatcher extends RowMatcher {
     private List<BigDecimal> values;
 
     /**
-     * Compares a DateColumn to specified Date.
+     * Compares a BigDecimal with the specified values.
      *
-     * @param bigDecimalColumn the bigDecimalColumn
-     * @param bigDecimals  the values
+     * @param bigDecimalColumn the BigDecimalColumn
+     * @param bigDecimals      the values
      */
     public BigDecimalMatcher(final BigDecimalColumn bigDecimalColumn, final BigDecimal... bigDecimals) {
-        this.column = bigDecimalColumn;
-        this.values = Arrays.asList(bigDecimals);
+        this(bigDecimalColumn, Arrays.asList(bigDecimals));
     }
 
+    /**
+     * Compares a BigDecimal with the specified values.
+     *
+     * @param bigDecimalColumn the BigDecimalColumn
+     * @param bigDecimals      the values
+     */
     public BigDecimalMatcher(final BigDecimalColumn bigDecimalColumn, final List<BigDecimal> bigDecimals) {
         this.column = bigDecimalColumn;
         this.values = bigDecimals;
@@ -60,11 +65,16 @@ public final class BigDecimalMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         BigDecimal d = row.getBigDecimal(column);
-        for (BigDecimal v : values){
-            if (d == null){
-                return v == null;
+        if (values.isEmpty()) {
+            return true;
+        }
+        for (BigDecimal v : values) {
+            if (v == null){
+                if (d == null){
+                    return true;
+                }
             } else {
-                if (d.equals(v)){
+                if (v.equals(d)){
                     return true;
                 }
             }

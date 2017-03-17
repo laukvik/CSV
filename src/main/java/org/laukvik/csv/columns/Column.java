@@ -144,7 +144,7 @@ public abstract class Column<T> implements Comparable {
      * @param columnDefinition the columnDefinition
      * @return the column
      */
-    public static final Column parseColumnDefinition(final ColumnDefinition columnDefinition) {
+    public static Column parseColumnDefinition(final ColumnDefinition columnDefinition) {
         ColumnDefinition.Attribute attrType = columnDefinition.get(TYPE);
         String columnName = columnDefinition.getColumnName();
         Column c = null;

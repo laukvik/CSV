@@ -2,7 +2,6 @@ package org.laukvik.csv.report;
 
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.IntegerColumn;
-import org.laukvik.csv.columns.StringColumn;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

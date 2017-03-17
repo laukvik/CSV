@@ -65,10 +65,12 @@ public final class IntegerColumn extends Column<Integer> {
     public int compare(final Integer one, final Integer another) {
         if (one == null && another == null) {
             return 0;
-        } else if (one == null && another != null) {
-            return -1;
-        } else if (one != null && another == null) {
+        }
+        if (one != null && another == null) {
             return 1;
+        }
+        if (one == null && another != null) {
+            return -1;
         }
         return one.compareTo(another);
     }
@@ -92,56 +94,31 @@ public final class IntegerColumn extends Column<Integer> {
 
     public static Integer getMods(Integer value, int q) {
         if (value == null){
-            return null;
+            return 0;
         } else {
             return ((value/q)% 10) * q;
         }
     }
 
     public static Integer getTen(Integer value) {
-//        if (value == null){
-//            return null;
-//        } else {
-//            return ((value/10)%10) * 10;
-//        }
         return getMods(value, 10);
     }
 
     public static Integer getHundred(Integer value) {
-//        if (value == null){
-//            return null;
-//        }
-//        return ((value/100)%10) * 100;
         return getMods(value, 100);
     }
 
 
     public static Integer getThousand(Integer value) {
-//        if (value == null){
-//            return null;
-//        }
-//        int j=(value/1000)%10;
-//        return j * 1000;
         return getMods(value, 1000);
     }
 
     public static Integer getMillion(Integer value) {
-//        if (value == null){
-//            return null;
-//        }
-//        int j=(value/1000000)%10;
-//        return j * 1000000;
         return getMods(value, 1000000);
     }
 
     public static Integer getBillion(Integer value) {
-//        if (value == null){
-//            return null;
-//        }
-//        int j=(value/1000000000)%10;
-//        return j * 1000000000;
         return getMods(value, 1000000000);
     }
-
 
 }

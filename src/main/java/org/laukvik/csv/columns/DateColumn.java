@@ -15,7 +15,6 @@
  */
 package org.laukvik.csv.columns;
 
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -88,9 +87,11 @@ public final class DateColumn extends Column<Date> {
     public static int compareDates(final Date one, final Date another) {
         if (one == null && another == null) {
             return 0;
-        } else if (one == null && another != null) {
+        }
+        if (one == null && another != null) {
             return -1;
-        } else if (one != null && another == null) {
+        }
+        if (one != null && another == null) {
             return 1;
         }
         return one.compareTo(another);
@@ -128,9 +129,11 @@ public final class DateColumn extends Column<Date> {
     public static boolean isEqualDate(final Date d1, final Date d2) {
         if (d1 == null && d2 == null) {
             return true;
-        } else if (d1 == null) {
+        }
+        if (d1 == null) {
             return false;
-        } else if (d2 == null) {
+        }
+        if (d2 == null) {
             return false;
         }
         GregorianCalendar c1 = new GregorianCalendar();
@@ -174,12 +177,7 @@ public final class DateColumn extends Column<Date> {
      * @return true if the date is the year
      */
     public static boolean isYear(final Date v, final int year) {
-        if (v == null) {
-            return false;
-        }
-        Calendar c = new GregorianCalendar();
-        c.setTime(v);
-        return c.get(GregorianCalendar.YEAR) == year;
+        return getYear(v) == year;
     }
 
     /**
@@ -190,12 +188,7 @@ public final class DateColumn extends Column<Date> {
      * @return true if date has the year greater than the year.
      */
     public static boolean isYearGreaterThan(final Date v, final int year) {
-        if (v == null) {
-            return false;
-        }
-        Calendar c = new GregorianCalendar();
-        c.setTime(v);
-        return c.get(GregorianCalendar.YEAR) > year;
+        return getYear(v) > year;
     }
 
     /**
@@ -206,12 +199,7 @@ public final class DateColumn extends Column<Date> {
      * @return true if date has the year less than the year.
      */
     public static boolean isYearLessThan(final Date v, final int year) {
-        if (v == null) {
-            return false;
-        }
-        Calendar c = new GregorianCalendar();
-        c.setTime(v);
-        return c.get(GregorianCalendar.YEAR) < year;
+        return getYear(v) <= year;
     }
 
     /**
@@ -223,12 +211,7 @@ public final class DateColumn extends Column<Date> {
      * @return true if the date is between the two years.
      */
     public static boolean isYearBetween(final Date v, final int year, final int toYear) {
-        if (v == null) {
-            return false;
-        }
-        Calendar c = new GregorianCalendar();
-        c.setTime(v);
-        int thisYear = c.get(GregorianCalendar.YEAR);
+        int thisYear = getYear(v);
         return thisYear >= year && thisYear <= toYear;
     }
 
@@ -240,12 +223,7 @@ public final class DateColumn extends Column<Date> {
      * @return returns true if the month is same
      */
     public static boolean isMonth(final Date v, final int month) {
-        if (v == null) {
-            return false;
-        }
-        Calendar c = new GregorianCalendar();
-        c.setTime(v);
-        return c.get(GregorianCalendar.MONTH) == month;
+        return getMonth(v) == month;
     }
 
     /**
@@ -256,12 +234,7 @@ public final class DateColumn extends Column<Date> {
      * @return true if the date has the week
      */
     public static boolean isWeek(final Date v, final int week) {
-        if (v == null) {
-            return false;
-        }
-        Calendar c = new GregorianCalendar();
-        c.setTime(v);
-        return c.get(GregorianCalendar.WEEK_OF_YEAR) == week;
+        return getWeekOfYear(v) == week;
     }
 
     /**
@@ -272,12 +245,7 @@ public final class DateColumn extends Column<Date> {
      * @return returns true if the date has the dayOfWeek.
      */
     public static boolean isDayOfWeek(final Date v, final int dayOfWeek) {
-        if (v == null) {
-            return false;
-        }
-        Calendar c = new GregorianCalendar();
-        c.setTime(v);
-        return c.get(GregorianCalendar.DAY_OF_WEEK) == dayOfWeek;
+        return getDayOfWeek(v) == dayOfWeek;
     }
 
     /**
@@ -326,10 +294,12 @@ public final class DateColumn extends Column<Date> {
     public int compare(final Date one, final Date another) {
         if (one == null && another == null) {
             return 0;
-        } else if (one == null) {
-            return -1;
-        } else if (another == null) {
+        }
+        if (one != null && another == null) {
             return 1;
+        }
+        if (one == null && another != null) {
+            return -1;
         }
         return one.compareTo(another);
     }
@@ -351,6 +321,12 @@ public final class DateColumn extends Column<Date> {
         return time >= start && time <= finish;
     }
 
+    /**
+     * Formats the date using the default date pattern
+     *
+     * @param date the date
+     * @return formatted value
+     */
     public static String formatDefaultDate(final Date date){
         if (date == null){
             return "";
@@ -359,6 +335,12 @@ public final class DateColumn extends Column<Date> {
         }
     }
 
+    /**
+     * Formats the date using the pattern
+     *
+     * @param date the date
+     * @return formatted value
+     */
     public String formatDate(final Date date){
         if (date == null){
             return "";
@@ -367,6 +349,12 @@ public final class DateColumn extends Column<Date> {
         }
     }
 
+    /**
+     * Returns the year part of the date.
+     *
+     * @param value the date
+     * @return the year
+     */
     public static Integer getYear(final Date value) {
         if (value == null){
             return null;
@@ -376,6 +364,12 @@ public final class DateColumn extends Column<Date> {
         return calendar.get(Calendar.YEAR);
     }
 
+    /**
+     * Returns the month part of the date.
+     *
+     * @param value the date
+     * @return the month
+     */
     public static Integer getMonth(final Date value) {
         if (value == null){
             return null;
@@ -385,6 +379,12 @@ public final class DateColumn extends Column<Date> {
         return calendar.get(Calendar.MONTH);
     }
 
+    /**
+     * Returns the day of month of the date.
+     *
+     * @param value the date
+     * @return the day of month
+     */
     public static Integer getDayOfMonth(final Date value) {
         if (value == null){
             return null;
@@ -394,6 +394,12 @@ public final class DateColumn extends Column<Date> {
         return calendar.get(Calendar.DAY_OF_MONTH);
     }
 
+    /**
+     * Returns the week part of the date.
+     *
+     * @param value the date
+     * @return the week
+     */
     public static Integer getWeekOfYear(final Date value) {
         if (value == null){
             return null;
@@ -403,6 +409,12 @@ public final class DateColumn extends Column<Date> {
         return calendar.get(Calendar.WEEK_OF_YEAR);
     }
 
+    /**
+     * Returns the day of week part of the date.
+     *
+     * @param value the date
+     * @return the day of week
+     */
     public static Integer getDayOfWeek(final Date value) {
         if (value == null){
             return null;
@@ -412,6 +424,12 @@ public final class DateColumn extends Column<Date> {
         return calendar.get(Calendar.DAY_OF_WEEK);
     }
 
+    /**
+     * Returns the hour part of the date.
+     *
+     * @param value the date
+     * @return the hours
+     */
     public static Integer getHour(final Date value) {
         if (value == null){
             return null;
@@ -421,6 +439,12 @@ public final class DateColumn extends Column<Date> {
         return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
+    /**
+     * Returns the minutes part of the date.
+     *
+     * @param value the date
+     * @return the minutes
+     */
     public static Integer getMinutes(final Date value) {
         if (value == null){
             return null;
@@ -430,6 +454,12 @@ public final class DateColumn extends Column<Date> {
         return calendar.get(Calendar.MINUTE);
     }
 
+    /**
+     * Returns the seconds part of the date.
+     *
+     * @param value the date
+     * @return the seconds
+     */
     public static Integer getSeconds(final Date value) {
         if (value == null){
             return null;
@@ -439,6 +469,12 @@ public final class DateColumn extends Column<Date> {
         return calendar.get(Calendar.SECOND);
     }
 
+    /**
+     * Returns the milliseconds part of the date.
+     *
+     * @param value the date
+     * @return the milliseconds
+     */
     public static Integer getMilliseconds(final Date value) {
         if (value == null){
             return null;

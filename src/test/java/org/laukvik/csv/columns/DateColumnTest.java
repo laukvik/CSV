@@ -15,6 +15,18 @@ import static org.junit.Assert.assertTrue;
  */
 public class DateColumnTest {
 
+    private static Date getDate(int year, int month, int day, int hour, int min, int sec, int ms) {
+        Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, min);
+        cal.set(Calendar.SECOND, sec);
+        cal.set(Calendar.MILLISECOND, ms);
+        return cal.getTime();
+    }
+
     private Date getTomorrow() {
         Calendar cal = new GregorianCalendar();
         Date today = cal.getTime();
@@ -229,5 +241,30 @@ public class DateColumnTest {
         assertEquals((Integer)Calendar.SUNDAY, DateColumn.getDayOfWeek(cal.getTime()) );
     }
 
+    @Test
+    public void getParts() throws Exception {
+        Date cal = getDate(2017, 2, 25, 16, 15, 12, 123 );
+        assertEquals( (Integer)2017, DateColumn.getYear(cal) );
+        assertEquals( (Integer)2, DateColumn.getMonth(cal) );
+        assertEquals( (Integer)25, DateColumn.getDayOfMonth(cal) );
+        assertEquals( (Integer)16, DateColumn.getHour(cal) );
+        assertEquals( (Integer)15, DateColumn.getMinutes(cal) );
+        assertEquals( (Integer)12, DateColumn.getSeconds(cal) );
+        assertEquals( (Integer)123, DateColumn.getMilliseconds(cal) );
+        assertNull(DateColumn.getYear(null));
+        assertNull(DateColumn.getMonth(null));
+        assertNull(DateColumn.getDayOfMonth(null));
+        assertNull(DateColumn.getHour(null));
+        assertNull(DateColumn.getMinutes(null));
+        assertNull(DateColumn.getSeconds(null));
+        assertNull(DateColumn.getMilliseconds(null));
+    }
+
+    @Test
+    public void formatDate() throws Exception {
+        Date cal = getDate(2017, 2, 25, 16, 15, 12, 123 );
+        DateColumn dc = new DateColumn("created", "dd.MM.YYYY HH.mm.ss");
+        assertEquals("25.02.2017 16.15.12", dc.formatDate(cal));
+    }
 
 }

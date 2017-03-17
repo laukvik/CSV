@@ -17,9 +17,9 @@ public final class DoubleRange extends Range<Double> {
     }
 
     /**
-     * Adds a value
+     * Adds a value.
      *
-     * @param value
+     * @param value the value
      */
     @Override
     public void addValue(final Double value) {

@@ -16,11 +16,9 @@
 package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
-import org.laukvik.csv.columns.DateColumn;
 import org.laukvik.csv.columns.DoubleColumn;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**

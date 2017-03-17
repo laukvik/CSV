@@ -18,7 +18,6 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;

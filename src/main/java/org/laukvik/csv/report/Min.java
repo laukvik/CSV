@@ -14,18 +14,29 @@ public final class Min extends Aggregate {
     private Integer min;
 
     /**
+     * Creates a new Min with the column.
      *
-     * @param column
+     * @param column the column
      */
     public Min(final IntegerColumn column) {
         super(column);
     }
 
 
+    /**
+     * Returns the value.
+     *
+     * @return the value
+     */
     public Integer getValue() {
         return min;
     }
 
+    /**
+     * Aggregates the value in the row.
+     *
+     * @param row the row
+     */
     public void aggregate(final Row row) {
         Integer value = row.getInteger((IntegerColumn) getColumn());
         if (min == null) {

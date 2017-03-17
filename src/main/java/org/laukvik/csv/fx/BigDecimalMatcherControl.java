@@ -11,7 +11,6 @@ import org.laukvik.csv.statistics.BigDecimalDistribution;
 import org.laukvik.csv.statistics.BigDecimalRange;
 import org.laukvik.csv.statistics.FreqDistribution;
 import org.laukvik.csv.statistics.Range;
-import org.laukvik.csv.statistics.RangedDistribution;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,8 +23,6 @@ import java.util.List;
  */
 public class BigDecimalMatcherControl extends ColumnMatcherControl {
 
-    private final Tab uniqueTab;
-    private final Tab rangeTab;
     private final FrequencyDistributionTableView uniqueView;
     private final FrequencyDistributionTableView rangeView;
 
@@ -37,10 +34,10 @@ public class BigDecimalMatcherControl extends ColumnMatcherControl {
         this.main = main;
         matchers = new ArrayList<>();
         uniqueView = new FrequencyDistributionTableView();
-        uniqueTab = new Tab("Values", uniqueView);
+        Tab uniqueTab = new Tab("Values", uniqueView);
 
         rangeView = new FrequencyDistributionTableView();
-        rangeTab = new Tab("Range", rangeView);
+        Tab rangeTab = new Tab("Range", rangeView);
 
         // Add tabs
         getTabs().addAll(uniqueTab, rangeTab);

@@ -1,7 +1,6 @@
 package org.laukvik.csv.fx;
 
 import javafx.application.Application;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -19,7 +18,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
@@ -103,7 +101,9 @@ public final class Main extends Application implements ChangeListener, FileListe
      * The CSV model.
      */
     private CSV csv;
-    /** Contains the query */
+    /**
+     * Contains the query
+     */
     private Query query;
     /**
      * The JavaFX stage.
@@ -205,9 +205,9 @@ public final class Main extends Application implements ChangeListener, FileListe
     }
 
 
-
     /**
      * Returns the formatted file size.
+     *
      * @param file the file
      * @return the formatted size
      */
@@ -221,6 +221,7 @@ public final class Main extends Application implements ChangeListener, FileListe
 
     /**
      * Returns the formatted file type.
+     *
      * @param file the file
      * @return the formatted file type
      */
@@ -265,6 +266,15 @@ public final class Main extends Application implements ChangeListener, FileListe
         } else {
             return file.getName();
         }
+    }
+
+    /**
+     * Returns an array of the supported separator characters.
+     *
+     * @return separator characters
+     */
+    public static char[] listSupportedSeparatorChars() {
+        return new char[]{CSV.COMMA, CSV.SEMICOLON, CSV.PIPE, CSV.TAB};
     }
 
     /**
@@ -316,7 +326,6 @@ public final class Main extends Application implements ChangeListener, FileListe
         resultsScroll = new ScrollPane(resultsTableView);
         resultsScroll.setFitToHeight(true);
         resultsScroll.setFitToWidth(true);
-
 
 
         tableSplit = new SplitPane(columnsScroll, columnMatcherControl);
@@ -388,29 +397,29 @@ public final class Main extends Application implements ChangeListener, FileListe
             tableSplit.getItems().remove(1);
 
             Column c = csv.getColumn(selectedColumnIndex);
-            if (c instanceof StringColumn){
+            if (c instanceof StringColumn) {
                 columnMatcherControl = new StringMatcherControl((StringColumn) c, this);
                 columnMatcherControl.loadCSV(csv);
-            } else if (c instanceof IntegerColumn){
+            } else if (c instanceof IntegerColumn) {
                 columnMatcherControl = new IntegerMatcherControl((IntegerColumn) c, this);
                 columnMatcherControl.loadCSV(csv);
 
-            } else if (c instanceof DoubleColumn){
+            } else if (c instanceof DoubleColumn) {
                 columnMatcherControl = new DoubleMatcherControl((DoubleColumn) c, this);
                 columnMatcherControl.loadCSV(csv);
 
-            } else if (c instanceof FloatColumn){
+            } else if (c instanceof FloatColumn) {
                 columnMatcherControl = new FloatMatcherControl((FloatColumn) c, this);
                 columnMatcherControl.loadCSV(csv);
 
-            } else if (c instanceof BigDecimalColumn){
+            } else if (c instanceof BigDecimalColumn) {
                 columnMatcherControl = new BigDecimalMatcherControl((BigDecimalColumn) c, this);
                 columnMatcherControl.loadCSV(csv);
 
-            } else if (c instanceof DateColumn){
+            } else if (c instanceof DateColumn) {
                 columnMatcherControl = new DateMatcherControl((DateColumn) c, this);
                 columnMatcherControl.loadCSV(csv);
-            } else if (c instanceof UrlColumn){
+            } else if (c instanceof UrlColumn) {
                 columnMatcherControl = new UrlMatcherControl((UrlColumn) c, this);
                 columnMatcherControl.loadCSV(csv);
             } else {
@@ -536,15 +545,6 @@ public final class Main extends Application implements ChangeListener, FileListe
     }
 
     /**
-     * Returns an array of the supported separator characters.
-     *
-     * @return separator characters
-     */
-    public static char[] listSupportedSeparatorChars() {
-        return new char[]{CSV.COMMA, CSV.SEMICOLON, CSV.PIPE, CSV.TAB};
-    }
-
-    /**
      * Clears all existing data in the model.
      */
     public void newFile() {
@@ -649,6 +649,7 @@ public final class Main extends Application implements ChangeListener, FileListe
 
     /**
      * Shows a dialog box with the error message.
+     *
      * @param message the error message
      */
     private void alert(final String message) {
@@ -695,7 +696,7 @@ public final class Main extends Application implements ChangeListener, FileListe
      * Implemented by ChangeListener.
      *
      * @param fromIndex the index to move from
-     * @param toIndex the destination
+     * @param toIndex   the destination
      * @see ChangeListener
      */
     public final void columnMoved(final int fromIndex, final int toIndex) {
@@ -706,7 +707,7 @@ public final class Main extends Application implements ChangeListener, FileListe
      * Implemented by ChangeListener.
      *
      * @param rowIndex the index which was removed
-     * @param row the row
+     * @param row      the row
      * @see ChangeListener
      */
     public final void rowRemoved(final int rowIndex, final Row row) {
@@ -718,7 +719,7 @@ public final class Main extends Application implements ChangeListener, FileListe
      * Implemented by ChangeListener.
      *
      * @param rowIndex the index which was removed
-     * @param row the row
+     * @param row      the row
      * @see ChangeListener
      */
     public final void rowCreated(final int rowIndex, final Row row) {
@@ -734,7 +735,7 @@ public final class Main extends Application implements ChangeListener, FileListe
      * Implemented by ChangeListener.
      *
      * @param fromRowIndex the old index
-     * @param toRowIndex the new index
+     * @param toRowIndex   the new index
      * @see ChangeListener
      */
     public final void rowMoved(final int fromRowIndex, final int toRowIndex) {
@@ -745,7 +746,7 @@ public final class Main extends Application implements ChangeListener, FileListe
      * Implemented by ChangeListener.
      *
      * @param fromRowIndex the from index
-     * @param toRowIndex the to index
+     * @param toRowIndex   the to index
      * @see ChangeListener
      */
     public final void rowsRemoved(final int fromRowIndex, final int toRowIndex) {
@@ -756,7 +757,7 @@ public final class Main extends Application implements ChangeListener, FileListe
      * Implemented by ChangeListener.
      *
      * @param columnIndex the column
-     * @param rowIndex the row
+     * @param rowIndex    the row
      * @see ChangeListener
      */
     public final void cellUpdated(final int columnIndex, final int rowIndex) {
@@ -767,7 +768,6 @@ public final class Main extends Application implements ChangeListener, FileListe
 
     /**
      * Builds FrequencyDistribution data.
-     *
      */
     public final void buildFrequencyDistribution() {
 //        int selectedColumnIndex = frequencyDistributionTableView.getSelectionModel().getSelectedIndex();
@@ -845,7 +845,7 @@ public final class Main extends Application implements ChangeListener, FileListe
 
     /**
      * Handles the deletion of a unqiue value.
-     *
+     * <p>
      * todo - Should it be possible to delete rows with this values
      *
      * @param columnIndex the index of the column to delete
@@ -876,7 +876,6 @@ public final class Main extends Application implements ChangeListener, FileListe
 
     /**
      * Builds the results table.
-     *
      */
     private void buildResultsTable() {
         resultsTableView.columnsChanged(csv, this);
@@ -930,7 +929,6 @@ public final class Main extends Application implements ChangeListener, FileListe
 
     /**
      * Handles printing action.
-     *
      */
     public final void handlePrintAction() {
         TextInputDialog dialog = new TextInputDialog("");
@@ -962,7 +960,6 @@ public final class Main extends Application implements ChangeListener, FileListe
 
     /**
      * Handles new column action.
-     *
      */
     public final void handleNewColumnAction() {
         TextInputDialog dialog = new TextInputDialog("");
@@ -978,7 +975,6 @@ public final class Main extends Application implements ChangeListener, FileListe
 
     /**
      * Handles new row action.
-     *
      */
     public final void handleNewRowAction() {
         int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
@@ -991,7 +987,6 @@ public final class Main extends Application implements ChangeListener, FileListe
 
     /**
      * Handles insert new headers action.
-     *
      */
     public final void handleNewHeaders() {
         csv.insertColumns();
@@ -1013,7 +1008,6 @@ public final class Main extends Application implements ChangeListener, FileListe
 
     /**
      * Handles paste action.
-     *
      */
     public final void handlePasteAction() {
         int rowIndex = resultsTableView.getSelectionModel().getSelectedIndex();
@@ -1084,7 +1078,7 @@ public final class Main extends Application implements ChangeListener, FileListe
     /**
      * Moves the row to a new index.
      *
-     * @param index the row to move
+     * @param index   the row to move
      * @param toIndex the new index
      */
     private void moveRow(final int index, final int toIndex) {
@@ -1096,7 +1090,7 @@ public final class Main extends Application implements ChangeListener, FileListe
      * Changes the sort order of a column.
      *
      * @param fromIndex the old index
-     * @param toIndex the new index
+     * @param toIndex   the new index
      */
     private void moveColumn(final int fromIndex, final int toIndex) {
         csv.moveColumn(fromIndex, toIndex);
@@ -1186,7 +1180,6 @@ public final class Main extends Application implements ChangeListener, FileListe
 
     /**
      * Handles save as action.
-     *
      */
     public final void handleSaveAsAction() {
         final FileChooser fileChooser = new FileChooser();
@@ -1201,7 +1194,7 @@ public final class Main extends Application implements ChangeListener, FileListe
         }
     }
 
-    public void handleSelectionChanged(final Column column){
+    public void handleSelectionChanged(final Column column) {
         List<RowMatcher> matchers = columnMatcherControl.getMatchers();
         List<Row> rows = csv.getRowsByMatchers(matchers);
         List<ObservableRow> list = new ArrayList<>();
@@ -1220,7 +1213,7 @@ public final class Main extends Application implements ChangeListener, FileListe
      * Adds a new selection with the value in that column.
      *
      * @param column the column
-     * @param value the value of the column
+     * @param value  the value of the column
      */
     public final void handleSelected(final Column column, final String value) {
         getQueryModel().addSelection(column, value);
@@ -1236,7 +1229,7 @@ public final class Main extends Application implements ChangeListener, FileListe
      * Removes the selection with the value in that column.
      *
      * @param column the column
-     * @param value the value of the column
+     * @param value  the value of the column
      */
     public final void handleUnselected(final Column column, final String value) {
         getQueryModel().removeSelection(column, value);
@@ -1259,18 +1252,18 @@ public final class Main extends Application implements ChangeListener, FileListe
         buildFrequencyDistribution();
     }
 
-    public void handleTabChanged(){
-        if (viewMode == ViewMode.Results){
+    public void handleTabChanged() {
+        if (viewMode == ViewMode.Results) {
             handleViewResultsAction();
-        } else if (viewMode == ViewMode.Chart){
+        } else if (viewMode == ViewMode.Chart) {
             handleViewChartAction();
-        } else if (viewMode == ViewMode.Maps){
+        } else if (viewMode == ViewMode.Maps) {
             handleViewGoogleMapsAction();
-        } else if (viewMode == ViewMode.Preview){
+        } else if (viewMode == ViewMode.Preview) {
             handleViewPreviewAction();
-        } else if (viewMode == ViewMode.Search){
+        } else if (viewMode == ViewMode.Search) {
             handleViewGoogleSearchAction();
-        } else if (viewMode == ViewMode.Wikipedia){
+        } else if (viewMode == ViewMode.Wikipedia) {
             handleViewWikipediaAction();
         }
     }
@@ -1297,7 +1290,7 @@ public final class Main extends Application implements ChangeListener, FileListe
      */
     public void handleViewPreviewAction() {
         ObservableFrequencyDistribution ofd = columnMatcherControl.getSelectedObservableFrequencyDistribution();
-        if (ofd == null){
+        if (ofd == null) {
             resultsScroll.setContent(getPreviewNothingSelectedNode());
         } else {
             String filename = ofd.labelProperty().getValue();
@@ -1330,7 +1323,7 @@ public final class Main extends Application implements ChangeListener, FileListe
      */
     public void handleViewWikipediaAction() {
         ObservableFrequencyDistribution ofd = columnMatcherControl.getSelectedObservableFrequencyDistribution();
-        if (ofd == null){
+        if (ofd == null) {
             resultsScroll.setContent(getPreviewNothingSelectedNode());
         } else {
             String value = ofd.labelProperty().getValue();
@@ -1352,7 +1345,7 @@ public final class Main extends Application implements ChangeListener, FileListe
     public void handleViewGoogleMapsAction() {
         ObservableFrequencyDistribution ofd = columnMatcherControl.getSelectedObservableFrequencyDistribution();
 
-        if (ofd == null){
+        if (ofd == null) {
             resultsScroll.setContent(getPreviewNothingSelectedNode());
         } else {
             String value = ofd.labelProperty().getValue();
@@ -1375,7 +1368,7 @@ public final class Main extends Application implements ChangeListener, FileListe
     public void handleViewGoogleSearchAction() {
         ObservableFrequencyDistribution ofd = columnMatcherControl.getSelectedObservableFrequencyDistribution();
 
-        if (ofd == null){
+        if (ofd == null) {
             resultsScroll.setContent(getPreviewNothingSelectedNode());
         } else {
             String value = ofd.labelProperty().getValue();
@@ -1392,13 +1385,13 @@ public final class Main extends Application implements ChangeListener, FileListe
         viewMode = ViewMode.Search;
     }
 
-    public Node getPreviewEmptyNode(){
+    public Node getPreviewEmptyNode() {
         BorderPane pane = new BorderPane();
         pane.centerProperty().setValue(new Label(bundle.getString("view.preview.empty")));
         return pane;
     }
 
-    public Node getPreviewNothingSelectedNode(){
+    public Node getPreviewNothingSelectedNode() {
         BorderPane pane = new BorderPane();
         pane.centerProperty().setValue(new Label(bundle.getString("view.preview.nothing.selected")));
         return pane;
@@ -1408,7 +1401,7 @@ public final class Main extends Application implements ChangeListener, FileListe
         return query;
     }
 
-    public void setQuery(Query query) {
+    public void setQuery(final Query query) {
         this.query = query;
     }
 

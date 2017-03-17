@@ -34,28 +34,40 @@ public final class StringColumn extends Column<String> {
         super(name);
     }
 
-    public static String getPrefix(final String s) {
-        if (s == null) {
+    /**
+     * Returns the text before the last period in the value.
+     *
+     * @param value the value
+     * @return the text before the last period
+     */
+    public static String getPrefix(final String value) {
+        if (value == null) {
             return null;
         } else {
-            int index = s.lastIndexOf(".");
+            int index = value.lastIndexOf(".");
             if (index < 0) {
                 return null;
             } else {
-                return s.substring(0, index);
+                return value.substring(0, index);
             }
         }
     }
 
-    public static String getPostfix(final String s) {
-        if (s == null) {
+    /**
+     * Returns the text after the last period in the value.
+     *
+     * @param value the value
+     * @return the text after the last period
+     */
+    public static String getPostfix(final String value) {
+        if (value == null) {
             return null;
         } else {
-            int index = s.lastIndexOf(".");
+            int index = value.lastIndexOf(".");
             if (index < 0) {
                 return null;
             } else {
-                return s.substring(index+ 1);
+                return value.substring(index+ 1);
             }
         }
     }
@@ -114,21 +126,33 @@ public final class StringColumn extends Column<String> {
     public int compare(final String one, final String another) {
         if (one == null && another == null) {
             return 0;
-        } else if (one == null && another != null) {
-            return -1;
-        } else if (one != null && another == null) {
+        }
+        if (one != null && another == null) {
             return 1;
+        }
+        if (one == null && another != null) {
+            return -1;
         }
         return one.compareTo(another);
     }
 
-    public static Integer getWordCount(final String s) {
-        if (s == null){
+    /**
+     * Returns the amount of words in the string
+     * @param value the string
+     * @return the amount of words
+     */
+    public static Integer getWordCount(final String value) {
+        if (value == null || value.length() == 0){
             return 0;
         }
-        return s.split("\\s+").length;
+        return value.split("\\s+").length;
     }
 
+    /**
+     * Returns the first letter of the value
+     * @param value the value
+     * @return the first letter
+     */
     public static String getFirstLetter(final String value){
         if (value == null || value.length() == 0){
             return null;
@@ -137,6 +161,11 @@ public final class StringColumn extends Column<String> {
         }
     }
 
+    /**
+     * Returns the length of the string
+     * @param value the string
+     * @return the length
+     */
     public static int getLength(final String value){
         return value == null ? 0 : value.length();
     }
