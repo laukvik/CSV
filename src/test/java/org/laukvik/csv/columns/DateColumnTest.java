@@ -204,19 +204,21 @@ public class DateColumnTest {
     @Test
     public void isYearBetween() throws Exception {
         Calendar cal = new GregorianCalendar();
-        int year = cal.get(Calendar.YEAR);
+        int thisYear = cal.get(Calendar.YEAR);
         cal.add(Calendar.YEAR, -1);
-        int yearFrom = cal.get(Calendar.YEAR);
-        cal.add(Calendar.YEAR, 1);
-        int yearTo = cal.get(Calendar.YEAR);
-        assertTrue(DateColumn.isYearBetween(new Date(), yearFrom, yearTo));
+        int lastYear = cal.get(Calendar.YEAR);
+        cal.add(Calendar.YEAR, 2);
+        int nextYear = cal.get(Calendar.YEAR);
+        cal.add(Calendar.YEAR, 8);
+        Date tenYearDate = cal.getTime();
+        assertTrue(DateColumn.isYearBetween(new Date(), lastYear, nextYear));
+        assertFalse(DateColumn.isYearBetween(new Date(), nextYear, lastYear));
+        assertTrue(DateColumn.isYearBetween(new Date(), thisYear, thisYear));
+        assertFalse(DateColumn.isYearBetween(new Date(), thisYear, lastYear));
+        assertTrue(DateColumn.isYearBetween(new Date(), lastYear, thisYear));
+        assertFalse(DateColumn.isYearBetween(null, thisYear, lastYear));
 
-        assertFalse(DateColumn.isYearBetween(new Date(), yearTo, yearFrom));
-        assertTrue(DateColumn.isYearBetween(new Date(), year, year));
-        assertFalse(DateColumn.isYearBetween(new Date(), year, yearFrom));
-        assertTrue(DateColumn.isYearBetween(new Date(), yearFrom, year));
-
-        assertFalse(DateColumn.isYearBetween(null, year, yearFrom));
+        assertFalse(DateColumn.isYearBetween(tenYearDate, lastYear, lastYear));
     }
 
     @Test
@@ -313,6 +315,9 @@ public class DateColumnTest {
         assertFalse( DateColumn.isBetweeen(value, null, d2) );
         assertFalse( DateColumn.isBetweeen(value, null, null) );
         assertFalse( DateColumn.isBetweeen(null, null, null) );
+
+        assertFalse( DateColumn.isBetweeen(d1, value, d2) );
+        assertFalse( DateColumn.isBetweeen(d3, value, d2) );
     }
 
 

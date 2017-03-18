@@ -150,8 +150,7 @@ public abstract class Column<T> implements Comparable {
      * @return the column
      */
     public static Column parseName(final String name) {
-        ColumnDefinition cd = new ColumnDefinition(name);
-        return parseColumnDefinition(cd);
+        return parseColumnDefinition(ColumnDefinition.parse(name));
     }
 
     /**
@@ -169,7 +168,7 @@ public abstract class Column<T> implements Comparable {
             c = new StringColumn(columnName);
         } else {
             String typeName = attrType.getValue();
-            if (typeName == null || typeName.trim().isEmpty()) {
+            if (typeName == null) {
                 c = new StringColumn(columnName);
 
             } else if (typeName.equalsIgnoreCase(TYPE_INTEGER)) {
@@ -198,7 +197,7 @@ public abstract class Column<T> implements Comparable {
 
                 if (attr == null || attr.getValue().isEmpty()) {
 //                    throw new IllegalColumnDefinitionException("");
-
+                    c = new DateColumn(columnName);
                 } else {
                     try {
                         new SimpleDateFormat(attr.getValue());
@@ -464,46 +463,46 @@ public abstract class Column<T> implements Comparable {
      * @return the formatted version
      */
     public final ColumnDefinition toColumnDefinition() {
-        ColumnDefinition cd = new ColumnDefinition(getName());
+        ColumnDefinition cd = ColumnDefinition.parse(getName());
         if (this instanceof StringColumn) {
             StringColumn sc = (StringColumn) this;
             if (sc.getSize() > 0) {
                 cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_STRING, sc.getSize() + ""));
             }
         } else if (this instanceof BigDecimalColumn) {
-            cd.setAttribute(TYPE, TYPE_BIGDECIMAL);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_BIGDECIMAL));
         } else if (this instanceof BooleanColumn) {
-            cd.setAttribute(TYPE, TYPE_BOOLEAN);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_BOOLEAN));
         } else if (this instanceof ByteColumn) {
-            cd.setAttribute(TYPE, TYPE_BYTE);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_BYTE));
         } else if (this instanceof DateColumn) {
-            cd.setAttribute(TYPE, TYPE_DATE);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_DATE));
             DateColumn dc = (DateColumn) this;
-            cd.setAttribute(FORMAT, dc.getFormat());
+            cd.setAttribute(FORMAT, new ColumnDefinition.Attribute(dc.getFormat()));
         } else if (this instanceof DoubleColumn) {
-            cd.setAttribute(TYPE, TYPE_DOUBLE);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_DOUBLE));
         } else if (this instanceof FloatColumn) {
-            cd.setAttribute(TYPE, TYPE_FLOAT);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_FLOAT));
         } else if (this instanceof IntegerColumn) {
-            cd.setAttribute(TYPE, TYPE_INTEGER);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_INTEGER));
         } else if (this instanceof UrlColumn) {
-            cd.setAttribute(TYPE, TYPE_URL);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_URL));
         }
         if (getDefaultValue() != null) {
-            cd.setAttribute(DEFAULT_VALUE, getDefaultValue());
+            cd.setAttribute(DEFAULT_VALUE, new ColumnDefinition.Attribute(getDefaultValue()));
         }
         ForeignKey fk = getForeignKey();
         if (fk != null) {
             cd.setAttribute(FOREIGN_KEY, new ColumnDefinition.Attribute(fk.getTable(), fk.getColumn()));
         }
         if (getWidth() > 0) {
-            cd.setAttribute(WIDTH, getWidth() + "");
+            cd.setAttribute(WIDTH, new ColumnDefinition.Attribute(getWidth() + ""));
         }
         if (isAllowNulls()) {
-            cd.setAttribute(ALLOW_NULLS, "true");
+            cd.setAttribute(ALLOW_NULLS, new ColumnDefinition.Attribute("true"));
         }
         if (isPrimaryKey()) {
-            cd.setAttribute(PRIMARY_KEY, "true");
+            cd.setAttribute(PRIMARY_KEY, new ColumnDefinition.Attribute("true"));
         }
         return cd;
     }

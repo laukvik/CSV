@@ -66,9 +66,6 @@ public final class UrlColumn extends Column<URL> {
         if (filename == null) {
             return null;
         }
-        if (filename.isEmpty()) {
-            return null;
-        }
         int index = filename.lastIndexOf(".");
         if (index < 0) {
             return null;
@@ -79,7 +76,7 @@ public final class UrlColumn extends Column<URL> {
 
     public static String getPrefix(final URL url) {
         String filename = getFilename(url);
-        if (filename == null || filename.isEmpty()) {
+        if (filename == null) {
             return null;
         }
         int index = filename.lastIndexOf(".");
@@ -132,12 +129,7 @@ public final class UrlColumn extends Column<URL> {
         if (url == null) {
             return null;
         }
-        String protocol = url.getProtocol();
-        if (protocol.isEmpty()) {
-            return null;
-        } else {
-            return protocol;
-        }
+        return url.getProtocol();
     }
 
     /**

@@ -218,7 +218,10 @@ public final class DateColumn extends Column<Date> {
             return false;
         }
         int thisYear = getYear(v);
-        return thisYear >= year && thisYear <= toYear;
+        if (thisYear < year) {
+            return false;
+        }
+        return thisYear <= toYear;
     }
 
     /**
@@ -286,7 +289,10 @@ public final class DateColumn extends Column<Date> {
         long time = value.getTime();
         long start = first.getTime();
         long finish = last.getTime();
-        return time >= start && time <= finish;
+        if (time < start){
+            return false;
+        }
+        return time <= finish;
     }
 
     /**

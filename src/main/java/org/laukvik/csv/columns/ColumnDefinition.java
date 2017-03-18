@@ -22,13 +22,16 @@ public final class ColumnDefinition {
      */
     private Map<String, Attribute> attributeMap;
 
-    /**
-     * Parses a column definition stored in a line of string.
-     *
-     * @param data the definition
-     */
-    public ColumnDefinition(final String data) {
-        parse(data);
+//    /**
+//     * Parses a column definition stored in a line of string.
+//     *
+//     * @param data the definition
+//     */
+//    public ColumnDefinition(final String data) {
+//        parse(data);
+//    }
+
+    public ColumnDefinition() {
     }
 
     /**
@@ -61,19 +64,23 @@ public final class ColumnDefinition {
      *
      * @param compressedColumnDefinition the compressed column to read
      */
-    private void parse(final String compressedColumnDefinition) {
-        attributeMap = new HashMap<>();
+    public static ColumnDefinition parse(final String compressedColumnDefinition) {
+        if (compressedColumnDefinition == null || compressedColumnDefinition.trim().isEmpty()){
+            return null;
+        }
+        ColumnDefinition cd = new ColumnDefinition();
+        cd.attributeMap = new HashMap<>();
         /* Extract extra information about the column*/
-        columnName = null;
+        cd.columnName = null;
         // Look for metadata in column headers
         int firstIndex = compressedColumnDefinition.indexOf("(");
         if (firstIndex == -1) {
             // No extra information
-            columnName = compressedColumnDefinition;
+            cd.columnName = compressedColumnDefinition;
         } else {
             // Found extra information
             int lastIndex = compressedColumnDefinition.indexOf(")", firstIndex);
-            columnName = compressedColumnDefinition.substring(0, firstIndex);
+            cd.columnName = compressedColumnDefinition.substring(0, firstIndex);
             if (lastIndex != -1) {
                 // String with metadata
                 String extraDetails = compressedColumnDefinition.substring(firstIndex + 1, lastIndex).trim();
@@ -89,17 +96,38 @@ public final class ColumnDefinition {
                         String[] arr = keyValue.split("=");
                         String key = arr[0];
                         if (arr.length > 1) {
+                            // Has value
                             String value = arr[1];
-                            setAttribute(key, value);
+                            int extraIndex = value.indexOf("[");
+                            if (extraIndex > -1){
+                                // Extra value
+                                int extraLastIndex = value.lastIndexOf("]");
+                                if (extraLastIndex > extraIndex) {
+                                    String extraValue = value.substring(0, extraIndex);
+                                    String extraNumber =  value.substring(extraIndex + 1, extraLastIndex);
+                                    cd.setAttribute(key, new ColumnDefinition.Attribute(extraValue, extraNumber));
+                                } else {
+                                    // End symbol is before start symbol
+                                    String extraValue = value.substring(0, extraIndex);
+                                    String extraNumber = value.substring(extraIndex+ 1);
+                                    cd.setAttribute(key, new ColumnDefinition.Attribute(extraValue, extraNumber));
+                                }
+                            } else {
+                                // No extra value
+                                cd.setAttribute(key, new ColumnDefinition.Attribute(value));
+                            }
+
                         } else {
-                            setAttribute(key, "");
+                            // Hasnt got value
+//                            cd.setAttribute(key,  new ColumnDefinition.Attribute(""));
                         }
                     } else {
-                        setAttribute(keyValue, "");
+//                        cd.setAttribute(keyValue, ColumnDefinition.Attribute(""));
                     }
                 }
             }
         }
+        return cd;
     }
 
     /**
@@ -108,10 +136,15 @@ public final class ColumnDefinition {
      * @param name  the name
      * @param value the value
      */
-    void setAttribute(final String name, final String value) {
-        setAttribute(name, Attribute.parse(value));
-    }
+//    void setAttribute(final String name, final String value) {
+//        setAttribute(name, Attribute.parse(value));
+//    }
 
+    /**
+     * Sets a named attribute.
+     * @param name the name
+     * @param attribute the attribute
+     */
     void setAttribute(final String name, final Attribute attribute) {
         if (name != null && attribute != null && !name.trim().isEmpty()) {
             attributeMap.put(name.toLowerCase(), attribute);
@@ -245,31 +278,31 @@ public final class ColumnDefinition {
             this.optional = optional;
         }
 
-        /**
-         * Parses a compressed attribute.
-         *
-         * @param compressed the compressed value
-         * @return an attribute
-         */
-        static Attribute parse(final String compressed) {
-            if (compressed == null || compressed.trim().isEmpty()) {
-                return null;
-            }
-            int firstIndex = compressed.indexOf("[");
-            if (firstIndex > -1) {
-                int lastIndex = compressed.lastIndexOf("]");
-                if (lastIndex > firstIndex) {
-                    String opt = compressed.substring(firstIndex + 1, lastIndex);
-                    String ext = compressed.substring(0, firstIndex);
-                    return new Attribute(opt, ext);
-                } else {
-                    // Fallback gently when stop bracket isn't found
-                    return new Attribute(compressed.substring(0, firstIndex));
-                }
-            } else {
-                return new Attribute(compressed);
-            }
-        }
+//        /**
+//         * Parses a compressed attribute.
+//         *
+//         * @param compressed the compressed value
+//         * @return an attribute
+//         */
+//        static Attribute parse(final String compressed) {
+//            if (compressed == null || compressed.trim().isEmpty()) {
+//                return null;
+//            }
+//            int firstIndex = compressed.indexOf("[");
+//            if (firstIndex > -1) {
+//                int lastIndex = compressed.lastIndexOf("]");
+//                if (lastIndex > firstIndex) {
+//                    String opt = compressed.substring(firstIndex + 1, lastIndex);
+//                    String ext = compressed.substring(0, firstIndex);
+//                    return new Attribute(opt, ext);
+//                } else {
+//                    // Fallback gently when stop bracket isn't found
+//                    return new Attribute(compressed.substring(0, firstIndex));
+//                }
+//            } else {
+//                return new Attribute(compressed);
+//            }
+//        }
 
         /**
          * Returns the compressed version.
