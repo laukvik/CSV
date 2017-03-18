@@ -15,6 +15,7 @@
  */
 package org.laukvik.csv.columns;
 
+import java.util.Arrays;
 import java.util.Base64;
 
 /**
@@ -59,12 +60,23 @@ public final class ByteColumn extends Column<byte[]> {
      * @return the comparable value
      */
     public int compare(final byte[] one, final byte[] another) {
-        if (one.length == another.length) {
-            return 0;
-        } else if (one.length < another.length) {
-            return -1;
+        if (one == null || another == null) {
+            if (one == null && another == null) {
+                return 0;
+            }
+            if (one == null) {
+                return -1;
+            } else {
+                return 1;
+            }
         } else {
-            return 1;
+            if (Arrays.equals(one, another)){
+                return 0;
+            } else if (one.length < another.length){
+                return -1;
+            } else {
+                return 1;
+            }
         }
     }
 

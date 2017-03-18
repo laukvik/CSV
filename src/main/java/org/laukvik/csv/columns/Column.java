@@ -26,41 +26,75 @@ import java.text.SimpleDateFormat;
  */
 public abstract class Column<T> implements Comparable {
 
-    /** Identifies the type attribute. */
+    /**
+     * Identifies the type attribute.
+     */
     static final String TYPE = "type";
-    /** Identifies BigDecimalColumn. */
+    /**
+     * Identifies BigDecimalColumn.
+     */
     static final String TYPE_BIGDECIMAL = "bigdecimal";
-    /** Identifies BooleanColumn. */
+    /**
+     * Identifies BooleanColumn.
+     */
     static final String TYPE_BOOLEAN = "boolean";
-    /** Identifies ByteColumn. */
+    /**
+     * Identifies ByteColumn.
+     */
     static final String TYPE_BYTE = "byte";
-    /** Identifies DateColumn. */
+    /**
+     * Identifies DateColumn.
+     */
     static final String TYPE_DATE = "date";
-    /** Identifies DoubleColumn. */
+    /**
+     * Identifies DoubleColumn.
+     */
     static final String TYPE_DOUBLE = "double";
-    /** Identifies FloatColumn. */
+    /**
+     * Identifies FloatColumn.
+     */
     static final String TYPE_FLOAT = "float";
-    /** Identifies IntegerColumn. */
+    /**
+     * Identifies IntegerColumn.
+     */
     static final String TYPE_INTEGER = "int";
-    /** Identifies StringColumn. */
+    /**
+     * Identifies StringColumn.
+     */
     static final String TYPE_STRING = "varchar";
-    /** Identifies UrlColumn. */
+    /**
+     * Identifies UrlColumn.
+     */
     static final String TYPE_URL = "url";
 
-    /** The name of the width attribute. */
+    /**
+     * The name of the width attribute.
+     */
     static final String WIDTH = "width";
-    /** The name of the allowNulls attribute. */
+    /**
+     * The name of the allowNulls attribute.
+     */
     static final String ALLOW_NULLS = "allowNulls";
-    /** The name of the primary key attribute. */
+    /**
+     * The name of the primary key attribute.
+     */
     static final String PRIMARY_KEY = "primaryKey";
-    /** The name of the foreign key attribute. */
+    /**
+     * The name of the foreign key attribute.
+     */
     static final String FOREIGN_KEY = "foreignKey";
-    /** The name of the default attribute. */
+    /**
+     * The name of the default attribute.
+     */
     static final String DEFAULT_VALUE = "default";
-    /** The name of the date format attribute. */
+    /**
+     * The name of the date format attribute.
+     */
     static final String FORMAT = "format";
 
-    /** The CSV the column belongs to. */
+    /**
+     * The CSV the column belongs to.
+     */
     private CSV csv;
 
     /**
@@ -103,24 +137,6 @@ public abstract class Column<T> implements Comparable {
         this.visible = true;
         this.primaryKey = false;
         this.allowNulls = false;
-    }
-
-    /**
-     * Returns the CSV the column belongs to.
-     *
-     * @return the csv
-     */
-    public final CSV getCSV() {
-        return csv;
-    }
-
-    /**
-     * Sets the CSV the column belongs to.
-     *
-     * @param csv the csv
-     */
-    public final void setCSV(final CSV csv) {
-        this.csv = csv;
     }
 
     /**
@@ -181,7 +197,8 @@ public abstract class Column<T> implements Comparable {
                 ColumnDefinition.Attribute attr = columnDefinition.get(FORMAT);
 
                 if (attr == null || attr.getValue().isEmpty()) {
-                    throw new IllegalColumnDefinitionException("");
+//                    throw new IllegalColumnDefinitionException("");
+
                 } else {
                     try {
                         new SimpleDateFormat(attr.getValue());
@@ -219,6 +236,45 @@ public abstract class Column<T> implements Comparable {
             }
         }
         return c;
+    }
+
+    /**
+     * Compares a value with another
+     *
+     * @param one     a value
+     * @param another a value
+     * @return comparable value
+     */
+    public static final int compareWith(final Comparable one, final Comparable another) {
+        if (one == null || another == null) {
+            if (one == null && another == null) {
+                return 0;
+            }
+            if (one == null) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+        return one.compareTo(another);
+    }
+
+    /**
+     * Returns the CSV the column belongs to.
+     *
+     * @return the csv
+     */
+    public final CSV getCSV() {
+        return csv;
+    }
+
+    /**
+     * Sets the CSV the column belongs to.
+     *
+     * @param csv the csv
+     */
+    public final void setCSV(final CSV csv) {
+        this.csv = csv;
     }
 
     /**
@@ -412,8 +468,7 @@ public abstract class Column<T> implements Comparable {
         if (this instanceof StringColumn) {
             StringColumn sc = (StringColumn) this;
             if (sc.getSize() > 0) {
-                cd.setAttribute(TYPE, TYPE_STRING);
-                cd.setAttribute(TYPE, TYPE_STRING, sc.getSize() + "");
+                cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_STRING, sc.getSize() + ""));
             }
         } else if (this instanceof BigDecimalColumn) {
             cd.setAttribute(TYPE, TYPE_BIGDECIMAL);
@@ -439,7 +494,7 @@ public abstract class Column<T> implements Comparable {
         }
         ForeignKey fk = getForeignKey();
         if (fk != null) {
-            cd.setAttribute(FOREIGN_KEY, fk.getTable(), fk.getColumn());
+            cd.setAttribute(FOREIGN_KEY, new ColumnDefinition.Attribute(fk.getTable(), fk.getColumn()));
         }
         if (getWidth() > 0) {
             cd.setAttribute(WIDTH, getWidth() + "");
@@ -462,22 +517,5 @@ public abstract class Column<T> implements Comparable {
         ColumnDefinition cd = toColumnDefinition();
         return cd.toCompressed();
     }
-
-//    /**
-//     * Compares a value with another
-//     * @param one a value
-//     * @param another a value
-//     * @return comparable value
-//     */
-//    public int compareTos(final <T extends Comparable> one, final <T extends Comparable> another){
-//        if (one == null || another == null) {
-//            if (one == null){
-//                return -1;
-//            } else {
-//                return 1;
-//            }
-//        }
-//        return one.compareTo(another);
-//    }
 
 }

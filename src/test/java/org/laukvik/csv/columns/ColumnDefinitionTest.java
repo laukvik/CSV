@@ -6,6 +6,13 @@ import static org.junit.Assert.assertEquals;
 
 public class ColumnDefinitionTest {
 
+
+    @Test
+    public void parseInvalid() throws Exception {
+        ColumnDefinition cd4 = new ColumnDefinition("President(");
+        assertEquals("President", cd4.getColumnName());
+    }
+
     @Test
     public void parseNameSimple() throws Exception {
         ColumnDefinition cd4 = new ColumnDefinition("President");
@@ -94,13 +101,29 @@ public class ColumnDefinitionTest {
     @Test
     public void setValue() throws Exception {
         ColumnDefinition cd = new ColumnDefinition("President");
-        cd.setAttribute("type", "varchar", "15");
+        cd.setAttribute(" ", "varchar");
+        assertEquals(0, cd.getAttributeCount());
+        cd.setAttribute("tYPe", new ColumnDefinition.Attribute("varchar", "15"));
         assertEquals("varchar", cd.get("type").getValue());
         assertEquals("15", cd.get("type").getOptional());
         cd.get("type").setOptional("16");
         assertEquals("16", cd.get("type").getOptional());
         cd.get("type").setValue("int");
         assertEquals("int", cd.get("type").getValue());
+    }
+
+    @Test
+    public void setAttribute() throws Exception {
+        ColumnDefinition cd = new ColumnDefinition("President");
+        cd.setAttribute(" ", new ColumnDefinition.Attribute(""));
+        assertEquals(0, cd.getAttributeCount());
+
+        cd.setAttribute("", new ColumnDefinition.Attribute(""));
+        assertEquals(0, cd.getAttributeCount());
+
+//        cd.setAttribute("", null);
+//        assertEquals(0, cd.getAttributeCount());
+
     }
 
 }

@@ -63,14 +63,7 @@ public final class DoubleColumn extends Column<Double> {
      * @return the comparison
      */
     public int compare(final Double one, final Double another) {
-        if (one == null || another == null) {
-            if (one == null) {
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-        return one.compareTo(another);
+        return compareWith(one, another);
     }
 
 }

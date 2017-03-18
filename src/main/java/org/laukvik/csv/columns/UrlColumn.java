@@ -133,7 +133,7 @@ public final class UrlColumn extends Column<URL> {
             return null;
         }
         String protocol = url.getProtocol();
-        if (protocol == null || protocol.isEmpty()) {
+        if (protocol.isEmpty()) {
             return null;
         } else {
             return protocol;
@@ -176,12 +176,15 @@ public final class UrlColumn extends Column<URL> {
      */
     public int compare(final URL one, final URL another) {
         if (one == null || another == null) {
-            if (one == null){
+            if (one == null && another == null) {
+                return 0;
+            }
+            if (one == null) {
                 return -1;
             } else {
                 return 1;
             }
         }
-        return one.toExternalForm().compareTo(another.toExternalForm());
+        return compareWith(one.toExternalForm(), another.toExternalForm());
     }
 }

@@ -161,14 +161,7 @@ public final class StringColumn extends Column<String> {
      * @return the compare value
      */
     public int compare(final String one, final String another) {
-        if (one == null || another == null) {
-            if (one == null){
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-        return one.compareTo(another);
+        return compareWith(one, another);
     }
 
 }

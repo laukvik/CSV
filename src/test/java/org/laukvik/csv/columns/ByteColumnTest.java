@@ -52,6 +52,10 @@ public class ByteColumnTest {
         assertEquals(-1, c.compare(bytes3, bytes5));
         assertEquals(0, c.compare(bytes3, bytes3));
         assertEquals(1, c.compare(bytes5, bytes3));
+
+        assertEquals(-1, c.compare(null, bytes5));
+        assertEquals(0, c.compare(null, null));
+        assertEquals(1, c.compare(bytes5, null));
     }
 
     @Test

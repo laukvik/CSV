@@ -177,14 +177,7 @@ public final class IntegerColumn extends Column<Integer> {
      * @return the compare value
      */
     public int compare(final Integer one, final Integer another) {
-        if (one == null || another == null) {
-            if (one == null){
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-        return one.compareTo(another);
+        return compareWith(one, another);
     }
 
 }

@@ -68,6 +68,25 @@ public class ColumnTest {
         cd = new ColumnDefinition("email");
         sc = (StringColumn) Column.parseColumnDefinition(cd);
         assertEquals("email", sc.getName());
+
+        cd = new ColumnDefinition("first(type= )");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
+
+        cd = new ColumnDefinition("first(type=)");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
+
+        cd = new ColumnDefinition("first");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
+
+        cd = new ColumnDefinition("last(type=date)");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof DateColumn);
+
+        cd = new ColumnDefinition("last(type=date,format)");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof DateColumn);
+        cd = new ColumnDefinition("last(type=date,format=)");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof DateColumn);
+        cd = new ColumnDefinition("last(type=date,format= )");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof DateColumn);
     }
 
     @Test
@@ -218,11 +237,6 @@ public class ColumnTest {
     @Test(expected = IllegalColumnDefinitionException.class)
     public void illegalDateFormat1() {
         Column.parseName("Took office(type=Date,format=MM/dd/i)");
-    }
-
-    @Test(expected = IllegalColumnDefinitionException.class)
-    public void illegalDateFormat2() {
-        Column.parseName("Took office(type=Date,format)");
     }
 
     @Test

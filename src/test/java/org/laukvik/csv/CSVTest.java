@@ -530,7 +530,7 @@ public class CSVTest {
     public void getColumn() throws IOException {
         CSV csv = new CSV();
         csv.readFile(getResource("separator_comma.csv"));
-        assertEquals(-1, csv.getColumn("DOESNT_EXIST"));
+        assertEquals(null, csv.getColumn("DOESNT_EXIST"));
     }
 
     @Test

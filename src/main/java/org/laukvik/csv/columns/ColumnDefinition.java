@@ -76,7 +76,7 @@ public final class ColumnDefinition {
             columnName = compressedColumnDefinition.substring(0, firstIndex);
             if (lastIndex != -1) {
                 // String with metadata
-                String extraDetails = compressedColumnDefinition.substring(firstIndex + 1, lastIndex);
+                String extraDetails = compressedColumnDefinition.substring(firstIndex + 1, lastIndex).trim();
                 String[] keyValues;
                 if (extraDetails.contains(",")) {
                     keyValues = extraDetails.split(",");
@@ -109,23 +109,29 @@ public final class ColumnDefinition {
      * @param value the value
      */
     void setAttribute(final String name, final String value) {
-        if (!name.trim().isEmpty()) {
-            attributeMap.put(name.toLowerCase(), new Attribute(value));
+        setAttribute(name, Attribute.parse(value));
+    }
+
+    void setAttribute(final String name, final Attribute attribute) {
+        if (name != null && attribute != null && !name.trim().isEmpty()) {
+            attributeMap.put(name.toLowerCase(), attribute);
         }
     }
 
-    /**
-     * Sets an attribute.
-     *
-     * @param name  the name
-     * @param value the value
-     * @param extra the extra value
-     */
-    void setAttribute(final String name, final String value, final String extra) {
-        if (!name.trim().isEmpty()) {
-            attributeMap.put(name.toLowerCase(), new Attribute(value, extra));
-        }
-    }
+//    /**
+//     * Sets an attribute.
+//     *
+//     * @param name  the name
+//     * @param value the value
+//     * @param extra the extra value
+//     */
+//    void setAttribute(final String name, final String value, final String extra) {
+//        if (name == null || value == null || name.trim().isEmpty() || value.trim().isEmpty()) {
+//        } else {
+//            String attName = name.toLowerCase();
+//            attributeMap.put(attName, new Attribute(value, extra));
+//        }
+//    }
 
     /**
      * Sets an attribute.
@@ -163,7 +169,10 @@ public final class ColumnDefinition {
      */
     boolean getBoolean(final String attributeName) {
         Attribute v = get(attributeName);
-        return !(v == null || v.value == null || v.value.trim().isEmpty()) && v.value.trim().equalsIgnoreCase("true");
+        if (v == null) {
+            return false;
+        }
+        return v.getValue().equalsIgnoreCase("true");
     }
 
     /**
@@ -197,7 +206,7 @@ public final class ColumnDefinition {
     /**
      * Specifies an attribute value with optional extra value.
      */
-    final class Attribute {
+    static final class Attribute {
 
         /**
          * The value.
@@ -215,17 +224,14 @@ public final class ColumnDefinition {
          */
         Attribute(final String value) {
             this.value = value;
-            if (value == null) {
-                return;
-            }
-            int firstIndex = value.indexOf("[");
-            if (firstIndex > -1) {
-                int lastIndex = value.lastIndexOf("]");
-                if (lastIndex > firstIndex) {
-                    this.optional = value.substring(firstIndex + 1, lastIndex);
-                    this.value = value.substring(0, firstIndex);
-                }
-            }
+//            int firstIndex = value.indexOf("[");
+//            if (firstIndex > -1) {
+//                int lastIndex = value.lastIndexOf("]");
+//                if (lastIndex > firstIndex) {
+//                    this.optional = value.substring(firstIndex + 1, lastIndex);
+//                    this.value = value.substring(0, firstIndex);
+//                }
+//            }
         }
 
         /**
@@ -237,6 +243,32 @@ public final class ColumnDefinition {
         Attribute(final String value, final String optional) {
             this.value = value;
             this.optional = optional;
+        }
+
+        /**
+         * Parses a compressed attribute.
+         *
+         * @param compressed the compressed value
+         * @return an attribute
+         */
+        static Attribute parse(final String compressed) {
+            if (compressed == null || compressed.trim().isEmpty()) {
+                return null;
+            }
+            int firstIndex = compressed.indexOf("[");
+            if (firstIndex > -1) {
+                int lastIndex = compressed.lastIndexOf("]");
+                if (lastIndex > firstIndex) {
+                    String opt = compressed.substring(firstIndex + 1, lastIndex);
+                    String ext = compressed.substring(0, firstIndex);
+                    return new Attribute(opt, ext);
+                } else {
+                    // Fallback gently when stop bracket isn't found
+                    return new Attribute(compressed.substring(0, firstIndex));
+                }
+            } else {
+                return new Attribute(compressed);
+            }
         }
 
         /**

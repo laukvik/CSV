@@ -87,16 +87,8 @@ public final class DateColumn extends Column<Date> {
      * @return the comparison
      */
     public static int compareDates(final Date one, final Date another) {
-        if (one == null && another == null) {
-            return 0;
-        }
-        if (one == null && another != null) {
-            return -1;
-        }
-        if (one != null && another == null) {
-            return 1;
-        }
-        return one.compareTo(another);
+//        return one.compareTo(another);
+        return compareWith(one, another);
     }
 
     /**
@@ -222,6 +214,9 @@ public final class DateColumn extends Column<Date> {
      * @return true if the date is between the two years.
      */
     public static boolean isYearBetween(final Date v, final int year, final int toYear) {
+        if (v == null) {
+            return false;
+        }
         int thisYear = getYear(v);
         return thisYear >= year && thisYear <= toYear;
     }
@@ -256,7 +251,24 @@ public final class DateColumn extends Column<Date> {
      * @return returns true if the date has the dayOfWeek.
      */
     public static boolean isDayOfWeek(final Date v, final int dayOfWeek) {
+        if (v == null) {
+            return false;
+        }
         return getDayOfWeek(v) == dayOfWeek;
+    }
+
+    /**
+     * Returns true if the date has the dayOfMonth.
+     *
+     * @param v the date
+     * @param dayOfMonth the day of month
+     * @return true if the date has the dayOfMonth.
+     */
+    public static boolean isDateOfMonth(final Date v, final int dayOfMonth) {
+        if (v == null) {
+            return false;
+        }
+        return getDayOfMonth(v) == dayOfMonth;
     }
 
     /**
@@ -275,20 +287,6 @@ public final class DateColumn extends Column<Date> {
         long start = first.getTime();
         long finish = last.getTime();
         return time >= start && time <= finish;
-    }
-
-    /**
-     * Formats the date using the default date pattern.
-     *
-     * @param date the date
-     * @return formatted value
-     */
-    public static String formatDefaultDate(final Date date) {
-        if (date == null) {
-            return "";
-        } else {
-            return DEFAULT_FORMATTER.format(date);
-        }
     }
 
     /**
@@ -480,14 +478,7 @@ public final class DateColumn extends Column<Date> {
      * @return the comparisond
      */
     public int compare(final Date one, final Date another) {
-        if (one == null || another == null) {
-            if (one == null){
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-        return one.compareTo(another);
+        return compareWith(one, another);
     }
 
     /**

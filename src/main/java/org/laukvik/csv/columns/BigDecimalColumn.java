@@ -59,14 +59,7 @@ public final class BigDecimalColumn extends Column<BigDecimal> {
      * @return the compare value
      */
     public int compare(final BigDecimal one, final BigDecimal another) {
-        if (one == null || another == null) {
-            if (one == null){
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-        return one.compareTo(another);
+        return compareWith(one, another);
     }
 
 }

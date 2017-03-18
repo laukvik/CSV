@@ -8,9 +8,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Morten Laukvik
+ *
+ *
  */
-public class DateOfMonthMatcher extends RowMatcher implements ValueMatcher<Date> {
+public final class DateOfMonthMatcher extends RowMatcher implements ValueMatcher<Date> {
 
     /**
      * The value to compare.
