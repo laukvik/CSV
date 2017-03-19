@@ -45,11 +45,15 @@ public final class ParityMatcher extends RowMatcher {
      * @param value         the value
      */
     public ParityMatcher(final IntegerColumn integerColumn, final Boolean... value) {
-        super();
-        this.column = integerColumn;
-        this.values = Arrays.asList(value);
+        this(integerColumn, Arrays.asList(value));
     }
 
+    /**
+     * The value of the column must be equal to the values.
+     *
+     * @param integerColumn the column
+     * @param values         the value
+     */
     public ParityMatcher(final IntegerColumn integerColumn, final List<Boolean> values) {
         super();
         this.column = integerColumn;

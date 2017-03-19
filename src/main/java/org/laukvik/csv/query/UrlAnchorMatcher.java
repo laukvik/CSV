@@ -43,11 +43,15 @@ public final class UrlAnchorMatcher extends RowMatcher implements ValueMatcher<U
      * @param value     the value
      */
     public UrlAnchorMatcher(final UrlColumn urlColumn, final String... value) {
-        super();
-        this.column = urlColumn;
-        this.values = Arrays.asList(value);
+        this(urlColumn, Arrays.asList(value));
     }
 
+    /**
+     * The value of the column must be.
+     *
+     * @param urlColumn the column
+     * @param values     the values
+     */
     public UrlAnchorMatcher(final UrlColumn urlColumn, final List<String> values) {
         super();
         this.column = urlColumn;

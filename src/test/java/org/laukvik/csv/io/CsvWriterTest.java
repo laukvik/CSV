@@ -59,7 +59,7 @@ public class CsvWriterTest {
     @Test
     public void shouldByDigitsOnly() {
         assertTrue(CsvWriter.isDigitsOnly("123"));
-        assertFalse(CsvWriter.isDigitsOnly(""));
+        assertTrue(CsvWriter.isDigitsOnly(""));
         assertFalse(CsvWriter.isDigitsOnly(null));
     }
 

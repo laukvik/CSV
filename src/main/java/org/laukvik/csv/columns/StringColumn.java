@@ -82,7 +82,7 @@ public final class StringColumn extends Column<String> {
         if (value == null || value.length() == 0) {
             return 0;
         }
-        return value.split("\\s+").length;
+        return value.trim().split("\\s+").length;
     }
 
     /**

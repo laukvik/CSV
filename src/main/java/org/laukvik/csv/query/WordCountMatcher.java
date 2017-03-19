@@ -42,9 +42,7 @@ public final class WordCountMatcher extends RowMatcher {
      * @param value        the value
      */
     public WordCountMatcher(final StringColumn stringColumn, final Integer... value) {
-        super();
-        this.column = stringColumn;
-        this.values = Arrays.asList(value);
+        this(stringColumn, Arrays.asList(value));
     }
 
     public WordCountMatcher(final StringColumn stringColumn, final List<Integer> values) {
