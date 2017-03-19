@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Matches Floats in the specified ranges.
  */
-public class FloatRangeMatcher extends RowMatcher implements ValueMatcher<Float> {
+public final class FloatRangeMatcher extends RowMatcher implements ValueMatcher<Float> {
 
     /**
      * The FloatColumn to match.

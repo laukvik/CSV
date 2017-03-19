@@ -13,7 +13,7 @@ import java.util.TreeMap;
  * @param <T> the type of data
  *
  */
-public class FreqDistribution<T> {
+public final class FreqDistribution<T> {
 
 
     /**

@@ -43,11 +43,6 @@ public final class DateColumn extends Column<Date> {
     public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
 
     /**
-     * The default timestamp formatter.
-     */
-    private static final DateFormat DEFAULT_FORMATTER = new SimpleDateFormat(DEFAULT_FORMAT);
-
-    /**
      * The DateFormat to use when reading and writing.
      */
     private DateFormat dateFormat;
@@ -87,7 +82,6 @@ public final class DateColumn extends Column<Date> {
      * @return the comparison
      */
     public static int compareDates(final Date one, final Date another) {
-//        return one.compareTo(another);
         return compareWith(one, another);
     }
 
@@ -289,7 +283,7 @@ public final class DateColumn extends Column<Date> {
         long time = value.getTime();
         long start = first.getTime();
         long finish = last.getTime();
-        if (time < start){
+        if (time < start) {
             return false;
         }
         return time <= finish;

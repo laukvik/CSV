@@ -11,7 +11,7 @@ public final class AnyMatcher extends RowMatcher {
     /**
      * The list of matchers.
      */
-    private RowMatcher[] matchers;
+    private final RowMatcher[] matchers;
 
     /**
      * Creates a new instance with the specified matchers.

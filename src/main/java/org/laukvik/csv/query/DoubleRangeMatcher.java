@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Matches Floats in the specified ranges.
  */
-public class DoubleRangeMatcher extends RowMatcher implements ValueMatcher<Double> {
+public final class DoubleRangeMatcher extends RowMatcher implements ValueMatcher<Double> {
 
     /**
      * The DoubleColumn to match.

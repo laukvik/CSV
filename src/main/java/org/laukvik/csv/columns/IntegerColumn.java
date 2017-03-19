@@ -60,7 +60,7 @@ public final class IntegerColumn extends Column<Integer> {
         if (value == null) {
             return false;
         } else {
-            return (value % 2) != 0;
+            return value % 2 != 0;
         }
     }
 
@@ -74,7 +74,7 @@ public final class IntegerColumn extends Column<Integer> {
         if (value == null) {
             return false;
         } else {
-            return (value < 0);
+            return value < 0;
         }
     }
 

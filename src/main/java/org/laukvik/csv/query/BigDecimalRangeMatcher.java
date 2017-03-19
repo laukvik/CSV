@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Matches BigDecimal in the specified ranges.
  */
-public class BigDecimalRangeMatcher extends RowMatcher implements ValueMatcher<BigDecimal> {
+public final class BigDecimalRangeMatcher extends RowMatcher implements ValueMatcher<BigDecimal> {
 
     /**
      * The BigDecimalColumn to match.

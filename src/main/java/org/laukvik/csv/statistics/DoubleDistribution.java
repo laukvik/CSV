@@ -3,7 +3,7 @@ package org.laukvik.csv.statistics;
 /**
  * Counts all values based on a list of ranges.
  */
-public class DoubleDistribution extends RangedDistribution<DoubleRange, Double> {
+public final class DoubleDistribution extends RangedDistribution<DoubleRange, Double> {
 
     /**
      * The generated range size.

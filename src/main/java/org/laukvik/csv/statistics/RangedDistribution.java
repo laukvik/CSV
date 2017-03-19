@@ -23,6 +23,11 @@ public abstract class RangedDistribution<T extends Range, V extends Number> {
     public static final int COUNTS = 10;
 
     /**
+     * The ascii number for SPACE character.
+     */
+    public static final int SPACE = 48;
+
+    /**
      * The list of ranges.
      */
     private final List<T> ranges;
@@ -61,7 +66,7 @@ public abstract class RangedDistribution<T extends Range, V extends Number> {
 //                index = right.indexOf("^[1-9]*");
 
                 for (int x = 0; x < right.length(); x++) {
-                    if (right.charAt(x) != 48) {
+                    if (right.charAt(x) != SPACE) {
 //                        x = right.length(); // exit loop
                         return (x * -1) - 1;
                     }

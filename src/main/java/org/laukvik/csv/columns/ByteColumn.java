@@ -70,9 +70,9 @@ public final class ByteColumn extends Column<byte[]> {
                 return 1;
             }
         } else {
-            if (Arrays.equals(one, another)){
+            if (Arrays.equals(one, another)) {
                 return 0;
-            } else if (one.length < another.length){
+            } else if (one.length < another.length) {
                 return -1;
             } else {
                 return 1;

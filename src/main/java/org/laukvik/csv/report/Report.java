@@ -92,8 +92,7 @@ public final class Report {
     public CSV buildReport(final CSV csv) {
         // Build unique node hierarchy
         Node root = buildNode(csv);
-        CSV newCSV = buildCSV(root);
-        return newCSV;
+        return buildCSV(root);
     }
 
     /**

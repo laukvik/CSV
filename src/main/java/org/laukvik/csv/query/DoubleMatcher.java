@@ -33,7 +33,7 @@ public final class DoubleMatcher extends RowMatcher {
     /**
      * The list of values.
      */
-    private List<Double> values;
+    private final List<Double> values;
 
     /**
      * Compares a DoubleColumn to specified doubles.

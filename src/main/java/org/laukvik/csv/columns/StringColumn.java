@@ -79,7 +79,7 @@ public final class StringColumn extends Column<String> {
      * @return the amount of words
      */
     public static Integer getWordCount(final String value) {
-        if (value == null || value.length() == 0) {
+        if (value == null || value.trim().length() == 0) {
             return 0;
         }
         return value.trim().split("\\s+").length;
@@ -100,7 +100,7 @@ public final class StringColumn extends Column<String> {
     }
 
     /**
-     * Returns the length of the string
+     * Returns the length of the string.
      *
      * @param value the string
      * @return the length

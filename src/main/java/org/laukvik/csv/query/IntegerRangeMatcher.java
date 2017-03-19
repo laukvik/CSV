@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Matches Integers in the specified ranges.
  */
-public class IntegerRangeMatcher extends RowMatcher implements ValueMatcher<Integer> {
+public final class IntegerRangeMatcher extends RowMatcher implements ValueMatcher<Integer> {
 
     /**
      * The IntegerColumn to match.

@@ -13,11 +13,11 @@ public abstract class AbstractDateMatcher extends RowMatcher {
     /**
      * The date.
      */
-    private Date value;
+    private final Date value;
     /**
      * The DateColumn.
      */
-    private DateColumn column;
+    private final DateColumn column;
 
     /**
      * Creates a new matcher.

@@ -11,7 +11,7 @@ public abstract class Aggregate {
     /**
      * The column it aggregates.
      */
-    private Column c;
+    private final Column c;
     /**
      * The new column with the aggregated data.
      */

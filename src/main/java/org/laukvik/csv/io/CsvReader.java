@@ -73,7 +73,7 @@ public final class CsvReader implements DatasetFileReader {
      */
     public CsvReader(final Charset charset, final Character separator, final Character quote) {
         this.autoDetectCharset = charset == null;
-        this.autoDetectColumnSeparator = (separator == null);
+        this.autoDetectColumnSeparator = separator == null;
         if (separator != null) {
             this.columnSeparatorChar = separator;
         }
@@ -120,10 +120,9 @@ public final class CsvReader implements DatasetFileReader {
      * Reads the next row.
      *
      * @param csv the csv
-     * @return a boolean whether a new row was found
      * @throws IOException when the row could not be read
      */
-    private boolean readRow(final CSV csv) throws IOException {
+    private void readRow(final CSV csv) throws IOException {
         Row row = csv.addRow();
         List<String> values = parseRow(csv);
         for (int x = 0; x < values.size(); x++) {
@@ -133,7 +132,6 @@ public final class CsvReader implements DatasetFileReader {
                 row.set(c, value);
             }
         }
-        return true;
     }
 
     /**

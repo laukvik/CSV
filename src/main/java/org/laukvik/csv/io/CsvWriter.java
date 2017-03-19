@@ -90,9 +90,8 @@ public final class CsvWriter implements DatasetFileWriter {
      * @param row the row
      * @param csv the csv
      * @return a list of columns
-     * @throws IOException when the file could not be written to.
      */
-    private List<String> buildRow(final Row row, final CSV csv) throws IOException {
+    private List<String> buildRow(final Row row, final CSV csv) {
         List<String> values = new ArrayList<>();
         for (int x = 0; x < csv.getColumnCount(); x++) {
             Column c = csv.getColumn(x);
@@ -105,9 +104,8 @@ public final class CsvWriter implements DatasetFileWriter {
      * Writes the column headers.
      * @param csv the csv
      * @return a list of columns
-     * @throws IOException when the MetaData could not be written
      */
-    private List<String> buildColumns(final CSV csv) throws IOException {
+    private List<String> buildColumns(final CSV csv) {
         List<String> items = new ArrayList<>();
         for (int x = 0; x < csv.getColumnCount(); x++) {
             Column c = csv.getColumn(x);

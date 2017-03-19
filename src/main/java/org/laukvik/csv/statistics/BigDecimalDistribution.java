@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 /**
  * Counts all values based on a list of ranges.
  */
-public class BigDecimalDistribution extends RangedDistribution<BigDecimalRange, BigDecimal> {
+public final class BigDecimalDistribution extends RangedDistribution<BigDecimalRange, BigDecimal> {
 
     /**
      * The generated range size.

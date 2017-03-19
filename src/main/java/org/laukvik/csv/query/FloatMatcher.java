@@ -33,7 +33,7 @@ public final class FloatMatcher extends RowMatcher {
     /**
      * The list of values.
      */
-    private List<Float> values;
+    private final List<Float> values;
 
     /**
      * The value of the floatColumn must be in the collection of floats.

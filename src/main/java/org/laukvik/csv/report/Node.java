@@ -37,8 +37,11 @@ public final class Node {
     /** */
     private List<Aggregate> aggregateList;
 
+    /** The minimum value found. */
     private BigDecimal min;
+    /** The maximum value found. */
     private BigDecimal max;
+    /** The sum of all values found. */
     private BigDecimal sum;
 
 
@@ -90,7 +93,12 @@ public final class Node {
         return map.isEmpty();
     }
 
-
+    /**
+     * Calculate a the total sum.
+     *
+     * @param v the value
+     * @param column the column
+     */
     public void doSUM(final Object v, final Column column) {
         if (column instanceof IntegerColumn && v instanceof Integer) {
             IntegerColumn ic = (IntegerColumn) column;
@@ -103,6 +111,12 @@ public final class Node {
         }
     }
 
+    /**
+     * Calculate a the minimum value.
+     *
+     * @param v the value
+     * @param column the column
+     */
     public void doMin(final Object v, final Column column) {
         if (column instanceof IntegerColumn && v instanceof Integer) {
             IntegerColumn ic = (IntegerColumn) column;
@@ -118,6 +132,12 @@ public final class Node {
         }
     }
 
+    /**
+     * Calculate a the maximum value.
+     *
+     * @param v the value
+     * @param column the column
+     */
     public void doMax(final Object v, final Column column) {
         if (column instanceof IntegerColumn && v instanceof Integer) {
             IntegerColumn ic = (IntegerColumn) column;
@@ -133,6 +153,12 @@ public final class Node {
         }
     }
 
+    /**
+     * Calculate a the count of all values.
+     *
+     * @param v the value
+     * @param column the column
+     */
     public void doCount(final Object v, final Column column) {
     }
 

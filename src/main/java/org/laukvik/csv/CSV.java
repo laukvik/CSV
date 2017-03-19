@@ -372,7 +372,6 @@ public final class CSV implements Serializable {
      */
     public void moveColumn(final int fromIndex, final int toIndex) {
         Column c1 = getColumn(fromIndex);
-        Column c2 = getColumn(toIndex);
         columns.remove(c1);
         columns.add(toIndex, c1);
         fireColumnMoved(fromIndex, toIndex);
@@ -1125,7 +1124,7 @@ public final class CSV implements Serializable {
      */
     public List<Row> getRowsByMatchers(final List<RowMatcher> matchers) {
         Query q = new Query();
-        for (RowMatcher m : matchers){
+        for (RowMatcher m : matchers) {
             q.addRowMatcher(m);
         }
         return getRowsByQuery(q);

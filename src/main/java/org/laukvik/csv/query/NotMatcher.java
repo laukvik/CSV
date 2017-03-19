@@ -10,7 +10,7 @@ public final class NotMatcher extends RowMatcher {
     /**
      * The matchers which should fail.
      */
-    private RowMatcher[] matchers;
+    private final RowMatcher[] matchers;
 
     /**
      * Creates a new instance with the matchers.

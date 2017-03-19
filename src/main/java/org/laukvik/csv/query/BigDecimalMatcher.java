@@ -34,7 +34,7 @@ public final class BigDecimalMatcher extends RowMatcher {
     /**
      * The list of values.
      */
-    private List<BigDecimal> values;
+    private final List<BigDecimal> values;
 
     /**
      * Compares a BigDecimal with the specified values.
