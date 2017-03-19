@@ -63,16 +63,7 @@ public final class BooleanColumn extends Column<Boolean> {
      * @return the comparable value
      */
     public int compare(final Boolean one, final Boolean another) {
-        if (one == null && another == null) {
-            return 0;
-        }
-        if (one != null && another == null) {
-            return 1;
-        }
-        if (one == null && another != null) {
-            return -1;
-        }
-        return one.compareTo(another);
+        return compareWith(one, another);
     }
 
 }

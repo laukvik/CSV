@@ -13,7 +13,7 @@ public final class Sum extends Aggregate {
     /**
      * Container for the sum.
      */
-    private BigDecimal sum;
+    private final BigDecimal sum;
 
     /**
      * Creates a new SUM for the column.
@@ -32,7 +32,7 @@ public final class Sum extends Aggregate {
     }
 
     /**
-     * Returns the value
+     * Returns the value.
      *
      * @return the value
      */

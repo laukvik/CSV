@@ -37,19 +37,25 @@ public final class MinuteMatcher extends RowMatcher implements ValueMatcher<Date
     private final DateColumn column;
 
     /**
-     * The value of the column must be.
+     * Matches the minutes in the minute part of the date.
      *
      * @param dateColumn the column
-     * @param value     the value
+     * @param minute      the minutes
      */
-    public MinuteMatcher(final DateColumn dateColumn, final Integer... value) {
-        this(dateColumn, Arrays.asList(value));
+    public MinuteMatcher(final DateColumn dateColumn, final Integer... minute) {
+        this(dateColumn, Arrays.asList(minute));
     }
 
-    public MinuteMatcher(final DateColumn dateColumn, final List<Integer> values) {
+    /**
+     * Matches the minutes in the minute part of the date.
+     *
+     * @param dateColumn the column
+     * @param minutes      the minutes
+     */
+    public MinuteMatcher(final DateColumn dateColumn, final List<Integer> minutes) {
         super();
         this.column = dateColumn;
-        this.values = values;
+        this.values = minutes;
     }
 
     /**
@@ -63,11 +69,17 @@ public final class MinuteMatcher extends RowMatcher implements ValueMatcher<Date
         return matches(v);
     }
 
+    /**
+     * Returns true when the value matches.
+     *
+     * @param value the value to test against
+     * @return true when matches
+     */
     public boolean matches(final Date value) {
         Integer port = DateColumn.getMinutes(value);
         for (Integer v : values) {
-            if (port == null){
-                if (v == null){
+            if (port == null) {
+                if (v == null) {
                     return true;
                 }
             } else if (port.equals(v)) {

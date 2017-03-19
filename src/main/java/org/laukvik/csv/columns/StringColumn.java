@@ -67,9 +67,46 @@ public final class StringColumn extends Column<String> {
             if (index < 0) {
                 return null;
             } else {
-                return value.substring(index+ 1);
+                return value.substring(index + 1);
             }
         }
+    }
+
+    /**
+     * Returns the amount of words in the string.
+     *
+     * @param value the string
+     * @return the amount of words
+     */
+    public static Integer getWordCount(final String value) {
+        if (value == null || value.trim().length() == 0) {
+            return 0;
+        }
+        return value.trim().split("\\s+").length;
+    }
+
+    /**
+     * Returns the first letter of the value.
+     *
+     * @param value the value
+     * @return the first letter
+     */
+    public static String getFirstLetter(final String value) {
+        if (value == null || value.length() == 0) {
+            return null;
+        } else {
+            return value.substring(0, 1);
+        }
+    }
+
+    /**
+     * Returns the length of the string.
+     *
+     * @param value the string
+     * @return the length
+     */
+    public static int getLength(final String value) {
+        return value == null ? 0 : value.length();
     }
 
     /**
@@ -124,50 +161,7 @@ public final class StringColumn extends Column<String> {
      * @return the compare value
      */
     public int compare(final String one, final String another) {
-        if (one == null && another == null) {
-            return 0;
-        }
-        if (one != null && another == null) {
-            return 1;
-        }
-        if (one == null && another != null) {
-            return -1;
-        }
-        return one.compareTo(another);
-    }
-
-    /**
-     * Returns the amount of words in the string
-     * @param value the string
-     * @return the amount of words
-     */
-    public static Integer getWordCount(final String value) {
-        if (value == null || value.length() == 0){
-            return 0;
-        }
-        return value.split("\\s+").length;
-    }
-
-    /**
-     * Returns the first letter of the value
-     * @param value the value
-     * @return the first letter
-     */
-    public static String getFirstLetter(final String value){
-        if (value == null || value.length() == 0){
-            return null;
-        } else {
-            return value.substring(0, 1);
-        }
-    }
-
-    /**
-     * Returns the length of the string
-     * @param value the string
-     * @return the length
-     */
-    public static int getLength(final String value){
-        return value == null ? 0 : value.length();
+        return compareWith(one, another);
     }
 
 }

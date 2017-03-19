@@ -31,13 +31,16 @@ public final class UrlPathMatcher extends RowMatcher {
      * The value to compare.
      */
     private final List<String> values;
-    /** The column to compare. */
+    /**
+     * The column to compare.
+     */
     private final UrlColumn column;
 
     /**
      * The value of the column must be.
+     *
      * @param urlColumn the column
-     * @param value the value
+     * @param value     the value
      */
     public UrlPathMatcher(final UrlColumn urlColumn, final String... value) {
         super();
@@ -60,12 +63,12 @@ public final class UrlPathMatcher extends RowMatcher {
     public boolean matches(final Row row) {
         URL v = row.getURL(column);
         String path = UrlColumn.getPath(v);
-        for (String s : values){
-            if (path == null){
-                if (s == null){
+        for (String s : values) {
+            if (path == null) {
+                if (s == null) {
                     return true;
                 }
-            } else if (path.equals(s)){
+            } else if (path.equals(s)) {
                 return true;
             }
         }

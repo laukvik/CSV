@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Morten Laukvik
  */
-public class WeekMatcher extends RowMatcher implements ValueMatcher<Date> {
+public final class WeekMatcher extends RowMatcher implements ValueMatcher<Date> {
 
     /**
      * The value to compare.
@@ -37,8 +37,6 @@ public class WeekMatcher extends RowMatcher implements ValueMatcher<Date> {
         this.values = values;
     }
 
-
-    @Override
     public boolean matches(final Date value) {
         Integer year = DateColumn.getWeekOfYear(value);
         for (Integer v : values) {

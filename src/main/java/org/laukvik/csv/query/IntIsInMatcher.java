@@ -44,6 +44,12 @@ public final class IntIsInMatcher extends RowMatcher {
         this.values = Arrays.asList(values);
     }
 
+    /**
+     * The value of the column must be the same as one or more in the values.
+     *
+     * @param integerColumn the column
+     * @param values the values
+     */
     public IntIsInMatcher(final IntegerColumn integerColumn, final List<Integer> values) {
         super();
         this.column = integerColumn;

@@ -9,9 +9,8 @@ import java.util.List;
 
 /**
  * Matches Floats in the specified ranges.
- *
  */
-public class DoubleRangeMatcher extends RowMatcher implements ValueMatcher<Double>{
+public final class DoubleRangeMatcher extends RowMatcher implements ValueMatcher<Double> {
 
     /**
      * The DoubleColumn to match.
@@ -27,7 +26,7 @@ public class DoubleRangeMatcher extends RowMatcher implements ValueMatcher<Doubl
      * Creates a new instance with the specified doubleColumn and range(s).
      *
      * @param doubleColumn the column
-     * @param range         the ranges
+     * @param range        the ranges
      */
     public DoubleRangeMatcher(final DoubleColumn doubleColumn, final DoubleRange... range) {
         this(doubleColumn, Arrays.asList(range));
@@ -37,7 +36,7 @@ public class DoubleRangeMatcher extends RowMatcher implements ValueMatcher<Doubl
      * Creates a new instance with the specified doubleColumn and range(s).
      *
      * @param doubleColumn the column
-     * @param range         the ranges
+     * @param range        the ranges
      */
     public DoubleRangeMatcher(final DoubleColumn doubleColumn, final List<DoubleRange> range) {
         super();
@@ -64,8 +63,8 @@ public class DoubleRangeMatcher extends RowMatcher implements ValueMatcher<Doubl
      */
     @Override
     public boolean matches(final Double value) {
-        for (DoubleRange r : ranges){
-            if (r.contains(value)){
+        for (DoubleRange r : ranges) {
+            if (r.contains(value)) {
                 return true;
             }
         }

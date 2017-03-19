@@ -34,7 +34,7 @@ public final class BigDecimalMatcher extends RowMatcher {
     /**
      * The list of values.
      */
-    private List<BigDecimal> values;
+    private final List<BigDecimal> values;
 
     /**
      * Compares a BigDecimal with the specified values.
@@ -69,12 +69,12 @@ public final class BigDecimalMatcher extends RowMatcher {
             return true;
         }
         for (BigDecimal v : values) {
-            if (v == null){
-                if (d == null){
+            if (v == null) {
+                if (d == null) {
                     return true;
                 }
             } else {
-                if (v.equals(d)){
+                if (v.equals(d)) {
                     return true;
                 }
             }

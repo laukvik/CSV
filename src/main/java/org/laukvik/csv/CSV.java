@@ -142,6 +142,11 @@ public final class CSV implements Serializable {
     public static final char QUOTE_SINGLE = 39;
 
     /**
+     * Indicates when the column could not be found.
+     */
+    public static final int COLUMN_NOT_FOUND = -1;
+
+    /**
      * The list of columns.
      */
     private final List<Column> columns;
@@ -153,6 +158,10 @@ public final class CSV implements Serializable {
      * The List of all FileListeners.
      */
     private final List<FileListener> fileListeners;
+    /**
+     * The list of Rows.
+     */
+    private final List<Row> rows;
     /**
      * The Character set.
      */
@@ -177,14 +186,7 @@ public final class CSV implements Serializable {
      * Automatically detects quote.
      */
     private boolean autoDetectQuote;
-    /**
-     * The list of Rows.
-     */
-    private final List<Row> rows;
-//    /**
-//     * The Query to use.
-//     */
-//    private Query query;
+
     /**
      * The file opened.
      */
@@ -196,7 +198,6 @@ public final class CSV implements Serializable {
     public CSV() {
         columns = new ArrayList<>();
         rows = new ArrayList<>();
-//        query = null;
         changeListeners = new ArrayList<>();
         fileListeners = new ArrayList<>();
         charset = Charset.defaultCharset();
@@ -278,7 +279,7 @@ public final class CSV implements Serializable {
      */
     public Column getColumn(final String name) {
         int index = indexOf(name);
-        if (index < 0){
+        if (index == COLUMN_NOT_FOUND) {
             return null;
         }
         return columns.get(index);
@@ -367,7 +368,6 @@ public final class CSV implements Serializable {
      */
     public void moveColumn(final int fromIndex, final int toIndex) {
         Column c1 = getColumn(fromIndex);
-        Column c2 = getColumn(toIndex);
         columns.remove(c1);
         columns.add(toIndex, c1);
         fireColumnMoved(fromIndex, toIndex);
@@ -397,7 +397,7 @@ public final class CSV implements Serializable {
             }
             x++;
         }
-        return -1;
+        return COLUMN_NOT_FOUND;
     }
 
     /**
@@ -715,7 +715,7 @@ public final class CSV implements Serializable {
      * Adds a new DateColumn.
      *
      * @param columnName the name
-     * @param format the date pattern
+     * @param format     the date pattern
      * @return the DateColumn being created
      */
     public DateColumn addDateColumn(final String columnName, final String format) {
@@ -859,41 +859,6 @@ public final class CSV implements Serializable {
     public void writeResourceBundle(final File resourceBundleFile) throws IOException {
         write(new ResourceBundleWriter(), resourceBundleFile);
     }
-
-//    /**
-//     * Returns the query.
-//     *
-//     * @return the query
-//     */
-//    public Query getQuery() {
-//        return query;
-//    }
-//
-//    /**
-//     * Filters the row based on typed queries.
-//     *
-//     * @return the query being created
-//     */
-//    public Query findByQuery() {
-//        this.query = new Query();
-//        return this.query;
-//    }
-
-//    /**
-//     * Returns true if there is already a query.
-//     *
-//     * @return true when a query has been started
-//     */
-//    public boolean hasQuery() {
-//        return this.query != null;
-//    }
-
-//    /**
-//     * Removes any query.
-//     */
-//    public void clearQuery() {
-//        this.query = null;
-//    }
 
     /**
      * Builds a FrequencyDistribution table for the specified column index.
@@ -1119,23 +1084,10 @@ public final class CSV implements Serializable {
      * @return the matching rorws
      */
     public List<Row> getRowsByMatchers(final List<RowMatcher> matchers) {
-        List<Row> newRows = new ArrayList<>();
-
-        int required = matchers.size();
-
-        for (int y= 0; y< getRowCount(); y++){
-            Row r = getRow(y);
-            int found = 0;
-            for (RowMatcher m : matchers){
-                if (m.matches(r)){
-                    found++;
-                }
-            }
-            if (found == required){
-                newRows.add(r);
-            }
+        Query q = new Query();
+        for (RowMatcher m : matchers) {
+            q.addRowMatcher(m);
         }
-
-        return newRows;
+        return getRowsByQuery(q);
     }
 }

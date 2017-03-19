@@ -26,41 +26,75 @@ import java.text.SimpleDateFormat;
  */
 public abstract class Column<T> implements Comparable {
 
-    /** Identifies the type attribute. */
+    /**
+     * Identifies the type attribute.
+     */
     static final String TYPE = "type";
-    /** Identifies BigDecimalColumn. */
+    /**
+     * Identifies BigDecimalColumn.
+     */
     static final String TYPE_BIGDECIMAL = "bigdecimal";
-    /** Identifies BooleanColumn. */
+    /**
+     * Identifies BooleanColumn.
+     */
     static final String TYPE_BOOLEAN = "boolean";
-    /** Identifies ByteColumn. */
+    /**
+     * Identifies ByteColumn.
+     */
     static final String TYPE_BYTE = "byte";
-    /** Identifies DateColumn. */
+    /**
+     * Identifies DateColumn.
+     */
     static final String TYPE_DATE = "date";
-    /** Identifies DoubleColumn. */
+    /**
+     * Identifies DoubleColumn.
+     */
     static final String TYPE_DOUBLE = "double";
-    /** Identifies FloatColumn. */
+    /**
+     * Identifies FloatColumn.
+     */
     static final String TYPE_FLOAT = "float";
-    /** Identifies IntegerColumn. */
+    /**
+     * Identifies IntegerColumn.
+     */
     static final String TYPE_INTEGER = "int";
-    /** Identifies StringColumn. */
+    /**
+     * Identifies StringColumn.
+     */
     static final String TYPE_STRING = "varchar";
-    /** Identifies UrlColumn. */
+    /**
+     * Identifies UrlColumn.
+     */
     static final String TYPE_URL = "url";
 
-    /** The name of the width attribute. */
+    /**
+     * The name of the width attribute.
+     */
     static final String WIDTH = "width";
-    /** The name of the allowNulls attribute. */
+    /**
+     * The name of the allowNulls attribute.
+     */
     static final String ALLOW_NULLS = "allowNulls";
-    /** The name of the primary key attribute. */
+    /**
+     * The name of the primary key attribute.
+     */
     static final String PRIMARY_KEY = "primaryKey";
-    /** The name of the foreign key attribute. */
+    /**
+     * The name of the foreign key attribute.
+     */
     static final String FOREIGN_KEY = "foreignKey";
-    /** The name of the default attribute. */
+    /**
+     * The name of the default attribute.
+     */
     static final String DEFAULT_VALUE = "default";
-    /** The name of the date format attribute. */
+    /**
+     * The name of the date format attribute.
+     */
     static final String FORMAT = "format";
 
-    /** The CSV the column belongs to. */
+    /**
+     * The CSV the column belongs to.
+     */
     private CSV csv;
 
     /**
@@ -106,24 +140,6 @@ public abstract class Column<T> implements Comparable {
     }
 
     /**
-     * Returns the CSV the column belongs to.
-     *
-     * @return the csv
-     */
-    public final CSV getCSV() {
-        return csv;
-    }
-
-    /**
-     * Sets the CSV the column belongs to.
-     *
-     * @param csv the csv
-     */
-    public final void setCSV(final CSV csv) {
-        this.csv = csv;
-    }
-
-    /**
      * Parses a column name with support for optional metadata about the column. The supported format of metadata is
      * like this:
      * <pre>
@@ -134,8 +150,7 @@ public abstract class Column<T> implements Comparable {
      * @return the column
      */
     public static Column parseName(final String name) {
-        ColumnDefinition cd = new ColumnDefinition(name);
-        return parseColumnDefinition(cd);
+        return parseColumnDefinition(ColumnDefinition.parse(name));
     }
 
     /**
@@ -153,10 +168,7 @@ public abstract class Column<T> implements Comparable {
             c = new StringColumn(columnName);
         } else {
             String typeName = attrType.getValue();
-            if (typeName == null || typeName.trim().isEmpty()) {
-                c = new StringColumn(columnName);
-
-            } else if (typeName.equalsIgnoreCase(TYPE_INTEGER)) {
+            if (typeName.equalsIgnoreCase(TYPE_INTEGER)) {
                 c = new IntegerColumn(columnName);
 
             } else if (typeName.equalsIgnoreCase(TYPE_FLOAT)) {
@@ -180,8 +192,8 @@ public abstract class Column<T> implements Comparable {
             } else if (typeName.equalsIgnoreCase(TYPE_DATE)) {
                 ColumnDefinition.Attribute attr = columnDefinition.get(FORMAT);
 
-                if (attr == null || attr.getValue().isEmpty()) {
-                    throw new IllegalColumnDefinitionException("");
+                if (attr == null) {
+                    c = new DateColumn(columnName);
                 } else {
                     try {
                         new SimpleDateFormat(attr.getValue());
@@ -192,6 +204,7 @@ public abstract class Column<T> implements Comparable {
                 }
             } else if (typeName.equalsIgnoreCase(TYPE_STRING)) {
                 StringColumn sc = new StringColumn(columnName);
+                c = sc;
                 String w = attrType.getOptional();
                 if (w != null) {
                     String v2 = w.trim();
@@ -201,7 +214,6 @@ public abstract class Column<T> implements Comparable {
                         throw new IllegalColumnDefinitionException(w);
                     }
                 }
-                c = sc;
             } else {
                 c = new StringColumn(columnName);
             }
@@ -219,6 +231,45 @@ public abstract class Column<T> implements Comparable {
             }
         }
         return c;
+    }
+
+    /**
+     * Compares a value with another.
+     *
+     * @param one     a value
+     * @param another a value
+     * @return comparable value
+     */
+    public static final int compareWith(final Comparable one, final Comparable another) {
+        if (one == null || another == null) {
+            if (one == null && another == null) {
+                return 0;
+            }
+            if (one == null) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+        return one.compareTo(another);
+    }
+
+    /**
+     * Returns the CSV the column belongs to.
+     *
+     * @return the csv
+     */
+    public final CSV getCSV() {
+        return csv;
+    }
+
+    /**
+     * Sets the CSV the column belongs to.
+     *
+     * @param csv the csv
+     */
+    public final void setCSV(final CSV csv) {
+        this.csv = csv;
     }
 
     /**
@@ -408,47 +459,46 @@ public abstract class Column<T> implements Comparable {
      * @return the formatted version
      */
     public final ColumnDefinition toColumnDefinition() {
-        ColumnDefinition cd = new ColumnDefinition(getName());
+        ColumnDefinition cd = ColumnDefinition.parse(getName());
         if (this instanceof StringColumn) {
             StringColumn sc = (StringColumn) this;
             if (sc.getSize() > 0) {
-                cd.setAttribute(TYPE, TYPE_STRING);
-                cd.setAttribute(TYPE, TYPE_STRING, sc.getSize() + "");
+                cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_STRING, sc.getSize() + ""));
             }
         } else if (this instanceof BigDecimalColumn) {
-            cd.setAttribute(TYPE, TYPE_BIGDECIMAL);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_BIGDECIMAL));
         } else if (this instanceof BooleanColumn) {
-            cd.setAttribute(TYPE, TYPE_BOOLEAN);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_BOOLEAN));
         } else if (this instanceof ByteColumn) {
-            cd.setAttribute(TYPE, TYPE_BYTE);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_BYTE));
         } else if (this instanceof DateColumn) {
-            cd.setAttribute(TYPE, TYPE_DATE);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_DATE));
             DateColumn dc = (DateColumn) this;
-            cd.setAttribute(FORMAT, dc.getFormat());
+            cd.setAttribute(FORMAT, new ColumnDefinition.Attribute(dc.getFormat()));
         } else if (this instanceof DoubleColumn) {
-            cd.setAttribute(TYPE, TYPE_DOUBLE);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_DOUBLE));
         } else if (this instanceof FloatColumn) {
-            cd.setAttribute(TYPE, TYPE_FLOAT);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_FLOAT));
         } else if (this instanceof IntegerColumn) {
-            cd.setAttribute(TYPE, TYPE_INTEGER);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_INTEGER));
         } else if (this instanceof UrlColumn) {
-            cd.setAttribute(TYPE, TYPE_URL);
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_URL));
         }
         if (getDefaultValue() != null) {
-            cd.setAttribute(DEFAULT_VALUE, getDefaultValue());
+            cd.setAttribute(DEFAULT_VALUE, new ColumnDefinition.Attribute(getDefaultValue()));
         }
         ForeignKey fk = getForeignKey();
         if (fk != null) {
-            cd.setAttribute(FOREIGN_KEY, fk.getTable(), fk.getColumn());
+            cd.setAttribute(FOREIGN_KEY, new ColumnDefinition.Attribute(fk.getTable(), fk.getColumn()));
         }
         if (getWidth() > 0) {
-            cd.setAttribute(WIDTH, getWidth() + "");
+            cd.setAttribute(WIDTH, new ColumnDefinition.Attribute(getWidth() + ""));
         }
         if (isAllowNulls()) {
-            cd.setAttribute(ALLOW_NULLS, "true");
+            cd.setAttribute(ALLOW_NULLS, new ColumnDefinition.Attribute("true"));
         }
         if (isPrimaryKey()) {
-            cd.setAttribute(PRIMARY_KEY, "true");
+            cd.setAttribute(PRIMARY_KEY, new ColumnDefinition.Attribute("true"));
         }
         return cd;
     }
@@ -462,6 +512,5 @@ public abstract class Column<T> implements Comparable {
         ColumnDefinition cd = toColumnDefinition();
         return cd.toCompressed();
     }
-
 
 }

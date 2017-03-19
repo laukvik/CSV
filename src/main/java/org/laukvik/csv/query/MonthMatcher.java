@@ -24,7 +24,6 @@ import java.util.List;
 
 /**
  * Compares a DateColumn to have the year to be the specified value.
- *
  */
 public final class MonthMatcher extends RowMatcher implements ValueMatcher<Date> {
 
@@ -41,12 +40,18 @@ public final class MonthMatcher extends RowMatcher implements ValueMatcher<Date>
      * Matches the value of the dateColumn to have the specified month.
      *
      * @param dateColumn the dateColumn
-     * @param value       the month
+     * @param value      the month
      */
     public MonthMatcher(final DateColumn dateColumn, final Integer... value) {
         this(dateColumn, Arrays.asList(value));
     }
 
+    /**
+     * Matches the value of the dateColumn to have the specified months.
+     *
+     * @param dateColumn the dateColumn
+     * @param values      the months
+     */
     public MonthMatcher(final DateColumn dateColumn, final List<Integer> values) {
         super();
         this.column = dateColumn;
@@ -67,9 +72,9 @@ public final class MonthMatcher extends RowMatcher implements ValueMatcher<Date>
     @Override
     public boolean matches(final Date value) {
         Integer month = DateColumn.getMonth(value);
-        for (Integer v : values){
-            if (month == null){
-                if (v == null){
+        for (Integer v : values) {
+            if (month == null) {
+                if (v == null) {
                     return true;
                 }
             } else if (month.equals(v)) {

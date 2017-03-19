@@ -21,12 +21,126 @@ package org.laukvik.csv.columns;
 public final class IntegerColumn extends Column<Integer> {
 
     /**
+     * The value of ten.
+     */
+    private static final int TEN = 10;
+    /**
+     * The value of hundred.
+     */
+    private static final int HUNDRED = 100;
+    /**
+     * The value of thousand.
+     */
+    private static final int THOUSAND = 1000;
+    /**
+     * The value of million.
+     */
+    private static final int MILLION = 1000000;
+    /**
+     * The value of billion.
+     */
+    private static final int BILLION = 1000000000;
+
+    /**
      * Column with Integer as the data type.
      *
      * @param name the name of the column
      */
     public IntegerColumn(final String name) {
         super(name);
+    }
+
+    /**
+     * Returns true when the value is an odd number.
+     *
+     * @param value the value
+     * @return true when matches
+     */
+    public static Boolean isOdd(final Integer value) {
+        if (value == null) {
+            return false;
+        } else {
+            return value % 2 != 0;
+        }
+    }
+
+    /**
+     * Returns true when the value is a negative number.
+     *
+     * @param value the value
+     * @return true when matches
+     */
+    public static boolean isNegative(final Integer value) {
+        if (value == null) {
+            return false;
+        } else {
+            return value < 0;
+        }
+    }
+
+    /**
+     * Returns true when the value is an odd number.
+     *
+     * @param value the value
+     * @param q multiplied with
+     * @return true when matches
+     */
+    public static Integer getMods(final Integer value, final int q) {
+        if (value == null) {
+            return 0;
+        } else {
+            return ((value / q) % TEN) * q;
+        }
+    }
+
+    /**
+     * Returns the ten part of the value.
+     *
+     * @param value the value
+     * @return true when matches
+     */
+    public static Integer getTen(final Integer value) {
+        return getMods(value, TEN);
+    }
+
+    /**
+     * Returns the hundred part of the value.
+     *
+     * @param value the value
+     * @return true when matches
+     */
+    public static Integer getHundred(final Integer value) {
+        return getMods(value, HUNDRED);
+    }
+
+    /**
+     * Returns the thousand part of the value.
+     *
+     * @param value the value
+     * @return true when matches
+     */
+    public static Integer getThousand(final Integer value) {
+        return getMods(value, THOUSAND);
+    }
+
+    /**
+     * Returns the million part of the value.
+     *
+     * @param value the value
+     * @return true when matches
+     */
+    public static Integer getMillion(final Integer value) {
+        return getMods(value, MILLION);
+    }
+
+    /**
+     * Returns the billion part of the value.
+     *
+     * @param value the value
+     * @return true when matches
+     */
+    public static Integer getBillion(final Integer value) {
+        return getMods(value, BILLION);
     }
 
     /**
@@ -63,62 +177,7 @@ public final class IntegerColumn extends Column<Integer> {
      * @return the compare value
      */
     public int compare(final Integer one, final Integer another) {
-        if (one == null && another == null) {
-            return 0;
-        }
-        if (one != null && another == null) {
-            return 1;
-        }
-        if (one == null && another != null) {
-            return -1;
-        }
-        return one.compareTo(another);
-    }
-
-
-    public static Boolean isOdd(Integer value) {
-        if (value == null){
-            return false;
-        } else {
-            return (value % 2) != 0;
-        }
-    }
-
-    public static boolean isNegative(Integer value) {
-        if (value == null){
-            return false;
-        } else {
-            return (value < 0);
-        }
-    }
-
-    public static Integer getMods(Integer value, int q) {
-        if (value == null){
-            return 0;
-        } else {
-            return ((value/q)% 10) * q;
-        }
-    }
-
-    public static Integer getTen(Integer value) {
-        return getMods(value, 10);
-    }
-
-    public static Integer getHundred(Integer value) {
-        return getMods(value, 100);
-    }
-
-
-    public static Integer getThousand(Integer value) {
-        return getMods(value, 1000);
-    }
-
-    public static Integer getMillion(Integer value) {
-        return getMods(value, 1000000);
-    }
-
-    public static Integer getBillion(Integer value) {
-        return getMods(value, 1000000000);
+        return compareWith(one, another);
     }
 
 }

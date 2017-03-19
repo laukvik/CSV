@@ -34,7 +34,6 @@ public final class HtmlWriter implements DatasetFileWriter {
 
     /**
      * Writes the CSV to the outputStream.
-     *
      */
     public HtmlWriter() {
     }
@@ -42,11 +41,11 @@ public final class HtmlWriter implements DatasetFileWriter {
     /**
      * Writes the CSV to the file.
      *
-     * @param csv the CSV to write
+     * @param csv  the CSV to write
      * @param file the file
      * @throws IOException when the file could not be written
      */
-    public void writeCSV(final File file, final CSV csv) throws IOException{
+    public void writeCSV(final File file, final CSV csv) throws IOException {
         try (FileOutputStream out = new FileOutputStream(file)) {
             writeCSV(csv, out);
         } catch (final IOException e) {
@@ -66,7 +65,7 @@ public final class HtmlWriter implements DatasetFileWriter {
 
         out.write("<html>\n".getBytes());
         out.write("<head>\n".getBytes());
-        if (charset != null){
+        if (charset != null) {
             out.write("<meta http-equiv=\"Content-Type\" content=\"".getBytes());
             out.write(charset.name().getBytes());
             out.write("\">\n".getBytes());

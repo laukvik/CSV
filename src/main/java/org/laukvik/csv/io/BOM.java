@@ -138,7 +138,7 @@ public enum BOM {
      * @return true if it matches
      */
     public boolean is(final byte... values) {
-        if (values.length == 0 || values.length < this.bytes.length) {
+        if (values == null || values.length == 0 || values.length < this.bytes.length) {
             return false;
         }
         byte[] sameBytes = Arrays.copyOfRange(values, 0, this.bytes.length);

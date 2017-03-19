@@ -92,8 +92,7 @@ public final class Report {
     public CSV buildReport(final CSV csv) {
         // Build unique node hierarchy
         Node root = buildNode(csv);
-        CSV newCSV = buildCSV(root);
-        return newCSV;
+        return buildCSV(root);
     }
 
     /**
@@ -132,8 +131,6 @@ public final class Report {
                         extra.doMax(v, c);
                     } else if (a instanceof Count) {
                         extra.doCount(v, c);
-                    } else if (a instanceof Name) {
-//                        extra.doName(v, c);
                     }
                 }
             }

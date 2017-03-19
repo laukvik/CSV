@@ -20,7 +20,6 @@ import org.laukvik.csv.columns.BooleanColumn;
 
 /**
  * Compares a DateColumn to have the year to be the specified value.
- *
  */
 public final class BooleanMatcher extends RowMatcher {
 
@@ -29,13 +28,16 @@ public final class BooleanMatcher extends RowMatcher {
      */
     private final Boolean value;
 
+    /**
+     * The column.
+     */
     private final BooleanColumn column;
 
     /**
      * Matches the value of the dateColumn to have the specified month.
      *
      * @param booleanColumn the booleanColumn
-     * @param value       the boolean value
+     * @param value         the boolean value
      */
     public BooleanMatcher(final BooleanColumn booleanColumn, final Boolean value) {
         this.column = booleanColumn;
@@ -49,8 +51,11 @@ public final class BooleanMatcher extends RowMatcher {
      * @return true if it matches
      */
     public boolean matches(final Row row) {
+        if (value == null) {
+            return row.getBoolean(column) == null;
+        }
         Boolean v = row.getBoolean(column);
-        if (v == null){
+        if (v == null) {
             return value == null;
         }
         return value.equals(v);

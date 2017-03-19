@@ -36,7 +36,6 @@ import java.util.TreeMap;
 /**
  * Represents a single Row in a CSV data set.
  *
- * @author Morten Laukvik
  */
 public final class Row implements Serializable {
 
@@ -49,10 +48,6 @@ public final class Row implements Serializable {
      * Creates a new Row.
      */
     public Row() {
-        /*
-      The timestamp it was created. Used only internally to separate rows.
-     */
-        long timestamp = System.nanoTime();
         this.map = new TreeMap<>();
     }
 

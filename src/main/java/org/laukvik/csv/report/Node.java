@@ -11,7 +11,6 @@ import java.util.TreeMap;
 
 /**
  * Counts the amount of instances for a given value.
- *
  */
 public final class Node {
 
@@ -19,26 +18,37 @@ public final class Node {
      * The value.
      */
     private Object value;
-    /** The sorted map of sub elements. */
+    /**
+     * The sorted map of sub elements.
+     */
     private Map<Object, Node> map;
-    /** The column type. */
+    /**
+     * The column type.
+     */
     private Column column;
-    /** How many times it contains this value. */
+    /**
+     * How many times it contains this value.
+     */
     private int count;
-    /** The parent node. */
+    /**
+     * The parent node.
+     */
     private Node parent;
     /** */
     private List<Aggregate> aggregateList;
 
+    /** The minimum value found. */
     private BigDecimal min;
+    /** The maximum value found. */
     private BigDecimal max;
+    /** The sum of all values found. */
     private BigDecimal sum;
 
 
     /**
      * Creates a new node.
      *
-     * @param value the text value
+     * @param value  the text value
      * @param column the column
      */
     public Node(final Object value, final Column column) {
@@ -58,9 +68,10 @@ public final class Node {
 
     /**
      * Returns true if node is root.
+     *
      * @return true when root
      */
-    public boolean isRoot(){
+    public boolean isRoot() {
         return parent == null;
     }
 
@@ -75,15 +86,20 @@ public final class Node {
 
     /**
      * Returns true when no sub elements.
-     * @return true when no sub elements
      *
+     * @return true when no sub elements
      */
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return map.isEmpty();
     }
 
-
-    public void doSUM(final Object v, final Column column){
+    /**
+     * Calculate a the total sum.
+     *
+     * @param v the value
+     * @param column the column
+     */
+    public void doSUM(final Object v, final Column column) {
         if (column instanceof IntegerColumn && v instanceof Integer) {
             IntegerColumn ic = (IntegerColumn) column;
             Integer i = (Integer) v;
@@ -95,7 +111,13 @@ public final class Node {
         }
     }
 
-    public void doMin(final Object v, final Column column){
+    /**
+     * Calculate a the minimum value.
+     *
+     * @param v the value
+     * @param column the column
+     */
+    public void doMin(final Object v, final Column column) {
         if (column instanceof IntegerColumn && v instanceof Integer) {
             IntegerColumn ic = (IntegerColumn) column;
             Integer i = (Integer) v;
@@ -110,7 +132,13 @@ public final class Node {
         }
     }
 
-    public void doMax(final Object v, final Column column){
+    /**
+     * Calculate a the maximum value.
+     *
+     * @param v the value
+     * @param column the column
+     */
+    public void doMax(final Object v, final Column column) {
         if (column instanceof IntegerColumn && v instanceof Integer) {
             IntegerColumn ic = (IntegerColumn) column;
             Integer i = (Integer) v;
@@ -125,12 +153,19 @@ public final class Node {
         }
     }
 
-    public void doCount(final Object v, final Column column){
+    /**
+     * Calculate a the count of all values.
+     *
+     * @param v the value
+     * @param column the column
+     */
+    public void doCount(final Object v, final Column column) {
     }
 
     /**
      * Adds a new node if it doesn't exits.
-     * @param value the value
+     *
+     * @param value  the value
      * @param column the column
      * @return the node added
      */
@@ -150,6 +185,7 @@ public final class Node {
 
     /**
      * Returns the value.
+     *
      * @return the value
      */
     public Object getValue() {
@@ -158,6 +194,7 @@ public final class Node {
 
     /**
      * Returns the map of sub items.
+     *
      * @return the map
      */
     public Map<Object, Node> getMap() {
@@ -166,6 +203,7 @@ public final class Node {
 
     /**
      * Returns the count.
+     *
      * @return the count
      */
     public int getCount() {
@@ -173,7 +211,7 @@ public final class Node {
     }
 
     /**
-     * Adds aggregated value
+     * Adds aggregated value.
      *
      * @param aggregate doSUM
      */
@@ -198,7 +236,7 @@ public final class Node {
     }
 
     public BigDecimal getAverage() {
-        if (sum == null || sum.intValue() == 0){
+        if (sum == null || sum.intValue() == 0) {
             return new BigDecimal(0);
         }
         return sum.divide(new BigDecimal(count), BigDecimal.ROUND_DOWN);

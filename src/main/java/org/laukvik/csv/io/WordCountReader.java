@@ -5,7 +5,6 @@ import org.laukvik.csv.columns.StringColumn;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,7 +54,6 @@ public final class WordCountReader implements DatasetFileReader {
      */
     public static Map<String, Integer> parse(final File file) throws FileNotFoundException {
         Map<String, Integer> map = new HashMap<>();
-        final FileReader r = new FileReader(file);
         try (Scanner s = new Scanner(file)) {
             while (s.hasNextLine()) {
                 String str = s.nextLine();

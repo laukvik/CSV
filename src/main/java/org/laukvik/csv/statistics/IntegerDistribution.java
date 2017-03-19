@@ -4,14 +4,18 @@ import java.math.BigDecimal;
 
 /**
  * Counts all values based on a list of ranges.
- *
  */
-public class IntegerDistribution extends RangedDistribution<IntegerRange, Integer>{
+public final class IntegerDistribution extends RangedDistribution<IntegerRange, Integer> {
 
     /**
      * The generated range size.
      */
     private int multiplier;
+
+    /**
+     * The value of ten.
+     */
+    private static final double TEN = 10d;
 
     /**
      * Creates an empty instance.
@@ -26,7 +30,7 @@ public class IntegerDistribution extends RangedDistribution<IntegerRange, Intege
      * @param minimum the minimum value
      * @param maximum the maximum value
      */
-    public void buildRange(final Integer minimum, final Integer maximum){
+    public void buildRange(final Integer minimum, final Integer maximum) {
         getRanges().clear();
 //        int min = Math.min(minimum, maximum);
 //        int max = Math.max(minimum, maximum);
@@ -50,9 +54,9 @@ public class IntegerDistribution extends RangedDistribution<IntegerRange, Intege
         if (index == 1) {
             multiplier = 1;
         } else if (index < 1) {
-            multiplier = (int) Math.pow(10d, (index *  -1));
+            multiplier = (int) Math.pow(TEN, (index * -1));
         } else {
-            multiplier = (int) Math.pow(10d, (index-1));
+            multiplier = (int) Math.pow(TEN, (index - 1));
         }
 
         for (int x = 0; x < COUNTS; x++) {

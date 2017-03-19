@@ -43,6 +43,12 @@ public final class StringInMatcher extends RowMatcher {
         this(stringColumn, Arrays.asList(values));
     }
 
+    /**
+     * The value of the column must be among the values.
+     *
+     * @param stringColumn the column
+     * @param values       the values
+     */
     public StringInMatcher(final StringColumn stringColumn, final List<String> values) {
         super();
         this.column = stringColumn;

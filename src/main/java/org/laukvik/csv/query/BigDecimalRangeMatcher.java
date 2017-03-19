@@ -10,9 +10,8 @@ import java.util.List;
 
 /**
  * Matches BigDecimal in the specified ranges.
- *
  */
-public class BigDecimalRangeMatcher extends RowMatcher implements ValueMatcher<BigDecimal>{
+public final class BigDecimalRangeMatcher extends RowMatcher implements ValueMatcher<BigDecimal> {
 
     /**
      * The BigDecimalColumn to match.
@@ -28,7 +27,7 @@ public class BigDecimalRangeMatcher extends RowMatcher implements ValueMatcher<B
      * Creates a new instance with the specified BigDecimalColumn and range(s).
      *
      * @param bigDecimalColumn the column
-     * @param range         the ranges
+     * @param range            the ranges
      */
     public BigDecimalRangeMatcher(final BigDecimalColumn bigDecimalColumn, final BigDecimalRange... range) {
         this(bigDecimalColumn, Arrays.asList(range));
@@ -38,7 +37,7 @@ public class BigDecimalRangeMatcher extends RowMatcher implements ValueMatcher<B
      * Creates a new instance with the specified bigDecimalColumn and range(s).
      *
      * @param bigDecimalColumn the column
-     * @param range         the ranges
+     * @param range            the ranges
      */
     public BigDecimalRangeMatcher(final BigDecimalColumn bigDecimalColumn, final List<BigDecimalRange> range) {
         super();
@@ -65,8 +64,8 @@ public class BigDecimalRangeMatcher extends RowMatcher implements ValueMatcher<B
      */
     @Override
     public boolean matches(final BigDecimal value) {
-        for (BigDecimalRange r : ranges){
-            if (r.contains(value)){
+        for (BigDecimalRange r : ranges) {
+            if (r.contains(value)) {
                 return true;
             }
         }

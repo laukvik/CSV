@@ -220,7 +220,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query isYear(final org.laukvik.csv.columns.DateColumn column, final Integer year) {
-        addRowMatcher(new YearIsMatcher(column, year));
+        addRowMatcher(new YearMatcher(column, year));
         return this;
     }
 

@@ -50,24 +50,52 @@ public class ColumnTest {
 
     @Test
     public void parseColumnDefinition(){
-        ColumnDefinition cd = new ColumnDefinition("first(type=date,format=MM/dd/yyyy)");
+        ColumnDefinition cd = ColumnDefinition.parse("first(type=date,format=MM/dd/yyyy)");
         DateColumn dc = (DateColumn) Column.parseColumnDefinition(cd);
         assertEquals("first", dc.getName());
         assertEquals("MM/dd/yyyy", dc.getFormat());
 
-        cd = new ColumnDefinition("last(type=)");
-        assertEquals("",cd.get("type").getValue());
+        cd = ColumnDefinition.parse("last(type=)");
+        assertNull(cd.get("type"));
         StringColumn s = (StringColumn) Column.parseColumnDefinition(cd);
         assertEquals("last", s.getName());
 
 
-        cd = new ColumnDefinition("last(type= )");
+        cd = ColumnDefinition.parse("last(type= )");
         StringColumn sc = (StringColumn) Column.parseColumnDefinition(cd);
         assertEquals("last", sc.getName());
 
-        cd = new ColumnDefinition("email");
+        cd = ColumnDefinition.parse("email");
         sc = (StringColumn) Column.parseColumnDefinition(cd);
         assertEquals("email", sc.getName());
+
+        cd = ColumnDefinition.parse("first(type= )");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
+
+        cd =  ColumnDefinition.parse("first(type=)");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
+
+        cd =  ColumnDefinition.parse("first");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
+
+        cd =  ColumnDefinition.parse("last(type=date)");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof DateColumn);
+
+        cd =  ColumnDefinition.parse("last(type=date,format)");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof DateColumn);
+        cd =  ColumnDefinition.parse("last(type=date,format=)");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof DateColumn);
+        cd =  ColumnDefinition.parse("last(type=date,format= )");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof DateColumn);
+
+        cd = ColumnDefinition.parse("first(type=varCHAR)");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
+
+        cd = ColumnDefinition.parse("first(type=)");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
+
+        cd = ColumnDefinition.parse("first");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
     }
 
     @Test
@@ -218,11 +246,6 @@ public class ColumnTest {
     @Test(expected = IllegalColumnDefinitionException.class)
     public void illegalDateFormat1() {
         Column.parseName("Took office(type=Date,format=MM/dd/i)");
-    }
-
-    @Test(expected = IllegalColumnDefinitionException.class)
-    public void illegalDateFormat2() {
-        Column.parseName("Took office(type=Date,format)");
     }
 
     @Test

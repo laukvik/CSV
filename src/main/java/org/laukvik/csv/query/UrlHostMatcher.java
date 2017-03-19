@@ -31,13 +31,16 @@ public final class UrlHostMatcher extends RowMatcher {
      * The value to compare.
      */
     private final List<String> values;
-    /** The column to compare. */
+    /**
+     * The column to compare.
+     */
     private final UrlColumn column;
 
     /**
      * The value of the column must be.
+     *
      * @param urlColumn the column
-     * @param value the value
+     * @param value     the value
      */
     public UrlHostMatcher(final UrlColumn urlColumn, final String... value) {
         super();
@@ -59,11 +62,11 @@ public final class UrlHostMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         URL v = row.getURL(column);
-        if (v == null){
+        if (v == null) {
             return false;
         } else {
-            for (String s : values){
-                if (v.getHost().equals(s)){
+            for (String s : values) {
+                if (v.getHost().equals(s)) {
                     return true;
                 }
             }

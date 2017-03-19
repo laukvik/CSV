@@ -6,12 +6,12 @@ import org.laukvik.csv.Row;
  * Matches any of the matchers.
  *
  */
-public final class AnyMatcher extends RowMatcher{
+public final class AnyMatcher extends RowMatcher {
 
     /**
      * The list of matchers.
      */
-    private RowMatcher[] matchers;
+    private final RowMatcher[] matchers;
 
     /**
      * Creates a new instance with the specified matchers.

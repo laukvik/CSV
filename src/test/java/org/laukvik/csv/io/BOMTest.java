@@ -24,6 +24,16 @@ public class BOMTest {
     }
 
     @Test
+    public void nulls(){
+        assertFalse( BOM.UTF8.is( null  ));
+        assertFalse( BOM.UTF8.is( (byte) 0xEF  ));
+//        BOM b = BOM.UTF8;
+//        File f = getResource("charset_utf_8.csv");
+//        Mockito.doThrow(new IOException()).when(b).findBom(f);
+//        assertNull(b.findBom(f));
+    }
+
+    @Test
     public void checkBytes(){
         assertTrue( BOM.UTF8.is( (byte) 0xEF, (byte) 0xBB , (byte) 0xBF, (byte)220  ));
     }

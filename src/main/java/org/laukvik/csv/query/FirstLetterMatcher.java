@@ -30,20 +30,27 @@ public final class FirstLetterMatcher extends RowMatcher {
      * The value to compare.
      */
     private final List<String> values;
-    /** The column to compare. */
+    /**
+     * The column to compare.
+     */
     private final StringColumn column;
 
     /**
-     * The value of the column must be.
+     * The first letter in the column must be in the collection.
+     *
      * @param stringColumn the column
-     * @param value the value
+     * @param value        the value
      */
     public FirstLetterMatcher(final StringColumn stringColumn, final String... value) {
-        super();
-        this.column = stringColumn;
-        this.values = Arrays.asList(value);
+        this(stringColumn, Arrays.asList(value));
     }
 
+    /**
+     * The first letter in the column must be in the collection.
+     *
+     * @param stringColumn the column
+     * @param values        the value
+     */
     public FirstLetterMatcher(final StringColumn stringColumn, final List<String> values) {
         super();
         this.column = stringColumn;
@@ -58,11 +65,11 @@ public final class FirstLetterMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         String v = row.getString(column);
-        if (v == null){
+        if (v == null) {
             return false;
         } else {
-            for (String s : values){
-                if (v.startsWith(s)){
+            for (String s : values) {
+                if (v.startsWith(s)) {
                     return true;
                 }
             }

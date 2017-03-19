@@ -108,6 +108,8 @@ public class UrlColumnTest {
     public void getPath() throws MalformedURLException {
         URL u1 = new URL("http://en.wikipedia.org/wiki/Barack_Obama.jpg");
         assertEquals("/wiki/Barack_Obama.jpg", UrlColumn.getPath(u1));
+        assertEquals("/", UrlColumn.getPath(new URL("http://en.wikipedia.org/")));
+        assertNull(UrlColumn.getPath(new URL("http://en.wikipedia.org")));
         assertNull(UrlColumn.getPath(null));
     }
 

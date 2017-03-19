@@ -26,9 +26,9 @@ import org.laukvik.csv.columns.Column;
 public final class IsInMatcher<T> extends RowMatcher {
 
     /** The column.  */
-    private Column<T> column;
+    private final Column<T> column;
     /** The values. */
-    private T[] values;
+    private final T[] values;
 
     /**
      * The value of the column must be in the values.

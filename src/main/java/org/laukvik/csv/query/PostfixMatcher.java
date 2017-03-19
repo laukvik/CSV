@@ -30,13 +30,16 @@ public final class PostfixMatcher extends RowMatcher {
      * The value to compare.
      */
     private final List<String> values;
-    /** The column to compare. */
+    /**
+     * The column to compare.
+     */
     private final StringColumn column;
 
     /**
      * The value of the column must be.
+     *
      * @param stringColumn the column
-     * @param value the value
+     * @param value        the value
      */
     public PostfixMatcher(final StringColumn stringColumn, final String... value) {
         super();
@@ -58,11 +61,11 @@ public final class PostfixMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         String v = row.getString(column);
-        if (v == null){
+        if (v == null) {
             return false;
         } else {
-            for (String s : values){
-                if (s.equals(StringColumn.getPostfix(v))){
+            for (String s : values) {
+                if (s.equals(StringColumn.getPostfix(v))) {
                     return true;
                 }
             }

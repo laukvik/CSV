@@ -8,9 +8,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Morten Laukvik
+ *
+ *
  */
-public class DateOfMonthMatcher extends RowMatcher implements ValueMatcher<Date> {
+public final class DateOfMonthMatcher extends RowMatcher implements ValueMatcher<Date> {
 
     /**
      * The value to compare.
@@ -22,7 +23,7 @@ public class DateOfMonthMatcher extends RowMatcher implements ValueMatcher<Date>
     private final DateColumn column;
 
     /**
-     * The value of the column must be.
+     * The date of the column must be among the values.
      *
      * @param dateColumn the column
      * @param value      the value
@@ -31,14 +32,23 @@ public class DateOfMonthMatcher extends RowMatcher implements ValueMatcher<Date>
         this(dateColumn, Arrays.asList(value));
     }
 
+    /**
+     * The date of the column must be among the values.
+     *
+     * @param dateColumn the column
+     * @param values      the value
+     */
     public DateOfMonthMatcher(final DateColumn dateColumn, final List<Integer> values) {
         super();
         this.column = dateColumn;
         this.values = values;
     }
 
-
-    @Override
+    /**
+     * Returns true when matches the value.
+     * @param value the value to test against
+     * @return true when matches
+     */
     public boolean matches(final Date value) {
         Integer year = DateColumn.getDayOfMonth(value);
         for (Integer v : values) {
@@ -53,7 +63,11 @@ public class DateOfMonthMatcher extends RowMatcher implements ValueMatcher<Date>
         return false;
     }
 
-    @Override
+    /**
+     * Returns true when matches the value.
+     * @param row the value to test against
+     * @return true when matches
+     */
     public boolean matches(final Row row) {
         Date date = row.getDate(column);
         return matches(date);

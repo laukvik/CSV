@@ -34,12 +34,19 @@ public class CsvReaderTest {
     }
 
     @Test
+    public void readIt() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(new File("/Users/morten/Desktop/World Cities Population.csv"));
+        assertEquals("Column count", 12, csv.getColumnCount());
+    }
+
+    @Test
     public void readMetaData() throws IOException {
         CSV csv = new CSV();
         CsvReader reader = new CsvReader( Charset.forName("utf-8"), null, null );
         reader.readFile( getResource("metadata.csv"), csv );
         assertEquals("Row count", 44, csv.getRowCount());
-        assertEquals("Column count", 9, csv.getColumnCount());
+        assertEquals("Column count", 12, csv.getColumnCount());
     }
 
     private void readFile(String filename, int requiredColumns, int requiredRows, String charset) throws IOException {

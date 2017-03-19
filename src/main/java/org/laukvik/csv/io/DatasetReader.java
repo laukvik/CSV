@@ -7,6 +7,10 @@ import org.laukvik.csv.CSV;
  */
 public interface DatasetReader {
 
+    /**
+     * Reads the dataset from the CSV.
+     * @param csv the csv
+     */
     void readDataset(CSV csv);
 
 }

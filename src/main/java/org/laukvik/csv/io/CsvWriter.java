@@ -18,10 +18,16 @@ package org.laukvik.csv.io;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
+
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +39,6 @@ import java.util.List;
  * @see <a href="https://en.wikipedia.org/wiki/Comma-separated_values">Comma Separated Values (wikipedia)</a>
  */
 public final class CsvWriter implements DatasetFileWriter {
-
-
-    /**
-     * Writes the data set in the CSV format to the outputStream.
-     */
-    public CsvWriter() {
-    }
 
     /**
      * Returns true if value only contains digits.
@@ -63,28 +62,34 @@ public final class CsvWriter implements DatasetFileWriter {
     /**
      * Writes the CSV to the file.
      *
-     * todo - Write bom
-     *
      * @param csv  the CSV to write
      * @param file the file
      * @throws IOException when the file could not be written
      */
     public void writeCSV(final File file, final CSV csv) throws IOException {
-        try (FileOutputStream out = new FileOutputStream(file)) {
+        try (FileOutputStream fos = new FileOutputStream(file)) {
             // BOM
             if (csv.getCharset() != null) {
                 BOM bom = BOM.findBomByCharset(csv.getCharset());
+                if (bom != null){
+                    fos.write(bom.getBytes());
+                }
             }
+        } catch (final IOException e) {
+            throw e;
+        }
+        final Charset cs = csv.getCharset() == null ? BOM.UTF8.getCharset() : csv.getCharset();
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(file, true), cs))) {
             // Columns
             List<String> columns = buildColumns(csv);
-            writeValues(columns, out);
+            writeValues(columns, writer);
             // Rows
             for (int y = 0; y < csv.getRowCount(); y++) {
                 Row r = csv.getRow(y);
                 List<String> items = buildRow(r, csv);
-                writeValues(items, out);
+                writeValues(items, writer);
             }
-
         } catch (final IOException e) {
             throw e;
         }
@@ -97,9 +102,8 @@ public final class CsvWriter implements DatasetFileWriter {
      * @param row the row
      * @param csv the csv
      * @return a list of columns
-     * @throws IOException when the file could not be written to.
      */
-    private List<String> buildRow(final Row row, final CSV csv) throws IOException {
+    private List<String> buildRow(final Row row, final CSV csv) {
         List<String> values = new ArrayList<>();
         for (int x = 0; x < csv.getColumnCount(); x++) {
             Column c = csv.getColumn(x);
@@ -112,14 +116,12 @@ public final class CsvWriter implements DatasetFileWriter {
      * Writes the column headers.
      * @param csv the csv
      * @return a list of columns
-     * @throws IOException when the MetaData could not be written
      */
-    private List<String> buildColumns(final CSV csv) throws IOException {
+    private List<String> buildColumns(final CSV csv) {
         List<String> items = new ArrayList<>();
         for (int x = 0; x < csv.getColumnCount(); x++) {
             Column c = csv.getColumn(x);
-            String header = c.toCSV();
-            items.add(header);
+            items.add(c.toCSV());
         }
         return items;
     }
@@ -128,37 +130,37 @@ public final class CsvWriter implements DatasetFileWriter {
      * Writes the values.
      *
      * @param values the values
-     * @param out    outputStream
+     * @param writer the writer
      * @throws IOException when the values could not be written
      */
-    private void writeValues(final List<String> values, final OutputStream out) throws IOException {
+    private void writeValues(final List<String> values, final Writer writer) throws IOException {
         for (int x = 0; x < values.size(); x++) {
             if (x > 0) {
-                out.write(CSV.COMMA);
+                writer.write(CSV.COMMA);
             }
             String column = values.get(x);
             if (column == null) {
-                out.write(CSV.QUOTE_DOUBLE);
-                out.write(CSV.QUOTE_DOUBLE);
+                writer.write(CSV.QUOTE_DOUBLE);
+                writer.write(CSV.QUOTE_DOUBLE);
             } else if (isDigitsOnly(column)) {
                 /* Digits only */
-                out.write(column.getBytes());
+                writer.write(column);
             } else {
                 /* Text */
-                out.write(CSV.QUOTE_DOUBLE);
+                writer.write(CSV.QUOTE_DOUBLE);
                 for (int n = 0; n < column.length(); n++) {
                     char ch = column.charAt(n);
                     if (ch == CSV.QUOTE_DOUBLE) {
                         /* Encode quotes - writeCSV an extra quote */
-                        out.write(CSV.QUOTE_DOUBLE);
+                        writer.write(CSV.QUOTE_DOUBLE);
                     }
-                    out.write(ch);
+                    writer.write(ch);
                 }
-                out.write(CSV.QUOTE_DOUBLE);
+                writer.write(CSV.QUOTE_DOUBLE);
             }
         }
-        out.write(CSV.RETURN);
-        out.write(CSV.LINEFEED);
+        writer.write(CSV.RETURN);
+        writer.write(CSV.LINEFEED);
     }
 
 }

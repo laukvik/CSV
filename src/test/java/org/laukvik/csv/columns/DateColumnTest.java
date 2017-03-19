@@ -34,6 +34,54 @@ public class DateColumnTest {
         return cal.getTime();
     }
 
+    private Date getMonthPlus() {
+        Calendar cal = new GregorianCalendar();
+        Date today = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        cal.add(Calendar.MONTH, 1);
+        return cal.getTime();
+    }
+
+    private Date getYearPlus() {
+        Calendar cal = new GregorianCalendar();
+        Date today = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        cal.add(Calendar.YEAR, 1);
+        return cal.getTime();
+    }
+
+    private Date getDatePlus() {
+        Calendar cal = new GregorianCalendar();
+        Date today = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        return cal.getTime();
+    }
+
+    private Date getHourPlus() {
+        Calendar cal = new GregorianCalendar();
+        Date today = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        cal.add(Calendar.HOUR_OF_DAY, 1);
+        return cal.getTime();
+    }
+
+    private Date getMinutePlus() {
+        Calendar cal = new GregorianCalendar();
+        Date today = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        cal.add(Calendar.MINUTE, 1);
+        return cal.getTime();
+    }
+
+    private Date getSecondsPlus() {
+        Calendar cal = new GregorianCalendar();
+        Date today = cal.getTime();
+        cal.add(Calendar.DATE, 1);
+        cal.add(Calendar.SECOND, 1);
+        return cal.getTime();
+    }
+
     @Test
     public void constructor() throws Exception {
         DateColumn c = new DateColumn("created");
@@ -81,12 +129,27 @@ public class DateColumnTest {
         assertFalse(DateColumn.isEqualDate(tomorrow, null));
         assertFalse(DateColumn.isEqualDate(null, tomorrow));
         assertTrue(DateColumn.isEqualDate(null, null));
+
+        assertTrue(DateColumn.isEqualDate(tomorrow, getHourPlus()));
+        assertFalse(DateColumn.isEqualDate(tomorrow, getDatePlus()));
+        assertTrue(DateColumn.isEqualDate(tomorrow, getMinutePlus()));
+        assertFalse(DateColumn.isEqualDate(tomorrow, getYearPlus()));
+        assertFalse(DateColumn.isEqualDate(tomorrow, getMonthPlus()));
     }
 
     @Test
     public void isEqualTime() throws Exception {
         Date tomorrow = getTomorrow();
         assertTrue(DateColumn.isEqualTime(tomorrow, tomorrow));
+
+        assertFalse(DateColumn.isEqualTime(tomorrow, getHourPlus()));
+        assertFalse(DateColumn.isEqualTime(tomorrow, getMinutePlus()));
+        assertFalse(DateColumn.isEqualTime(tomorrow, getSecondsPlus()));
+
+        assertTrue(DateColumn.isEqualTime(tomorrow, getDatePlus()));
+        assertTrue(DateColumn.isEqualTime(tomorrow, getMonthPlus()));
+        assertTrue(DateColumn.isEqualTime(tomorrow, getYearPlus()));
+
         assertFalse(DateColumn.isEqualTime(tomorrow, null));
         assertFalse(DateColumn.isEqualTime(null, tomorrow));
         assertTrue(DateColumn.isEqualTime(null, null));
@@ -106,36 +169,56 @@ public class DateColumnTest {
         cal.add(Calendar.YEAR, 1);
         assertFalse(DateColumn.isYearGreaterThan(new Date(), cal.get(Calendar.YEAR)));
         assertFalse(DateColumn.isYearGreaterThan(null, cal.get(Calendar.YEAR)));
-//        assertTrue(DateColumn.isYearGreaterThan(new Date(), cal.get(Calendar.YEAR) - 1));
+        assertTrue(DateColumn.isYearGreaterThan(new Date(), cal.get(Calendar.YEAR) - 3));
         assertFalse(DateColumn.isYearGreaterThan(new Date(), cal.get(Calendar.YEAR)));
     }
 
     @Test
     public void isYearLessThan() throws Exception {
         Calendar cal = new GregorianCalendar();
-        assertFalse(DateColumn.isYearLessThan(new Date(), cal.get(Calendar.YEAR)));
+
+        assertFalse(DateColumn.isYearLessThan(cal.getTime(), cal.get(Calendar.YEAR)));
 
         cal.add(Calendar.YEAR, -1);
         assertFalse(DateColumn.isYearLessThan(new Date(), cal.get(Calendar.YEAR)));
 
         cal.add(Calendar.YEAR, 5);
         assertTrue(DateColumn.isYearLessThan(new Date(), cal.get(Calendar.YEAR)));
+
+        assertFalse(DateColumn.isYearLessThan(null, cal.get(Calendar.YEAR)));
+    }
+
+    @Test
+    public void isDateOfMonth(){
+        Calendar cal = new GregorianCalendar();
+        Date now = cal.getTime();
+        Calendar cal2 = new GregorianCalendar();
+        cal2.add(Calendar.DAY_OF_MONTH, 2);
+
+        assertTrue(DateColumn.isDateOfMonth(now, cal.get(Calendar.DAY_OF_MONTH)));
+        assertFalse(DateColumn.isDateOfMonth(now, cal2.get(Calendar.DAY_OF_MONTH)));
+        assertFalse(DateColumn.isDateOfMonth(null, cal2.get(Calendar.DAY_OF_MONTH)));
+
     }
 
     @Test
     public void isYearBetween() throws Exception {
         Calendar cal = new GregorianCalendar();
-        int year = cal.get(Calendar.YEAR);
+        int thisYear = cal.get(Calendar.YEAR);
         cal.add(Calendar.YEAR, -1);
-        int yearFrom = cal.get(Calendar.YEAR);
-        cal.add(Calendar.YEAR, 1);
-        int yearTo = cal.get(Calendar.YEAR);
-        assertTrue(DateColumn.isYearBetween(new Date(), yearFrom, yearTo));
+        int lastYear = cal.get(Calendar.YEAR);
+        cal.add(Calendar.YEAR, 2);
+        int nextYear = cal.get(Calendar.YEAR);
+        cal.add(Calendar.YEAR, 8);
+        Date tenYearDate = cal.getTime();
+        assertTrue(DateColumn.isYearBetween(new Date(), lastYear, nextYear));
+        assertFalse(DateColumn.isYearBetween(new Date(), nextYear, lastYear));
+        assertTrue(DateColumn.isYearBetween(new Date(), thisYear, thisYear));
+        assertFalse(DateColumn.isYearBetween(new Date(), thisYear, lastYear));
+        assertTrue(DateColumn.isYearBetween(new Date(), lastYear, thisYear));
+        assertFalse(DateColumn.isYearBetween(null, thisYear, lastYear));
 
-        assertFalse(DateColumn.isYearBetween(new Date(), yearTo, yearFrom));
-        assertTrue(DateColumn.isYearBetween(new Date(), year, year));
-        assertFalse(DateColumn.isYearBetween(new Date(), year, yearFrom));
-        assertTrue(DateColumn.isYearBetween(new Date(), yearFrom, year));
+        assertFalse(DateColumn.isYearBetween(tenYearDate, lastYear, lastYear));
     }
 
     @Test
@@ -163,6 +246,8 @@ public class DateColumnTest {
         assertTrue(DateColumn.isDayOfWeek(new Date(), dow));
         assertFalse(DateColumn.isDayOfWeek(new Date(), dow+1));
         assertFalse(DateColumn.isDayOfWeek(new Date(), dow-1));
+
+        assertFalse(DateColumn.isDayOfWeek(null, dow));
     }
 
     @Test
@@ -186,8 +271,10 @@ public class DateColumnTest {
         String dateString = "2000-01-01 00:00:00";
         Date d = c.parse(dateString);
         assertEquals(dateString, c.asString(d));
-        assertNull(dateString, c.parse(""));
-        assertNull(dateString, c.parse(null));
+        assertNull(c.parse(""));
+        assertNull(c.parse(" "));
+        assertNull(c.parse("LXLASDLASD"));
+        assertNull(c.parse(null));
     }
 
     @Test
@@ -203,10 +290,10 @@ public class DateColumnTest {
         Calendar cal = new GregorianCalendar();
         Date today = cal.getTime();
         cal.add(Calendar.DATE, 1);
-        Date tomorrow = getTomorrow();
+        Date tomorrow = cal.getTime();
         assertEquals(-1, DateColumn.compareDates(today, tomorrow));
         assertEquals(1, DateColumn.compareDates(tomorrow, today));
-        assertEquals(0, DateColumn.compareDates(tomorrow, cal.getTime()));
+        assertEquals(0, DateColumn.compareDates(tomorrow, tomorrow));
         assertEquals(1, DateColumn.compareDates(tomorrow, null));
         assertEquals(-1, DateColumn.compareDates(null, cal.getTime()));
         assertEquals(0, DateColumn.compareDates(null, null));
@@ -228,6 +315,9 @@ public class DateColumnTest {
         assertFalse( DateColumn.isBetweeen(value, null, d2) );
         assertFalse( DateColumn.isBetweeen(value, null, null) );
         assertFalse( DateColumn.isBetweeen(null, null, null) );
+
+        assertFalse( DateColumn.isBetweeen(d1, value, d2) );
+        assertFalse( DateColumn.isBetweeen(d3, value, d2) );
     }
 
 
@@ -237,9 +327,18 @@ public class DateColumnTest {
         Calendar cal = new GregorianCalendar();
         cal.set(Calendar.YEAR, 2017);
         cal.set(Calendar.DAY_OF_YEAR, 1);
-//        cal.setFirstDayOfWeek(Calendar.MONDAY);
         assertEquals((Integer)Calendar.SUNDAY, DateColumn.getDayOfWeek(cal.getTime()) );
+        assertNull(DateColumn.getDayOfWeek(null) );
     }
+
+    @Test
+    public void getWeekOfYear() throws Exception {
+        Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.WEEK_OF_YEAR, 10);
+        assertEquals((Integer)10, DateColumn.getWeekOfYear(cal.getTime()) );
+        assertNull(DateColumn.getWeekOfYear(null) );
+    }
+
 
     @Test
     public void getParts() throws Exception {
@@ -264,7 +363,8 @@ public class DateColumnTest {
     public void formatDate() throws Exception {
         Date cal = getDate(2017, 2, 25, 16, 15, 12, 123 );
         DateColumn dc = new DateColumn("created", "dd.MM.YYYY HH.mm.ss");
-        assertEquals("25.02.2017 16.15.12", dc.formatDate(cal));
+        assertEquals("25.03.2017 16.15.12", dc.formatDate(cal));
+        assertEquals("", dc.formatDate(null));
     }
 
 }
