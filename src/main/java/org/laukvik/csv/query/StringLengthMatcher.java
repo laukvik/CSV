@@ -42,9 +42,7 @@ public final class StringLengthMatcher extends RowMatcher {
      * @param value        the value
      */
     public StringLengthMatcher(final StringColumn stringColumn, final Integer... value) {
-        super();
-        this.column = stringColumn;
-        this.values = Arrays.asList(value);
+        this(stringColumn, Arrays.asList(value));
     }
 
     public StringLengthMatcher(final StringColumn stringColumn, final List<Integer> values) {
