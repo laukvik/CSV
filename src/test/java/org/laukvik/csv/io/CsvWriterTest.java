@@ -38,7 +38,7 @@ public class CsvWriterTest {
     @Test
     public void writeAndRead() throws IOException {
         File f = File.createTempFile("CsvWriter", ".csv");
-        f = new File("/Users/morten/Desktop/writer.csv");
+//        f = new File("/Users/morten/Desktop/writer.csv");
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");

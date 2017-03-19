@@ -186,10 +186,7 @@ public final class CSV implements Serializable {
      * Automatically detects quote.
      */
     private boolean autoDetectQuote;
-//    /**
-//     * The Query to use.
-//     */
-//    private Query query;
+
     /**
      * The file opened.
      */
@@ -201,7 +198,6 @@ public final class CSV implements Serializable {
     public CSV() {
         columns = new ArrayList<>();
         rows = new ArrayList<>();
-//        query = null;
         changeListeners = new ArrayList<>();
         fileListeners = new ArrayList<>();
         charset = Charset.defaultCharset();
@@ -863,41 +859,6 @@ public final class CSV implements Serializable {
     public void writeResourceBundle(final File resourceBundleFile) throws IOException {
         write(new ResourceBundleWriter(), resourceBundleFile);
     }
-
-//    /**
-//     * Returns the query.
-//     *
-//     * @return the query
-//     */
-//    public Query getQuery() {
-//        return query;
-//    }
-//
-//    /**
-//     * Filters the row based on typed queries.
-//     *
-//     * @return the query being created
-//     */
-//    public Query findByQuery() {
-//        this.query = new Query();
-//        return this.query;
-//    }
-
-//    /**
-//     * Returns true if there is already a query.
-//     *
-//     * @return true when a query has been started
-//     */
-//    public boolean hasQuery() {
-//        return this.query != null;
-//    }
-
-//    /**
-//     * Removes any query.
-//     */
-//    public void clearQuery() {
-//        this.query = null;
-//    }
 
     /**
      * Builds a FrequencyDistribution table for the specified column index.

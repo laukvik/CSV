@@ -93,7 +93,7 @@ public final class CsvReader implements DatasetFileReader {
      */
     public void readFile(final File file, final CSV csv) throws IOException {
         this.lineCounter = 0;
-        if (autoDetectCharset) {
+        if (csv.isAutoDetectCharset()) {
             BOM bom = BOM.findBom(file);
             if (bom == null) {
                 reader = Files.newBufferedReader(file.toPath());
