@@ -42,8 +42,7 @@ public final class DoubleMatcher extends RowMatcher {
      * @param doubles      the values
      */
     public DoubleMatcher(final DoubleColumn doubleColumn, final Double... doubles) {
-        this.column = doubleColumn;
-        this.values = Arrays.asList(doubles);
+        this(doubleColumn, Arrays.asList(doubles));
     }
 
     /**

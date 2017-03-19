@@ -42,9 +42,7 @@ public final class FirstLetterMatcher extends RowMatcher {
      * @param value        the value
      */
     public FirstLetterMatcher(final StringColumn stringColumn, final String... value) {
-        super();
-        this.column = stringColumn;
-        this.values = Arrays.asList(value);
+        this(stringColumn, Arrays.asList(value));
     }
 
     /**

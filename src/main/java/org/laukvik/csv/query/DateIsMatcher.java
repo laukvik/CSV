@@ -18,7 +18,7 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -38,10 +38,8 @@ public final class DateIsMatcher extends AbstractDateMatcher implements ValueMat
      * @param column the dateColumn
      * @param value  the date
      */
-    public DateIsMatcher(final DateColumn column, final Date value) {
-        super(column, value);
-        values = new ArrayList<>();
-        values.add(value);
+    public DateIsMatcher(final DateColumn column, final Date... value) {
+        this(column, Arrays.asList(value));
     }
 
     /**

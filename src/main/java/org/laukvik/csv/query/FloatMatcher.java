@@ -42,8 +42,7 @@ public final class FloatMatcher extends RowMatcher {
      * @param floats      the values
      */
     public FloatMatcher(final FloatColumn floatColumn, final Float... floats) {
-        this.column = floatColumn;
-        this.values = Arrays.asList(floats);
+        this(floatColumn, Arrays.asList(floats));
     }
 
     /**

@@ -46,6 +46,12 @@ public final class MonthMatcher extends RowMatcher implements ValueMatcher<Date>
         this(dateColumn, Arrays.asList(value));
     }
 
+    /**
+     * Matches the value of the dateColumn to have the specified months.
+     *
+     * @param dateColumn the dateColumn
+     * @param values      the months
+     */
     public MonthMatcher(final DateColumn dateColumn, final List<Integer> values) {
         super();
         this.column = dateColumn;
