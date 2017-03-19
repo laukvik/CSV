@@ -59,9 +59,6 @@ public final class CsvWriter implements DatasetFileWriter {
         return true;
     }
 
-    Writer o;
-    Charset cs;
-
     /**
      * Writes the CSV to the file.
      *
@@ -70,7 +67,6 @@ public final class CsvWriter implements DatasetFileWriter {
      * @throws IOException when the file could not be written
      */
     public void writeCSV(final File file, final CSV csv) throws IOException {
-        cs = csv.getCharset();
         try (FileOutputStream fos = new FileOutputStream(file)) {
             // BOM
             if (csv.getCharset() != null) {
@@ -82,17 +78,17 @@ public final class CsvWriter implements DatasetFileWriter {
         } catch (final IOException e) {
             throw e;
         }
-        try (Writer out = new BufferedWriter(new OutputStreamWriter(
+        final Charset cs = csv.getCharset() == null ? BOM.UTF8.getCharset() : csv.getCharset();
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(file, true), cs))) {
-            o = out;
             // Columns
             List<String> columns = buildColumns(csv);
-            writeValues(columns);
+            writeValues(columns, writer);
             // Rows
             for (int y = 0; y < csv.getRowCount(); y++) {
                 Row r = csv.getRow(y);
                 List<String> items = buildRow(r, csv);
-                writeValues(items);
+                writeValues(items, writer);
             }
         } catch (final IOException e) {
             throw e;
@@ -130,50 +126,41 @@ public final class CsvWriter implements DatasetFileWriter {
         return items;
     }
 
-
-
     /**
      * Writes the values.
      *
      * @param values the values
+     * @param writer the writer
      * @throws IOException when the values could not be written
      */
-    private void writeValues(final List<String> values) throws IOException {
+    private void writeValues(final List<String> values, final Writer writer) throws IOException {
         for (int x = 0; x < values.size(); x++) {
             if (x > 0) {
-                write(CSV.COMMA);
+                writer.write(CSV.COMMA);
             }
             String column = values.get(x);
             if (column == null) {
-                write(CSV.QUOTE_DOUBLE);
-                write(CSV.QUOTE_DOUBLE);
+                writer.write(CSV.QUOTE_DOUBLE);
+                writer.write(CSV.QUOTE_DOUBLE);
             } else if (isDigitsOnly(column)) {
                 /* Digits only */
-                write(column);
+                writer.write(column);
             } else {
                 /* Text */
-                write(CSV.QUOTE_DOUBLE);
+                writer.write(CSV.QUOTE_DOUBLE);
                 for (int n = 0; n < column.length(); n++) {
                     char ch = column.charAt(n);
                     if (ch == CSV.QUOTE_DOUBLE) {
                         /* Encode quotes - writeCSV an extra quote */
-                        write(CSV.QUOTE_DOUBLE);
+                        writer.write(CSV.QUOTE_DOUBLE);
                     }
-                    write(ch);
+                    writer.write(ch);
                 }
-                write(CSV.QUOTE_DOUBLE);
+                writer.write(CSV.QUOTE_DOUBLE);
             }
         }
-        write(CSV.RETURN);
-        write(CSV.LINEFEED);
-    }
-
-    private void write(final String value) throws IOException {
-        o.write(value);
-    }
-
-    private void write(final Character value) throws IOException {
-        o.write(value);
+        writer.write(CSV.RETURN);
+        writer.write(CSV.LINEFEED);
     }
 
 }
