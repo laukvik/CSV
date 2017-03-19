@@ -34,6 +34,13 @@ public class CsvReaderTest {
     }
 
     @Test
+    public void readIt() throws IOException {
+        CSV csv = new CSV();
+        csv.readFile(new File("/Users/morten/Desktop/World Cities Population.csv"));
+        assertEquals("Column count", 12, csv.getColumnCount());
+    }
+
+    @Test
     public void readMetaData() throws IOException {
         CSV csv = new CSV();
         CsvReader reader = new CsvReader( Charset.forName("utf-8"), null, null );

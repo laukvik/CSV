@@ -158,6 +158,7 @@ public final class CsvReader implements DatasetFileReader {
             // Read next char
             int intChar = reader.read();
 
+
             char currentChar = (char) intChar;
 
             boolean foundBom = false;
