@@ -126,13 +126,10 @@ public final class CsvReader implements DatasetFileReader {
     private boolean readRow(final CSV csv) throws IOException {
         Row row = csv.addRow();
         List<String> values = parseRow(csv);
-        if (values.isEmpty()) {
-            return false;
-        }
         for (int x = 0; x < values.size(); x++) {
             String value = values.get(x);
-            if (x < csv.getColumnCount()) {
-                Column c = csv.getColumn(x);
+            Column c = csv.getColumn(x);
+            if (c != null) {
                 row.set(c, value);
             }
         }
@@ -204,7 +201,6 @@ public final class CsvReader implements DatasetFileReader {
                 isWithinQuote = true;
                 while (reader.ready()) {
                     currentChar = (char) reader.read();
-//                    rawLine.append(currentChar);
                     if (currentChar == this.quoteChar) {
                         quoteCount++;
                         break;

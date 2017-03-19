@@ -34,13 +34,6 @@ import java.util.List;
  */
 public final class CsvWriter implements DatasetFileWriter {
 
-
-    /**
-     * Writes the data set in the CSV format to the outputStream.
-     */
-    public CsvWriter() {
-    }
-
     /**
      * Returns true if value only contains digits.
      *

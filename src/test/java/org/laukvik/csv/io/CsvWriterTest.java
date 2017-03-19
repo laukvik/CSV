@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class CsvWriterTest {
@@ -56,7 +58,9 @@ public class CsvWriterTest {
 
     @Test
     public void shouldByDigitsOnly() {
-        Assert.assertEquals(true, CsvWriter.isDigitsOnly("123"));
+        assertTrue(CsvWriter.isDigitsOnly("123"));
+        assertFalse(CsvWriter.isDigitsOnly(""));
+        assertFalse(CsvWriter.isDigitsOnly(null));
     }
 
     @Test

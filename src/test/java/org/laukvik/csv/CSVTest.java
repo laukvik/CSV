@@ -465,32 +465,6 @@ public class CSVTest {
         }
     }
 
-//    @Test
-//    public void readQuoted() {
-//        try {
-//            CSV csv = new CSV();
-//            csv.readFile(getResource("quote_double.csv"));
-//            MetaData md = csv.getMetaData();
-//            assertEquals("Lead", md.getColumnName(0));
-//            assertEquals("Title", md.getColumnName(1));
-//            assertEquals("Phone", md.getColumnName(2));
-//            assertEquals("Notes", md.getColumnName(3));
-//
-//            assertSame("ColumnCount", 4, md.getColumnCount());
-//            assertSame("RowCount", 2, csv.getRowCount());
-//
-//            Row r = csv.getRow(0);
-//
-//            StringColumn notes = (StringColumn) md.getColumn("Notes");
-//
-//            assertEquals("Spoke Tuesday, he's interested", r.getString(notes));
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//            fail(e.getMessage());
-//        }
-//    }
-
     @Test
     public void readUnqouted() {
         try {
@@ -583,6 +557,12 @@ public class CSVTest {
     public void readTabSeparated() throws IOException {
         CSV csv = new CSV();
         csv.setSeparator(CSV.TAB);
+        csv.readFile(getResource("separator_tab.csv"));
+        assertEquals(3, csv.getColumnCount());
+        assertEquals(1,csv.getRowCount());
+
+        csv = new CSV();
+//        assertEquals((Character)CSV.TAB, csv.getSeparatorChar());
         csv.readFile(getResource("separator_tab.csv"));
         assertEquals(3, csv.getColumnCount());
         assertEquals(1,csv.getRowCount());
