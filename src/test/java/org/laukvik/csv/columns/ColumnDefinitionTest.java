@@ -62,6 +62,11 @@ public class ColumnDefinitionTest {
         cd = ColumnDefinition.parse("President(type=VARCHAR[200),");
         assertEquals("VARCHAR", cd.get("type").getValue());
         assertEquals("200", cd.get("type").getOptional());
+
+        cd = ColumnDefinition.parse("President(type=VARCHAR)");
+        assertEquals("VARCHAR", cd.get("type").getValue());
+
+        cd = ColumnDefinition.parse("President");
     }
 
     @Test

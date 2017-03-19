@@ -168,10 +168,7 @@ public abstract class Column<T> implements Comparable {
             c = new StringColumn(columnName);
         } else {
             String typeName = attrType.getValue();
-            if (typeName == null) {
-                c = new StringColumn(columnName);
-
-            } else if (typeName.equalsIgnoreCase(TYPE_INTEGER)) {
+            if (typeName.equalsIgnoreCase(TYPE_INTEGER)) {
                 c = new IntegerColumn(columnName);
 
             } else if (typeName.equalsIgnoreCase(TYPE_FLOAT)) {
@@ -195,8 +192,7 @@ public abstract class Column<T> implements Comparable {
             } else if (typeName.equalsIgnoreCase(TYPE_DATE)) {
                 ColumnDefinition.Attribute attr = columnDefinition.get(FORMAT);
 
-                if (attr == null || attr.getValue().isEmpty()) {
-//                    throw new IllegalColumnDefinitionException("");
+                if (attr == null) {
                     c = new DateColumn(columnName);
                 } else {
                     try {
@@ -208,6 +204,7 @@ public abstract class Column<T> implements Comparable {
                 }
             } else if (typeName.equalsIgnoreCase(TYPE_STRING)) {
                 StringColumn sc = new StringColumn(columnName);
+                c = sc;
                 String w = attrType.getOptional();
                 if (w != null) {
                     String v2 = w.trim();
@@ -217,7 +214,6 @@ public abstract class Column<T> implements Comparable {
                         throw new IllegalColumnDefinitionException(w);
                     }
                 }
-                c = sc;
             } else {
                 c = new StringColumn(columnName);
             }
@@ -238,7 +234,7 @@ public abstract class Column<T> implements Comparable {
     }
 
     /**
-     * Compares a value with another
+     * Compares a value with another.
      *
      * @param one     a value
      * @param another a value

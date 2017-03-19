@@ -87,6 +87,15 @@ public class ColumnTest {
         assertTrue(Column.parseColumnDefinition(cd) instanceof DateColumn);
         cd =  ColumnDefinition.parse("last(type=date,format= )");
         assertTrue(Column.parseColumnDefinition(cd) instanceof DateColumn);
+
+        cd = ColumnDefinition.parse("first(type=varCHAR)");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
+
+        cd = ColumnDefinition.parse("first(type=)");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
+
+        cd = ColumnDefinition.parse("first");
+        assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
     }
 
     @Test
