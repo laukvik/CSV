@@ -46,7 +46,6 @@ public class BigDecimalMatcherTest {
         assertTrue(m3.matches(r5));
 
         BigDecimalMatcher m4 = new BigDecimalMatcher(col, null, new BigDecimal(100), null);
-//        System.out.println("m4: " + m4.getValues().size());
         assertTrue(m4.matches(r1));
         assertFalse(m4.matches(r2));
         assertTrue(m4.matches(r3));

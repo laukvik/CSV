@@ -4,11 +4,11 @@ import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
-import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +46,7 @@ public final class CsvReader implements DatasetFileReader {
     /**
      * The bufferedReader.
      */
-    private BufferedReader reader;
+    private InputStreamReader reader;
     /**
      * The quote character to use.
      */
@@ -96,14 +96,15 @@ public final class CsvReader implements DatasetFileReader {
         if (csv.isAutoDetectCharset()) {
             BOM bom = BOM.findBom(file);
             if (bom == null) {
-                reader = Files.newBufferedReader(file.toPath());
+                reader = new InputStreamReader(new FileInputStream(file));
             } else {
-                reader = Files.newBufferedReader(file.toPath(), bom.getCharset());
+                reader = new InputStreamReader(new FileInputStream(file), bom.getCharset());
+                reader.skip(bom.getBytes().length);
+//                reader.skip(1);
                 csv.setCharset(bom.getCharset());
             }
-
         } else {
-            reader = Files.newBufferedReader(file.toPath(), csv.getCharset());
+            reader = new InputStreamReader(new FileInputStream(file), csv.getCharset());
         }
         csv.setSeparator(columnSeparatorChar);
         csv.setQuoteChar(this.quoteChar);

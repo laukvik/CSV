@@ -73,7 +73,6 @@ public final class IntIsInMatcher extends RowMatcher {
 //                return value == null;
 //            }
             if (value.intValue() == v.intValue()) {
-                System.out.println(value.intValue() + " = " +  v.intValue());
                 return true;
             }
         }

@@ -63,16 +63,16 @@ public class ReportTest {
 
         CSV c = r.buildReport(csv);
 
-        for (int x=0; x<c.getColumnCount(); x++){
-            System.out.print( c.getColumn(x).getName() + "\t");
-        }
-        System.out.println();
-        for (int y= 0; y<c.getRowCount(); y++){
-            for (int x=0; x<c.getColumnCount(); x++){
-                System.out.print( c.getRow(y).get( c.getColumn(x) ) + "\t");
-            }
-            System.out.println();
-        }
+//        for (int x=0; x<c.getColumnCount(); x++){
+//            System.out.print( c.getColumn(x).getName() + "\t");
+//        }
+//        System.out.println();
+//        for (int y= 0; y<c.getRowCount(); y++){
+//            for (int x=0; x<c.getColumnCount(); x++){
+//                System.out.print( c.getRow(y).get( c.getColumn(x) ) + "\t");
+//            }
+//            System.out.println();
+//        }
     }
 
     @Test

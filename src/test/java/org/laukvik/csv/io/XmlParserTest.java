@@ -69,7 +69,6 @@ public class XmlParserTest {
 
         @Override
         public void foundTag(Tag tag) {
-//            System.out.println(tags + " " + tag.getName());
             tags++;
         }
 

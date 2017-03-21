@@ -9,10 +9,6 @@ public class RangedDistributionTest {
 
     @Test
     public void findPlaces(){
-//        System.out.println(new BigDecimal("000.0120").scale());
-        System.out.println("000.0120".indexOf("^[1-9]"));
-
-
         assertEquals(1,  findPlace(new BigDecimal("001")));
         assertEquals(1,  findPlace(new BigDecimal("1.0")));
         assertEquals(1,  findPlace(new BigDecimal("1.000000")));

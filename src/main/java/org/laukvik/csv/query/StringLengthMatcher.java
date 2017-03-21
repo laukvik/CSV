@@ -36,7 +36,7 @@ public final class StringLengthMatcher extends RowMatcher {
     private final StringColumn column;
 
     /**
-     * The value of the column must be.
+     * Matches all strings with the specified length values.
      *
      * @param stringColumn the column
      * @param value        the value
@@ -45,6 +45,12 @@ public final class StringLengthMatcher extends RowMatcher {
         this(stringColumn, Arrays.asList(value));
     }
 
+    /**
+     * Matches all strings with the specified length values.
+     *
+     * @param stringColumn the column
+     * @param values        the value
+     */
     public StringLengthMatcher(final StringColumn stringColumn, final List<Integer> values) {
         super();
         this.column = stringColumn;
@@ -63,7 +69,6 @@ public final class StringLengthMatcher extends RowMatcher {
             return false;
         } else {
             for (int i : values) {
-                System.out.println(i + " = " + StringColumn.getLength(v));
                 if (i == StringColumn.getLength(v)) {
                     return true;
                 }

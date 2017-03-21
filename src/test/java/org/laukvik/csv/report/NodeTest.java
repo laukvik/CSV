@@ -27,7 +27,7 @@ public class NodeTest {
         root.add("Norge",  land).add("Bergen",by);
         root.add("Danmark",land).add("København",by);
         root.add("Sverige",land).add("Stockholm",by).add("Europa", verdensdel);
-        root.getMap().forEach( (k,v) -> System.out.println( k + ": " + v.getCount()));
+//        root.getMap().forEach( (k,v) -> System.out.println( k + ": " + v.getCount()));
     }
 
 }

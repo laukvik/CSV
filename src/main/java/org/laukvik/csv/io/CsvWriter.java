@@ -67,20 +67,9 @@ public final class CsvWriter implements DatasetFileWriter {
      * @throws IOException when the file could not be written
      */
     public void writeCSV(final File file, final CSV csv) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(file)) {
-            // BOM
-            if (csv.getCharset() != null) {
-                BOM bom = BOM.findBomByCharset(csv.getCharset());
-                if (bom != null){
-                    fos.write(bom.getBytes());
-                }
-            }
-        } catch (final IOException e) {
-            throw e;
-        }
         final Charset cs = csv.getCharset() == null ? BOM.UTF8.getCharset() : csv.getCharset();
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream(file, true), cs))) {
+                new FileOutputStream(file), cs))) {
             // Columns
             List<String> columns = buildColumns(csv);
             writeValues(columns, writer);
