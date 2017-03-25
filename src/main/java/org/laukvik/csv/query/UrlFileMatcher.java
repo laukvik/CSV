@@ -47,7 +47,6 @@ public final class UrlFileMatcher extends RowMatcher implements ValueMatcher<URL
     }
 
     public UrlFileMatcher(final UrlColumn urlColumn, final List<String> values) {
-        super();
         this.column = urlColumn;
         this.values = values;
     }
@@ -59,23 +58,12 @@ public final class UrlFileMatcher extends RowMatcher implements ValueMatcher<URL
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        URL v = row.getURL(column);
-        return matches(v);
+        return matches(row.getURL(column));
     }
 
 
     @Override
     public boolean matches(final URL v) {
-        String filename = UrlColumn.getFilename(v);
-        for (String s : values) {
-            if (filename == null) {
-                if (s == null) {
-                    return true;
-                }
-            } else if (filename.equals(s)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(UrlColumn.getFilename(v));
     }
 }

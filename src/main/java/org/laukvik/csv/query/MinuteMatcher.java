@@ -76,17 +76,7 @@ public final class MinuteMatcher extends RowMatcher implements ValueMatcher<Date
      * @return true when matches
      */
     public boolean matches(final Date value) {
-        Integer port = DateColumn.getMinutes(value);
-        for (Integer v : values) {
-            if (port == null) {
-                if (v == null) {
-                    return true;
-                }
-            } else if (port.equals(v)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(DateColumn.getMinutes(value));
     }
 
 }

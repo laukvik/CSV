@@ -33,6 +33,13 @@ public class BigDecimalRangeMatcherTest {
         assertTrue(m1.matches(r3));
         assertFalse(m1.matches(r4));
         assertFalse(m1.matches(r5));
+
+        BigDecimalRangeMatcher m2 = new BigDecimalRangeMatcher(col);
+        assertFalse(m2.matches(r1));
+        assertFalse(m2.matches(r2));
+        assertFalse(m2.matches(r3));
+        assertFalse(m2.matches(r4));
+        assertFalse(m2.matches(r5));
     }
 
 

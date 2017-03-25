@@ -52,7 +52,6 @@ public final class FirstLetterMatcher extends RowMatcher {
      * @param values        the value
      */
     public FirstLetterMatcher(final StringColumn stringColumn, final List<String> values) {
-        super();
         this.column = stringColumn;
         this.values = values;
     }
@@ -65,16 +64,7 @@ public final class FirstLetterMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         String v = row.getString(column);
-        if (v == null) {
-            return false;
-        } else {
-            for (String s : values) {
-                if (v.startsWith(s)) {
-                    return true;
-                }
-            }
-            return false;
-        }
+        return values.contains(StringColumn.getFirstLetter(v));
     }
 
 }

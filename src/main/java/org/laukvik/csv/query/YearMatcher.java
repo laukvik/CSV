@@ -32,7 +32,6 @@ public final class YearMatcher extends RowMatcher implements ValueMatcher<Date> 
     }
 
     public YearMatcher(final DateColumn dateColumn, final List<Integer> values) {
-        super();
         this.column = dateColumn;
         this.values = values;
     }
@@ -40,22 +39,11 @@ public final class YearMatcher extends RowMatcher implements ValueMatcher<Date> 
 
     @Override
     public boolean matches(final Date value) {
-        Integer year = DateColumn.getYear(value);
-        for (Integer v : values) {
-            if (year == null) {
-                if (v == null) {
-                    return true;
-                }
-            } else if (year.equals(v)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(DateColumn.getYear(value));
     }
 
     @Override
     public boolean matches(final Row row) {
-        Date date = row.getDate(column);
-        return matches(date);
+        return matches(row.getDate(column));
     }
 }

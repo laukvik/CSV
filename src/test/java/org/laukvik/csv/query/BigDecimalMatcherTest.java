@@ -38,11 +38,12 @@ public class BigDecimalMatcherTest {
         assertTrue(m2.matches(r4));
         assertFalse(m2.matches(r5));
 
-        BigDecimalMatcher m3 = new BigDecimalMatcher(col);
-        assertTrue(m3.matches(r1));
-        assertTrue(m3.matches(r2));
-        assertTrue(m3.matches(r3));
-        assertTrue(m3.matches(r4));
+        BigDecimal bd = null;
+        BigDecimalMatcher m3 = new BigDecimalMatcher(col, bd);
+        assertFalse(m3.matches(r1));
+        assertFalse(m3.matches(r2));
+        assertFalse(m3.matches(r3));
+        assertFalse(m3.matches(r4));
         assertTrue(m3.matches(r5));
 
         BigDecimalMatcher m4 = new BigDecimalMatcher(col, null, new BigDecimal(100), null);

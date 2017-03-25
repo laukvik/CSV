@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Morten Laukvik
+ *
  */
 public final class WeekMatcher extends RowMatcher implements ValueMatcher<Date> {
 
@@ -38,22 +38,11 @@ public final class WeekMatcher extends RowMatcher implements ValueMatcher<Date> 
     }
 
     public boolean matches(final Date value) {
-        Integer year = DateColumn.getWeekOfYear(value);
-        for (Integer v : values) {
-            if (year == null) {
-                if (v == null) {
-                    return true;
-                }
-            } else if (year.equals(v)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(DateColumn.getWeekOfYear(value));
     }
 
     @Override
     public boolean matches(final Row row) {
-        Date date = row.getDate(column);
-        return matches(date);
+        return matches(row.getDate(column));
     }
 }

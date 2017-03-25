@@ -60,21 +60,11 @@ public final class DateIsMatcher extends AbstractDateMatcher implements ValueMat
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        Date v = row.getDate(getColumn());
-        return matches(v);
+        return matches(row.getDate(getColumn()));
     }
 
     @Override
     public boolean matches(final Date v) {
-        for (Date d : values) {
-            if (v == null) {
-                if (d == null) {
-                    return true;
-                }
-            } else if (v.equals(d)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(v);
     }
 }

@@ -54,8 +54,8 @@ public class UrlFilePostfixMatcherTest {
     public void matchesSpace() {
         String s = "";
         UrlFilePostfixMatcher m = new UrlFilePostfixMatcher(c, s);
-        assertTrue(m.matches(r7));
-        assertTrue(m.matches(r1));
+        assertFalse(m.matches(r7));
+        assertFalse(m.matches(r1));
     }
 
 }

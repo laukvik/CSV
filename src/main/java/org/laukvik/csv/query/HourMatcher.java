@@ -76,17 +76,7 @@ public final class HourMatcher extends RowMatcher implements ValueMatcher<Date> 
      * @return true when the row matches
      */
     public boolean matches(final Date value) {
-        Integer port = DateColumn.getHour(value);
-        for (Integer v : values) {
-            if (port == null) {
-                if (v == null) {
-                    return true;
-                }
-            } else if (port.equals(v)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(DateColumn.getHour(value));
     }
 
 }

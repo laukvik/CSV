@@ -47,7 +47,6 @@ public final class SecondMatcher extends RowMatcher implements ValueMatcher<Date
     }
 
     public SecondMatcher(final DateColumn dateColumn, final List<Integer> values) {
-        super();
         this.column = dateColumn;
         this.values = values;
     }
@@ -59,22 +58,11 @@ public final class SecondMatcher extends RowMatcher implements ValueMatcher<Date
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        Date v = row.getDate(column);
-        return matches(v);
+        return matches(row.getDate(column));
     }
 
     public boolean matches(final Date value) {
-        Integer port = DateColumn.getSeconds(value);
-        for (Integer v : values) {
-            if (port == null) {
-                if (v == null) {
-                    return true;
-                }
-            } else if (port.equals(v)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(DateColumn.getSeconds(value));
     }
 
 }

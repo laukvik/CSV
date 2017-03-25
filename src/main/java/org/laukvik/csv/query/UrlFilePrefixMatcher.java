@@ -64,17 +64,7 @@ public final class UrlFilePrefixMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         URL v = row.getURL(column);
-        String filename = UrlColumn.getPrefix(v);
-        for (String s : values) {
-            if (filename == null) {
-                if (s == null) {
-                    return true;
-                }
-            } else if (filename.equals(s)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(UrlColumn.getPrefix(v));
     }
 
 

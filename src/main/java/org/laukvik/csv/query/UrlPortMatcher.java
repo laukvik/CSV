@@ -47,7 +47,6 @@ public final class UrlPortMatcher extends RowMatcher implements ValueMatcher<URL
     }
 
     public UrlPortMatcher(final UrlColumn urlColumn, final List<Integer> values) {
-        super();
         this.column = urlColumn;
         this.values = values;
     }
@@ -63,17 +62,7 @@ public final class UrlPortMatcher extends RowMatcher implements ValueMatcher<URL
     }
 
     public boolean matches(final URL value) {
-        Integer port = UrlColumn.getPort(value);
-        for (Integer v : values) {
-            if (port == null) {
-                if (v == null) {
-                    return true;
-                }
-            } else if (port.equals(v)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(UrlColumn.getPort(value));
     }
 
 }

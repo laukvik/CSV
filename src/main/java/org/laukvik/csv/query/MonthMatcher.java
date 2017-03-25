@@ -53,7 +53,6 @@ public final class MonthMatcher extends RowMatcher implements ValueMatcher<Date>
      * @param values      the months
      */
     public MonthMatcher(final DateColumn dateColumn, final List<Integer> values) {
-        super();
         this.column = dateColumn;
         this.values = values;
     }
@@ -65,22 +64,11 @@ public final class MonthMatcher extends RowMatcher implements ValueMatcher<Date>
      * @return true if it matches
      */
     public boolean matches(final Row row) {
-        Date v = row.getDate(column);
-        return matches(v);
+        return matches(row.getDate(column));
     }
 
     @Override
     public boolean matches(final Date value) {
-        Integer month = DateColumn.getMonth(value);
-        for (Integer v : values) {
-            if (month == null) {
-                if (v == null) {
-                    return true;
-                }
-            } else if (month.equals(v)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(DateColumn.getMonth(value));
     }
 }

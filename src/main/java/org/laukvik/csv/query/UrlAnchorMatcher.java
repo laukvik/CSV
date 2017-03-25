@@ -53,7 +53,6 @@ public final class UrlAnchorMatcher extends RowMatcher implements ValueMatcher<U
      * @param values     the values
      */
     public UrlAnchorMatcher(final UrlColumn urlColumn, final List<String> values) {
-        super();
         this.column = urlColumn;
         this.values = values;
     }
@@ -65,21 +64,11 @@ public final class UrlAnchorMatcher extends RowMatcher implements ValueMatcher<U
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        URL v = row.getURL(column);
-        return matches(v);
+        return matches(row.getURL(column));
     }
-
 
     @Override
     public boolean matches(final URL value) {
-        String anchor = UrlColumn.getAnchor(value);
-        for (String s : values) {
-            if (anchor == null) {
-                return s == null;
-            } else if (anchor.equals(s)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(UrlColumn.getAnchor(value));
     }
 }

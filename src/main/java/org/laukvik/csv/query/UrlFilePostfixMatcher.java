@@ -53,7 +53,6 @@ public final class UrlFilePostfixMatcher extends RowMatcher implements ValueMatc
      * @param values     the values
      */
     public UrlFilePostfixMatcher(final UrlColumn urlColumn, final List<String> values) {
-        super();
         this.column = urlColumn;
         this.values = values;
     }
@@ -76,16 +75,6 @@ public final class UrlFilePostfixMatcher extends RowMatcher implements ValueMatc
      */
     @Override
     public boolean matches(final URL value) {
-        String postfix = UrlColumn.getPostfix(value);
-        for (String s : values) {
-            if (postfix == null) {
-                if (s == null) {
-                    return true;
-                }
-            } else if (postfix.equals(s)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(UrlColumn.getPostfix(value));
     }
 }

@@ -76,17 +76,7 @@ public final class MillisecondMatcher extends RowMatcher implements ValueMatcher
      * @return true when the row matches
      */
     public boolean matches(final Date value) {
-        Integer port = DateColumn.getMilliseconds(value);
-        for (Integer v : values) {
-            if (port == null) {
-                if (v == null) {
-                    return true;
-                }
-            } else if (port.equals(v)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(DateColumn.getMilliseconds(value));
     }
 
 }

@@ -65,16 +65,6 @@ public final class UrlProtocolMatcher extends RowMatcher implements ValueMatcher
 
     @Override
     public boolean matches(final URL v) {
-        String p = UrlColumn.getProtocol(v);
-        for (String s : values) {
-            if (p == null) {
-                if (s == null) {
-                    return true;
-                }
-            } else if (p.equals(s)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(UrlColumn.getProtocol(v));
     }
 }

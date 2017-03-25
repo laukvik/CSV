@@ -50,17 +50,7 @@ public final class DateOfMonthMatcher extends RowMatcher implements ValueMatcher
      * @return true when matches
      */
     public boolean matches(final Date value) {
-        Integer year = DateColumn.getDayOfMonth(value);
-        for (Integer v : values) {
-            if (year == null) {
-                if (v == null) {
-                    return true;
-                }
-            } else if (year.equals(v)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(DateColumn.getDayOfMonth(value));
     }
 
     /**
@@ -69,7 +59,6 @@ public final class DateOfMonthMatcher extends RowMatcher implements ValueMatcher
      * @return true when matches
      */
     public boolean matches(final Row row) {
-        Date date = row.getDate(column);
-        return matches(date);
+        return matches(row.getDate(column));
     }
 }

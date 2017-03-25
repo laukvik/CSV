@@ -46,7 +46,6 @@ public final class PostfixMatcher extends RowMatcher {
     }
 
     public PostfixMatcher(final StringColumn stringColumn, final List<String> value) {
-        super();
         this.column = stringColumn;
         this.values = value;
     }
@@ -58,19 +57,7 @@ public final class PostfixMatcher extends RowMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        String v = row.getString(column);
-        for (String s : values) {
-            if (v == null){
-                if (s == null){
-                    return true;
-                }
-            } else {
-                if (s.equals(StringColumn.getPostfix(v))) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return values.contains(row.getString(column));
     }
 
 }
