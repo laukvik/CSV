@@ -23,6 +23,13 @@ public class UrlPortMatcherTest {
         assertFalse(m.matches(u2));
         assertFalse(m.matches(u3));
         assertFalse(m.matches(u4));
+
+        Integer i = null;
+        UrlPortMatcher m2 = new UrlPortMatcher(c, i);
+        assertFalse(m2.matches(u1));
+        assertFalse(m2.matches(u2));
+        assertTrue(m2.matches(u3));
+        assertTrue(m2.matches(u4));
     }
 
 }

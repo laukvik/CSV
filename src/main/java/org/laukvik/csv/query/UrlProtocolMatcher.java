@@ -59,8 +59,7 @@ public final class UrlProtocolMatcher extends RowMatcher implements ValueMatcher
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        URL v = row.getURL(column);
-        return matches(v);
+        return matches(row.getURL(column));
     }
 
 

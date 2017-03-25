@@ -167,8 +167,9 @@ public final class DateColumn extends Column<Date> {
     public static boolean isYear(final Date v, final int year) {
         if (v == null) {
             return false;
+        } else {
+            return getYear(v) == year;
         }
-        return getYear(v) == year;
     }
 
     /**

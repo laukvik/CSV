@@ -59,8 +59,7 @@ public final class UrlPortMatcher extends RowMatcher implements ValueMatcher<URL
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        URL v = row.getURL(column);
-        return matches(v);
+        return matches(row.getURL(column));
     }
 
     public boolean matches(final URL value) {

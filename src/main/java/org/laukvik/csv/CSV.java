@@ -48,6 +48,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Stream;
 
 /**
  * An API for reading and writing to Viewer. The implementation is based on the
@@ -216,6 +217,15 @@ public final class CSV implements Serializable {
         this();
         readFile(csvFile);
     }
+
+    /**
+     * Returns stream of rows.
+     * @return stream
+     */
+    public Stream<Row> stream(){
+        return rows.stream();
+    }
+
 
     /**
      * Automatically detects charset using BOM (Byte Order Mark).

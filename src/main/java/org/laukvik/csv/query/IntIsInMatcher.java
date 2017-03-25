@@ -17,6 +17,7 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,26 +30,26 @@ public final class IntIsInMatcher extends RowMatcher {
      * The values to compare to.
      */
     private final List<Integer> values;
-    /** The column to use. */
+    /**
+     * The column to use.
+     */
     private final IntegerColumn column;
 
     /**
      * The value of the column must be the same as one or more in the values.
      *
      * @param integerColumn the column
-     * @param values the values
+     * @param values        the values
      */
     public IntIsInMatcher(final IntegerColumn integerColumn, final Integer... values) {
-        super();
-        this.column = integerColumn;
-        this.values = Arrays.asList(values);
+        this(integerColumn, Arrays.asList(values));
     }
 
     /**
      * The value of the column must be the same as one or more in the values.
      *
      * @param integerColumn the column
-     * @param values the values
+     * @param values        the values
      */
     public IntIsInMatcher(final IntegerColumn integerColumn, final List<Integer> values) {
         super();
@@ -64,16 +65,15 @@ public final class IntIsInMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         Integer value = row.getInteger(column);
-        if (value == null) {
-            return false;
-        }
-
         for (Integer v : values) {
-//            if (v == null){
-//                return value == null;
-//            }
-            if (value.intValue() == v.intValue()) {
-                return true;
+            if (value == null) {
+                if (v == null) {
+                    return true;
+                }
+            } else {
+                if (value.equals(v)) {
+                    return true;
+                }
             }
         }
         return false;

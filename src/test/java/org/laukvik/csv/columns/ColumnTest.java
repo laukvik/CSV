@@ -46,6 +46,12 @@ public class ColumnTest {
     public void parseName() throws Exception {
         IntegerColumn c = (IntegerColumn) Column.parseName("Presidency(type=INT)");
         assertNotNull(c);
+        Column c1 = Column.parseName("Name(type=varchar)");
+        assertTrue(c1 instanceof StringColumn);
+        Column c2 = Column.parseName("Name(type=tullball)");
+        assertTrue(c2 instanceof StringColumn);
+        Column c3 = Column.parseName("Name(type=url)");
+        assertTrue(c3 instanceof UrlColumn);
     }
 
     @Test

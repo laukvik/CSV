@@ -43,9 +43,7 @@ public final class UrlPathMatcher extends RowMatcher {
      * @param value     the value
      */
     public UrlPathMatcher(final UrlColumn urlColumn, final String... value) {
-        super();
-        this.column = urlColumn;
-        this.values = Arrays.asList(value);
+        this(urlColumn, Arrays.asList(value));
     }
 
     public UrlPathMatcher(final UrlColumn urlColumn, final List<String> values) {

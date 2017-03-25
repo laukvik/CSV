@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Compares a StringColumn to have the specified value.
  */
-public final class UrlFilePostfixMatcher extends RowMatcher {
+public final class UrlFilePostfixMatcher extends RowMatcher implements ValueMatcher<URL> {
 
     /**
      * The value to compare.
@@ -46,6 +46,12 @@ public final class UrlFilePostfixMatcher extends RowMatcher {
         this(urlColumn, Arrays.asList(value));
     }
 
+    /**
+     * The value of the column must be.
+     *
+     * @param urlColumn the column
+     * @param values     the values
+     */
     public UrlFilePostfixMatcher(final UrlColumn urlColumn, final List<String> values) {
         super();
         this.column = urlColumn;
@@ -59,17 +65,27 @@ public final class UrlFilePostfixMatcher extends RowMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        URL v = row.getURL(column);
-        String postfix = UrlColumn.getPostfix(v);
+        return matches(row.getURL(column));
+    }
+
+    /**
+     * Returns true if the url matches the values.
+     *
+     * @param value the value to test against
+     * @return
+     */
+    @Override
+    public boolean matches(final URL value) {
+        String postfix = UrlColumn.getPostfix(value);
         for (String s : values) {
             if (postfix == null) {
-                return s == null;
+                if (s == null) {
+                    return true;
+                }
             } else if (postfix.equals(s)) {
                 return true;
             }
         }
         return false;
     }
-
-
 }

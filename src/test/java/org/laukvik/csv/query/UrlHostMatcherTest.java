@@ -21,6 +21,12 @@ public class UrlHostMatcherTest {
         assertTrue(m.matches(r1));
         assertFalse(m.matches(r2));
         assertFalse(m.matches(r3));
+
+        String s2 = null;
+        UrlHostMatcher m2 = new UrlHostMatcher(c, s2);
+        assertFalse(m2.matches(r1));
+        assertFalse(m2.matches(r2));
+        assertTrue(m2.matches(r3));
     }
 
 }

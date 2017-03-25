@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Compares a StringColumn to have the specified value.
+ * Compares a UrlColumn to have the specified value.
  */
 public final class UrlFilePrefixMatcher extends RowMatcher {
 
@@ -37,19 +37,21 @@ public final class UrlFilePrefixMatcher extends RowMatcher {
     private final UrlColumn column;
 
     /**
-     * The value of the column must be.
+     * Matches the prefix of the file in the URL
      *
      * @param urlColumn the column
      * @param value     the value
      */
     public UrlFilePrefixMatcher(final UrlColumn urlColumn, final String... value) {
-        super();
-        this.column = urlColumn;
-        this.values = Arrays.asList(value);
+        this(urlColumn, Arrays.asList(value));
     }
 
+    /**
+     * Matches the prefix of the file in the URL
+     * @param urlColumn
+     * @param values
+     */
     public UrlFilePrefixMatcher(final UrlColumn urlColumn, final List<String> values) {
-        super();
         this.column = urlColumn;
         this.values = values;
     }
@@ -62,20 +64,17 @@ public final class UrlFilePrefixMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         URL v = row.getURL(column);
-        if (v == null) {
-            return false;
-        } else {
-            String filename = UrlColumn.getPrefix(v);
+        String filename = UrlColumn.getPrefix(v);
+        for (String s : values) {
             if (filename == null) {
-                return false;
-            }
-            for (String s : values) {
-                if (filename.equals(s)) {
+                if (s == null) {
                     return true;
                 }
+            } else if (filename.equals(s)) {
+                return true;
             }
-            return false;
         }
+        return false;
     }
 
 

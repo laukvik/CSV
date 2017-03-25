@@ -89,7 +89,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query is(final org.laukvik.csv.columns.StringColumn column, final String value) {
-        addRowMatcher(new StringIsMatcher(column, value));
+        addRowMatcher(new StringInMatcher(column, value));
         return this;
     }
 

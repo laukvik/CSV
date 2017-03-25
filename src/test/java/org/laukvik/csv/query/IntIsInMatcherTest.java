@@ -24,6 +24,13 @@ public class IntIsInMatcherTest {
         assertTrue(m.matches(r1));
         assertFalse(m.matches(r2));
         assertFalse(m.matches(r3));
+
+        Integer i = null;
+        IntIsInMatcher m2 = new IntIsInMatcher(first, i);
+        assertFalse(m2.matches(r1));
+        assertTrue(m2.matches(r2));
+        assertFalse(m2.matches(r3));
+
     }
 
 }

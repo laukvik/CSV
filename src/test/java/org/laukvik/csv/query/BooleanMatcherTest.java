@@ -14,13 +14,25 @@ public class BooleanMatcherTest {
     public void matches() throws Exception {
         CSV csv = new CSV();
         BooleanColumn c = csv.addBooleanColumn("visible");
-        Row r = csv.addRow().setBoolean(c, Boolean.FALSE);
+
+        Row r1 = csv.addRow().setBoolean(c, Boolean.FALSE);
+        Row r2 = csv.addRow().setBoolean(c, Boolean.TRUE);
+        Row r3 = csv.addRow();
         BooleanMatcher m1 = new BooleanMatcher(c, Boolean.FALSE);
         BooleanMatcher m2 = new BooleanMatcher(c, Boolean.TRUE);
         BooleanMatcher m3 = new BooleanMatcher(c, null);
-        assertTrue(m1.matches(r));
-        assertFalse(m2.matches(r));
-        assertFalse(m3.matches(r));
+
+        assertTrue(m1.matches(r1));
+        assertFalse(m2.matches(r1));
+        assertFalse(m3.matches(r1));
+
+        assertFalse(m1.matches(r2));
+        assertTrue(m2.matches(r2));
+        assertFalse(m3.matches(r2));
+
+        assertFalse(m1.matches(r3));
+        assertFalse(m2.matches(r3));
+        assertTrue(m3.matches(r3));
     }
 
 }

@@ -23,6 +23,13 @@ public class UrlProtocolMatcherTest {
         assertFalse(m.matches(u2));
         assertFalse(m.matches(u3));
         assertFalse(m.matches(u4));
+
+        String s2 = null;
+        UrlProtocolMatcher m2 = new UrlProtocolMatcher(c, s2);
+        assertFalse(m2.matches(u1));
+        assertFalse(m2.matches(u2));
+        assertFalse(m2.matches(u3));
+        assertTrue(m2.matches(u4));
     }
 
 }

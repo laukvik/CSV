@@ -42,9 +42,7 @@ public final class PrefixMatcher extends RowMatcher {
      * @param value        the value
      */
     public PrefixMatcher(final StringColumn stringColumn, final String... value) {
-        super();
-        this.column = stringColumn;
-        this.values = Arrays.asList(value);
+        this(stringColumn, Arrays.asList(value));
     }
 
     public PrefixMatcher(final StringColumn stringColumn, final List<String> values) {
@@ -61,16 +59,7 @@ public final class PrefixMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         String v = StringColumn.getPrefix(row.getString(column));
-        if (v == null) {
-            return false;
-        } else {
-            for (String s : values) {
-                if (v.equals(s)) {
-                    return true;
-                }
-            }
-            return false;
-        }
+        return values.contains(v);
     }
 
 

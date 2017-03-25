@@ -16,6 +16,7 @@
 package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
 
 import java.net.URL;
@@ -43,9 +44,7 @@ public final class UrlHostMatcher extends RowMatcher {
      * @param value     the value
      */
     public UrlHostMatcher(final UrlColumn urlColumn, final String... value) {
-        super();
-        this.column = urlColumn;
-        this.values = Arrays.asList(value);
+        this(urlColumn, Arrays.asList(value));
     }
 
     public UrlHostMatcher(final UrlColumn urlColumn, final List<String> values) {
@@ -62,16 +61,18 @@ public final class UrlHostMatcher extends RowMatcher {
      */
     public boolean matches(final Row row) {
         URL v = row.getURL(column);
-        if (v == null) {
-            return false;
-        } else {
-            for (String s : values) {
+        for (String s : values) {
+            if (v == null){
+                if (s == null){
+                    return true;
+                }
+            } else {
                 if (v.getHost().equals(s)) {
                     return true;
                 }
             }
-            return false;
         }
+        return false;
     }
 
 

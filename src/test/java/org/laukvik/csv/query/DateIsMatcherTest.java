@@ -8,6 +8,7 @@ import org.laukvik.csv.columns.DateColumn;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -23,7 +24,13 @@ public class DateIsMatcherTest {
         Row r2 = csv.addRow();
         Row r3 = csv.addRow().setDate(first, first.parse("2010.03.01"));
         DateIsMatcher m = new DateIsMatcher(first, first.parse("2010.01.01"));
+        Date d = null;
+        DateIsMatcher m2 = new DateIsMatcher(first, d);
         assertTrue( m.matches(r1) );
+        Date d2 = null;
+        Date d3 = first.parse("2010.01.01");
+        assertTrue( m2.matches(d2) );
+        assertFalse( m2.matches(d3) );
     }
 
 

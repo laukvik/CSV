@@ -17,11 +17,13 @@ public class FloatMatcherTest {
         Row r1 = csv.addRow().setFloat(c, 20f);
         Row r2 = csv.addRow().setFloat(c, 30f);
         Row r3 = csv.addRow().setFloat(c, 40f);
+        Row r4 = csv.addRow();
 
         FloatMatcher m = new FloatMatcher(c, 20f);
         assertTrue(m.matches(r1));
         assertFalse(m.matches(r2));
         assertFalse(m.matches(r3));
+        assertFalse(m.matches(r4));
     }
 
 }

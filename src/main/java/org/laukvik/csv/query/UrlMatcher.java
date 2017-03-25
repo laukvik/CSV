@@ -43,9 +43,7 @@ public final class UrlMatcher extends RowMatcher {
      * @param value     the value
      */
     public UrlMatcher(final UrlColumn urlColumn, final URL... value) {
-        super();
-        this.column = urlColumn;
-        this.values = Arrays.asList(value);
+        this(urlColumn, Arrays.asList(value));
     }
 
     public UrlMatcher(final UrlColumn urlColumn, final List<URL> values) {

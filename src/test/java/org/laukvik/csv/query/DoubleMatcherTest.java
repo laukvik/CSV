@@ -17,10 +17,12 @@ public class DoubleMatcherTest {
         Row r1 = csv.addRow().setDouble(c, 100d);
         Row r2 = csv.addRow().setDouble(c, 200d);
         Row r3 = csv.addRow().setDouble(c, 300d);
+        Row r4 = csv.addRow();
         DoubleMatcher m = new DoubleMatcher(c, 200d);
         assertFalse(m.matches(r1));
         assertTrue(m.matches(r2));
         assertFalse(m.matches(r3));
+        assertFalse(m.matches(r4));
     }
 
 }
