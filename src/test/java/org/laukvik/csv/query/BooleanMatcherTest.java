@@ -20,7 +20,8 @@ public class BooleanMatcherTest {
         Row r3 = csv.addRow();
         BooleanMatcher m1 = new BooleanMatcher(c, Boolean.FALSE);
         BooleanMatcher m2 = new BooleanMatcher(c, Boolean.TRUE);
-        BooleanMatcher m3 = new BooleanMatcher(c, null);
+        Boolean b = null;
+        BooleanMatcher m3 = new BooleanMatcher(c, b);
 
         assertTrue(m1.matches(r1));
         assertFalse(m2.matches(r1));

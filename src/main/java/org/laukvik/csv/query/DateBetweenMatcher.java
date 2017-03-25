@@ -56,8 +56,7 @@ public final class DateBetweenMatcher extends AbstractDateMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        Date value = row.getDate(getColumn());
-        return DateColumn.isBetweeen(value, firstDate, lastDate);
+        return DateColumn.isBetweeen(row.getDate(getColumn()), firstDate, lastDate);
     }
 
 }

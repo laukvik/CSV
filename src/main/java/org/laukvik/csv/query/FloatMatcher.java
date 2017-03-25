@@ -63,17 +63,7 @@ public final class FloatMatcher extends RowMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        Float d = row.getFloat(column);
-        for (Float v : values) {
-            if (d == null) {
-                return v == null;
-            } else {
-                if (d.equals(v)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return values.contains(row.getFloat(column));
     }
 
 }

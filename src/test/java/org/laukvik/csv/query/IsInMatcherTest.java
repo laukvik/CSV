@@ -30,7 +30,7 @@ public class IsInMatcherTest {
         assertFalse( matcher3.matches(row) );
 
         IsInMatcher<Float> matcher4 = new IsInMatcher<Float>(created);
-        assertTrue( matcher4.matches(row) );
+        assertFalse( matcher4.matches(row) );
     }
 
 }

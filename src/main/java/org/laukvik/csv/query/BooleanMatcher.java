@@ -18,15 +18,18 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.BooleanColumn;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
- * Compares a DateColumn to have the year to be the specified value.
+ *
+ *
  */
 public final class BooleanMatcher extends RowMatcher {
 
     /**
-     * The year.
      */
-    private final Boolean value;
+    private final List<Boolean> values;
 
     /**
      * The column.
@@ -34,14 +37,17 @@ public final class BooleanMatcher extends RowMatcher {
     private final BooleanColumn column;
 
     /**
-     * Matches the value of the dateColumn to have the specified month.
      *
      * @param booleanColumn the booleanColumn
-     * @param value         the boolean value
+     * @param values         the boolean values
      */
-    public BooleanMatcher(final BooleanColumn booleanColumn, final Boolean value) {
+    public BooleanMatcher(final BooleanColumn booleanColumn, final Boolean... values) {
+        this(booleanColumn, Arrays.asList(values));
+    }
+
+    public BooleanMatcher(final BooleanColumn booleanColumn, final List<Boolean> values) {
         this.column = booleanColumn;
-        this.value = value;
+        this.values = values;
     }
 
     /**
@@ -51,14 +57,7 @@ public final class BooleanMatcher extends RowMatcher {
      * @return true if it matches
      */
     public boolean matches(final Row row) {
-        if (value == null) {
-            return row.getBoolean(column) == null;
-        }
-        Boolean v = row.getBoolean(column);
-        if (v == null) {
-            return value == null;
-        }
-        return value.equals(v);
+        return values.contains(row.getBoolean(column));
     }
 
 }

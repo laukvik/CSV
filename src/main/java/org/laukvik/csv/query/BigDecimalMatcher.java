@@ -64,8 +64,7 @@ public final class BigDecimalMatcher extends RowMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        BigDecimal d = row.getBigDecimal(column);
-        return values.contains(d);
+        return values.contains(row.getBigDecimal(column));
     }
 
 }

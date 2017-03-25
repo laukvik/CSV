@@ -76,7 +76,7 @@ public class XmlWriterTest {
         Assert.assertEquals(2, document.getDocumentElement().getElementsByTagName("person").getLength());
     }
 
-    @Test(expected=CsvWriterException.class)
+    @Test(expected=IOException.class)
     public void write() throws CsvWriterException, IOException {
         CSV csv = new CSV();
         StringColumn c = csv.addStringColumn("first");

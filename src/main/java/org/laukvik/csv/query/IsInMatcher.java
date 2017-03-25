@@ -17,6 +17,8 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Compares a Column to be in an array of objects.
@@ -28,7 +30,7 @@ public final class IsInMatcher<T> extends RowMatcher {
     /** The column.  */
     private final Column<T> column;
     /** The values. */
-    private final T[] values;
+    private final List<T> values;
 
     /**
      * The value of the column must be in the values.
@@ -37,9 +39,8 @@ public final class IsInMatcher<T> extends RowMatcher {
      * @param values the values
      */
     public IsInMatcher(final Column<T> column, final T... values) {
-        super();
         this.column = column;
-        this.values = values;
+        this.values = Arrays.asList(values);
     }
 
     /**
@@ -49,19 +50,8 @@ public final class IsInMatcher<T> extends RowMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        if (values == null || values.length == 0) {
-            return true;
-        }
         Object o = row.get(column);
-        if (o == null) {
-            return false;
-        }
-        for (T value : values) {
-            if (value != null && o.equals(value)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(o);
     }
 
 }

@@ -18,7 +18,9 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Compares a DateColumn to an array of Dates.
@@ -29,7 +31,7 @@ public final class DateIsInMatcher extends AbstractDateMatcher {
     /**
      * The dates to match.
      */
-    private final Date[] values;
+    private final List<Date> values;
 
     /**
      * Compares a DateColumn to an array of Dates.
@@ -38,6 +40,10 @@ public final class DateIsInMatcher extends AbstractDateMatcher {
      * @param values the dates
      */
     public DateIsInMatcher(final DateColumn column, final Date... values) {
+        this(column, Arrays.asList(values));
+    }
+
+    public DateIsInMatcher(final DateColumn column, final List<Date> values) {
         super(column, null);
         this.values = values;
     }
@@ -50,12 +56,7 @@ public final class DateIsInMatcher extends AbstractDateMatcher {
      */
     public boolean matches(final Row row) {
         Date value = row.getDate(getColumn());
-        for (Date d : values) {
-            if (value.equals(d)) {
-                return true;
-            }
-        }
-        return false;
+        return values.contains(value);
     }
 
 }
