@@ -32,8 +32,8 @@ public interface DatasetFileWriter {
      *
      * @param file the file
      * @param csv the CSV to write
-     * @throws IOException when the file can't be fully written
+     * @throws CsvWriterException when the file can't be fully written
      */
-    void writeCSV(File file, CSV csv) throws IOException;
+    void writeCSV(File file, CSV csv) throws CsvWriterException;
 
 }

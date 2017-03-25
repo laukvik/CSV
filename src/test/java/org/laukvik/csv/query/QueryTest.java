@@ -71,9 +71,7 @@ public class QueryTest {
             party = (StringColumn) csv.getColumn("Party");
             portrait = (StringColumn) csv.getColumn("portrait");
             thumbnail = (StringColumn) csv.getColumn("thumbnail");
-
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
         }
     }
 

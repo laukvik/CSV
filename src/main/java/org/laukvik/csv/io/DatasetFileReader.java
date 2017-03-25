@@ -17,6 +17,6 @@ public interface DatasetFileReader {
      * @param csv  the csv instance
      * @throws IOException when the file can't be fully read
      */
-    void readFile(File file, CSV csv) throws IOException;
+    void readFile(File file, CSV csv) throws CsvReaderException;
 
 }

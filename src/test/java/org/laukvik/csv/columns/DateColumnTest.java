@@ -158,7 +158,9 @@ public class DateColumnTest {
     @Test
     public void isYear() throws Exception {
         Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.YEAR, 2015);
         Date today = cal.getTime();
+        assertTrue(DateColumn.isYear(today, 2015));
         assertTrue(DateColumn.isYear(today, cal.get(Calendar.YEAR)));
         assertFalse(DateColumn.isYear(null, cal.get(Calendar.YEAR)));
     }

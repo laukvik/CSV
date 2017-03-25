@@ -26,14 +26,13 @@ import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
 import org.laukvik.csv.io.CsvReader;
+import org.laukvik.csv.io.CsvReaderException;
 import org.laukvik.csv.io.CsvWriter;
+import org.laukvik.csv.io.CsvWriterException;
 import org.laukvik.csv.io.DatasetFileReader;
 import org.laukvik.csv.io.DatasetFileWriter;
 import org.laukvik.csv.io.HtmlWriter;
 import org.laukvik.csv.io.JsonWriter;
-import org.laukvik.csv.io.ResourceBundleReader;
-import org.laukvik.csv.io.ResourceBundleWriter;
-import org.laukvik.csv.io.WordCountReader;
 import org.laukvik.csv.io.XmlWriter;
 import org.laukvik.csv.query.Query;
 import org.laukvik.csv.query.RowMatcher;
@@ -213,7 +212,7 @@ public final class CSV implements Serializable {
      * @param csvFile the file to open
      * @throws IOException when the file could not be read
      */
-    public CSV(final File csvFile) throws IOException {
+    public CSV(final File csvFile) throws CsvReaderException {
         this();
         readFile(csvFile);
     }
@@ -764,9 +763,9 @@ public final class CSV implements Serializable {
      *
      * @param csvFile the file to read
      * @param reader  the reader to use
-     * @throws IOException when the file can't be read
+     * @throws CsvReaderException when the file can't be read
      */
-    private void readDatasetFile(final File csvFile, final DatasetFileReader reader) throws IOException {
+    private void readDatasetFile(final File csvFile, final DatasetFileReader reader) throws CsvReaderException {
         clear();
         this.file = csvFile;
         fireBeginRead();
@@ -778,43 +777,21 @@ public final class CSV implements Serializable {
      * Reads the CSV file with the specified separator and quote character.
      *
      * @param csvFile the file to read
-     * @throws IOException when the file could not be read
+     * @throws CsvReaderException when the file could not be read
      */
-    public void readFile(final File csvFile) throws IOException {
+    public void readFile(final File csvFile) throws CsvReaderException {
         CsvReader reader = new CsvReader(charset, separatorChar, quoteChar);
         readDatasetFile(csvFile, reader);
     }
-
-    /**
-     * Reads a text file and builds a Frequency Distribution table data
-     * of how many times each word has been used.
-     *
-     * @param textFile the file
-     * @throws IOException when the file could not be read
-     */
-    public void readWordCountFile(final File textFile) throws IOException {
-        readDatasetFile(textFile, new WordCountReader());
-    }
-
-    /**
-     * Reads a ResourceBundle file.
-     *
-     * @param resourceBundleFile the file
-     * @throws IOException when the file could not be read
-     */
-    public void readResourceBundle(final File resourceBundleFile) throws IOException {
-        readDatasetFile(resourceBundleFile, new ResourceBundleReader());
-    }
-
 
     /**
      * Writes the contents to a file using the specified Writer.
      *
      * @param writer      the Writer
      * @param fileToWrite the file to write to
-     * @throws IOException when the file could not be written
+     * @throws CsvWriterException when the file could not be written
      */
-    private void write(final DatasetFileWriter writer, final File fileToWrite) throws IOException {
+    private void write(final DatasetFileWriter writer, final File fileToWrite) throws CsvWriterException {
         fireBeginWrite();
         writer.writeCSV(fileToWrite, this);
         fireFinishWrite();
@@ -824,9 +801,9 @@ public final class CSV implements Serializable {
      * Writes the contents to a file.
      *
      * @param csvFile the file
-     * @throws IOException when the file could not be written
+     * @throws CsvWriterException when the file could not be written
      */
-    public void writeFile(final File csvFile) throws IOException {
+    public void writeFile(final File csvFile) throws CsvWriterException {
         write(new CsvWriter(), csvFile);
     }
 
@@ -834,9 +811,9 @@ public final class CSV implements Serializable {
      * Writes the contents to a file in XML format.
      *
      * @param xmlFile the file
-     * @throws IOException when the file could not be written
+     * @throws CsvWriterException when the file could not be written
      */
-    public void writeXML(final File xmlFile) throws IOException {
+    public void writeXML(final File xmlFile) throws CsvWriterException {
         write(new XmlWriter(), xmlFile);
     }
 
@@ -844,9 +821,9 @@ public final class CSV implements Serializable {
      * Writes the contents to a file in JSON format.
      *
      * @param jsonFile the file
-     * @throws IOException when the file could not be written
+     * @throws CsvWriterException when the file could not be written
      */
-    public void writeJSON(final File jsonFile) throws IOException {
+    public void writeJSON(final File jsonFile) throws CsvWriterException {
         write(new JsonWriter(), jsonFile);
     }
 
@@ -854,20 +831,10 @@ public final class CSV implements Serializable {
      * Writes the contents to a file in HTML format.
      *
      * @param htmlFile the file
-     * @throws IOException when the file could not be written
+     * @throws CsvWriterException when the file could not be written
      */
-    public void writeHtml(final File htmlFile) throws IOException {
+    public void writeHtml(final File htmlFile) throws CsvWriterException {
         write(new HtmlWriter(), htmlFile);
-    }
-
-    /**
-     * Writes the contents to multiple files.
-     *
-     * @param resourceBundleFile the file
-     * @throws IOException when the file could not be written
-     */
-    public void writeResourceBundle(final File resourceBundleFile) throws IOException {
-        write(new ResourceBundleWriter(), resourceBundleFile);
     }
 
     /**

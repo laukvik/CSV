@@ -43,13 +43,13 @@ public final class HtmlWriter implements DatasetFileWriter {
      *
      * @param csv  the CSV to write
      * @param file the file
-     * @throws IOException when the file could not be written
+     * @throws CsvWriterException when the file could not be written
      */
-    public void writeCSV(final File file, final CSV csv) throws IOException {
+    public void writeCSV(final File file, final CSV csv) throws CsvWriterException {
         try (FileOutputStream out = new FileOutputStream(file)) {
             writeCSV(csv, out);
         } catch (final IOException e) {
-            throw e;
+            throw new CsvWriterException("Failed to write CSV to file " + file.getAbsolutePath(), e);
         }
     }
 

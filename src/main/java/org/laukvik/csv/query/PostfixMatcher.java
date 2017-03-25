@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Compares a StringColumn to have the specified value.
  */
-public final class PostfixMatcher extends RowMatcher {
+public final class PostfixMatcher extends RowMatcher implements ValueMatcher<String>{
 
     /**
      * The value to compare.
@@ -57,7 +57,13 @@ public final class PostfixMatcher extends RowMatcher {
      * @return true when the row matches
      */
     public boolean matches(final Row row) {
-        return values.contains(row.getString(column));
+        String v = row.getString(column);
+        String postfix = StringColumn.getPostfix(v);
+        return matches(postfix);
     }
 
+    @Override
+    public boolean matches(final String value) {
+        return values.contains(value);
+    }
 }

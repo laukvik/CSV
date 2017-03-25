@@ -29,6 +29,8 @@ import org.laukvik.csv.columns.FloatColumn;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
+import org.laukvik.csv.io.CsvReaderException;
+import org.laukvik.csv.io.CsvWriterException;
 import org.laukvik.csv.query.RowMatcher;
 import org.laukvik.csv.query.StringInMatcher;
 import org.laukvik.csv.statistics.FrequencyDistribution;
@@ -57,7 +59,7 @@ public class CSVTest {
     }
 
     @Test
-    public void setAutoDetectSeparator() throws IOException {
+    public void setAutoDetectSeparator() throws CsvReaderException {
         CSV csv = new CSV();
         csv.setAutoDetectSeparator(true);
         csv.setAutoDetectQuote(true);
@@ -127,7 +129,7 @@ public class CSVTest {
     }
 
     @Test
-    public void insertColumns() throws IOException {
+    public void insertColumns() throws CsvReaderException {
         CSV csv = new CSV(getResource("noheaders.csv"));
         assertEquals(1, csv.getRowCount());
         assertEquals(2, csv.getColumnCount());
@@ -137,7 +139,7 @@ public class CSVTest {
     }
 
     @Test
-    public void removeColumn() throws IOException {
+    public void removeColumn() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         StringColumn presidency = (StringColumn) csv.getColumn(0);
@@ -149,7 +151,7 @@ public class CSVTest {
     }
 
     @Test
-    public void fireColumnMoved() throws IOException {
+    public void fireColumnMoved() throws CsvReaderException {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("first");
         StringColumn last = csv.addStringColumn("last");
@@ -161,7 +163,7 @@ public class CSVTest {
     // ------ Rows ------
 
     @Test
-    public void buildDistinctValues() throws IOException {
+    public void buildDistinctValues() throws CsvReaderException {
         CSV csv = new CSV();
         StringColumn president = csv.addStringColumn("President");
         csv.addRow().setString(president, "Hillary");
@@ -174,7 +176,7 @@ public class CSVTest {
     }
 
     @Test
-    public void addRowAt() throws IOException {
+    public void addRowAt() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         StringColumn president = csv.addStringColumn("President");
@@ -183,7 +185,7 @@ public class CSVTest {
     }
 
     @Test
-    public void shouldSwapRows() throws IOException {
+    public void shouldSwapRows() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         Row r0 = csv.getRow(0);
@@ -194,7 +196,7 @@ public class CSVTest {
     }
 
     @Test
-    public void shouldMoveRows() throws IOException {
+    public void shouldMoveRows() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         Row r9 = csv.getRow(9);
@@ -203,7 +205,7 @@ public class CSVTest {
     }
 
     @Test
-    public void shouldRemoveRow() throws IOException {
+    public void shouldRemoveRow() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         assertEquals(44, csv.getRowCount());
@@ -212,7 +214,7 @@ public class CSVTest {
     }
 
     @Test
-    public void shouldRemoveRowsBetween() throws IOException {
+    public void shouldRemoveRowsBetween() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         csv.removeRowsBetween(0, 9);
@@ -220,7 +222,7 @@ public class CSVTest {
     }
 
     @Test
-    public void indexOf() throws IOException {
+    public void indexOf() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         Row r = csv.getRow(10);
@@ -229,17 +231,17 @@ public class CSVTest {
         assertEquals(-1, csv.indexOf("DontExist"));
     }
 
-//    @Test
-//    public void findRows() throws IOException {
-//        CSV csv = new CSV();
-//        csv.readFile(getResource("countries.csv"));
-//        assertEquals(249, csv.getRowCount());
-//    }
+    @Test
+    public void stream() throws CsvReaderException {
+        CSV csv = new CSV();
+        csv.readFile(getResource("presidents.csv"));
+        assertEquals(44, csv.stream().count());
+    }
 
     // ------ div ------
 
     @Test
-    public void clear() throws IOException {
+    public void clear() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         csv.clear();
@@ -247,7 +249,7 @@ public class CSVTest {
     }
 
     @Test
-    public void removeRows() throws IOException {
+    public void removeRows() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         csv.removeRows();
@@ -259,21 +261,21 @@ public class CSVTest {
     // ------ Reading ------
 
     @Test
-    public void getRow() throws IOException {
+    public void getRow() throws CsvReaderException {
         CSV csv = new CSV(getResource("presidents.csv"));
         assertNull(csv.getRow(5000));
     }
 
 
     @Test
-    public void readUsingConstructor() throws IOException {
+    public void readUsingConstructor() throws CsvReaderException {
         CSV csv = new CSV(getResource("presidents.csv"));
         assertNotNull(csv.getFile());
         assertSame(44, csv.getRowCount());
     }
 
     @Test
-    public void iterator() throws IOException {
+    public void iterator() throws CsvReaderException {
         CSV csv = new CSV();
         for (Row r : csv.getRows()) {
         }
@@ -306,7 +308,7 @@ public class CSVTest {
         try {
             csv.writeFile(file);
         }
-        catch (IOException e) {
+        catch (CsvWriterException e) {
             fail(e.getMessage());
         }
         CSV csv2 = new CSV();
@@ -347,17 +349,6 @@ public class CSVTest {
         StringColumn last = csv.addStringColumn("Last");
         csv.addRow().setString(first, "Bill").setString(last, "Gates");
         csv.writeHtml(file);
-        assertNotNull(file);
-    }
-
-    @Test
-    public void writeResourceBundle() throws Exception {
-        File file = File.createTempFile("writeJSON", ".json");
-        CSV csv = new CSV();
-        StringColumn first = csv.addStringColumn("First");
-        StringColumn last = csv.addStringColumn("Last");
-        csv.addRow().setString(first, "Bill").setString(last, "Gates");
-        csv.writeResourceBundle(file);
         assertNotNull(file);
     }
 
@@ -492,7 +483,7 @@ public class CSVTest {
     }
 
     @Test
-    public void readInvalid() throws IOException {
+    public void readInvalid() throws CsvReaderException {
             CSV csv = new CSV();
             csv.readFile(getResource("invalid.csv"));
         assertEquals("First", "First", csv.getColumn(0).getName());
@@ -501,14 +492,14 @@ public class CSVTest {
     }
 
     @Test
-    public void getColumn() throws IOException {
+    public void getColumn() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile(getResource("separator_comma.csv"));
         assertEquals(null, csv.getColumn("DOESNT_EXIST"));
     }
 
     @Test
-    public void writeXml() throws IOException {
+    public void writeXml() throws IOException, CsvWriterException {
         CSV csv = new CSV();
         csv.addColumn("first");
         File file = File.createTempFile("csvxmltest", "xml");
@@ -516,7 +507,7 @@ public class CSVTest {
     }
 
     @Test
-    public void getRowsByMatchers() throws IOException {
+    public void getRowsByMatchers() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile( getResource("separator_comma.csv")  );
         StringColumn c = (StringColumn) csv.getColumn("Heading1");
@@ -528,7 +519,7 @@ public class CSVTest {
     }
 
     @Test
-    public void readWithoutSeparator() throws IOException {
+    public void readWithoutSeparator() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile( getResource("separator_comma.csv")  );
         assertEquals(3, csv.getColumnCount());
@@ -536,7 +527,7 @@ public class CSVTest {
     }
 
     @Test
-    public void readCommaSeparated() throws IOException {
+    public void readCommaSeparated() throws CsvReaderException {
         CSV csv = new CSV();
         csv.setSeparator(CSV.COMMA);
         csv.readFile(getResource("separator_comma.csv"));
@@ -545,7 +536,7 @@ public class CSVTest {
     }
 
     @Test
-    public void readSemiColonSeparated() throws IOException {
+    public void readSemiColonSeparated() throws CsvReaderException {
         CSV csv = new CSV();
         csv.setSeparator(CSV.SEMICOLON);
         csv.readFile(getResource("separator_semi.csv"));
@@ -554,7 +545,7 @@ public class CSVTest {
     }
 
     @Test
-    public void readTabSeparated() throws IOException {
+    public void readTabSeparated() throws CsvReaderException {
         CSV csv = new CSV();
         csv.setSeparator(CSV.TAB);
         csv.readFile(getResource("separator_tab.csv"));
@@ -569,7 +560,7 @@ public class CSVTest {
     }
 
     @Test
-    public void readPipeSeparated() throws IOException {
+    public void readPipeSeparated() throws CsvReaderException {
         CSV csv = new CSV();
         csv.setSeparator(CSV.PIPE);
         csv.readFile(getResource("separator_pipe.csv"));
@@ -578,7 +569,7 @@ public class CSVTest {
     }
 
     @Test
-    public void readSingleQuote() throws IOException {
+    public void readSingleQuote() throws CsvReaderException {
         CSV csv = new CSV();
         csv.setSeparator(CSV.COMMA);
         csv.setQuoteChar(CSV.QUOTE_SINGLE);
@@ -593,7 +584,7 @@ public class CSVTest {
     }
 
     @Test
-    public void readDoubleQuote() throws IOException {
+    public void readDoubleQuote() throws CsvReaderException {
         CSV csv = new CSV();
         csv.setSeparator(CSV.COMMA);
         csv.setQuoteChar(CSV.QUOTE_DOUBLE);
@@ -603,14 +594,6 @@ public class CSVTest {
         StringColumn sc = (StringColumn) csv.getColumn(0);
         assertEquals("Heading1", csv.getColumn(0).getName());
         assertEquals("first", csv.getRow(0).getString(sc));
-    }
-
-    @Test
-    public void shouldReadWords() throws IOException {
-        CSV csv = new CSV();
-        csv.readWordCountFile( getResource("words.txt") );
-        assertEquals(2, csv.getColumnCount());
-        assertEquals(8, csv.getRowCount());
     }
 
     @Test

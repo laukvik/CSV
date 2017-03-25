@@ -76,4 +76,14 @@ public class XmlWriterTest {
         Assert.assertEquals(2, document.getDocumentElement().getElementsByTagName("person").getLength());
     }
 
+    @Test(expected=CsvWriterException.class)
+    public void write() throws CsvWriterException, IOException {
+        CSV csv = new CSV();
+        StringColumn c = csv.addStringColumn("first");
+        csv.addRow().setString(c, "Bill");
+
+        XmlWriter writer = new XmlWriter("people", "person");
+        writer.writeCSV(csv, new FileOutputStream( new File("") ));
+    }
+
 }

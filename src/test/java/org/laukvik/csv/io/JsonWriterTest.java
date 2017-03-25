@@ -40,7 +40,7 @@ public class JsonWriterTest {
         JsonWriter writer = new JsonWriter();
         writer.writeCSV(csv, new FileOutputStream(file));
 
-//        JSONParser parser = new JSONParser( csv );
+//        JSONParser parser = new JSONParser( file );
 //
 //        Object obj = parser.parse(new FileReader(file));
 //        JSONArray arr = (JSONArray) obj;
@@ -75,6 +75,12 @@ public class JsonWriterTest {
 
         JsonWriter writer = new JsonWriter();
         writer.writeCSV(csv, new FileOutputStream(file));
+    }
+
+    @Test(expected=CsvWriterException.class)
+    public void write() throws CsvWriterException {
+        CSV csv = new CSV();
+        csv.writeJSON( new File("") );
     }
 
 }

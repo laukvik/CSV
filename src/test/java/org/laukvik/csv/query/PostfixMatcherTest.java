@@ -12,7 +12,7 @@ public class PostfixMatcherTest {
     @Test
     public void matches() throws Exception {
         CSV csv = new CSV();
-        StringColumn first = csv.addStringColumn("jpg");
+        StringColumn first = csv.addStringColumn("filename");
         Row r1 = csv.addRow().setString(first, "thumb-01.jpg");
         Row r2 = csv.addRow().setString(first, "thumb-02.jpg");
         Row r3 = csv.addRow().setString(first, "thumb-01.gif");

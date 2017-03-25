@@ -22,9 +22,7 @@ import org.laukvik.csv.columns.Column;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -64,9 +62,9 @@ public final class CsvWriter implements DatasetFileWriter {
      *
      * @param csv  the CSV to write
      * @param file the file
-     * @throws IOException when the file could not be written
+     * @throws CsvWriterException when the file could not be written
      */
-    public void writeCSV(final File file, final CSV csv) throws IOException {
+    public void writeCSV(final File file, final CSV csv) throws CsvWriterException {
         final Charset cs = csv.getCharset() == null ? BOM.UTF8.getCharset() : csv.getCharset();
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(file), cs))) {
@@ -80,7 +78,7 @@ public final class CsvWriter implements DatasetFileWriter {
                 writeValues(items, writer);
             }
         } catch (final IOException e) {
-            throw e;
+            throw new CsvWriterException("Failed to write CSV to file " + file.getAbsolutePath(), e);
         }
     }
 
@@ -103,6 +101,7 @@ public final class CsvWriter implements DatasetFileWriter {
 
     /**
      * Writes the column headers.
+     *
      * @param csv the csv
      * @return a list of columns
      */
@@ -132,15 +131,15 @@ public final class CsvWriter implements DatasetFileWriter {
                 writer.write(CSV.QUOTE_DOUBLE);
                 writer.write(CSV.QUOTE_DOUBLE);
             } else if (isDigitsOnly(column)) {
-                /* Digits only */
+                // Digits only
                 writer.write(column);
             } else {
-                /* Text */
+                // Text
                 writer.write(CSV.QUOTE_DOUBLE);
                 for (int n = 0; n < column.length(); n++) {
                     char ch = column.charAt(n);
                     if (ch == CSV.QUOTE_DOUBLE) {
-                        /* Encode quotes - writeCSV an extra quote */
+                        // Encode quotes - writeCSV an extra quote
                         writer.write(CSV.QUOTE_DOUBLE);
                     }
                     writer.write(ch);

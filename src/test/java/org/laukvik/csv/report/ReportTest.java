@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
+import org.laukvik.csv.io.CsvReaderException;
+import org.laukvik.csv.io.CsvWriterException;
 
 import java.io.File;
 import java.io.IOException;
@@ -107,7 +109,7 @@ public class ReportTest {
     }
 
     @Test
-    public void buildCSV_node() throws IOException {
+    public void buildCSV_node() throws IOException, CsvReaderException, CsvWriterException {
         CSV csv = new CSV();
         csv.readFile(getResource("metadata.csv"));
         IntegerColumn presidency = (IntegerColumn) csv.getColumn("presidency");

@@ -36,7 +36,7 @@ public class CsvWriterTest {
     }
 
     @Test
-    public void writeAndRead() throws IOException {
+    public void writeAndRead() throws CsvWriterException, IOException, CsvReaderException {
         File f = File.createTempFile("CsvWriter", ".csv");
         f = new File("/Users/morten/Desktop/writer.csv");
         CSV csv = new CSV();
@@ -68,6 +68,12 @@ public class CsvWriterTest {
         Assert.assertEquals("Can't start with space", false, CsvWriter.isDigitsOnly(" 123"));
         Assert.assertEquals("Can't end with space", false, CsvWriter.isDigitsOnly("123 "));
         Assert.assertEquals("Can't have space on left and right", false, CsvWriter.isDigitsOnly("123 "));
+    }
+
+    @Test(expected=CsvWriterException.class)
+    public void write() throws CsvWriterException {
+        CSV csv = new CSV();
+        csv.writeFile( new File("") );
     }
 
 }

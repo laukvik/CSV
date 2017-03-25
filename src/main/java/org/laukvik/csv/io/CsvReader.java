@@ -89,31 +89,40 @@ public final class CsvReader implements DatasetFileReader {
      *
      * @param file the file
      * @param csv  the csv
-     * @throws IOException when the file could not be read
+     * @throws CsvReaderException when the file could not be read
      */
-    public void readFile(final File file, final CSV csv) throws IOException {
+    public void readFile(final File file, final CSV csv) throws CsvReaderException {
         this.lineCounter = 0;
-        if (csv.isAutoDetectCharset()) {
-            BOM bom = BOM.findBom(file);
-            if (bom == null) {
-                reader = new InputStreamReader(new FileInputStream(file));
+        try {
+            if (csv.isAutoDetectCharset()) {
+                BOM bom = BOM.findBom(file);
+                if (bom == null) {
+                    reader = new InputStreamReader(new FileInputStream(file));
+                } else {
+                    reader = new InputStreamReader(new FileInputStream(file), bom.getCharset());
+                    reader.skip(bom.getBytes().length);
+                    csv.setCharset(bom.getCharset());
+                }
             } else {
-                reader = new InputStreamReader(new FileInputStream(file), bom.getCharset());
-                reader.skip(bom.getBytes().length);
-//                reader.skip(1);
-                csv.setCharset(bom.getCharset());
+                reader = new InputStreamReader(new FileInputStream(file), csv.getCharset());
             }
-        } else {
-            reader = new InputStreamReader(new FileInputStream(file), csv.getCharset());
-        }
-        csv.setSeparator(columnSeparatorChar);
-        csv.setQuoteChar(this.quoteChar);
-        List<String> columns = parseRow(csv);
-        for (String rawColumnName : columns) {
-            csv.addColumn(Column.parseName(rawColumnName));
-        }
-        while (reader.ready()) {
-            readRow(csv);
+            csv.setSeparator(columnSeparatorChar);
+            csv.setQuoteChar(this.quoteChar);
+            List<String> columns = parseRow(csv);
+            for (String rawColumnName : columns) {
+                csv.addColumn(Column.parseName(rawColumnName));
+            }
+            while (reader.ready()) {
+                readRow(csv);
+            }
+        } catch (IOException e) {
+            throw new CsvReaderException("Failed to read file " + file.getAbsolutePath(), e);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new CsvReaderException("Failed to close file " + file.getAbsolutePath(), e);
+            }
         }
     }
 
@@ -129,9 +138,7 @@ public final class CsvReader implements DatasetFileReader {
         for (int x = 0; x < values.size(); x++) {
             String value = values.get(x);
             Column c = csv.getColumn(x);
-            if (c != null) {
-                row.set(c, value);
-            }
+            row.set(c, value);
         }
     }
 

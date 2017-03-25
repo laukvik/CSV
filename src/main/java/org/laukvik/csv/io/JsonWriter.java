@@ -82,12 +82,14 @@ public final class JsonWriter implements DatasetFileWriter {
      * Writes the CSV to the file.
      *
      * @param file the file
-     * @param csv the CSV to write
+     * @param csv  the CSV to write
+     * @throws CsvWriterException
      */
-    public void writeCSV(final File file, final CSV csv) {
+    public void writeCSV(final File file, final CSV csv) throws CsvWriterException {
         try (FileOutputStream out = new FileOutputStream(file)) {
             writeCSV(csv, out);
         } catch (final IOException e) {
+            throw new CsvWriterException("Failed to write CSV to file " + file.getAbsolutePath(), e);
         }
     }
 
@@ -138,7 +140,8 @@ public final class JsonWriter implements DatasetFileWriter {
 
     /**
      * Writes the string to the outputStream.
-     * @param s the string to write
+     *
+     * @param s            the string to write
      * @param outputStream the outputStream
      * @throws IOException when the string could not be written
      */

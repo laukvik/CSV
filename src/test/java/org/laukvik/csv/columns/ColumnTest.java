@@ -220,6 +220,9 @@ public class ColumnTest {
         assertNotNull(new FloatColumn("a").toColumnDefinition());
         assertNotNull(new IntegerColumn("a").toColumnDefinition());
         assertNotNull(new UrlColumn("a").toColumnDefinition());
+
+        Column colUrl = Column.parseName("first(type=url)");
+        assertTrue(colUrl instanceof UrlColumn);
     }
 
     @Test
