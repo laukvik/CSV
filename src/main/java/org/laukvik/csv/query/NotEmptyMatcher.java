@@ -33,7 +33,6 @@ public final class NotEmptyMatcher implements ValueMatcher<Object> {
      * @param column the column
      */
     public NotEmptyMatcher(final Column column) {
-        super();
         this.c = column;
     }
 

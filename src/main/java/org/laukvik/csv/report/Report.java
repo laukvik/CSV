@@ -5,9 +5,8 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
-import org.laukvik.csv.query.RowMatcher;
 import org.laukvik.csv.query.SortOrder;
-
+import org.laukvik.csv.query.ValueMatcher;
 import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ public final class Report {
     /**
      * The list of row matchers.
      */
-    private final List<RowMatcher> rowMatcherList;
+    private final List<ValueMatcher> rowMatcherList;
     /**
      * Sort by.
      */
@@ -79,7 +78,7 @@ public final class Report {
      *
      * @param rowMatcher the rowmatcher
      */
-    public void addMatcher(final RowMatcher rowMatcher) {
+    public void addMatcher(final ValueMatcher rowMatcher) {
         rowMatcherList.add(rowMatcher);
     }
 
@@ -108,10 +107,14 @@ public final class Report {
             Node extra = root;
             // Exlude non matching rows
             boolean matchesAll = true;
-            for (RowMatcher rm : rowMatcherList) {
-                if (!rm.matchesRow(r)) {
+            for (ValueMatcher rm : rowMatcherList) {
+                Column c = rm.getColumn();
+                if (!rm.matches(r.get(c))){
                     matchesAll = false;
                 }
+//                if (!rm.matchesRow(r)) {
+//                    matchesAll = false;
+//                }
             }
             //
             if (matchesAll) {

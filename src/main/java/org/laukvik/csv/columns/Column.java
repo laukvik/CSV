@@ -288,7 +288,6 @@ public abstract class Column<T> implements Comparable {
      */
     public final void setVisible(final boolean isVisible) {
         this.visible = isVisible;
-        fireColumnChanged();
     }
 
     /**
@@ -307,7 +306,6 @@ public abstract class Column<T> implements Comparable {
      */
     public final void setWidth(final int columnWidth) {
         this.width = columnWidth;
-        fireColumnChanged();
     }
 
     /**
@@ -351,7 +349,6 @@ public abstract class Column<T> implements Comparable {
      */
     public final void setName(final String columnName) {
         this.name = columnName;
-        fireColumnChanged();
     }
 
     /**
@@ -424,15 +421,6 @@ public abstract class Column<T> implements Comparable {
      */
     public final void setPrimaryKey(final boolean isPrimaryKey) {
         this.primaryKey = isPrimaryKey;
-    }
-
-    /**
-     * Fired when the column is changed.
-     */
-    private void fireColumnChanged() {
-        if (csv != null) {
-            csv.fireColumnUpdated(this);
-        }
     }
 
     /**

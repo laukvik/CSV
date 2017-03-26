@@ -4,17 +4,17 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
 
 /**
- * Finds the lowest value of the.
+ * Finds the maximum value of all aggregated rows.
  */
 public final class Max extends Aggregate {
 
     /**
-     * Container for the minimum value.
+     * Container for the maximum value.
      */
     private Integer max;
 
     /**
-     * Creates a new Max instance for with the column.
+     * Creates a maximum aggregator for the column.
      * @param column the column
      */
     public Max(final IntegerColumn column) {

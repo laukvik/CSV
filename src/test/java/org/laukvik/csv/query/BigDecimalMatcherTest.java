@@ -23,8 +23,6 @@ public class BigDecimalMatcherTest {
         BigDecimal r4 = new BigDecimal(300);
         BigDecimal r5 = null;
 
-
-
         BigDecimalMatcher m1 = new BigDecimalMatcher(col, new BigDecimal(100));
         assertTrue(m1.matches(r1));
         assertFalse(m1.matches(r2));
@@ -53,7 +51,6 @@ public class BigDecimalMatcherTest {
         assertTrue(m4.matches(r3));
         assertFalse(m4.matches(r4));
         assertTrue(m4.matches(r5));
-
     }
 
 }

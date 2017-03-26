@@ -186,9 +186,17 @@ public class RowTest {
         Row r = csv.addRow();
         r.setInteger(ic, 64);
         assertEquals((Integer) 64, r.getInteger(ic));
-        r.remove(ic);
+        r.setNull(ic);
         assertEquals(true, r.isNull(ic));
         assertNull(r.getInteger(ic));
+    }
+
+    @Test
+    public void isnull() {
+        CSV csv = new CSV();
+        IntegerColumn ic = csv.addIntegerColumn("integer");
+        Row r = csv.addRow();
+        assertTrue( r.isNull(ic));
     }
 
 }

@@ -34,7 +34,16 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Represents a single Row in a CSV data set.
+ * Represents a single row in the CSV.
+ *
+ * <h3>Examples</h3>
+ * <pre>
+ * CSV csv = new CSV();
+ * StringColumn first = csv.addStringColumn("first");
+ * Row = csv.addRow();
+ * row.setString( first, "Bill" );
+ * </pre>
+ *
  *
  */
 public final class Row implements Serializable {
@@ -64,7 +73,7 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Updates the column with the value.
+     * Set the column with the value.
      *
      * @param column the column to setDate
      * @param value  the value
@@ -76,7 +85,7 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Updates the column with the value.
+     * Set the column with the value.
      *
      * @param column the column to setDate
      * @param value  the value
@@ -88,7 +97,7 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Updates the column with the value.
+     * Sets the column with the value.
      *
      * @param column the column to setDate
      * @param value  the value
@@ -100,7 +109,7 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Updates the column with the value.
+     * Sets the column with the value.
      *
      * @param column the column to setDate
      * @param value  the value
@@ -112,7 +121,7 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Updates the column with the value.
+     * Sets the column with the value.
      *
      * @param column the column to setDate
      * @param value  the value
@@ -124,7 +133,7 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Updates the column with the value.
+     * Sets the column with the value.
      *
      * @param column the column to setDate
      * @param value  the value
@@ -136,7 +145,7 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Updates the column with the value.
+     * Sets the column with the value.
      *
      * @param column the column to setDate
      * @param value  the value
@@ -148,7 +157,7 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Updates the column with the value.
+     * Sets the column with the value.
      *
      * @param column the column to setDate
      * @param value  the value
@@ -182,13 +191,18 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Returns the column as String.
+     * Returns the column value as String.
      *
      * @param column the column
      * @return the column as a String
      */
     public String getAsString(final Column column) {
-        return map.get(column) + "";
+        Object value = map.get(column);
+        if (value == null){
+            return "";
+        } else {
+            return value.toString();
+        }
     }
 
     /**
@@ -243,11 +257,11 @@ public final class Row implements Serializable {
     }
 
     /**
-     * Removes the value for the column.
+     * Sets the value to be null.
      *
      * @param column the column
      */
-    public void remove(final Column column) {
+    public void setNull(final Column column) {
         map.remove(column);
     }
 

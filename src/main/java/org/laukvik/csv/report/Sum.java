@@ -6,7 +6,7 @@ import org.laukvik.csv.columns.IntegerColumn;
 import java.math.BigDecimal;
 
 /**
- * Sums all values found.
+ * Sums up the value of all aggregated rows.
  */
 public final class Sum extends Aggregate {
 

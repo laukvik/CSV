@@ -35,12 +35,10 @@ import org.laukvik.csv.io.HtmlWriter;
 import org.laukvik.csv.io.JsonWriter;
 import org.laukvik.csv.io.XmlWriter;
 import org.laukvik.csv.query.Query;
-import org.laukvik.csv.query.RowMatcher;
 import org.laukvik.csv.query.ValueMatcher;
 import org.laukvik.csv.statistics.FrequencyDistribution;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -348,13 +346,13 @@ public final class CSV implements Serializable {
     /**
      * Removes the column.
      *
-     * @param column the column to remove
+     * @param column the column to setNull
      */
     public void removeColumn(final Column column) {
         column.setCSV(null);
         columns.remove(column);
         for (Row r : getRows()) {
-            r.remove(column);
+            r.setNull(column);
         }
         fireColumnRemoved(column);
     }
@@ -569,7 +567,7 @@ public final class CSV implements Serializable {
     /**
      * Removes the row at the specified index.
      *
-     * @param index the index to remove
+     * @param index the index to setNull
      */
     public void removeRow(final int index) {
         Row row = rows.remove(index);
@@ -901,7 +899,7 @@ public final class CSV implements Serializable {
     /**
      * Removes the ChangeListener.
      *
-     * @param changeListener the ChangeListener to remove
+     * @param changeListener the ChangeListener to setNull
      */
     public void removeChangeListener(final ChangeListener changeListener) {
         changeListeners.remove(changeListener);
@@ -971,7 +969,7 @@ public final class CSV implements Serializable {
      *
      * @param column the Column
      */
-    public void fireColumnUpdated(final Column column) {
+    void fireColumnUpdated(final Column column) {
         for (ChangeListener l : changeListeners) {
             l.columnUpdated(column);
         }
@@ -1004,7 +1002,7 @@ public final class CSV implements Serializable {
     /**
      * Adds a FileListener.
      *
-     * @param fileListener the ChangeListener to remove
+     * @param fileListener the ChangeListener to setNull
      */
     public void addFileListener(final FileListener fileListener) {
         fileListeners.add(fileListener);
@@ -1013,7 +1011,7 @@ public final class CSV implements Serializable {
     /**
      * Removes a FileListener.
      *
-     * @param fileListener the FileListener to remove
+     * @param fileListener the FileListener to setNull
      */
     public void removeFileListener(final FileListener fileListener) {
         fileListeners.remove(fileListener);

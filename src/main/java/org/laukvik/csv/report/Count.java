@@ -4,7 +4,7 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
 /**
- * Counts all items.
+ * Finds the amount of aggregated rows.
  *
  */
 public final class Count extends Aggregate {

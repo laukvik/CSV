@@ -150,22 +150,20 @@ public final class XmlWriter implements DatasetFileWriter {
                 out.write(EQUAL);
                 out.write(QUOTATION_MARK);
                 String s = r.getAsString(col);
-                if (s != null) {
-                    for (int n = 0; n < s.length(); n++) {
-                        char c = s.charAt(n);
-                        if (c == QUOTATION_MARK) {
-                            out.write("&quot;".getBytes());
-                        } else if (c == OPEN) {
-                            out.write("&lt;".getBytes());
-                        } else if (c == CLOSE) {
-                            out.write("&gt;".getBytes());
-                        } else if (c == APOSTROPHE) {
-                            out.write("&apos;".getBytes());
-                        } else if (c == AMPERSAND) {
-                            out.write("&amp;".getBytes());
-                        } else {
-                            out.write(c);
-                        }
+                for (int n = 0; n < s.length(); n++) {
+                    char c = s.charAt(n);
+                    if (c == QUOTATION_MARK) {
+                        out.write("&quot;".getBytes());
+                    } else if (c == OPEN) {
+                        out.write("&lt;".getBytes());
+                    } else if (c == CLOSE) {
+                        out.write("&gt;".getBytes());
+                    } else if (c == APOSTROPHE) {
+                        out.write("&apos;".getBytes());
+                    } else if (c == AMPERSAND) {
+                        out.write("&amp;".getBytes());
+                    } else {
+                        out.write(c);
                     }
                 }
                 out.write(QUOTATION_MARK);

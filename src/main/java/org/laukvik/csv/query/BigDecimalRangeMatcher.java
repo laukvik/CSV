@@ -41,7 +41,6 @@ public final class BigDecimalRangeMatcher implements ValueMatcher<BigDecimal> {
      * @param range            the ranges
      */
     public BigDecimalRangeMatcher(final BigDecimalColumn bigDecimalColumn, final List<BigDecimalRange> range) {
-        super();
         this.column = bigDecimalColumn;
         this.ranges = range;
     }

@@ -96,9 +96,7 @@ public final class HtmlWriter implements DatasetFileWriter {
                 out.write("<td>".getBytes());
                 Column col = csv.getColumn(x);
                 String s = r.getAsString(col);
-                if (s != null) {
-                    out.write(s.getBytes());
-                }
+                out.write(s.getBytes());
                 out.write("</td>".getBytes());
             }
 

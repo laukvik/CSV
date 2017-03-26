@@ -4,7 +4,7 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.IntegerColumn;
 
 /**
- * Finds the lowest value of the.
+ * Finds the minimum value of all aggregated rows.
  */
 public final class Min extends Aggregate {
 

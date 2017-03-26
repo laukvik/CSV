@@ -39,7 +39,6 @@ public final class DateOfMonthMatcher implements ValueMatcher<Date> {
      * @param values      the value
      */
     public DateOfMonthMatcher(final DateColumn dateColumn, final List<Integer> values) {
-        super();
         this.column = dateColumn;
         this.values = values;
     }

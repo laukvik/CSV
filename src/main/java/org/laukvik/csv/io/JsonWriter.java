@@ -146,15 +146,13 @@ public final class JsonWriter implements DatasetFileWriter {
      * @throws IOException when the string could not be written
      */
     private void writeString(final String s, final OutputStream outputStream) throws IOException {
-        if (s != null) {
-            for (int z = 0; z < s.length(); z++) {
-                char c = s.charAt(z);
-                if (c == DOUBLE_QUOTE) {
-                    outputStream.write('\\');
-                    outputStream.write(c);
-                } else {
-                    outputStream.write(c);
-                }
+        for (int z = 0; z < s.length(); z++) {
+            char c = s.charAt(z);
+            if (c == DOUBLE_QUOTE) {
+                outputStream.write('\\');
+                outputStream.write(c);
+            } else {
+                outputStream.write(c);
             }
         }
     }
