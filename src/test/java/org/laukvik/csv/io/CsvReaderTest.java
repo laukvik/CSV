@@ -129,6 +129,8 @@ public class CsvReaderTest {
         reader.readFile( getResource("charset.csv"), csv );
         StringColumn sc = (StringColumn) csv.getColumn("text");
         assertEquals("Norwegian chars", norwegian, csv.getRow(0).getString(sc));
+
+        guessCharset(getResource("charset.csv"));
     }
 
     public Charset findCharset(String filename) throws CsvReaderException {

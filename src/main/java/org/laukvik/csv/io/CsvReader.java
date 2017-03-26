@@ -64,6 +64,9 @@ public final class CsvReader implements DatasetFileReader {
      */
     private Character columnSeparatorChar;
 
+    /** The charset being instructed to use. */
+    private Charset charset;
+
     /**
      * Reads CSV from the specified reader using the separator and quote characters.
      *
@@ -82,6 +85,7 @@ public final class CsvReader implements DatasetFileReader {
         } else {
             this.quoteChar = quote;
         }
+        this.charset = charset;
     }
 
     /**
@@ -94,17 +98,19 @@ public final class CsvReader implements DatasetFileReader {
     public void readFile(final File file, final CSV csv) throws CsvReaderException {
         this.lineCounter = 0;
         try {
-            if (csv.isAutoDetectCharset()) {
+            if (autoDetectCharset) {
                 BOM bom = BOM.findBom(file);
                 if (bom == null) {
                     reader = new InputStreamReader(new FileInputStream(file));
+                    csv.setCharset(BOM.UTF8.getCharset());
                 } else {
                     reader = new InputStreamReader(new FileInputStream(file), bom.getCharset());
                     reader.skip(bom.getBytes().length);
                     csv.setCharset(bom.getCharset());
                 }
             } else {
-                reader = new InputStreamReader(new FileInputStream(file), csv.getCharset());
+                reader = new InputStreamReader(new FileInputStream(file), this.charset);
+                csv.setCharset(this.charset);
             }
             csv.setSeparator(columnSeparatorChar);
             csv.setQuoteChar(this.quoteChar);
