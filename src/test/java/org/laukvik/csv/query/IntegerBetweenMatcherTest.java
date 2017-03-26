@@ -10,15 +10,15 @@ import static org.junit.Assert.assertTrue;
 
 /**
  */
-public class IntBetweenMatcherTest {
+public class IntegerBetweenMatcherTest {
 
     @Test
     public void isBetween() throws Exception {
-        assertTrue(IntBetweenMatcher.isBetween(5, 0, 10));
-        assertTrue(IntBetweenMatcher.isBetween(0, 0, 10));
-        assertTrue(IntBetweenMatcher.isBetween(10, 0, 10));
-        assertFalse(IntBetweenMatcher.isBetween(-1, 0, 10));
-        assertFalse(IntBetweenMatcher.isBetween(11, 0, 10));
+        assertTrue(IntegerBetweenMatcher.isBetween(5, 0, 10));
+        assertTrue(IntegerBetweenMatcher.isBetween(0, 0, 10));
+        assertTrue(IntegerBetweenMatcher.isBetween(10, 0, 10));
+        assertFalse(IntegerBetweenMatcher.isBetween(-1, 0, 10));
+        assertFalse(IntegerBetweenMatcher.isBetween(11, 0, 10));
     }
 
     @Test
@@ -30,7 +30,7 @@ public class IntBetweenMatcherTest {
         Row r3 = csv.addRow().setInteger(first, 5);
         Row r4 = csv.addRow().setInteger(first, 5);
         Row r5 = csv.addRow();
-        IntBetweenMatcher m = new IntBetweenMatcher(first, 1, 4);
+        IntegerBetweenMatcher m = new IntegerBetweenMatcher(first, 1, 4);
         assertTrue(m.matches(1));
         assertTrue(m.matches(3));
         assertFalse(m.matches(5));

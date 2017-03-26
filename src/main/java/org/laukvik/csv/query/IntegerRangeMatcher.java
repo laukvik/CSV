@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Matches Integers in the specified ranges.
+ * Compares an Integer value to a list of IntegerRanges.
  */
 public final class IntegerRangeMatcher implements ValueMatcher<Integer> {
 

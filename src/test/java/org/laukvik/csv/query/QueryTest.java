@@ -84,7 +84,7 @@ public class QueryTest {
     public void isInt() {
         Query q = new Query();
         q.is(presidency,10);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(1, rows.size());
     }
 
@@ -92,7 +92,7 @@ public class QueryTest {
     public void isIntBetween() {
         Query q = new Query();
         q.isBetween(presidency,10, 19);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(10, rows.size());
     }
 
@@ -100,7 +100,7 @@ public class QueryTest {
     public void isGreaterThan() {
         Query q = new Query();
         q.isGreaterThan(presidency, 40);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(4, rows.size());
     }
 
@@ -108,7 +108,7 @@ public class QueryTest {
     public void lessThan() {
         Query q = new Query();
         q.lessThan(presidency, 41);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(40, rows.size());
     }
 
@@ -116,7 +116,7 @@ public class QueryTest {
     public void isIn() {
         Query q = new Query();
         q.isIn(presidency, 1,3,5);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(3, rows.size());
     }
 
@@ -125,7 +125,7 @@ public class QueryTest {
         Date date = tookOffice.parse("20/01/2009");
         Query q = new Query();
         q.is(tookOffice, date);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(1, rows.size());
     }
 
@@ -134,7 +134,7 @@ public class QueryTest {
         Date date = new GregorianCalendar(2000, 1, 1).getTime();
         Query q = new Query();
         q.after(tookOffice, date);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(2, rows.size());
     }
 
@@ -143,7 +143,7 @@ public class QueryTest {
         Date date = tookOffice.parse("1/1/1800");
         Query q = new Query();
         q.lessThan(tookOffice, date);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(2, rows.size());
     }
 
@@ -154,7 +154,7 @@ public class QueryTest {
     public void sortDate() throws ParseException {
         Query q = new Query();
         q.descending(tookOffice);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals("Barack Obama", rows.get(0).getString(president));
     }
 
@@ -162,7 +162,7 @@ public class QueryTest {
     public void stringIs() throws ParseException {
         Query q = new Query();
         q.is(homeState, "Virginia");
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(5, rows.size());
     }
 
@@ -170,7 +170,7 @@ public class QueryTest {
     public void isEmpty() throws ParseException {
         Query q = new Query();
         q.isEmpty(leftOffice);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(1, rows.size());
     }
 
@@ -178,7 +178,7 @@ public class QueryTest {
     public void isYear() throws ParseException {
         Query q = new Query();
         q.isYear(leftOffice, 1809);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(1, rows.size());
     }
 
@@ -186,7 +186,7 @@ public class QueryTest {
     public void ascending() throws IOException {
         Query q = new Query();
         q.ascending(leftOffice);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals( (Integer)44, rows.get(0).getInteger(presidency));
     }
 
@@ -194,7 +194,7 @@ public class QueryTest {
     public void descending() throws ParseException {
         Query q = new Query();
         q.descending(president);
-        List<Row> rows = csv.getRowsByQuery(q);
+        List<Row> rows = csv.findRowsByQuery(q);
         assertEquals("Zachary Taylor", rows.get(0).getString(president));
     }
 
@@ -216,7 +216,7 @@ public class QueryTest {
     @Test
     public void getMatchers() throws IOException {
         Query q = new Query();
-        IntLessThanMatcher m = new IntLessThanMatcher(presidency, 5);
+        IntegerLessThanMatcher m = new IntegerLessThanMatcher(presidency, 5);
         q.addRowMatcher(m);
         assertEquals(1, q.getMatchers().size());
         q.removeRowMatcher(m);

@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Compares a IntegerColumn to be in an array of values.
  */
-public final class IntIsInMatcher implements ValueMatcher<Integer> {
+public final class IntegerIsInMatcher implements ValueMatcher<Integer> {
 
     /**
      * The values to compare to.
@@ -41,7 +41,7 @@ public final class IntIsInMatcher implements ValueMatcher<Integer> {
      * @param integerColumn the column
      * @param values        the values
      */
-    public IntIsInMatcher(final IntegerColumn integerColumn, final Integer... values) {
+    public IntegerIsInMatcher(final IntegerColumn integerColumn, final Integer... values) {
         this(integerColumn, Arrays.asList(values));
     }
 
@@ -51,7 +51,7 @@ public final class IntIsInMatcher implements ValueMatcher<Integer> {
      * @param integerColumn the column
      * @param values        the values
      */
-    public IntIsInMatcher(final IntegerColumn integerColumn, final List<Integer> values) {
+    public IntegerIsInMatcher(final IntegerColumn integerColumn, final List<Integer> values) {
         super();
         this.column = integerColumn;
         this.values = values;

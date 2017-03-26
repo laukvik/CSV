@@ -21,7 +21,7 @@ import org.laukvik.csv.columns.IntegerColumn;
 /**
  * Compares a IntegerColumn to be between to values.
  */
-public final class IntBetweenMatcher implements ValueMatcher<Integer> {
+public final class IntegerBetweenMatcher implements ValueMatcher<Integer> {
 
     /**
      * The smallest allowed value.
@@ -39,7 +39,7 @@ public final class IntBetweenMatcher implements ValueMatcher<Integer> {
      * @param minimum       the minimum value
      * @param maximum       the maximum value
      */
-    public IntBetweenMatcher(final IntegerColumn integerColumn, final int minimum, final int maximum) {
+    public IntegerBetweenMatcher(final IntegerColumn integerColumn, final int minimum, final int maximum) {
         super();
         this.column = integerColumn;
         this.min = minimum;

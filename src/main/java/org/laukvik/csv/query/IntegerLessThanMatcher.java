@@ -19,9 +19,9 @@ import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.IntegerColumn;
 
 /**
- * Compares a IntegerColumn to be equal to a value.
+ * Compares a IntegerColumn to be less than a value.
  */
-public final class IntIsMatcher implements ValueMatcher<Integer> {
+public final class IntegerLessThanMatcher implements ValueMatcher<Integer> {
 
     /**
      * The value to match.
@@ -31,12 +31,12 @@ public final class IntIsMatcher implements ValueMatcher<Integer> {
     private final IntegerColumn column;
 
     /**
-     * The value of the column must be equal to the value.
+     * The value of the column must be value.
      *
      * @param integerColumn the column
      * @param value         the value
      */
-    public IntIsMatcher(final IntegerColumn integerColumn, final int value) {
+    public IntegerLessThanMatcher(final IntegerColumn integerColumn, final int value) {
         super();
         this.column = integerColumn;
         this.value = value;
@@ -49,6 +49,6 @@ public final class IntIsMatcher implements ValueMatcher<Integer> {
 
     @Override
     public boolean matches(final Integer i) {
-        return i != null && value == i;
+        return i != null && i < value;
     }
 }

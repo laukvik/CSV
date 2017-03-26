@@ -9,13 +9,13 @@ import static org.junit.Assert.assertTrue;
 
 /**
  */
-public class IntLessThanMatcherTest {
+public class IntegerIsMatcherTest {
 
     @Test
     public void matches() throws Exception {
         CSV csv = new CSV();
         IntegerColumn created = csv.addIntegerColumn("created");
-        IntLessThanMatcher m = new IntLessThanMatcher(created, 4);
+        IntegerIsMatcher m = new IntegerIsMatcher(created, 3);
         assertTrue( m.matches(3) );
         assertFalse( m.matches(4) );
         assertFalse( m.matches(5) );

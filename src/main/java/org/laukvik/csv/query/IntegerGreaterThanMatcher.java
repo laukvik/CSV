@@ -19,27 +19,43 @@ import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.IntegerColumn;
 
 /**
- * Compares a IntegerColumn to be less than a value.
+ * Compares a IntegerColumn to be greater than a value.
  */
-public final class IntLessThanMatcher implements ValueMatcher<Integer> {
+public final class IntegerGreaterThanMatcher implements ValueMatcher<Integer> {
 
     /**
-     * The value to match.
+     * The minimum value.
      */
-    private final int value;
-    /** The column to match. */
+    private final int min;
+    /**
+     * The column.
+     */
     private final IntegerColumn column;
 
     /**
-     * The value of the column must be value.
+     * The value of the column must be greater than minimumValue.
      *
      * @param integerColumn the column
-     * @param value         the value
+     * @param minimumValue  the minimum value
      */
-    public IntLessThanMatcher(final IntegerColumn integerColumn, final int value) {
+    public IntegerGreaterThanMatcher(final IntegerColumn integerColumn, final int minimumValue) {
         super();
         this.column = integerColumn;
-        this.value = value;
+        this.min = minimumValue;
+    }
+
+    /**
+     * Returns true if the value is greater than minimum.
+     *
+     * @param value   the value
+     * @param minimum the minimum value
+     * @return when the value is greater than minimum
+     */
+    public static boolean isGreaterThan(final Integer value, final int minimum) {
+        if (value == null) {
+            return false;
+        }
+        return value > minimum;
     }
 
     @Override
@@ -48,7 +64,7 @@ public final class IntLessThanMatcher implements ValueMatcher<Integer> {
     }
 
     @Override
-    public boolean matches(final Integer i) {
-        return i != null && i < value;
+    public boolean matches(final Integer value) {
+        return isGreaterThan(value, min);
     }
 }

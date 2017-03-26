@@ -492,7 +492,7 @@ public final class CSV implements Serializable {
      * @param query the query
      * @return the rows
      */
-    public List<Row> getRowsByQuery(final Query query) {
+    public List<Row> findRowsByQuery(final Query query) {
         return query.getRows(this);
     }
 
@@ -1059,11 +1059,11 @@ public final class CSV implements Serializable {
      * @param matchers the macthers
      * @return the matching rorws
      */
-    public List<Row> getRowsByMatchers(final List<ValueMatcher> matchers) {
+    public List<Row> findRowsByMatchers(final List<ValueMatcher> matchers) {
         Query q = new Query();
         for (ValueMatcher m : matchers) {
             q.addRowMatcher(m);
         }
-        return getRowsByQuery(q);
+        return findRowsByQuery(q);
     }
 }

@@ -515,7 +515,7 @@ public class CSVTest {
         List<ValueMatcher> matchers = new ArrayList<>();
         matchers.add( new StringInMatcher(c, "First"));
 
-        csv.getRowsByMatchers(matchers);
+        csv.findRowsByMatchers(matchers);
     }
 
     @Test

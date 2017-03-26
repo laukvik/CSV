@@ -8,7 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Matches Floats in the specified ranges.
+ * Compares a double value to a list of DoubleRanges.
+ *
  */
 public final class DoubleRangeMatcher implements ValueMatcher<Double> {
 

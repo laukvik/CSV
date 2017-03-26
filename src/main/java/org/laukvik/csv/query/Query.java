@@ -138,7 +138,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query isBetween(final org.laukvik.csv.columns.IntegerColumn column, final int min, final int max) {
-        addRowMatcher(new IntBetweenMatcher(column, min, max));
+        addRowMatcher(new IntegerBetweenMatcher(column, min, max));
         return this;
     }
 
@@ -150,7 +150,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query isGreaterThan(final org.laukvik.csv.columns.IntegerColumn column, final int value) {
-        addRowMatcher(new IntGreaterThanMatcher(column, value));
+        addRowMatcher(new IntegerGreaterThanMatcher(column, value));
         return this;
     }
 
@@ -162,7 +162,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query isIn(final org.laukvik.csv.columns.IntegerColumn column, final Integer... list) {
-        addRowMatcher(new IntIsInMatcher(column, list));
+        addRowMatcher(new IntegerIsInMatcher(column, list));
         return this;
     }
 
@@ -174,7 +174,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query is(final org.laukvik.csv.columns.IntegerColumn column, final Integer value) {
-        addRowMatcher(new IntIsMatcher(column, value));
+        addRowMatcher(new IntegerIsMatcher(column, value));
         return this;
     }
 
@@ -186,7 +186,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query lessThan(final org.laukvik.csv.columns.IntegerColumn column, final int value) {
-        addRowMatcher(new IntLessThanMatcher(column, value));
+        addRowMatcher(new IntegerLessThanMatcher(column, value));
         return this;
     }
 

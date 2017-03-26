@@ -2,7 +2,6 @@ package org.laukvik.csv.query;
 
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.BigDecimalColumn;
 import org.laukvik.csv.statistics.BigDecimalRange;
 
@@ -18,11 +17,11 @@ public class BigDecimalRangeMatcherTest {
         CSV csv = new CSV();
         BigDecimalColumn col = new BigDecimalColumn("val");
         csv.addColumn(col);
-        Row r1 = csv.addRow().setBigDecimal(col, new BigDecimal(100));
-        Row r2 = csv.addRow().setBigDecimal(col, new BigDecimal(200));
-        Row r3 = csv.addRow().setBigDecimal(col, new BigDecimal(100));
-        Row r4 = csv.addRow().setBigDecimal(col, new BigDecimal(300));
-        Row r5 = csv.addRow().setBigDecimal(col, null);
+        BigDecimal r1 = new BigDecimal(100);
+        BigDecimal r2 = new BigDecimal(200);
+        BigDecimal r3 = new BigDecimal(100);
+        BigDecimal r4 = new BigDecimal(300);
+        BigDecimal r5 = null;
 
 
         BigDecimalRange range = new BigDecimalRange("Hundred", new BigDecimal(99), new BigDecimal(201));

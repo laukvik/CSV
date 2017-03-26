@@ -125,7 +125,7 @@ public class ReportTest {
         r.addColumn(new Count(party));
 //        r.addColumn(new Count(homeState));
 
-//        r.addMatcher( new IntLessThanMatcher(presidency, 11));
+//        r.addMatcher( new IntegerLessThanMatcher(presidency, 11));
         Node root = r.buildNode(csv);
 
         CSV csv2 = r.buildCSV(root);

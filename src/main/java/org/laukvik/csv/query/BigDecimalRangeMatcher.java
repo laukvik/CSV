@@ -1,6 +1,5 @@
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.BigDecimalColumn;
 import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.statistics.BigDecimalRange;
@@ -10,7 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Matches BigDecimal in the specified ranges.
+ * Compares a BigDecimal value to a list of BigDecimalRanges.
+ *
  */
 public final class BigDecimalRangeMatcher implements ValueMatcher<BigDecimal> {
 
@@ -50,16 +50,16 @@ public final class BigDecimalRangeMatcher implements ValueMatcher<BigDecimal> {
         return column;
     }
 
-    /**
-     * Returns true when the row matchesRow.
-     *
-     * @param row the row
-     * @return true when the row matchesRow
-     */
-    public boolean matches(final Row row) {
-        BigDecimal i = row.getBigDecimal(column);
-        return matches(i);
-    }
+//    /**
+//     * Returns true when the row matchesRow.
+//     *
+//     * @param row the row
+//     * @return true when the row matchesRow
+//     */
+//    public boolean matches(final Row row) {
+//        BigDecimal i = row.getBigDecimal(column);
+//        return matches(i);
+//    }
 
     /**
      * Returns true when the value matchesRow.

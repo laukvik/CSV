@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Matches Floats in the specified ranges.
+ * Compares a float value to a list of FloatRanges.
  */
 public final class FloatRangeMatcher implements ValueMatcher<Float> {
 
