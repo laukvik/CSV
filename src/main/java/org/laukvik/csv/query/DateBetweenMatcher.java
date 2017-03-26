@@ -15,7 +15,6 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Date;
@@ -49,14 +48,8 @@ public final class DateBetweenMatcher extends AbstractDateMatcher {
         this.lastDate = last;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        return DateColumn.isBetweeen(row.getDate(getColumn()), firstDate, lastDate);
+    @Override
+    public boolean matches(final Date value) {
+        return DateColumn.isBetweeen(value, firstDate, lastDate);
     }
-
 }

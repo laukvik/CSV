@@ -54,7 +54,7 @@ public final class IntegerColumn extends Column<Integer> {
      * Returns true when the value is an odd number.
      *
      * @param value the value
-     * @return true when matches
+     * @return true when matchesRow
      */
     public static Boolean isOdd(final Integer value) {
         if (value == null) {
@@ -68,7 +68,7 @@ public final class IntegerColumn extends Column<Integer> {
      * Returns true when the value is a negative number.
      *
      * @param value the value
-     * @return true when matches
+     * @return true when matchesRow
      */
     public static boolean isNegative(final Integer value) {
         if (value == null) {
@@ -83,7 +83,7 @@ public final class IntegerColumn extends Column<Integer> {
      *
      * @param value the value
      * @param q multiplied with
-     * @return true when matches
+     * @return true when matchesRow
      */
     public static Integer getMods(final Integer value, final int q) {
         if (value == null) {
@@ -97,7 +97,7 @@ public final class IntegerColumn extends Column<Integer> {
      * Returns the ten part of the value.
      *
      * @param value the value
-     * @return true when matches
+     * @return true when matchesRow
      */
     public static Integer getTen(final Integer value) {
         return getMods(value, TEN);
@@ -107,7 +107,7 @@ public final class IntegerColumn extends Column<Integer> {
      * Returns the hundred part of the value.
      *
      * @param value the value
-     * @return true when matches
+     * @return true when matchesRow
      */
     public static Integer getHundred(final Integer value) {
         return getMods(value, HUNDRED);
@@ -117,7 +117,7 @@ public final class IntegerColumn extends Column<Integer> {
      * Returns the thousand part of the value.
      *
      * @param value the value
-     * @return true when matches
+     * @return true when matchesRow
      */
     public static Integer getThousand(final Integer value) {
         return getMods(value, THOUSAND);
@@ -127,7 +127,7 @@ public final class IntegerColumn extends Column<Integer> {
      * Returns the million part of the value.
      *
      * @param value the value
-     * @return true when matches
+     * @return true when matchesRow
      */
     public static Integer getMillion(final Integer value) {
         return getMods(value, MILLION);
@@ -137,7 +137,7 @@ public final class IntegerColumn extends Column<Integer> {
      * Returns the billion part of the value.
      *
      * @param value the value
-     * @return true when matches
+     * @return true when matchesRow
      */
     public static Integer getBillion(final Integer value) {
         return getMods(value, BILLION);

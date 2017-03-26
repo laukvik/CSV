@@ -122,12 +122,12 @@ public final class CsvReader implements DatasetFileReader {
                 readRow(csv);
             }
         } catch (IOException e) {
-            throw new CsvReaderException("Failed to read file " + file.getAbsolutePath(), e);
+            throw new CsvReaderException(file, e);
         } finally {
             try {
                 reader.close();
             } catch (IOException e) {
-                throw new CsvReaderException("Failed to close file " + file.getAbsolutePath(), e);
+                throw new CsvReaderException(file, e);
             }
         }
     }

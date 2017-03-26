@@ -1,6 +1,6 @@
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Arrays;
@@ -8,9 +8,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Morten Laukvik
+ * Compares a DateColumn to have the specified year(s).
+ *
  */
-public final class YearMatcher extends RowMatcher implements ValueMatcher<Date> {
+public final class YearMatcher implements ValueMatcher<Date> {
 
     /**
      * The value to compare.
@@ -22,7 +23,7 @@ public final class YearMatcher extends RowMatcher implements ValueMatcher<Date> 
     private final DateColumn column;
 
     /**
-     * The value of the column must be.
+     * Compares a DateColumn to have the specified year(s).
      *
      * @param dateColumn the column
      * @param value      the value
@@ -31,19 +32,25 @@ public final class YearMatcher extends RowMatcher implements ValueMatcher<Date> 
         this(dateColumn, Arrays.asList(value));
     }
 
+    /**
+     * Compares a DateColumn to have the specified year(s).
+     *
+     * @param dateColumn the column
+     * @param values      the years
+     */
     public YearMatcher(final DateColumn dateColumn, final List<Integer> values) {
         this.column = dateColumn;
         this.values = values;
     }
 
+    @Override
+    public Column getColumn() {
+        return column;
+    }
 
     @Override
     public boolean matches(final Date value) {
         return values.contains(DateColumn.getYear(value));
     }
 
-    @Override
-    public boolean matches(final Row row) {
-        return matches(row.getDate(column));
-    }
 }

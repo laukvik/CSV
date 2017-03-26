@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DoubleColumn;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Compares a DoubleColumn to a list of values.
  */
-public final class DoubleMatcher extends RowMatcher {
+public final class DoubleMatcher implements ValueMatcher<Double> {
 
     /**
      * The DoubleColumn.
@@ -56,24 +56,13 @@ public final class DoubleMatcher extends RowMatcher {
         this.values = doubles;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        Double d = row.getDouble(column);
-        for (Double v : values) {
-            if (d == null) {
-                return v == null;
-            } else {
-                if (d.equals(v)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
+    @Override
+    public boolean matches(final Double value) {
+        return values.contains(value);
+    }
 }

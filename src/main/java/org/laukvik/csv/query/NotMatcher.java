@@ -1,35 +1,40 @@
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 
 /**
- * Matches none of the specified matches.
+ * Matches none of the specified matchesRow.
  */
-public final class NotMatcher extends RowMatcher {
+public final class NotMatcher implements ValueMatcher<Object> {
 
     /**
      * The matchers which should fail.
      */
-    private final RowMatcher[] matchers;
+    private final ValueMatcher[] matchers;
 
     /**
      * Creates a new instance with the matchers.
      *
-     * @param rowMatchers the matchers
+     * @param valueMatchers the matchers
      */
-    public NotMatcher(final RowMatcher... rowMatchers) {
-        this.matchers = rowMatchers;
+    public NotMatcher(final ValueMatcher... valueMatchers) {
+        this.matchers = valueMatchers;
+    }
+
+    @Override
+    public Column getColumn() {
+        return null;
     }
 
     /**
-     * Returns true when no matches returns true.
+     * Returns true when no matchesRow returns true.
      *
-     * @param row the row
-     * @return true when none matches
+     * @param value the value
+     * @return true when none matchesRow
      */
-    public boolean matches(final Row row) {
-        for (RowMatcher m : matchers) {
-            if (m.matches(row)) {
+    public boolean matches(final Object value) {
+        for (ValueMatcher m : matchers) {
+            if (m.matches(value)) {
                 return false;
             }
         }

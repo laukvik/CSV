@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.util.regex.Pattern;
@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 /**
  * Compares a StringColumn to have one or more of the specified values.
  */
-public final class RegExMatcher extends RowMatcher {
+public final class RegExMatcher implements ValueMatcher<String> {
 
     /** The Column to match. */
     private final StringColumn column;
@@ -38,20 +38,17 @@ public final class RegExMatcher extends RowMatcher {
      * @param regex       the value
      */
     public RegExMatcher(final StringColumn stringColumn, final String regex) {
-        super();
         this.column = stringColumn;
         this.pattern = Pattern.compile(regex);
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        String val = row.getString(column);
-        return pattern.matcher(val).matches();
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
+    @Override
+    public boolean matches(final String value) {
+        return pattern.matcher(value).matches();
+    }
 }

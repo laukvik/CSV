@@ -1,6 +1,6 @@
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Arrays;
@@ -8,9 +8,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * Compares a DateColumn to have the specified month(s).
  *
  */
-public final class WeekMatcher extends RowMatcher implements ValueMatcher<Date> {
+public final class WeekMatcher implements ValueMatcher<Date> {
 
     /**
      * The value to compare.
@@ -22,7 +23,7 @@ public final class WeekMatcher extends RowMatcher implements ValueMatcher<Date> 
     private final DateColumn column;
 
     /**
-     * The value of the column must be.
+     * Compares a DateColumn to have the specified month(s).
      *
      * @param dateColumn the column
      * @param value      the value
@@ -31,18 +32,24 @@ public final class WeekMatcher extends RowMatcher implements ValueMatcher<Date> 
         this(dateColumn, Arrays.asList(value));
     }
 
+    /**
+     * Compares a DateColumn to have the specified month(s).
+     *
+     * @param dateColumn the column
+     * @param values      the value
+     */
     public WeekMatcher(final DateColumn dateColumn, final List<Integer> values) {
-        super();
         this.column = dateColumn;
         this.values = values;
+    }
+
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
     public boolean matches(final Date value) {
         return values.contains(DateColumn.getWeekOfYear(value));
     }
 
-    @Override
-    public boolean matches(final Row row) {
-        return matches(row.getDate(column));
-    }
 }

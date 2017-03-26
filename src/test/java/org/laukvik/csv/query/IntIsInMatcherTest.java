@@ -21,15 +21,15 @@ public class IntIsInMatcherTest {
         Row r2 = csv.addRow();
         Row r3 = csv.addRow().setInteger(first, 10);
         IntIsInMatcher m = new IntIsInMatcher(first, 12, 13, 14);
-        assertTrue(m.matches(r1));
-        assertFalse(m.matches(r2));
-        assertFalse(m.matches(r3));
+        assertTrue(m.matches(12));
+        assertFalse(m.matches(null));
+        assertFalse(m.matches(10));
 
         Integer i = null;
         IntIsInMatcher m2 = new IntIsInMatcher(first, i);
-        assertFalse(m2.matches(r1));
-        assertTrue(m2.matches(r2));
-        assertFalse(m2.matches(r3));
+        assertFalse(m2.matches(12));
+        assertTrue(m2.matches(null));
+        assertFalse(m2.matches(10));
 
     }
 

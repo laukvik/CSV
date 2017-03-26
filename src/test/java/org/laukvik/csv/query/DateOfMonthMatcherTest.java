@@ -2,7 +2,6 @@ package org.laukvik.csv.query;
 
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Calendar;
@@ -26,20 +25,17 @@ public class DateOfMonthMatcherTest {
         Date d6 = cal.getTime();
         Date d7 = null;
 
-        Row r5 = csv.addRow().setDate(c, d5);
-        Row r6 = csv.addRow().setDate(c, d6);
-        Row r7 = csv.addRow().setDate(c, d7);
 
         DateOfMonthMatcher m1 = new DateOfMonthMatcher(c, 5);
-        assertTrue(m1.matches(r5));
-        assertFalse(m1.matches(r6));
-        assertFalse(m1.matches(r7));
+        assertTrue(m1.matches(d5));
+        assertFalse(m1.matches(d6));
+        assertFalse(m1.matches(d7));
 
         assertTrue(m1.matches(d5));
         assertFalse(m1.matches(d6));
         assertFalse(m1.matches(d7));
 
-//        assertTrue(m1.matches(d7));
+//        assertTrue(m1.matchesRow(d7));
         assertFalse(m1.matches(d7));
     }
 

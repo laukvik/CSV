@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Compares a StringColumn to have the specified value.
  */
-public final class MillisecondMatcher extends RowMatcher implements ValueMatcher<Date> {
+public final class MillisecondMatcher implements ValueMatcher<Date> {
 
     /**
      * The value to compare.
@@ -58,22 +58,16 @@ public final class MillisecondMatcher extends RowMatcher implements ValueMatcher
         this.values = values;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        Date v = row.getDate(column);
-        return matches(v);
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
     /**
-     * Returns true when the value matches.
+     * Returns true when the value matchesRow.
      *
      * @param value the value
-     * @return true when the row matches
+     * @return true when the row matchesRow
      */
     public boolean matches(final Date value) {
         return values.contains(DateColumn.getMilliseconds(value));

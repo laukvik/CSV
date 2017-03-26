@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.UrlColumn;
 
 import java.net.URL;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Compares a UrlColumn to have the specified value.
  */
-public final class UrlFilePrefixMatcher extends RowMatcher {
+public final class UrlFilePrefixMatcher implements ValueMatcher<URL> {
 
     /**
      * The value to compare.
@@ -37,7 +37,7 @@ public final class UrlFilePrefixMatcher extends RowMatcher {
     private final UrlColumn column;
 
     /**
-     * Matches the prefix of the file in the URL
+     * Matches the prefix of the file in the URL.
      *
      * @param urlColumn the column
      * @param value     the value
@@ -47,25 +47,22 @@ public final class UrlFilePrefixMatcher extends RowMatcher {
     }
 
     /**
-     * Matches the prefix of the file in the URL
-     * @param urlColumn
-     * @param values
+     * Matches the prefix of the file in the URL.
+     * @param urlColumn the column
+     * @param values the list of values
      */
     public UrlFilePrefixMatcher(final UrlColumn urlColumn, final List<String> values) {
         this.column = urlColumn;
         this.values = values;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        URL v = row.getURL(column);
-        return values.contains(UrlColumn.getPrefix(v));
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
-
+    @Override
+    public boolean matches(URL value) {
+        return values.contains(UrlColumn.getPrefix(value));
+    }
 }

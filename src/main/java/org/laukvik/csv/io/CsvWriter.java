@@ -78,7 +78,7 @@ public final class CsvWriter implements DatasetFileWriter {
                 writeValues(items, writer);
             }
         } catch (final IOException e) {
-            throw new CsvWriterException("Failed to write CSV to file " + file.getAbsolutePath(), e);
+            throw new CsvWriterException(file, e);
         }
     }
 

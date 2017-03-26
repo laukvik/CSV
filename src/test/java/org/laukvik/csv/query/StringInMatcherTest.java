@@ -2,7 +2,6 @@ package org.laukvik.csv.query;
 
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.StringColumn;
 
 import static org.junit.Assert.assertFalse;
@@ -24,15 +23,11 @@ public class StringInMatcherTest {
     public void matches() throws Exception {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("first");
-        Row r1 = csv.addRow().setString(first, "Steve");
-        Row r2 = csv.addRow().setString(first, "Bill");
-        Row r3 = csv.addRow().setString(first, "Unkown");
-        Row r4 = csv.addRow();
         StringInMatcher m = new StringInMatcher(first, "Steve", "Bill");
-        assertTrue(m.matches(r1));
-        assertTrue(m.matches(r2));
-        assertFalse(m.matches(r3));
-        assertFalse(m.matches(r4));
+        assertTrue(m.matches("Steve"));
+        assertTrue(m.matches("Bill"));
+        assertFalse(m.matches("Unkown"));
+        assertFalse(m.matches(null));
     }
 
 }

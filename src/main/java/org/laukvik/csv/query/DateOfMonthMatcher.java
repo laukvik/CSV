@@ -1,6 +1,6 @@
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Arrays;
@@ -8,10 +8,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
+ * Compares a DateColumn to have the specified date of month.
  *
  */
-public final class DateOfMonthMatcher extends RowMatcher implements ValueMatcher<Date> {
+public final class DateOfMonthMatcher implements ValueMatcher<Date> {
 
     /**
      * The value to compare.
@@ -23,7 +23,7 @@ public final class DateOfMonthMatcher extends RowMatcher implements ValueMatcher
     private final DateColumn column;
 
     /**
-     * The date of the column must be among the values.
+     * Compares a DateColumn to have the specified date of month.
      *
      * @param dateColumn the column
      * @param value      the value
@@ -33,7 +33,7 @@ public final class DateOfMonthMatcher extends RowMatcher implements ValueMatcher
     }
 
     /**
-     * The date of the column must be among the values.
+     * Compares a DateColumn to have the specified date of month.
      *
      * @param dateColumn the column
      * @param values      the value
@@ -44,21 +44,18 @@ public final class DateOfMonthMatcher extends RowMatcher implements ValueMatcher
         this.values = values;
     }
 
+    @Override
+    public Column getColumn() {
+        return column;
+    }
+
     /**
-     * Returns true when matches the value.
+     * Returns true when matchesRow the value.
      * @param value the value to test against
-     * @return true when matches
+     * @return true when matchesRow
      */
     public boolean matches(final Date value) {
         return values.contains(DateColumn.getDayOfMonth(value));
     }
 
-    /**
-     * Returns true when matches the value.
-     * @param row the value to test against
-     * @return true when matches
-     */
-    public boolean matches(final Row row) {
-        return matches(row.getDate(column));
-    }
 }

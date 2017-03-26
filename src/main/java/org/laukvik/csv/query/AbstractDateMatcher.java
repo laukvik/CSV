@@ -8,7 +8,7 @@ import java.util.Date;
  * An abstract class that has all utility methods to be helpful.
  *
  */
-public abstract class AbstractDateMatcher extends RowMatcher {
+public abstract class AbstractDateMatcher implements ValueMatcher<Date> {
 
     /**
      * The date.

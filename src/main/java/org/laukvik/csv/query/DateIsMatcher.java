@@ -15,7 +15,6 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Arrays;
@@ -51,16 +50,6 @@ public final class DateIsMatcher extends AbstractDateMatcher implements ValueMat
     public DateIsMatcher(final DateColumn column, final List<Date> values) {
         super(column, null);
         this.values = values;
-    }
-
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        return matches(row.getDate(getColumn()));
     }
 
     @Override

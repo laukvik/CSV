@@ -1,6 +1,6 @@
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Arrays;
@@ -8,9 +8,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Morten Laukvik
+ * Compares a DateColumn to have the specified weekday(s).
+ *
  */
-public final class WeekdayMatcher extends RowMatcher implements ValueMatcher<Date> {
+public final class WeekdayMatcher implements ValueMatcher<Date> {
 
     /**
      * The value to compare.
@@ -22,7 +23,7 @@ public final class WeekdayMatcher extends RowMatcher implements ValueMatcher<Dat
     private final DateColumn column;
 
     /**
-     * The value of the column must be.
+     * Compares a DateColumn to have the specified weekday(s).
      *
      * @param dateColumn the column
      * @param value      the value
@@ -31,6 +32,12 @@ public final class WeekdayMatcher extends RowMatcher implements ValueMatcher<Dat
         this(dateColumn, Arrays.asList(value));
     }
 
+    /**
+     * Compares a DateColumn to have the specified weekday(s).
+     *
+     * @param dateColumn the column
+     * @param values      the values
+     */
     public WeekdayMatcher(final DateColumn dateColumn, final List<Integer> values) {
         this.column = dateColumn;
         this.values = values;
@@ -43,7 +50,8 @@ public final class WeekdayMatcher extends RowMatcher implements ValueMatcher<Dat
     }
 
     @Override
-    public boolean matches(final Row row) {
-        return matches(row.getDate(column));
+    public Column getColumn() {
+        return column;
     }
+
 }

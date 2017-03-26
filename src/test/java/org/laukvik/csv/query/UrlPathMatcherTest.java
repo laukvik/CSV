@@ -3,7 +3,6 @@ package org.laukvik.csv.query;
 import org.junit.Before;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.UrlColumn;
 
 import java.net.MalformedURLException;
@@ -16,38 +15,32 @@ public class UrlPathMatcherTest {
 
     CSV csv;
     UrlColumn c;
-    Row r1, r2, r3, r4, r5;
 
     @Before
     public void before() throws MalformedURLException {
         csv = new CSV();
         c = csv.addUrlColumn("value");
-        r1 = csv.addRow().setURL(c, new URL("http://localhost"));
-        r2 = csv.addRow().setURL(c, new URL("http://localhost/img"));
-        r3 = csv.addRow().setURL(c, new URL("http://localhost/img/"));
-        r4 = csv.addRow().setURL(c, new URL("http://localhost/##"));
-        r5 = csv.addRow().setURL(c, null);
     }
 
     @Test
-    public void matches() {
+    public void matches() throws MalformedURLException {
         UrlPathMatcher m = new UrlPathMatcher(c, "/img");
-        assertFalse(m.matches(r1));
-        assertTrue(m.matches(r2));
-        assertFalse(m.matches(r3));
-        assertFalse(m.matches(r4));
-        assertFalse(m.matches(r5));
+        assertFalse(m.matches(new URL("http://localhost")));
+        assertTrue(m.matches(new URL("http://localhost/img")));
+        assertFalse(m.matches(new URL("http://localhost/img/")));
+        assertFalse(m.matches(new URL("http://localhost/##")));
+        assertFalse(m.matches(null));
     }
 
     @Test
-    public void matchesNull(){
+    public void matchesNull() throws MalformedURLException {
         String s2 = null;
         UrlPathMatcher m = new UrlPathMatcher(c, s2);
-        assertTrue(m.matches(r1));
-        assertFalse(m.matches(r2));
-        assertFalse(m.matches(r3));
-        assertFalse(m.matches(r4));
-        assertTrue(m.matches(r5));
+        assertTrue(m.matches(new URL("http://localhost")));
+        assertFalse(m.matches(new URL("http://localhost/img")));
+        assertFalse(m.matches(new URL("http://localhost/img/")));
+        assertFalse(m.matches(new URL("http://localhost/##")));
+        assertTrue(m.matches(null));
     }
 
 }

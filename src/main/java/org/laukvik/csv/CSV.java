@@ -36,6 +36,7 @@ import org.laukvik.csv.io.JsonWriter;
 import org.laukvik.csv.io.XmlWriter;
 import org.laukvik.csv.query.Query;
 import org.laukvik.csv.query.RowMatcher;
+import org.laukvik.csv.query.ValueMatcher;
 import org.laukvik.csv.statistics.FrequencyDistribution;
 
 import java.io.File;
@@ -210,7 +211,7 @@ public final class CSV implements Serializable {
      * Opens the specified CSV file and parses it.
      *
      * @param csvFile the file to open
-     * @throws IOException when the file could not be read
+     * @throws CsvReaderException when the file could not be read
      */
     public CSV(final File csvFile) throws CsvReaderException {
         this();
@@ -488,7 +489,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Returns the rows that matches the query.
+     * Returns the rows that matchesRow the query.
      *
      * @param query the query
      * @return the rows
@@ -1060,9 +1061,9 @@ public final class CSV implements Serializable {
      * @param matchers the macthers
      * @return the matching rorws
      */
-    public List<Row> getRowsByMatchers(final List<RowMatcher> matchers) {
+    public List<Row> getRowsByMatchers(final List<ValueMatcher> matchers) {
         Query q = new Query();
-        for (RowMatcher m : matchers) {
+        for (ValueMatcher m : matchers) {
             q.addRowMatcher(m);
         }
         return getRowsByQuery(q);

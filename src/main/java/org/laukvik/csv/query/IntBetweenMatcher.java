@@ -15,13 +15,13 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.IntegerColumn;
 
 /**
  * Compares a IntegerColumn to be between to values.
  */
-public final class IntBetweenMatcher extends RowMatcher {
+public final class IntBetweenMatcher implements ValueMatcher<Integer> {
 
     /**
      * The smallest allowed value.
@@ -61,15 +61,13 @@ public final class IntBetweenMatcher extends RowMatcher {
         return value >= minimum && value <= maximum;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        Integer value = row.getInteger(column);
-        return isBetween(value, min, max);
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
+    @Override
+    public boolean matches(final Integer value) {
+        return isBetween(value, min, max);
+    }
 }

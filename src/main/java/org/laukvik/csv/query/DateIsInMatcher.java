@@ -48,15 +48,8 @@ public final class DateIsInMatcher extends AbstractDateMatcher {
         this.values = values;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        Date value = row.getDate(getColumn());
+    @Override
+    public boolean matches(final Date value) {
         return values.contains(value);
     }
-
 }

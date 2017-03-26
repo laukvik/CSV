@@ -32,10 +32,10 @@ public class WeekdayMatcherTest {
         Row r4 = csv.addRow();
 
         WeekdayMatcher m = new WeekdayMatcher(c, 2);
-        assertFalse(m.matches(r1));
-        assertTrue(m.matches(r2));
-        assertFalse(m.matches(r3));
-        assertFalse(m.matches(r4));
+        assertFalse(m.matches(d1));
+        assertTrue(m.matches(d2));
+        assertFalse(m.matches(d3));
+        assertFalse(m.matches(null));
     }
 
 }

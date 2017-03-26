@@ -18,16 +18,16 @@ package org.laukvik.csv.query;
 import org.laukvik.csv.Row;
 
 /**
- * An interface for excluding rows that doesn't matches the criteria.
+ * An interface for excluding rows that doesn't matchesRow the criteria.
  */
-public abstract class RowMatcher {
+public interface RowMatcher {
 
     /**
-     * Returns true if the row matches.
+     * Returns true if the row matchesRow.
      *
      * @param row the row
-     * @return true if it matches
+     * @return true if it matchesRow
      */
-    public abstract boolean matches(Row row);
+    boolean matchesRow(Row row);
 
 }

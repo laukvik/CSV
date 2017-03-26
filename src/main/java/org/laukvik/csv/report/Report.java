@@ -109,7 +109,7 @@ public final class Report {
             // Exlude non matching rows
             boolean matchesAll = true;
             for (RowMatcher rm : rowMatcherList) {
-                if (!rm.matches(r)) {
+                if (!rm.matchesRow(r)) {
                     matchesAll = false;
                 }
             }

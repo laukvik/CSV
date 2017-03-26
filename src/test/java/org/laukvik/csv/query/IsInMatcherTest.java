@@ -21,16 +21,16 @@ public class IsInMatcherTest {
         Row row = csv.addRow().setFloat(created, 3f);
 
         IsInMatcher<Float> matcher = new IsInMatcher<Float>(created, 1f, 2f, 3f);
-        assertTrue( matcher.matches(row) );
+        assertTrue( matcher.matches(3f) );
 
         IsInMatcher<Float> matcher2 = new IsInMatcher<Float>(updated, 1f, 2f, 3f);
-        assertFalse( matcher2.matches(row) );
+        assertFalse( matcher2.matches(3f) );
 
         IsInMatcher<Float> matcher3 = new IsInMatcher<Float>(created, 200f, 3000f);
-        assertFalse( matcher3.matches(row) );
+        assertFalse( matcher3.matches(3f) );
 
         IsInMatcher<Float> matcher4 = new IsInMatcher<Float>(created);
-        assertFalse( matcher4.matches(row) );
+        assertFalse( matcher4.matches(3f) );
     }
 
 }

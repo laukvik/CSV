@@ -15,8 +15,8 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.BigDecimalColumn;
+import org.laukvik.csv.columns.Column;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Compares a BigDecimalColumn to a list of values.
  */
-public final class BigDecimalMatcher extends RowMatcher {
+public final class BigDecimalMatcher implements ValueMatcher<BigDecimal> {
 
     /**
      * The BigDecimalColumn.
@@ -57,14 +57,13 @@ public final class BigDecimalMatcher extends RowMatcher {
         this.values = bigDecimals;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        return values.contains(row.getBigDecimal(column));
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
+    @Override
+    public boolean matches(final BigDecimal value) {
+        return values.contains(value);
+    }
 }

@@ -1,6 +1,6 @@
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DoubleColumn;
 import org.laukvik.csv.statistics.DoubleRange;
 
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Matches Floats in the specified ranges.
  */
-public final class DoubleRangeMatcher extends RowMatcher implements ValueMatcher<Double> {
+public final class DoubleRangeMatcher implements ValueMatcher<Double> {
 
     /**
      * The DoubleColumn to match.
@@ -44,22 +44,16 @@ public final class DoubleRangeMatcher extends RowMatcher implements ValueMatcher
         this.ranges = range;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        Double i = row.getDouble(column);
-        return matches(i);
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
     /**
-     * Returns true when the value matches.
+     * Returns true when the value matchesRow.
      *
      * @param value the value to test against
-     * @return true when matches
+     * @return true when matchesRow
      */
     @Override
     public boolean matches(final Double value) {

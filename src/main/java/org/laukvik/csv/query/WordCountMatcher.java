@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Compares a StringColumn to have the specified value.
  */
-public final class WordCountMatcher extends RowMatcher {
+public final class WordCountMatcher implements ValueMatcher<String> {
 
     /**
      * The value to compare.
@@ -46,19 +46,17 @@ public final class WordCountMatcher extends RowMatcher {
     }
 
     public WordCountMatcher(final StringColumn stringColumn, final List<Integer> values) {
-        super();
         this.column = stringColumn;
         this.values = values;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        String v = row.getString(column);
+    @Override
+    public Column getColumn() {
+        return column;
+    }
+
+    @Override
+    public boolean matches(final String v) {
         if (v == null) {
             return false;
         } else {
@@ -70,5 +68,4 @@ public final class WordCountMatcher extends RowMatcher {
             return false;
         }
     }
-
 }

@@ -15,13 +15,13 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.IntegerColumn;
 
 /**
  * Compares a IntegerColumn to be equal to a value.
  */
-public final class IntIsMatcher extends RowMatcher {
+public final class IntIsMatcher implements ValueMatcher<Integer> {
 
     /**
      * The value to match.
@@ -42,15 +42,13 @@ public final class IntIsMatcher extends RowMatcher {
         this.value = value;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        Integer i = row.getInteger(column);
-        return i != null && value == i;
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
+    @Override
+    public boolean matches(final Integer i) {
+        return i != null && value == i;
+    }
 }

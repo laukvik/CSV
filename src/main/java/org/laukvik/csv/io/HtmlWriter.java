@@ -49,7 +49,7 @@ public final class HtmlWriter implements DatasetFileWriter {
         try (FileOutputStream out = new FileOutputStream(file)) {
             writeCSV(csv, out);
         } catch (final IOException e) {
-            throw new CsvWriterException("Failed to write CSV to file " + file.getAbsolutePath(), e);
+            throw new CsvWriterException(file, e);
         }
     }
 

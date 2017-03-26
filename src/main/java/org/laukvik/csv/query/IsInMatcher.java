@@ -15,7 +15,6 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +24,7 @@ import java.util.List;
  *
  * @param <T> the type of object
  */
-public final class IsInMatcher<T> extends RowMatcher {
+public final class IsInMatcher<T> implements ValueMatcher<T> {
 
     /** The column.  */
     private final Column<T> column;
@@ -43,15 +42,13 @@ public final class IsInMatcher<T> extends RowMatcher {
         this.values = Arrays.asList(values);
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        Object o = row.get(column);
-        return values.contains(o);
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
+    @Override
+    public boolean matches(T value) {
+        return values.contains(value);
+    }
 }

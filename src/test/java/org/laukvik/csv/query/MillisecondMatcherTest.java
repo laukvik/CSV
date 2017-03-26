@@ -2,7 +2,6 @@ package org.laukvik.csv.query;
 
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Calendar;
@@ -25,16 +24,12 @@ public class MillisecondMatcherTest {
 
         CSV csv = new CSV();
         DateColumn c = csv.addDateColumn("value");
-        Row r1 = csv.addRow().setDate(c, d1);
-        Row r2 = csv.addRow().setDate(c, d2);
-        Row r3 = csv.addRow().setDate(c, d3);
-        Row r4 = csv.addRow();
 
         MillisecondMatcher m = new MillisecondMatcher(c, 11);
-        assertFalse(m.matches(r1));
-        assertTrue(m.matches(r2));
-        assertFalse(m.matches(r3));
-        assertFalse(m.matches(r4));
+        assertFalse(m.matches(d1));
+        assertTrue(m.matches(d2));
+        assertFalse(m.matches(d3));
+        assertFalse(m.matches(null));
     }
 
 }

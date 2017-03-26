@@ -35,14 +35,18 @@ public final class DateGreaterThanMatcher extends AbstractDateMatcher {
     }
 
     /**
-     * Returns true when the row matches.
+     * Returns true when the row matchesRow.
      *
      * @param row the row
-     * @return true when the row matches
+     * @return true when the row matchesRow
      */
     public boolean matches(final Row row) {
         Date d = row.getDate(getColumn());
         return DateColumn.isGreaterThan(d, getValue());
     }
 
+    @Override
+    public boolean matches(final Date value) {
+        return DateColumn.isGreaterThan(value, getValue());
+    }
 }

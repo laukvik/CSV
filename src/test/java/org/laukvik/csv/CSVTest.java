@@ -31,8 +31,8 @@ import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.columns.UrlColumn;
 import org.laukvik.csv.io.CsvReaderException;
 import org.laukvik.csv.io.CsvWriterException;
-import org.laukvik.csv.query.RowMatcher;
 import org.laukvik.csv.query.StringInMatcher;
+import org.laukvik.csv.query.ValueMatcher;
 import org.laukvik.csv.statistics.FrequencyDistribution;
 
 import java.io.File;
@@ -512,7 +512,7 @@ public class CSVTest {
         csv.readFile( getResource("separator_comma.csv")  );
         StringColumn c = (StringColumn) csv.getColumn("Heading1");
 
-        List<RowMatcher> matchers = new ArrayList<>();
+        List<ValueMatcher> matchers = new ArrayList<>();
         matchers.add( new StringInMatcher(c, "First"));
 
         csv.getRowsByMatchers(matchers);

@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.IntegerColumn;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Compares a IntegerColumn to be in an array of values.
  */
-public final class IntIsInMatcher extends RowMatcher {
+public final class IntIsInMatcher implements ValueMatcher<Integer> {
 
     /**
      * The values to compare to.
@@ -57,14 +57,14 @@ public final class IntIsInMatcher extends RowMatcher {
         this.values = values;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        Integer value = row.getInteger(column);
+    @Override
+    public Column getColumn() {
+        return column;
+    }
+
+
+    @Override
+    public boolean matches(final Integer value) {
         for (Integer v : values) {
             if (value == null) {
                 if (v == null) {
@@ -78,5 +78,4 @@ public final class IntIsInMatcher extends RowMatcher {
         }
         return false;
     }
-
 }

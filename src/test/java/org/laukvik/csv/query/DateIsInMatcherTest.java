@@ -2,7 +2,6 @@ package org.laukvik.csv.query;
 
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Calendar;
@@ -30,19 +29,18 @@ public class DateIsInMatcherTest {
 
         CSV csv = new CSV();
         DateColumn created = csv.addDateColumn("created");
-        Row row = csv.addRow().setDate(created, d2003);
 
         DateIsInMatcher matcher = new DateIsInMatcher(created, d2002, d2003, d2005);
-        assertTrue( matcher.matches(row) );
+        assertTrue( matcher.matches(d2003) );
 
         matcher = new DateIsInMatcher(created);
-        assertFalse( matcher.matches(row) );
+        assertFalse( matcher.matches(d2003) );
 
         matcher = new DateIsInMatcher(created, d2002, d2005);
-        assertFalse( matcher.matches(row) );
+        assertFalse( matcher.matches(d2003) );
 
         matcher = new DateIsInMatcher(created, d2005, d2003);
-        assertTrue( matcher.matches(row) );
+        assertTrue( matcher.matches(d2003) );
 
     }
 

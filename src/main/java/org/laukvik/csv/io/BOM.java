@@ -132,10 +132,10 @@ public enum BOM {
     }
 
     /**
-     * Returns whether the bytes matches the current.
+     * Returns whether the bytes matchesRow the current.
      *
      * @param values the bytes
-     * @return true if it matches
+     * @return true if it matchesRow
      */
     public boolean is(final byte... values) {
         if (values == null || values.length == 0 || values.length < this.bytes.length) {

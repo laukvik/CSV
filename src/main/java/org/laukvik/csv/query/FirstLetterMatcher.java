@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.StringColumn;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Compares a StringColumn to have the specified value.
  */
-public final class FirstLetterMatcher extends RowMatcher {
+public final class FirstLetterMatcher implements ValueMatcher<String> {
 
     /**
      * The value to compare.
@@ -56,15 +56,13 @@ public final class FirstLetterMatcher extends RowMatcher {
         this.values = values;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        String v = row.getString(column);
-        return values.contains(StringColumn.getFirstLetter(v));
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
+    @Override
+    public boolean matches(final String value) {
+        return values.contains(StringColumn.getFirstLetter(value));
+    }
 }

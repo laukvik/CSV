@@ -31,11 +31,11 @@ public class IntBetweenMatcherTest {
         Row r4 = csv.addRow().setInteger(first, 5);
         Row r5 = csv.addRow();
         IntBetweenMatcher m = new IntBetweenMatcher(first, 1, 4);
-        assertTrue(m.matches(r1));
-        assertTrue(m.matches(r2));
-        assertFalse(m.matches(r3));
-        assertFalse(m.matches(r4));
-        assertFalse(m.matches(r5));
+        assertTrue(m.matches(1));
+        assertTrue(m.matches(3));
+        assertFalse(m.matches(5));
+        assertFalse(m.matches(5));
+        assertFalse(m.matches(null));
     }
 
 }

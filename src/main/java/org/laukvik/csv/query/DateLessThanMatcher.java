@@ -15,7 +15,6 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Date;
@@ -36,15 +35,8 @@ public final class DateLessThanMatcher extends AbstractDateMatcher {
         super(column, value);
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        Date d = row.getDate(getColumn());
-        return DateColumn.isLessThan(d, getValue());
+    @Override
+    public boolean matches(final Date value) {
+        return DateColumn.isLessThan(value, getValue());
     }
-
 }

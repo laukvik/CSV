@@ -27,10 +27,10 @@ public class AnyMatcherTest {
 
         AnyMatcher m = new AnyMatcher(m1, m2);
 
-        assertTrue(m.matches(r1));
-        assertTrue(m.matches(r2));
-        assertFalse(m.matches(r3));
-        assertFalse(m.matches(r4));
+        assertTrue(m.matchesRow(r1));
+        assertTrue(m.matchesRow(r2));
+        assertFalse(m.matchesRow(r3));
+        assertFalse(m.matchesRow(r4));
 
     }
 

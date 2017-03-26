@@ -23,17 +23,17 @@ public class BooleanMatcherTest {
         Boolean b = null;
         BooleanMatcher m3 = new BooleanMatcher(c, b);
 
-        assertTrue(m1.matches(r1));
-        assertFalse(m2.matches(r1));
-        assertFalse(m3.matches(r1));
+        assertTrue(m1.matches(Boolean.FALSE));
+        assertFalse(m2.matches(Boolean.FALSE));
+        assertFalse(m3.matches(Boolean.FALSE));
 
-        assertFalse(m1.matches(r2));
-        assertTrue(m2.matches(r2));
-        assertFalse(m3.matches(r2));
+        assertFalse(m1.matches(Boolean.TRUE));
+        assertTrue(m2.matches(Boolean.TRUE));
+        assertFalse(m3.matches(Boolean.TRUE));
 
-        assertFalse(m1.matches(r3));
-        assertFalse(m2.matches(r3));
-        assertTrue(m3.matches(r3));
+        assertFalse(m1.matches(null));
+        assertFalse(m2.matches(null));
+        assertTrue(m3.matches(null));
     }
 
 }

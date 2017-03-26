@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Compares a StringColumn to have the specified value.
  */
-public final class SecondMatcher extends RowMatcher implements ValueMatcher<Date> {
+public final class SecondMatcher implements ValueMatcher<Date> {
 
     /**
      * The value to compare.
@@ -51,14 +51,9 @@ public final class SecondMatcher extends RowMatcher implements ValueMatcher<Date
         this.values = values;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        return matches(row.getDate(column));
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
     public boolean matches(final Date value) {

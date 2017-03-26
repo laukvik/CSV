@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.FloatColumn;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Compares a FloatColumn to a list of values.
  */
-public final class FloatMatcher extends RowMatcher {
+public final class FloatMatcher implements ValueMatcher<Float> {
 
     /**
      * The FloatColumn.
@@ -56,14 +56,13 @@ public final class FloatMatcher extends RowMatcher {
         this.values = floats;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        return values.contains(row.getFloat(column));
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
+    @Override
+    public boolean matches(final Float value) {
+        return values.contains(value);
+    }
 }

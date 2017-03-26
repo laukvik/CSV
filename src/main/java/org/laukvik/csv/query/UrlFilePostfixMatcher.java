@@ -15,7 +15,7 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.UrlColumn;
 
 import java.net.URL;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Compares a StringColumn to have the specified value.
  */
-public final class UrlFilePostfixMatcher extends RowMatcher implements ValueMatcher<URL> {
+public final class UrlFilePostfixMatcher implements ValueMatcher<URL> {
 
     /**
      * The value to compare.
@@ -57,21 +57,16 @@ public final class UrlFilePostfixMatcher extends RowMatcher implements ValueMatc
         this.values = values;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        return matches(row.getURL(column));
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
     /**
-     * Returns true if the url matches the values.
+     * Returns true if the url matchesRow the values.
      *
      * @param value the value to test against
-     * @return
+     * @return true when the url matchesRow
      */
     @Override
     public boolean matches(final URL value) {

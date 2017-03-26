@@ -20,9 +20,9 @@ public class UrlMatcherTest {
         Row r2 = csv.addRow().setURL(c, new URL("http://wikipedia.org/"));
         Row r3 = csv.addRow().setURL(c, null);
         UrlMatcher m = new UrlMatcher(c, new URL("http://localhost"));
-        assertTrue(m.matches(r1));
-        assertFalse(m.matches(r2));
-        assertFalse(m.matches(r3));
+        assertTrue(m.matches(new URL("http://localhost")));
+        assertFalse(m.matches(new URL("http://wikipedia.org/")));
+        assertFalse(m.matches(null));
     }
 
 }

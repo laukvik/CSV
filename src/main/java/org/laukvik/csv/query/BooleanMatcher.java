@@ -15,19 +15,20 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.BooleanColumn;
+import org.laukvik.csv.columns.Column;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * Compares a BooleanColumn to have the specified boolean value.
  *
  */
-public final class BooleanMatcher extends RowMatcher {
+public final class BooleanMatcher implements ValueMatcher<Boolean> {
 
     /**
+     * The values.
      */
     private final List<Boolean> values;
 
@@ -37,6 +38,7 @@ public final class BooleanMatcher extends RowMatcher {
     private final BooleanColumn column;
 
     /**
+     * Compares a BooleanColumn to have the specified boolean value.
      *
      * @param booleanColumn the booleanColumn
      * @param values         the boolean values
@@ -45,19 +47,24 @@ public final class BooleanMatcher extends RowMatcher {
         this(booleanColumn, Arrays.asList(values));
     }
 
+    /**
+     * Compares a BooleanColumn to have the specified boolean value.
+     *
+     * @param booleanColumn the booleanColumn
+     * @param values         the boolean values
+     */
     public BooleanMatcher(final BooleanColumn booleanColumn, final List<Boolean> values) {
         this.column = booleanColumn;
         this.values = values;
     }
 
-    /**
-     * Matches the row.
-     *
-     * @param row the row to compare
-     * @return true if it matches
-     */
-    public boolean matches(final Row row) {
-        return values.contains(row.getBoolean(column));
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
+    @Override
+    public boolean matches(final Boolean value) {
+        return values.contains(value);
+    }
 }

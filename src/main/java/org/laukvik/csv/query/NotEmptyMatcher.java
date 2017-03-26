@@ -15,13 +15,12 @@
  */
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
 /**
  * Compares a Column to be not empty.
  */
-public final class NotEmptyMatcher extends RowMatcher {
+public final class NotEmptyMatcher implements ValueMatcher<Object> {
 
     /**
      * The Column.
@@ -38,14 +37,13 @@ public final class NotEmptyMatcher extends RowMatcher {
         this.c = column;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        return !row.isNull(c);
+    @Override
+    public Column getColumn() {
+        return null;
     }
 
+    @Override
+    public boolean matches(final Object value) {
+        return value != null;
+    }
 }

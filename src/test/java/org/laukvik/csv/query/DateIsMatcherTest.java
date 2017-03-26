@@ -2,7 +2,6 @@ package org.laukvik.csv.query;
 
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Date;
@@ -20,13 +19,10 @@ public class DateIsMatcherTest {
     public void matches() throws Exception {
         CSV csv = new CSV();
         DateColumn first = csv.addDateColumn("created", "yyyy.MM.dd");
-        Row r1 = csv.addRow().setDate(first, first.parse("2010.01.01"));
-        Row r2 = csv.addRow();
-        Row r3 = csv.addRow().setDate(first, first.parse("2010.03.01"));
         DateIsMatcher m = new DateIsMatcher(first, first.parse("2010.01.01"));
         Date d = null;
         DateIsMatcher m2 = new DateIsMatcher(first, d);
-        assertTrue( m.matches(r1) );
+        assertTrue( m.matches(first.parse("2010.01.01")) );
         Date d2 = null;
         Date d3 = first.parse("2010.01.01");
         assertTrue( m2.matches(d2) );

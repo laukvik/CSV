@@ -17,6 +17,7 @@ package org.laukvik.csv.query;
 
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +32,7 @@ public final class Query {
     /**
      * Contains all matchers.
      */
-    private final List<RowMatcher> matchers;
+    private final List<ValueMatcher> matchers;
     /**
      * Contains all sort orders.
      */
@@ -229,7 +230,7 @@ public final class Query {
      *
      * @param matcher the matcher
      */
-    public void addRowMatcher(final RowMatcher matcher) {
+    public void addRowMatcher(final ValueMatcher matcher) {
         matchers.add(matcher);
     }
 
@@ -238,7 +239,7 @@ public final class Query {
      *
      * @param matcher the matcher
      */
-    public void removeRowMatcher(final RowMatcher matcher) {
+    public void removeRowMatcher(final ValueMatcher matcher) {
         matchers.remove(matcher);
     }
 
@@ -287,7 +288,7 @@ public final class Query {
      *
      * @return the matchers
      */
-    public List<RowMatcher> getMatchers() {
+    public List<ValueMatcher> getMatchers() {
         return matchers;
     }
 
@@ -301,17 +302,22 @@ public final class Query {
     }
 
     /**
-     * Returns true if the row matches the query.
+     * Returns true if the row matchesRow the query.
      *
      * @param row the row
-     * @return true when matches
+     * @return true when matchesRow
      */
     public boolean matches(final Row row) {
         int matchCount = 0;
-        for (RowMatcher matcher : matchers) {
-            if (matcher.matches(row)) {
+
+        for (ValueMatcher matcher : matchers) {
+            Column c = matcher.getColumn();
+            if (matcher.matches(row.get(c))){
                 matchCount++;
             }
+//            if (matcher.matches(row)) {
+//                matchCount++;
+//            }
         }
         return matchCount == matchers.size();
     }

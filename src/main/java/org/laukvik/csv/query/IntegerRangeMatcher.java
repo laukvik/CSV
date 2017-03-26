@@ -1,6 +1,6 @@
 package org.laukvik.csv.query;
 
-import org.laukvik.csv.Row;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.statistics.IntegerRange;
 
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Matches Integers in the specified ranges.
  */
-public final class IntegerRangeMatcher extends RowMatcher implements ValueMatcher<Integer> {
+public final class IntegerRangeMatcher implements ValueMatcher<Integer> {
 
     /**
      * The IntegerColumn to match.
@@ -39,27 +39,20 @@ public final class IntegerRangeMatcher extends RowMatcher implements ValueMatche
      * @param range         the ranges
      */
     public IntegerRangeMatcher(final IntegerColumn integerColumn, final List<IntegerRange> range) {
-        super();
         this.column = integerColumn;
         this.ranges = range;
     }
 
-    /**
-     * Returns true when the row matches.
-     *
-     * @param row the row
-     * @return true when the row matches
-     */
-    public boolean matches(final Row row) {
-        Integer i = row.getInteger(column);
-        return matches(i);
+    @Override
+    public Column getColumn() {
+        return column;
     }
 
     /**
-     * Returns true when the value matches.
+     * Returns true when the value matchesRow.
      *
      * @param value the value to test against
-     * @return true when matches
+     * @return true when matchesRow
      */
     @Override
     public boolean matches(final Integer value) {
