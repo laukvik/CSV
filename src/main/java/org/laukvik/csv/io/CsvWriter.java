@@ -44,7 +44,7 @@ public final class CsvWriter implements DatasetFileWriter {
      * @param value the value
      * @return true if digits only
      */
-    public static boolean isDigitsOnly(final String value) {
+    protected static boolean isDigitsOnly(final String value) {
         if (value == null) {
             return false;
         }

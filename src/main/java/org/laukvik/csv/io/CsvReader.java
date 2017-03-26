@@ -13,29 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h2>Reads a data set in the CSV format.</h2>
- * <h3>Reading a file with auto detect on:</h3>
- * <pre>
- * try (CsvReader r = new CsvReader( new File("presidents.csv"), Charset.forName(charset)) )) {
- *   while (r.hasNext()) {
- *     Row row = r.next();
- *   }
- *   }
- *   catch (IOException e) {
- *     e.printStacktrace();
- * }
- * </pre>
- * <h3>Reading a file with specifying separator character and encoding:</h3>
- * <pre>
- * try (CsvReader r = new CsvReader( new File("presidents.csv"), Charset.forName(charset)) )) {
- *   while (r.hasNext()) {
- *     Row row = r.next();
- *   }
- *   }
- *   catch (IOException e) {
- *     e.printStacktrace();
- * }
- * </pre>
+ * Reads a data set in the CSV format.
+ *
  */
 public final class CsvReader implements DatasetFileReader {
 
@@ -64,7 +43,9 @@ public final class CsvReader implements DatasetFileReader {
      */
     private Character columnSeparatorChar;
 
-    /** The charset being instructed to use. */
+    /**
+     * The charset being instructed to use.
+     */
     private Charset charset;
 
     /**

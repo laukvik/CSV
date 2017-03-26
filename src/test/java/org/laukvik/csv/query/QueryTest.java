@@ -217,9 +217,9 @@ public class QueryTest {
     public void getMatchers() throws IOException {
         Query q = new Query();
         IntegerLessThanMatcher m = new IntegerLessThanMatcher(presidency, 5);
-        q.addRowMatcher(m);
+        q.addMatcher(m);
         assertEquals(1, q.getMatchers().size());
-        q.removeRowMatcher(m);
+        q.removeMatcher(m);
         assertEquals(0, q.getMatchers().size());
     }
 

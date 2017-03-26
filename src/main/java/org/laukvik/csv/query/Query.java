@@ -54,7 +54,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query after(final org.laukvik.csv.columns.DateColumn column, final Date date) {
-        addRowMatcher(new DateGreaterThanMatcher(column, date));
+        addMatcher(new DateGreaterThanMatcher(column, date));
         return this;
     }
 
@@ -66,7 +66,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query contains(final org.laukvik.csv.columns.DateColumn column, final Date... dates) {
-        addRowMatcher(new DateIsInMatcher(column, dates));
+        addMatcher(new DateIsInMatcher(column, dates));
         return this;
     }
 
@@ -78,7 +78,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query is(final org.laukvik.csv.columns.DateColumn column, final Date date) {
-        addRowMatcher(new DateIsMatcher(column, date));
+        addMatcher(new DateIsMatcher(column, date));
         return this;
     }
 
@@ -90,7 +90,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query is(final org.laukvik.csv.columns.StringColumn column, final String value) {
-        addRowMatcher(new StringInMatcher(column, value));
+        addMatcher(new StringInMatcher(column, value));
         return this;
     }
 
@@ -102,7 +102,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query in(final org.laukvik.csv.columns.StringColumn column, final String... list) {
-        addRowMatcher(new StringInMatcher(column, list));
+        addMatcher(new StringInMatcher(column, list));
         return this;
     }
 
@@ -114,7 +114,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query lessThan(final org.laukvik.csv.columns.DateColumn column, final Date date) {
-        addRowMatcher(new DateLessThanMatcher(column, date));
+        addMatcher(new DateLessThanMatcher(column, date));
         return this;
     }
 
@@ -125,7 +125,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query isEmpty(final org.laukvik.csv.columns.Column column) {
-        addRowMatcher(new EmptyMatcher(column));
+        addMatcher(new EmptyMatcher(column));
         return this;
     }
 
@@ -138,7 +138,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query isBetween(final org.laukvik.csv.columns.IntegerColumn column, final int min, final int max) {
-        addRowMatcher(new IntegerBetweenMatcher(column, min, max));
+        addMatcher(new IntegerBetweenMatcher(column, min, max));
         return this;
     }
 
@@ -150,7 +150,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query isGreaterThan(final org.laukvik.csv.columns.IntegerColumn column, final int value) {
-        addRowMatcher(new IntegerGreaterThanMatcher(column, value));
+        addMatcher(new IntegerGreaterThanMatcher(column, value));
         return this;
     }
 
@@ -162,7 +162,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query isIn(final org.laukvik.csv.columns.IntegerColumn column, final Integer... list) {
-        addRowMatcher(new IntegerIsInMatcher(column, list));
+        addMatcher(new IntegerIsInMatcher(column, list));
         return this;
     }
 
@@ -174,7 +174,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query is(final org.laukvik.csv.columns.IntegerColumn column, final Integer value) {
-        addRowMatcher(new IntegerIsMatcher(column, value));
+        addMatcher(new IntegerIsMatcher(column, value));
         return this;
     }
 
@@ -186,7 +186,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query lessThan(final org.laukvik.csv.columns.IntegerColumn column, final int value) {
-        addRowMatcher(new IntegerLessThanMatcher(column, value));
+        addMatcher(new IntegerLessThanMatcher(column, value));
         return this;
     }
 
@@ -198,7 +198,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query in(final org.laukvik.csv.columns.Column column, final Float... list) {
-        addRowMatcher(new IsInMatcher<Float>(column, list));
+        addMatcher(new IsInMatcher<Float>(column, list));
         return this;
     }
 
@@ -209,7 +209,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query notEmpty(final org.laukvik.csv.columns.Column column) {
-        addRowMatcher(new NotEmptyMatcher(column));
+        addMatcher(new NotEmptyMatcher(column));
         return this;
     }
 
@@ -221,7 +221,7 @@ public final class Query {
      * @return the same query instance
      */
     public Query isYear(final org.laukvik.csv.columns.DateColumn column, final Integer year) {
-        addRowMatcher(new YearMatcher(column, year));
+        addMatcher(new YearMatcher(column, year));
         return this;
     }
 
@@ -230,7 +230,7 @@ public final class Query {
      *
      * @param matcher the matcher
      */
-    public void addRowMatcher(final ValueMatcher matcher) {
+    public void addMatcher(final ValueMatcher matcher) {
         matchers.add(matcher);
     }
 
@@ -239,7 +239,7 @@ public final class Query {
      *
      * @param matcher the matcher
      */
-    public void removeRowMatcher(final ValueMatcher matcher) {
+    public void removeMatcher(final ValueMatcher matcher) {
         matchers.remove(matcher);
     }
 
@@ -315,9 +315,6 @@ public final class Query {
             if (matcher.matches(row.get(c))){
                 matchCount++;
             }
-//            if (matcher.matches(row)) {
-//                matchCount++;
-//            }
         }
         return matchCount == matchers.size();
     }

@@ -1062,7 +1062,7 @@ public final class CSV implements Serializable {
     public List<Row> findRowsByMatchers(final List<ValueMatcher> matchers) {
         Query q = new Query();
         for (ValueMatcher m : matchers) {
-            q.addRowMatcher(m);
+            q.addMatcher(m);
         }
         return findRowsByQuery(q);
     }

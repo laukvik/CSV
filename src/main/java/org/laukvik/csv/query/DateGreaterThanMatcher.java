@@ -20,7 +20,7 @@ import org.laukvik.csv.columns.DateColumn;
 import java.util.Date;
 
 /**
- * Matches rows with date greater than the value.
+ * Compares a DateColumn to the specified dates.
  */
 public final class DateGreaterThanMatcher extends AbstractDateMatcher {
 
