@@ -20,7 +20,11 @@ public class UrlAnchorMatcherTest {
         assertFalse(m.matches(new URL("http://localhost/#")));
         assertFalse(m.matches(new URL("http://localhost/#a")));
         assertFalse(m.matches(new URL("http://localhost/##")));
-        assertTrue(m.matches(null));
+        assertFalse(m.matches(null));
+
+        String s = null;
+        UrlAnchorMatcher m2 = new UrlAnchorMatcher(c, s);
+        assertTrue(m2.matches(null));
     }
 
 }

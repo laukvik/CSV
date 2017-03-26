@@ -15,7 +15,7 @@ public class IntIsMatcherTest {
     public void matches() throws Exception {
         CSV csv = new CSV();
         IntegerColumn created = csv.addIntegerColumn("created");
-        IntIsMatcher m = new IntIsMatcher(created, 4);
+        IntIsMatcher m = new IntIsMatcher(created, 3);
         assertTrue( m.matches(3) );
         assertFalse( m.matches(4) );
         assertFalse( m.matches(5) );

@@ -11,8 +11,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- */
 public class RowSorterTest {
 
     @Test
@@ -34,7 +32,6 @@ public class RowSorterTest {
         assertTrue(sort1.compare(r1,r3) < 0);
         assertTrue(sort1.compare(r3,r1) > 0);
         assertTrue(sort1.compare(r4,r4) == 0);
-
     }
 
 }
