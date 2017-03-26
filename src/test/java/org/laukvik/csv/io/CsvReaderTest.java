@@ -125,7 +125,6 @@ public class CsvReaderTest {
         Charset charset = BOM.UTF8.getCharset();
         String norwegian = "Norwegian æøå and ÆØÅ";
         CSV csv = new CSV();
-        csv.setCharset(charset);
         CsvReader reader = new CsvReader(charset, null, null );
         reader.readFile( getResource("charset.csv"), csv );
         StringColumn sc = (StringColumn) csv.getColumn("text");

@@ -6,7 +6,7 @@ import org.laukvik.csv.columns.IntegerColumn;
 /**
  * Finds the lowest value of the.
  */
-public class Max extends Aggregate {
+public final class Max extends Aggregate {
 
     /**
      * Container for the minimum value.
