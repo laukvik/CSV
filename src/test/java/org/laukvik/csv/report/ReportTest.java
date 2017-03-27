@@ -129,7 +129,6 @@ public class ReportTest {
         Node root = r.buildNode(csv);
 
         CSV csv2 = r.buildCSV(root);
-        csv2.writeFile(new File("/Users/morten/Desktop/aggreg.csv"));
     }
 
 
