@@ -195,8 +195,18 @@ public class RowTest {
     public void isnull() {
         CSV csv = new CSV();
         IntegerColumn ic = csv.addIntegerColumn("integer");
-        Row r = csv.addRow();
+        Row r = csv.addRow().setInteger(ic, 12);
         assertTrue( r.isNull(ic));
+    }
+
+    @Test
+    public void getAsString() {
+        CSV csv = new CSV();
+        IntegerColumn ic = csv.addIntegerColumn("i1");
+        IntegerColumn ic2 = csv.addIntegerColumn("i2");
+        Row r = csv.addRow().setInteger(ic, 1234567).setInteger(ic2, null);
+        assertEquals( "1234567", r.getAsString(ic));
+        assertEquals( "", r.getAsString(ic2));
     }
 
 }
