@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -194,9 +195,11 @@ public class RowTest {
     @Test
     public void isnull() {
         CSV csv = new CSV();
-        IntegerColumn ic = csv.addIntegerColumn("integer");
+        IntegerColumn ic = csv.addIntegerColumn("i1");
+        IntegerColumn ic2 = csv.addIntegerColumn("i2");
         Row r = csv.addRow().setInteger(ic, 12);
-        assertTrue( r.isNull(ic));
+        assertFalse( r.isNull(ic));
+        assertTrue( r.isNull(ic2));
     }
 
     @Test
