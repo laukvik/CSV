@@ -2,17 +2,24 @@ package org.laukvik.csv.query;
 
 import org.junit.Test;
 import org.laukvik.csv.CSV;
-import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.DateColumn;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class SecondMatcherTest {
+
+    @Test
+    public void getColumn() {
+        DateColumn c = new DateColumn("value");
+        SecondMatcher m = new SecondMatcher(c, 11);
+        assertEquals(c, m.getColumn());
+    }
 
     @Test
     public void matches() throws Exception {
@@ -26,10 +33,6 @@ public class SecondMatcherTest {
 
         CSV csv = new CSV();
         DateColumn c = csv.addDateColumn("value");
-        Row r1 = csv.addRow().setDate(c, d1);
-        Row r2 = csv.addRow().setDate(c, d2);
-        Row r3 = csv.addRow().setDate(c, d3);
-        Row r4 = csv.addRow();
 
         SecondMatcher m = new SecondMatcher(c, 11);
         assertFalse(m.matches(d1));

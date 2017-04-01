@@ -16,30 +16,32 @@
 package org.laukvik.csv.query;
 
 import org.laukvik.csv.columns.Column;
-import org.laukvik.csv.columns.StringColumn;
-
-import java.util.regex.Pattern;
+import org.laukvik.csv.columns.FloatColumn;
 
 /**
- * Compares a StringColumn to have one or more of the specified values.
+ * Compares a FloatColumn to be less than a value.
  */
-public final class RegExMatcher implements ValueMatcher<String> {
-
-    /** The Column to match. */
-    private final StringColumn column;
-
-    /** The compiled regular expression pattern. */
-    private final Pattern pattern;
+public final class FloatLessThanMatcher implements ValueMatcher<Float> {
 
     /**
-     * The value of the column must be among the values.
-     *
-     * @param stringColumn the column
-     * @param pattern the value
+     * The value to match.
      */
-    public RegExMatcher(final StringColumn stringColumn, final Pattern pattern) {
-        this.column = stringColumn;
-        this.pattern = pattern;
+    private final float value;
+    /**
+     * The column to match.
+     */
+    private final FloatColumn column;
+
+    /**
+     * The value of the column must be value.
+     *
+     * @param floatColumn the column
+     * @param value       the value
+     */
+    public FloatLessThanMatcher(final FloatColumn floatColumn, final float value) {
+        super();
+        this.column = floatColumn;
+        this.value = value;
     }
 
     @Override
@@ -48,7 +50,7 @@ public final class RegExMatcher implements ValueMatcher<String> {
     }
 
     @Override
-    public boolean matches(final String value) {
-        return pattern.matcher(value).matches();
+    public boolean matches(final Float i) {
+        return i != null && i < value;
     }
 }

@@ -5,10 +5,18 @@ import org.laukvik.csv.columns.UrlColumn;
 
 import java.net.URL;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class UrlProtocolMatcherTest {
+
+    @Test
+    public void getColumn() {
+        UrlColumn c = new UrlColumn("value");
+        UrlProtocolMatcher m = new UrlProtocolMatcher(c, "");
+        assertEquals(c, m.getColumn());
+    }
 
     @Test
     public void matches() throws Exception {

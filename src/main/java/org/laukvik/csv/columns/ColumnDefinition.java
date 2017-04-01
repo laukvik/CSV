@@ -71,7 +71,7 @@ public final class ColumnDefinition {
                                     String extraNumber = value.substring(extraIndex + 1, extraLastIndex);
                                     cd.setAttribute(key, new ColumnDefinition.Attribute(extraValue, extraNumber));
                                 } else {
-                                    // End symbol is before start symbol
+                                    // End symbol is isBefore start symbol
                                     String extraValue = value.substring(0, extraIndex);
                                     String extraNumber = value.substring(extraIndex + 1);
                                     cd.setAttribute(key, new ColumnDefinition.Attribute(extraValue, extraNumber));

@@ -8,9 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-/**
- * TODO - Tests should be moved to DateColumn instead
- */
 public class DateLessThanMatcherTest {
 
     public Date createDate(int year, int month, int day) {

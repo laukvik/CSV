@@ -2,15 +2,22 @@ package org.laukvik.csv.query;
 
 import org.junit.Test;
 import org.laukvik.csv.CSV;
+import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.FloatColumn;
+import org.laukvik.csv.columns.StringColumn;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/**
- * @author Morten Laukvik
- */
 public class IsInMatcherTest {
+
+    @Test
+    public void getColumn() {
+        Column c = new StringColumn("first");
+        IsInMatcher<Object> m = new IsInMatcher<Object>(c);
+        assertEquals(c, m.getColumn());
+    }
 
     @Test
     public void matches() throws Exception {

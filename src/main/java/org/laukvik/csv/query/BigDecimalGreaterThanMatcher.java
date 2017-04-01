@@ -15,31 +15,35 @@
  */
 package org.laukvik.csv.query;
 
+import org.laukvik.csv.columns.BigDecimalColumn;
 import org.laukvik.csv.columns.Column;
-import org.laukvik.csv.columns.StringColumn;
 
-import java.util.regex.Pattern;
+import java.math.BigDecimal;
 
 /**
- * Compares a StringColumn to have one or more of the specified values.
+ * Compares a BigDecimalColumn to be less than a value.
  */
-public final class RegExMatcher implements ValueMatcher<String> {
-
-    /** The Column to match. */
-    private final StringColumn column;
-
-    /** The compiled regular expression pattern. */
-    private final Pattern pattern;
+public final class BigDecimalGreaterThanMatcher implements ValueMatcher<BigDecimal> {
 
     /**
-     * The value of the column must be among the values.
-     *
-     * @param stringColumn the column
-     * @param pattern the value
+     * The value to match.
      */
-    public RegExMatcher(final StringColumn stringColumn, final Pattern pattern) {
-        this.column = stringColumn;
-        this.pattern = pattern;
+    private final BigDecimal value;
+    /**
+     * The column to match.
+     */
+    private final BigDecimalColumn column;
+
+    /**
+     * The value of the column must be value.
+     *
+     * @param bigDecimalColumn the column
+     * @param value            the value
+     */
+    public BigDecimalGreaterThanMatcher(final BigDecimalColumn bigDecimalColumn, final BigDecimal value) {
+        super();
+        this.column = bigDecimalColumn;
+        this.value = value;
     }
 
     @Override
@@ -48,7 +52,7 @@ public final class RegExMatcher implements ValueMatcher<String> {
     }
 
     @Override
-    public boolean matches(final String value) {
-        return pattern.matcher(value).matches();
+    public boolean matches(final BigDecimal i) {
+        return i != null && value.compareTo(i) < 0;
     }
 }

@@ -5,10 +5,18 @@ import org.laukvik.csv.CSV;
 import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.BooleanColumn;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class BooleanMatcherTest {
+
+    @Test
+    public void getColumn() {
+        BooleanColumn c = new BooleanColumn("value");
+        BooleanMatcher m = new BooleanMatcher(c);
+        assertEquals(c, m.getColumn());
+    }
 
     @Test
     public void matches() throws Exception {

@@ -107,7 +107,7 @@ public class QueryTest {
     @Test
     public void lessThan() {
         Query q = new Query();
-        q.lessThan(presidency, 41);
+        q.isLessThan(presidency, 41);
         List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(40, rows.size());
     }
@@ -115,7 +115,7 @@ public class QueryTest {
     @Test
     public void isIn() {
         Query q = new Query();
-        q.isIn(presidency, 1,3,5);
+        q.is(presidency, 1, 3, 5);
         List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(3, rows.size());
     }
@@ -133,7 +133,7 @@ public class QueryTest {
     public void greaterThan() throws ParseException {
         Date date = new GregorianCalendar(2000, 1, 1).getTime();
         Query q = new Query();
-        q.after(tookOffice, date);
+        q.isAfter(tookOffice, date);
         List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(2, rows.size());
     }
@@ -142,7 +142,7 @@ public class QueryTest {
     public void isDateLess() throws ParseException {
         Date date = tookOffice.parse("1/1/1800");
         Query q = new Query();
-        q.lessThan(tookOffice, date);
+        q.isBefore(tookOffice, date);
         List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(2, rows.size());
     }
@@ -209,7 +209,7 @@ public class QueryTest {
     @Test
     public void greaterThan_date() throws IOException {
         Query q = new Query();
-        q.after(leftOffice, leftOffice.parse("01/01/2005")); // dd/MM/yyyy
+        q.isAfter(leftOffice, leftOffice.parse("01/01/2005")); // dd/MM/yyyy
         assertEquals(1, q.getRows(csv).size());
     }
 

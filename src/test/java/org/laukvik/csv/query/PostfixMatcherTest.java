@@ -4,10 +4,18 @@ import org.junit.Test;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.columns.StringColumn;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class PostfixMatcherTest {
+
+    @Test
+    public void getColumn() {
+        StringColumn c = new StringColumn("value");
+        PostfixMatcher m = new PostfixMatcher(c, "");
+        assertEquals(c, m.getColumn());
+    }
 
     @Test
     public void matches() throws Exception {

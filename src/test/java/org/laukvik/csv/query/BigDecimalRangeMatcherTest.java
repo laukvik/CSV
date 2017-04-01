@@ -7,10 +7,18 @@ import org.laukvik.csv.statistics.BigDecimalRange;
 
 import java.math.BigDecimal;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class BigDecimalRangeMatcherTest {
+
+    @Test
+    public void getColumn() {
+        BigDecimalColumn c = new BigDecimalColumn("value");
+        BigDecimalRangeMatcher m = new BigDecimalRangeMatcher(c);
+        assertEquals(c, m.getColumn());
+    }
 
     @Test
     public void matches() throws Exception {

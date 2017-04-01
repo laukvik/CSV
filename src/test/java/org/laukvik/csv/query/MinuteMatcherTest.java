@@ -8,10 +8,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class MinuteMatcherTest {
+
+    @Test
+    public void getColumn() {
+        DateColumn c = new DateColumn("value");
+        MinuteMatcher m = new MinuteMatcher(c);
+        assertEquals(c, m.getColumn());
+    }
 
     @Test
     public void matches() throws Exception {

@@ -6,10 +6,19 @@ import org.laukvik.csv.columns.BigDecimalColumn;
 
 import java.math.BigDecimal;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class BigDecimalMatcherTest {
+
+    @Test
+    public void getColumn() {
+        BigDecimalColumn c = new BigDecimalColumn("value");
+        BigDecimalMatcher m = new BigDecimalMatcher(c);
+        assertEquals(c, m.getColumn());
+    }
+
 
     @Test
     public void matches() throws Exception {
