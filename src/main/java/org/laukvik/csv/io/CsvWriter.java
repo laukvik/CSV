@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Writes the data setUnparsed in the CSV format.
+ * Writes the data setRaw in the CSV format.
  *
  * @see <a href="https://tools.ietf.org/html/rfc4180">Common Format and MIME Type for Comma-Separated
  * Values (CSV) Files</a>
@@ -95,7 +95,7 @@ public final class CsvWriter implements DatasetFileWriter {
         List<String> values = new ArrayList<>();
         for (int x = 0; x < csv.getColumnCount(); x++) {
             Column c = csv.getColumn(x);
-            values.add(row.getAsString(c));
+            values.add(row.getRaw(c));
         }
         return values;
     }

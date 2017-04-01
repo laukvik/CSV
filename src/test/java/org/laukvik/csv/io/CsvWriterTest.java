@@ -41,8 +41,8 @@ public class CsvWriterTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
-        csv.addRow().setUnparsed(first, "Bill").setUnparsed(last, "Gates");
-        csv.addRow().setUnparsed(first, "Steve").setUnparsed(last, "Jobs");
+        csv.addRow().setRaw(first, "Bill").setRaw(last, "Gates");
+        csv.addRow().setRaw(first, "Steve").setRaw(last, "Jobs");
         CsvWriter w = new CsvWriter();
         w.writeCSV(f, csv);
 
@@ -51,8 +51,8 @@ public class CsvWriterTest {
         assertEquals(2, csv2.getRowCount());
         assertEquals("First", csv2.getColumn(0).getName());
         assertEquals("Last", csv2.getColumn(1).getName());
-        assertEquals("Bill", csv2.getRow(0).getString(first));
-        assertEquals("Gates", csv2.getRow(0).getString(last));
+        assertEquals("Bill", csv2.getRow(0).get(first));
+        assertEquals("Gates", csv2.getRow(0).get(last));
     }
 
     @Test

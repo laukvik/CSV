@@ -36,19 +36,19 @@ public class XmlParserTest {
 
 //        assertEquals(4, html.getChildren().size());
 
-//        Tag h1 = body.getChildren().get(0);
+//        Tag h1 = body.getChildren().getObject(0);
 //        assertEquals("h1", h1.getName());
 //
-//        Tag p = body.getChildren().get(1);
+//        Tag p = body.getChildren().getObject(1);
 //        assertEquals("p", p.getName());
 //
-//        Tag img = body.getChildren().get(2);
+//        Tag img = body.getChildren().getObject(2);
 //        assertEquals("img", img.getName());
 //
-//        Tag input = body.getChildren().get(3);
+//        Tag input = body.getChildren().getObject(3);
 //        assertEquals("input", input.getName());
 
-//        Tag text = p.getChildren().get(0);
+//        Tag text = p.getChildren().getObject(0);
 //        assertEquals("The ", text.getText());
     }
 

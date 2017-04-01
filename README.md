@@ -5,165 +5,168 @@ LaukvikCSV
 **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)<br/>
 
 
-An easy to use API for reading, writing, querying and exporting data.
+LaukvikCSV is a powerful API for reading, writing and querying tabular data stored in the CSV format. In contrast to other API it lets you specify data types for each column using meta data. It automatically detects delimiters so you don't have to worry about delimiters being comma, tab, pipe, semicolon etc. Run powerful queries to filter your data easily with a fluid query language thats type safe. Export your tabular data to CSV, JSON, XML and HTML.
 
 
-## Reading files
+## Reading a CSV file
 
 The easiest way to read a CSV file is to call the default constructor. This method will try to auto detect separator character and encoding.
 
-    CSV csv = new CSV(new File("presidents.csv"));
-    
-To read files using a SEMI COLON as separator character
-
-    CSV csv = new CSV();
-    csv.readFile( new File("presidents.csv"), CSV.SEMICOLON );
-
-To read files using a semi colon as PIPE character
-
-    CSV csv = new CSV();
-    csv.readFile( new File("presidents.csv"), CSV.PIPE );
-
-To read files using a semi colon as TAB character
-
-    CSV csv = new CSV();
-    csv.readFile( new File("presidents.csv"), CSV.TAB );
+```java
+CSV csv = new CSV( new File("presidents.csv") );
+StringColumn president = csv.getColumn("president");
+IntegerColumn presidency = csv.getColumn(5);
+List<Row> rows = csv.findRows();
+for (Row r : rows){
+    System.out.println( r.getObject(president) );
+    System.out.println( r.getObject(presidency) );
+}
+```
 
 ## Writing files
+```java
+CSV csv = new CSV();
+StringColumn first = csv.getColumn("first");
+StringColumn last = csv.getColumn("last");
+csv.writeFile( new File("addresses.csv") ); // Write to CSV format
+```
 
-    csv.writeFile( file, CSV.PIPE );
+## Exporting files
+```java
+csv.writeHtml( new File("addresses.html") ); // Write to HTML format
+csv.writeJSON( new File("addresses.json") ); // Write to JSON format
+csv.writeXML( new File("addresses.xnk") ); // Write to XML format
+```
 
-## Querying files
+## Querying a CSV file
+```java
+CSV csv = new CSV( new File("presidents.csv") );
+StringColumn president = csv.getColumn("president");
+IntegerColumn presidency = csv.getColumn(5);
+Query query = new Query();
+query.isBetween(presidency, 1, 10);
+List<Row> rows = csv.findRowsByQuery( query );
+for (Row r : rows){
+    System.out.println( r.getObject(president) );
+    System.out.println( r.getObject(presidency) );
+}
+```
 
-    csv.find().column( first
-
-## Working with rows and columns
-
-
-
-
-
-
-
-## Export files
-
-To write the contents to a CSV file
-
-    csv.writeFile( new File("presidents.csv") );
-
-To write the contents to a XML file
-
-    csv.writeXML( new File("presidents.xml") );
-
-To write the contents to a JSON file
-
-    csv.writeXML( new File("presidents.json") );
-    
-To write the contents to a HTML file
-
-    csv.writeXML( new File("presidents.html") );
-    
-To write the contents to ResourceBundle(s)
-
-    csv.writeXML( new File("presidents.properties") );
-
-
+## Building a CSV file
+```java
+CSV csv = new CSV();
+StringColumn first = csv.getColumn("first");
+StringColumn last = csv.getColumn("last");
+csv.addRow().set( first, "John" ).set( last, "Doe" );  
+```
 
 ## Working with columns
 
 Creating a CSV with two columns
+```java
+CSV csv = new CSV();
+csv.addStringColumn("President");
+csv.addStringColumn("Party");
+```
 
-    CSV csv = new CSV();
-    csv.addColumn("President");
-    csv.addColumn("Party");
-    
 Reordering columns. The following example moves the column "Party" from index 1 to index 0 
+```java
+csv.moveColumn(1,0);
+```
 
-    csv.getMetaData().moveColumn(1,0);
-    
 Removes the first column (President).
-
-    csv.getMetaData().removeColumn(0);
-
-    
-    
-    
+```java
+csv.removeColumn(0);
+```
 
 ## Working with rows
 
 Adding a new row with data
+```java
+CSV csv = new CSV();
+StringColumn president = csv.addColumn("President");
+StringColumn party = csv.addColumn("Party");
 
-    CSV csv = new CSV();
-    StringColumn president = csv.addColumn("President");
-    StringColumn party = csv.addColumn("Party");
-    
-    csv.addRow().update(president, "Barack Obama").update(party, "Democratic");
+csv.addRow()
+    .set(president, "Barack Obama")
+    .set(party, "Democratic");
+```
 
 Moving a row up or down
+```java
+csv.moveRow( 1, 2 );
+```
 
-    csv.moveRow( 1, 2 );
-    
 Swapping two rows
+```java
+csv.swapRows( 1, 2 );
+```
 
-    csv.swapRows( 1, 2 );
-    
 Removing rows
+```java
+csv.removeRow( 5 );
+```
 
-    csv.removeRow( 5 );
-    
 Removing rows between range
+```java
+csv.removeRows( 5, 10 );
+```
 
-    csv.removeRows( 5, 10 );
-    
 Finding the index
-
-    csv.indexOf( row );
+```java
+csv.indexOf( row );
+```
 
 Inserting row at a specific index
-
-    CSV csv = new CSV();
-    StringColumn president = csv.addStringColumn("President");
-    csv.addRow(0).setString(president, "Barak Obama");
-
-
+```java
+CSV csv = new CSV();
+StringColumn president = csv.addStringColumn("President");
+csv.addRow(0).setString(president, "Barak Obama");
+```
 
 ## Iterating rows
 
 Iterating all rows
-
-    CSV csv = new CSV();
-    for (int y=0; y<csv.getRowCount(); y++){
-        Row row = csv.getRow(y);
-    }
-
-Iterate using stream
+```java
+CSV csv = new CSV( new File("presidents.csv") );
+for (Row row : csv.findRows()){
     
-    // Insert example
+}
+```
 
-
+Iterate rows using stream
+```java
+CSV csv = new CSV( new File("presidents.csv") );
+csv.stream();
+```
 
 ## Using queries 
 
-The API supports fluent queries similar to SQL. The first example finds all rows where President is Barack Obama
+Finds all rows where the presidency is between 1 and 10
+```java
+Query query = new Query();
+query.isBetween( presidency, 1, 10 ); // Find all rows with value 1 to 10
+List<Row> rows = csv.findRowsByQuery( query ); // Returns two rows
+```
 
-    List<Row> rows = csv.findByQuery().where().column("President").is("Barack Obama").getResultList();
-    
-The second example uses sorting for the results
-    
-    List<Row> rows = csv.findByQuery().orderBy().asc("President").getResultList();
-
-
+Finds all rows above and sorts it descending order
+```java
+Query query = new Query()
+    .isBetween( presidency, 1, 10 )
+    .descending( presidency );
+List<Row> rows = csv.findByQuery(query);
+```
 
 ## FrequencyDistribution
 
-Builds a FrequencyDistribution for column with index 2;
-
-    FrequencyDistribution fd = csv.buildFrequencyDistribution( 2 );
-
+Builds a FrequencyDistribution for an integer column
+```java
+FrequencyDistribution<Integer> fd = csv.buildFrequencyDistribution( presidency );
+```
 
 ## Distinct Values
-
-    Set<String> values = csv.buildDistinctValues(1);
-
+```java
+Set<String> values = csv.buildDistinctValues( name );
+```
 
 

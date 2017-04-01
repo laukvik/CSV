@@ -5,7 +5,7 @@ import org.laukvik.csv.CSV;
 import java.io.File;
 
 /**
- * An interface for reading an entire dataset.
+ * An interface for reading data sets.
  */
 public interface DatasetFileReader {
 

@@ -71,7 +71,7 @@ public class ReportTest {
 //        System.out.println();
 //        for (int y= 0; y<c.getRowCount(); y++){
 //            for (int x=0; x<c.getColumnCount(); x++){
-//                System.out.print( c.getRow(y).get( c.getColumn(x) ) + "\t");
+//                System.out.print( c.getRow(y).getObject( c.getColumn(x) ) + "\t");
 //            }
 //            System.out.println();
 //        }
@@ -99,7 +99,7 @@ public class ReportTest {
 //        System.out.println("TABELL:");
 //        for (int y=0; y < csv.getRowCount(); y++){
 //            for (int x=0; x<csv.getColumnCount(); x++){
-//                System.out.print( csv.getRow(y).get( csv.getColumn(x)) + "\t");
+//                System.out.print( csv.getRow(y).getObject( csv.getColumn(x)) + "\t");
 //            }
 //            System.out.println();
 //        }
@@ -127,6 +127,7 @@ public class ReportTest {
 
 //        r.addMatcher( new IntegerLessThanMatcher(presidency, 11));
         Node root = r.buildNode(csv);
+
 
         CSV csv2 = r.buildCSV(root);
     }

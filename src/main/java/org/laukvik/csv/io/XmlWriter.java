@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 /**
- * Writes the data setUnparsed in the XML format.
+ * Writes the data setRaw in the XML format.
  *
  * @see <a href="https://en.wikipedia.org/wiki/XML">XML (wikipedia)</a>
  */
@@ -150,7 +150,7 @@ public final class XmlWriter implements DatasetFileWriter {
                 out.write(csv.getColumn(x).getName().getBytes(charset));
                 out.write(EQUAL);
                 out.write(QUOTATION_MARK);
-                String s = r.getAsString(col);
+                String s = r.getRaw(col);
                 for (int n = 0; n < s.length(); n++) {
                     char c = s.charAt(n);
                     if (c == QUOTATION_MARK) {

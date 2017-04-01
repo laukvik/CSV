@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 /**
- * Writes the data setUnparsed in the HTML format.
+ * Writes the data setRaw in the HTML format.
  *
  * @see <a href="https://en.wikipedia.org/wiki/HTML">HTML (wikipedia)</a>
  */
@@ -96,7 +96,7 @@ public final class HtmlWriter implements DatasetFileWriter {
             for (int x = 0; x < csv.getColumnCount(); x++) {
                 out.write("<td>".getBytes());
                 Column col = csv.getColumn(x);
-                String s = r.getAsString(col);
+                String s = r.getRaw(col);
                 out.write(s.getBytes());
                 out.write("</td>".getBytes());
             }

@@ -40,7 +40,7 @@ public final class Min extends Aggregate {
      */
     @Override
     public void aggregate(final Row row) {
-        Integer value = row.getInteger((IntegerColumn) getColumn());
+        Integer value = row.get((IntegerColumn) getColumn());
         if (min == null) {
             min = value;
         } else {

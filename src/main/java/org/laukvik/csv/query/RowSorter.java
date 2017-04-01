@@ -55,8 +55,8 @@ public final class RowSorter implements Comparator<Row> {
 
             int result = 0;
 
-            Object o1 = r1.get(c);
-            Object o2 = r2.get(c);
+            Object o1 = r1.getObject(c);
+            Object o2 = r2.getObject(c);
 
             if (sortOrder.getType() == SortOrder.ASC) {
                 result = c.compare(o1, o2);

@@ -39,11 +39,11 @@ public class XmlWriterTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
 
-        csv.addRow().setString(first, "&");
-        csv.addRow().setString(first, "\"");
-        csv.addRow().setString(first, ">");
-        csv.addRow().setString(first, "<");
-        csv.addRow().setString(first, "'");
+        csv.addRow().set(first, "&");
+        csv.addRow().set(first, "\"");
+        csv.addRow().set(first, ">");
+        csv.addRow().set(first, "<");
+        csv.addRow().set(first, "'");
 
         XmlWriter writer = new XmlWriter();
         writer.writeCSV(csv, new FileOutputStream(file));
@@ -61,8 +61,8 @@ public class XmlWriterTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
 
-        csv.addRow().setString(first, "Bob");
-        csv.addRow().setString(first, "Dylan");
+        csv.addRow().set(first, "Bob");
+        csv.addRow().set(first, "Dylan");
 
         XmlWriter writer = new XmlWriter("people", "person");
         writer.writeCSV(csv, new FileOutputStream(file));
@@ -80,7 +80,7 @@ public class XmlWriterTest {
     public void write() throws CsvWriterException, IOException {
         CSV csv = new CSV();
         StringColumn c = csv.addStringColumn("first");
-        csv.addRow().setString(c, "Bill");
+        csv.addRow().set(c, "Bill");
 
         XmlWriter writer = new XmlWriter("people", "person");
         writer.writeCSV(csv, new FileOutputStream( new File("") ));

@@ -353,7 +353,7 @@ public class QueryTest {
         Query q = new Query();
         q.ascending(leftOffice);
         List<Row> rows = csv.findRowsByQuery(q);
-        assertEquals((Integer) 44, rows.get(0).getInteger(presidency));
+        assertEquals((Integer) 44, rows.get(0).get(presidency));
     }
 
     @Test
@@ -361,7 +361,7 @@ public class QueryTest {
         Query q = new Query();
         q.descending(president);
         List<Row> rows = csv.findRowsByQuery(q);
-        assertEquals("Zachary Taylor", rows.get(0).getString(president));
+        assertEquals("Zachary Taylor", rows.get(0).get(president));
     }
 
 

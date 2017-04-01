@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Writes the data setUnparsed in the JSON format.
+ * Writes the data setRaw in the JSON format.
  *
  * @see <a href="https://en.wikipedia.org/wiki/JSON">JSON (wikipedia)</a>
  */
@@ -126,7 +126,7 @@ public final class JsonWriter implements DatasetFileWriter {
                 out.write(DOUBLE_QUOTE);
                 out.write(SEMICOLON);
                 out.write(DOUBLE_QUOTE);
-                String s2 = row.getAsString(c);
+                String s2 = row.getRaw(c);
                 writeString(s2, out);
                 out.write(DOUBLE_QUOTE);
             }

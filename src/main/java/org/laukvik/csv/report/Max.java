@@ -37,7 +37,7 @@ public final class Max extends Aggregate {
      */
     @Override
     public void aggregate(final Row row) {
-        Integer value = row.getInteger((IntegerColumn) getColumn());
+        Integer value = row.get((IntegerColumn) getColumn());
         if (max == null) {
             max = value;
         } else {

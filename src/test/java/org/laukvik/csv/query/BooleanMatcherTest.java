@@ -23,8 +23,8 @@ public class BooleanMatcherTest {
         CSV csv = new CSV();
         BooleanColumn c = csv.addBooleanColumn("visible");
 
-        Row r1 = csv.addRow().setBoolean(c, Boolean.FALSE);
-        Row r2 = csv.addRow().setBoolean(c, Boolean.TRUE);
+        Row r1 = csv.addRow().set(c, Boolean.FALSE);
+        Row r2 = csv.addRow().set(c, Boolean.TRUE);
         Row r3 = csv.addRow();
         BooleanMatcher m1 = new BooleanMatcher(c, Boolean.FALSE);
         BooleanMatcher m2 = new BooleanMatcher(c, Boolean.TRUE);

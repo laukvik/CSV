@@ -18,6 +18,7 @@ package org.laukvik.csv.io;
 import org.junit.Test;
 import org.laukvik.csv.CSV;
 import org.laukvik.csv.columns.StringColumn;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -28,6 +29,11 @@ import java.util.SortedMap;
 import static org.junit.Assert.assertEquals;
 
 public class CsvReaderTest {
+
+    public static File getResource(String filename) {
+        ClassLoader classLoader = CsvReaderTest.class.getClassLoader();
+        return new File(classLoader.getResource(filename).getFile());
+    }
 
     public void readFile(File file){
         try (FileReader inputStream = new FileReader(file)){
@@ -40,11 +46,6 @@ public class CsvReaderTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static File getResource(String filename) {
-        ClassLoader classLoader = CsvReaderTest.class.getClassLoader();
-        return new File(classLoader.getResource(filename).getFile());
     }
 
     public Charset guessCharset(final File file){
@@ -128,7 +129,7 @@ public class CsvReaderTest {
         CsvReader reader = new CsvReader(charset, null, null );
         reader.readFile( getResource("charset.csv"), csv );
         StringColumn sc = (StringColumn) csv.getColumn("text");
-        assertEquals("Norwegian chars", norwegian, csv.getRow(0).getString(sc));
+        assertEquals("Norwegian chars", norwegian, csv.getRow(0).get(sc));
 
         guessCharset(getResource("charset.csv"));
     }

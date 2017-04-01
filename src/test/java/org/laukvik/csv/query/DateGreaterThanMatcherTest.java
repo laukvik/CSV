@@ -16,10 +16,10 @@ public class DateGreaterThanMatcherTest {
     public void matches() throws Exception {
         CSV csv = new CSV();
         DateColumn first = csv.addDateColumn("created", "yyyy.MM.dd");
-        Row r1 = csv.addRow().setDate(first, first.parse("2002.05.05"));
-        Row r2 = csv.addRow().setDate(first, first.parse("2003.05.05"));
-        Row r3 = csv.addRow().setDate(first, first.parse("2004.05.05"));
-        Row r4 = csv.addRow().setDate(first, null);
+        Row r1 = csv.addRow().set(first, first.parse("2002.05.05"));
+        Row r2 = csv.addRow().set(first, first.parse("2003.05.05"));
+        Row r3 = csv.addRow().set(first, first.parse("2004.05.05"));
+        Row r4 = csv.addRow().set(first, null);
 
         DateGreaterThanMatcher m = new DateGreaterThanMatcher(first, first.parse("2003.05.05"));
 

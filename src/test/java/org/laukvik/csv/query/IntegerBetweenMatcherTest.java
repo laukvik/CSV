@@ -25,10 +25,10 @@ public class IntegerBetweenMatcherTest {
     public void matches() throws Exception {
         CSV csv = new CSV();
         IntegerColumn first = csv.addIntegerColumn("first");
-        Row r1 = csv.addRow().setInteger(first, 1);
-        Row r2 = csv.addRow().setInteger(first, 3);
-        Row r3 = csv.addRow().setInteger(first, 5);
-        Row r4 = csv.addRow().setInteger(first, 5);
+        Row r1 = csv.addRow().set(first, 1);
+        Row r2 = csv.addRow().set(first, 3);
+        Row r3 = csv.addRow().set(first, 5);
+        Row r4 = csv.addRow().set(first, 5);
         Row r5 = csv.addRow();
         IntegerBetweenMatcher m = new IntegerBetweenMatcher(first, 1, 4);
         assertTrue(m.matches(1));

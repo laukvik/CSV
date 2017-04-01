@@ -31,7 +31,6 @@ import java.util.regex.Pattern;
  *
  * <h3>Using query</h3>
  * <pre>{@code
- *
  *     Query query = new Query();
  *     query.isBetween(presidency, 1, 10);
  *     List<Row> rows = csv.findRowsByQuery( query );
@@ -584,7 +583,7 @@ public final class Query {
 
         for (ValueMatcher matcher : matchers) {
             Column c = matcher.getColumn();
-            if (matcher.matches(row.get(c))) {
+            if (matcher.matches(row.getObject(c))) {
                 matchCount++;
             }
         }

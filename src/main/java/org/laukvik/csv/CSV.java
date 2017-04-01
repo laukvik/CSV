@@ -59,19 +59,50 @@ import java.util.stream.Stream;
  * <h3>Reading a CSV file</h3>
  * <pre>{@code
  *     CSV csv = new CSV( new File("presidents.csv") );
- *     StringColumn president = csv.getColumn(0);
+ *     StringColumn president = csv.getColumn("president");
+ *     IntegerColumn presidency = csv.getColumn(5);
  *     List<Row> rows = csv.findRows();
  *     for (Row r : rows){
- *         System.out.println( r.getString(president) );
+ *         System.out.println( r.getObject(president) );
+ *         System.out.println( r.getObject(presidency) );
  *     }
  * }</pre>
  *
  *
  * <h3>Writing a CSV file</h3>
+ * <pre>{@code
+ *     CSV csv = new CSV();
+ *     StringColumn first = csv.getColumn("first");
+ *     StringColumn last = csv.getColumn("last");
+ *     csv.writeFile( new File("addresses.csv") ); // Write to CSV format
+ *     csv.writeHtml( new File("addresses.html") ); // Write to HTML format
+ *     csv.writeJSON( new File("addresses.json") ); // Write to JSON format
+ *     csv.writeXML( new File("addresses.xnk") ); // Write to XML format
+ * }</pre>
  *
  * <h3>Querying a CSV file</h3>
+ * <p>The following example illustrates a simple query. To see more advanced examples please see the
+ * documentation for the Query class.</p>
+ * <pre>{@code
+ *     CSV csv = new CSV( new File("presidents.csv") );
+ *     StringColumn president = csv.getColumn("president");
+ *     IntegerColumn presidency = csv.getColumn(5);
+ *     Query query = new Query();
+ *     query.isBetween(presidency, 1, 10);
+ *     List<Row> rows = csv.findRowsByQuery( query );
+ *     for (Row r : rows){
+ *         System.out.println( r.getObject(president) );
+ *         System.out.println( r.getObject(presidency) );
+ *     }
+ * }</pre>
  *
  * <h3>Building a CSV file</h3>
+ * <pre>{@code
+ *     CSV csv = new CSV();
+ *     StringColumn first = csv.getColumn("first");
+ *     StringColumn last = csv.getColumn("last");
+ *     csv.addRow().set( first, "John" ).set( last, "Doe" );
+ * }</pre>
  *
  */
 public final class CSV implements Serializable {
@@ -130,7 +161,7 @@ public final class CSV implements Serializable {
      */
     private final List<Row> rows;
     /**
-     * The Character setUnparsed.
+     * The Character setRaw.
      */
     private Charset charset;
     /**
@@ -204,7 +235,7 @@ public final class CSV implements Serializable {
     /**
      * Set automatic detection of charset using BOM.
      *
-     * @param autoDetectCharset use automatic when setUnparsed to true
+     * @param autoDetectCharset use automatic when setRaw to true
      */
     public void setAutoDetectCharset(final boolean autoDetectCharset) {
         this.autoDetectCharset = autoDetectCharset;
@@ -222,7 +253,7 @@ public final class CSV implements Serializable {
     /**
      * Sets automatic detection of separator.
      *
-     * @param autoDetectSeparator use automatic when setUnparsed to true
+     * @param autoDetectSeparator use automatic when setRaw to true
      */
     public void setAutoDetectSeparator(final boolean autoDetectSeparator) {
         this.autoDetectSeparator = autoDetectSeparator;
@@ -240,7 +271,7 @@ public final class CSV implements Serializable {
     /**
      * Set automatic detection of quotes.
      *
-     * @param autoDetectQuote use automatic when setUnparsed to true
+     * @param autoDetectQuote use automatic when setRaw to true
      */
     public void setAutoDetectQuote(final boolean autoDetectQuote) {
         this.autoDetectQuote = autoDetectQuote;
@@ -317,7 +348,7 @@ public final class CSV implements Serializable {
     public void removeColumn(final Column column) {
         column.setCSV(null);
         columns.remove(column);
-        for (Row r : getRows()) {
+        for (Row r : findRows()) {
             r.setNull(column);
         }
     }
@@ -433,7 +464,7 @@ public final class CSV implements Serializable {
         Row r = addRow(0);
         for (int x = 0; x < getColumnCount(); x++) {
             StringColumn c = (StringColumn) getColumn(x);
-            r.setString(c, c.getName());
+            r.set(c, c.getName());
             c.setName("Column" + (x + 1));
         }
     }
@@ -443,7 +474,7 @@ public final class CSV implements Serializable {
      *
      * @return the rows
      */
-    protected List<Row> getRows() {
+    public List<Row> findRows() {
         return rows;
     }
 
@@ -793,7 +824,7 @@ public final class CSV implements Serializable {
      */
     public FrequencyDistribution<String> buildFrequencyDistribution(final StringColumn column) {
         FrequencyDistribution<String> cv = new FrequencyDistribution<>(column);
-        rows.stream().forEach(r -> cv.addValue(r.getString(column)));
+        rows.stream().forEach(r -> cv.addValue(r.get(column)));
         return cv;
     }
 
@@ -805,7 +836,7 @@ public final class CSV implements Serializable {
      */
     public FrequencyDistribution<BigDecimal> buildFrequencyDistribution(final BigDecimalColumn column) {
         FrequencyDistribution<BigDecimal> cv = new FrequencyDistribution<>(column);
-        rows.stream().forEach(r -> cv.addValue(r.getBigDecimal(column)));
+        rows.stream().forEach(r -> cv.addValue(r.get(column)));
         return cv;
     }
 
@@ -817,7 +848,7 @@ public final class CSV implements Serializable {
      */
     public FrequencyDistribution<Boolean> buildFrequencyDistribution(final BooleanColumn column) {
         FrequencyDistribution<Boolean> cv = new FrequencyDistribution<>(column);
-        rows.stream().forEach(r -> cv.addValue(r.getBoolean(column)));
+        rows.stream().forEach(r -> cv.addValue(r.get(column)));
         return cv;
     }
 
@@ -829,7 +860,7 @@ public final class CSV implements Serializable {
      */
     public FrequencyDistribution<Date> buildFrequencyDistribution(final DateColumn column) {
         FrequencyDistribution<Date> cv = new FrequencyDistribution<>(column);
-        rows.stream().forEach(r -> cv.addValue(r.getDate(column)));
+        rows.stream().forEach(r -> cv.addValue(r.get(column)));
         return cv;
     }
 
@@ -841,7 +872,7 @@ public final class CSV implements Serializable {
      */
     public FrequencyDistribution<Double> buildFrequencyDistribution(final DoubleColumn column) {
         FrequencyDistribution<Double> cv = new FrequencyDistribution<>(column);
-        rows.stream().forEach(r -> cv.addValue(r.getDouble(column)));
+        rows.stream().forEach(r -> cv.addValue(r.get(column)));
         return cv;
     }
 
@@ -853,7 +884,7 @@ public final class CSV implements Serializable {
      */
     public FrequencyDistribution<Float> buildFrequencyDistribution(final FloatColumn column) {
         FrequencyDistribution<Float> cv = new FrequencyDistribution<>(column);
-        rows.stream().forEach(r -> cv.addValue(r.getFloat(column)));
+        rows.stream().forEach(r -> cv.addValue(r.get(column)));
         return cv;
     }
 
@@ -865,7 +896,7 @@ public final class CSV implements Serializable {
      */
     public FrequencyDistribution<Integer> buildFrequencyDistribution(final IntegerColumn column) {
         FrequencyDistribution<Integer> cv = new FrequencyDistribution<>(column);
-        rows.stream().forEach(r -> cv.addValue(r.getInteger(column)));
+        rows.stream().forEach(r -> cv.addValue(r.get(column)));
         return cv;
     }
 
@@ -877,88 +908,88 @@ public final class CSV implements Serializable {
      */
     public FrequencyDistribution<URL> buildFrequencyDistribution(final UrlColumn column) {
         FrequencyDistribution<URL> cv = new FrequencyDistribution<>(column);
-        rows.stream().forEach(r -> cv.addValue(r.getURL(column)));
+        rows.stream().forEach(r -> cv.addValue(r.get(column)));
         return cv;
     }
 
     /**
-     * Builds a setUnparsed of distinct values.
+     * Builds a setRaw of distinct values.
      *
      * @param column the column
      * @return the distinct values
      */
     public Set<BigDecimal> buildDistinctValues(final BigDecimalColumn column) {
-        return rows.stream().map(r -> r.getBigDecimal(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
-     * Builds a setUnparsed of distinct values.
+     * Builds a setRaw of distinct values.
      *
      * @param column the column
      * @return the distinct values
      */
     public Set<Boolean> buildDistinctValues(final BooleanColumn column) {
-        return rows.stream().map(r -> r.getBoolean(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
-     * Builds a setUnparsed of distinct values.
+     * Builds a setRaw of distinct values.
      *
      * @param column the column
      * @return the distinct values
      */
     public Set<Date> buildDistinctValues(final DateColumn column) {
-        return rows.stream().map(r -> r.getDate(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
-     * Builds a setUnparsed of distinct values.
+     * Builds a setRaw of distinct values.
      *
      * @param column the column
      * @return the distinct values
      */
     public Set<Double> buildDistinctValues(final DoubleColumn column) {
-        return rows.stream().map(r -> r.getDouble(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
-     * Builds a setUnparsed of distinct values.
+     * Builds a setRaw of distinct values.
      *
      * @param column the column
      * @return the distinct values
      */
     public Set<Float> buildDistinctValues(final FloatColumn column) {
-        return rows.stream().map(r -> r.getFloat(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
-     * Builds a setUnparsed of distinct values.
+     * Builds a setRaw of distinct values.
      *
      * @param column the column
      * @return the distinct values
      */
     public Set<Integer> buildDistinctValues(final IntegerColumn column) {
-        return rows.stream().map(r -> r.getInteger(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
-     * Builds a setUnparsed of distinct values.
+     * Builds a setRaw of distinct values.
      *
      * @param column the column
      * @return the distinct values
      */
     public Set<String> buildDistinctValues(final StringColumn column) {
-        return rows.stream().map(r -> r.getString(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
-     * Builds a setUnparsed of distinct values.
+     * Builds a setRaw of distinct values.
      *
      * @param column the column
      * @return the distinct values
      */
     public Set<URL> buildDistinctValues(final UrlColumn column) {
-        return rows.stream().map(r -> r.getURL(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**

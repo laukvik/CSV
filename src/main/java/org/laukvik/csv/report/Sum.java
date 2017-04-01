@@ -27,7 +27,7 @@ public final class Sum extends Aggregate {
 
     @Override
     public void aggregate(final Row row) {
-        Integer value = row.getInteger((IntegerColumn) getColumn());
+        Integer value = row.get((IntegerColumn) getColumn());
         sum.add(new BigDecimal(value == null ? 0  : value));
     }
 

@@ -62,30 +62,30 @@ public class RowTest {
         Date now = new Date();
         URL url = new URL("http://www.google.com");
 
-        r.setBigDecimal(bdc, new BigDecimal("123"));
-        r.setBoolean(bc, false);
-        r.setBytes(byteC, new byte[]{1, 2, 3, 4, 5});
-        r.setDate(datec, now);
-        r.setDouble(dc, 178d);
-        r.setFloat(fc, 99f);
-        r.setInteger(ic, 64);
-        r.setString(sc, "Bob");
-        r.setURL(uc, url);
+        r.set(bdc, new BigDecimal("123"));
+        r.set(bc, false);
+        r.set(byteC, new byte[]{1, 2, 3, 4, 5});
+        r.set(datec, now);
+        r.set(dc, 178d);
+        r.set(fc, 99f);
+        r.set(ic, 64);
+        r.set(sc, "Bob");
+        r.set(uc, url);
 
-        assertEquals(new BigDecimal("123"), r.getBigDecimal(bdc));
-        assertEquals(Boolean.FALSE, r.getBoolean(bc));
-        assertTrue(Arrays.equals(new byte[]{1, 2, 3, 4, 5}, r.getBytes(byteC)));
-        assertEquals(now, r.getDate(datec));
-        assertEquals(178d, r.getDouble(dc));
-        assertEquals(99f, r.getFloat(fc));
-        assertEquals((Integer) 64, r.getInteger(ic));
-        assertEquals("Bob", r.getString(sc));
-        assertEquals(url, r.getURL(uc));
+        assertEquals(new BigDecimal("123"), r.get(bdc));
+        assertEquals(Boolean.FALSE, r.get(bc));
+        assertTrue(Arrays.equals(new byte[]{1, 2, 3, 4, 5}, r.get(byteC)));
+        assertEquals(now, r.get(datec));
+        assertEquals(178d, r.get(dc));
+        assertEquals(99f, r.get(fc));
+        assertEquals((Integer) 64, r.get(ic));
+        assertEquals("Bob", r.get(sc));
+        assertEquals(url, r.get(uc));
 
-        r.setUnparsed(bc, "true");
-        assertEquals(Boolean.TRUE, r.getBoolean(bc));
+        r.setRaw(bc, "true");
+        assertEquals(Boolean.TRUE, r.get(bc));
 
-        assertEquals("http://www.google.com", r.getAsString(uc));
+        assertEquals("http://www.google.com", r.getRaw(uc));
 
     }
 
@@ -94,9 +94,9 @@ public class RowTest {
         CSV csv = new CSV();
         BigDecimalColumn bdc = csv.addBigDecimalColumn("bigDecimal");
         Row r = csv.addRow();
-        r.setBigDecimal(bdc, new BigDecimal("123"));
-        assertEquals(new BigDecimal("123"), r.getBigDecimal(bdc));
-        assertEquals("123", r.getAsString(bdc));
+        r.set(bdc, new BigDecimal("123"));
+        assertEquals(new BigDecimal("123"), r.get(bdc));
+        assertEquals("123", r.getRaw(bdc));
     }
 
     @Test
@@ -104,9 +104,9 @@ public class RowTest {
         CSV csv = new CSV();
         BooleanColumn bc = csv.addBooleanColumn("boolean");
         Row r = csv.addRow();
-        r.setBoolean(bc, false);
-        assertEquals(Boolean.FALSE, r.getBoolean(bc));
-        assertEquals("false", r.getAsString(bc));
+        r.set(bc, false);
+        assertEquals(Boolean.FALSE, r.get(bc));
+        assertEquals("false", r.getRaw(bc));
     }
 
     @Test
@@ -114,9 +114,9 @@ public class RowTest {
         CSV csv = new CSV();
         ByteColumn byteC = csv.addByteColumn("byte");
         Row r = csv.addRow();
-        r.setBytes(byteC, new byte[]{1, 2, 3, 4, 5});
-        assertTrue(Arrays.equals(new byte[]{1, 2, 3, 4, 5}, r.getBytes(byteC)));
-//        assertEquals("123",r.getAsString(byteC));
+        r.set(byteC, new byte[]{1, 2, 3, 4, 5});
+        assertTrue(Arrays.equals(new byte[]{1, 2, 3, 4, 5}, r.get(byteC)));
+//        assertEquals("123",r.getRaw(byteC));
     }
 
     @Test
@@ -125,9 +125,9 @@ public class RowTest {
         DateColumn datec = csv.addDateColumn("date");
         Row r = csv.addRow();
         Date now = new Date();
-        r.setDate(datec, now);
-        assertEquals(now, r.getDate(datec));
-//        assertEquals("123",r.getAsString(datec));
+        r.set(datec, now);
+        assertEquals(now, r.get(datec));
+//        assertEquals("123",r.getRaw(datec));
     }
 
     @Test
@@ -135,9 +135,9 @@ public class RowTest {
         CSV csv = new CSV();
         DoubleColumn dc = csv.addDoubleColumn("double");
         Row r = csv.addRow();
-        r.setDouble(dc, 178d);
-        assertEquals(178d, r.getDouble(dc));
-        assertEquals("178.0", r.getAsString(dc));
+        r.set(dc, 178d);
+        assertEquals(178d, r.get(dc));
+        assertEquals("178.0", r.getRaw(dc));
     }
 
     @Test
@@ -145,9 +145,9 @@ public class RowTest {
         CSV csv = new CSV();
         FloatColumn fc = csv.addFloatColumn("float");
         Row r = csv.addRow();
-        r.setFloat(fc, 99f);
-        assertEquals(99f, r.getFloat(fc));
-        assertEquals("99.0", r.getAsString(fc));
+        r.set(fc, 99f);
+        assertEquals(99f, r.get(fc));
+        assertEquals("99.0", r.getRaw(fc));
     }
 
     @Test
@@ -155,9 +155,9 @@ public class RowTest {
         CSV csv = new CSV();
         IntegerColumn ic = csv.addIntegerColumn("integer");
         Row r = csv.addRow();
-        r.setInteger(ic, 64);
-        assertEquals((Integer) 64, r.getInteger(ic));
-        assertEquals("64", r.getAsString(ic));
+        r.set(ic, 64);
+        assertEquals((Integer) 64, r.get(ic));
+        assertEquals("64", r.getRaw(ic));
     }
 
     @Test
@@ -165,8 +165,8 @@ public class RowTest {
         CSV csv = new CSV();
         StringColumn sc = csv.addStringColumn("string");
         Row r = csv.addRow();
-        r.setString(sc, "Bob");
-        assertEquals("Bob", r.getString(sc));
+        r.set(sc, "Bob");
+        assertEquals("Bob", r.get(sc));
     }
 
     @Test
@@ -175,9 +175,9 @@ public class RowTest {
         UrlColumn uc = csv.addUrlColumn("url");
         Row r = csv.addRow();
         URL url = new URL("http://www.google.com");
-        r.setURL(uc, url);
-        assertEquals(url, r.getURL(uc));
-        assertEquals("http://www.google.com", r.getAsString(uc));
+        r.set(uc, url);
+        assertEquals(url, r.get(uc));
+        assertEquals("http://www.google.com", r.getRaw(uc));
     }
 
     @Test
@@ -185,11 +185,11 @@ public class RowTest {
         CSV csv = new CSV();
         IntegerColumn ic = csv.addIntegerColumn("integer");
         Row r = csv.addRow();
-        r.setInteger(ic, 64);
-        assertEquals((Integer) 64, r.getInteger(ic));
+        r.set(ic, 64);
+        assertEquals((Integer) 64, r.get(ic));
         r.setNull(ic);
         assertEquals(true, r.isNull(ic));
-        assertNull(r.getInteger(ic));
+        assertNull(r.get(ic));
     }
 
     @Test
@@ -197,7 +197,7 @@ public class RowTest {
         CSV csv = new CSV();
         IntegerColumn ic = csv.addIntegerColumn("i1");
         IntegerColumn ic2 = csv.addIntegerColumn("i2");
-        Row r = csv.addRow().setInteger(ic, 12);
+        Row r = csv.addRow().set(ic, 12);
         assertFalse( r.isNull(ic));
         assertTrue( r.isNull(ic2));
     }
@@ -207,9 +207,9 @@ public class RowTest {
         CSV csv = new CSV();
         IntegerColumn ic = csv.addIntegerColumn("i1");
         IntegerColumn ic2 = csv.addIntegerColumn("i2");
-        Row r = csv.addRow().setInteger(ic, 1234567).setInteger(ic2, null);
-        assertEquals( "1234567", r.getAsString(ic));
-        assertEquals( "", r.getAsString(ic2));
+        Row r = csv.addRow().set(ic, 1234567).set(ic2, null);
+        assertEquals("1234567", r.getRaw(ic));
+        assertEquals("", r.getRaw(ic2));
     }
 
 }

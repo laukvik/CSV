@@ -24,10 +24,10 @@ public class RowSorterTest {
 
         RowSorter sort1 = new RowSorter(order1);
 
-        Row r1 = csv.addRow().setInteger(created, 2).setString(first, "Steve");
-        Row r2 = csv.addRow().setInteger(created, 3).setString(first, "Bill");
-        Row r3 = csv.addRow().setInteger(created, 1).setString(first, "Unknown");
-        Row r4 = csv.addRow().setInteger(created, 1).setString(first, "Unknown");
+        Row r1 = csv.addRow().set(created, 2).set(first, "Steve");
+        Row r2 = csv.addRow().set(created, 3).set(first, "Bill");
+        Row r3 = csv.addRow().set(created, 1).set(first, "Unknown");
+        Row r4 = csv.addRow().set(created, 1).set(first, "Unknown");
 
         assertTrue(sort1.compare(r1,r3) < 0);
         assertTrue(sort1.compare(r3,r1) > 0);

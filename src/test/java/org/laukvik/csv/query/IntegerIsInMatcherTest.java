@@ -17,9 +17,9 @@ public class IntegerIsInMatcherTest {
     public void matches() throws Exception {
         CSV csv = new CSV();
         IntegerColumn first = csv.addIntegerColumn("first");
-        Row r1 = csv.addRow().setInteger(first, 12);
+        Row r1 = csv.addRow().set(first, 12);
         Row r2 = csv.addRow();
-        Row r3 = csv.addRow().setInteger(first, 10);
+        Row r3 = csv.addRow().set(first, 10);
         IntegerIsInMatcher m = new IntegerIsInMatcher(first, 12, 13, 14);
         assertTrue(m.matches(12));
         assertFalse(m.matches(null));

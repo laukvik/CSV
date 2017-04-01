@@ -168,10 +168,10 @@ public class CSVTest {
     public void buildDistinctValues() throws CsvReaderException {
         CSV csv = new CSV();
         StringColumn president = csv.addStringColumn("President");
-        csv.addRow().setString(president, "Hillary");
-        csv.addRow().setString(president, "Barak");
-        csv.addRow().setString(president, "Hillary");
-        csv.addRow().setString(president, "Clinton");
+        csv.addRow().set(president, "Hillary");
+        csv.addRow().set(president, "Barak");
+        csv.addRow().set(president, "Hillary");
+        csv.addRow().set(president, "Clinton");
         Set<String> values = csv.buildDistinctValues(president);
         Assert.assertEquals(3, values.size());
 
@@ -279,7 +279,7 @@ public class CSVTest {
     @Test
     public void iterator() throws CsvReaderException {
         CSV csv = new CSV();
-        for (Row r : csv.getRows()) {
+        for (Row r : csv.findRows()) {
         }
     }
 
@@ -288,8 +288,8 @@ public class CSVTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
-        Row r1 = csv.addRow().setString(first, "Bill").setString(last, "Gates");
-        Row r2 = csv.addRow().setString(first, "Steve").setString(last, "Jobs");
+        Row r1 = csv.addRow().set(first, "Bill").set(last, "Gates");
+        Row r2 = csv.addRow().set(first, "Steve").set(last, "Jobs");
 //        assertEquals("Row1", 2, r1.getValues().size());
 //        assertEquals("Row1", 2, r2.getValues().size());
         assertSame("RowCount", csv.getRowCount(), 2);
@@ -304,8 +304,8 @@ public class CSVTest {
         assertSame(csv.getColumnCount(), 2);
         assertEquals("First should be 0", 0, csv.indexOf(first));
         assertEquals("Last should be 1", 1, csv.indexOf(last));
-        csv.addRow().setString(first, "Bill").setString(last, "Gates");
-        csv.addRow().setString(first, "Steve").setString(last, "Jobs");
+        csv.addRow().set(first, "Bill").set(last, "Gates");
+        csv.addRow().set(first, "Steve").set(last, "Jobs");
         assertSame("RowCount", csv.getRowCount(), 2);
         try {
             csv.writeFile(file);
@@ -323,7 +323,7 @@ public class CSVTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
-        csv.addRow().setString(first, "Bill").setString(last, "Gates");
+        csv.addRow().set(first, "Bill").set(last, "Gates");
         csv.writeXML(file);
         assertNotNull(file);
     }
@@ -334,8 +334,8 @@ public class CSVTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
-        csv.addRow().setString(first, "Bill").setString(last, "Gates");
-        csv.addRow().setString(first, "Steve").setString(last, "Jobs");
+        csv.addRow().set(first, "Bill").set(last, "Gates");
+        csv.addRow().set(first, "Steve").set(last, "Jobs");
         csv.writeJSON(file);
         JSONParser parser = new JSONParser();
         Object obj = parser.parse(new FileReader(file));
@@ -349,7 +349,7 @@ public class CSVTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
-        csv.addRow().setString(first, "Bill").setString(last, "Gates");
+        csv.addRow().set(first, "Bill").set(last, "Gates");
         csv.writeHtml(file);
         assertNotNull(file);
     }
@@ -376,13 +376,13 @@ public class CSVTest {
 
             Row r = csv.getRow(0);
 
-            assertEquals("Skippy", "Skippy Peterson", r.getString(playerName));
-            assertEquals("First Base", "First Base", r.getString(position));
-            assertEquals("1908-1913", "1908-1913", r.getString(yearsActive));
+            assertEquals("Skippy", "Skippy Peterson", r.get(playerName));
+            assertEquals("First Base", "First Base", r.get(position));
+            assertEquals("1908-1913", "1908-1913", r.get(yearsActive));
 
             String blueDog = "\"Blue Dog\", \"The Magician\"";
 
-            assertEquals("Blue Dog The Magician", "\"Blue Dog\", \"The Magician\"", r.getString(nicknames));
+            assertEquals("Blue Dog The Magician", "\"Blue Dog\", \"The Magician\"", r.get(nicknames));
 
         }
         catch (Exception e) {
@@ -409,7 +409,7 @@ public class CSVTest {
 
             StringColumn model = (StringColumn) csv.getColumn("Model");
 
-            assertEquals("Venture", "Venture \"Extended Edition\"", r.getString(model));
+            assertEquals("Venture", "Venture \"Extended Edition\"", r.get(model));
         }
         catch (Exception e) {
             fail(e.getMessage());
@@ -439,7 +439,7 @@ public class CSVTest {
             Row r = csv.getRow(0);
             StringColumn desc = (StringColumn) csv.getColumn("Description");
 
-            assertEquals("ac, abs, moon", "ac, abs, moon", r.getString(desc));
+            assertEquals("ac, abs, moon", "ac, abs, moon", r.get(desc));
         }
         catch (Exception e) {
             fail(e.getMessage());
@@ -465,7 +465,7 @@ public class CSVTest {
 
             StringColumn col = (StringColumn) csv.getColumn("GPA");
 
-            assertEquals("GPA", "3.48", r.getString(col));
+            assertEquals("GPA", "3.48", r.get(col));
         }
         catch (Exception e) {
             fail(e.getMessage());
@@ -570,7 +570,7 @@ public class CSVTest {
         StringColumn sc = (StringColumn) csv.getColumn(0);
         assertTrue(csv.isAutoDetectCharset());
         assertEquals("Heading1", csv.getColumn(0).getName());
-        assertEquals("first", csv.getRow(0).getString(sc));
+        assertEquals("first", csv.getRow(0).get(sc));
     }
 
     @Test
@@ -583,7 +583,7 @@ public class CSVTest {
         assertEquals(2,csv.getRowCount());
         StringColumn sc = (StringColumn) csv.getColumn(0);
         assertEquals("Heading1", csv.getColumn(0).getName());
-        assertEquals("first", csv.getRow(0).getString(sc));
+        assertEquals("first", csv.getRow(0).get(sc));
     }
 
     @Test
@@ -602,12 +602,12 @@ public class CSVTest {
     public void buildFrequencyDistribution_string() throws Exception {
         CSV csv = new CSV();
         StringColumn c = csv.addStringColumn("First");
-        csv.addRow().setString(c, "a");
-        csv.addRow().setString(c, "b");
-        csv.addRow().setString(c, "c");
-        csv.addRow().setString(c, "a");
-        csv.addRow().setString(c, "a");
-        csv.addRow().setString(c, null);
+        csv.addRow().set(c, "a");
+        csv.addRow().set(c, "b");
+        csv.addRow().set(c, "c");
+        csv.addRow().set(c, "a");
+        csv.addRow().set(c, "a");
+        csv.addRow().set(c, null);
         FrequencyDistribution<String> fd = csv.buildFrequencyDistribution(c);
         assertEquals(3, fd.getKeys().size());
     }
@@ -616,12 +616,12 @@ public class CSVTest {
     public void buildFrequencyDistribution_int() throws Exception {
         CSV csv = new CSV();
         IntegerColumn c = csv.addIntegerColumn("First");
-        csv.addRow().setInteger(c, 1);
-        csv.addRow().setInteger(c, 2);
-        csv.addRow().setInteger(c, 3);
-        csv.addRow().setInteger(c, 1);
-        csv.addRow().setInteger(c, 1);
-        csv.addRow().setInteger(c, null);
+        csv.addRow().set(c, 1);
+        csv.addRow().set(c, 2);
+        csv.addRow().set(c, 3);
+        csv.addRow().set(c, 1);
+        csv.addRow().set(c, 1);
+        csv.addRow().set(c, null);
         FrequencyDistribution<Integer> fd = csv.buildFrequencyDistribution(c);
         assertEquals(3, fd.getKeys().size());
         Set<Integer> distinct = csv.buildDistinctValues(c);
@@ -632,12 +632,12 @@ public class CSVTest {
     public void buildFrequencyDistribution_float() throws Exception {
         CSV csv = new CSV();
         FloatColumn c = csv.addFloatColumn("First");
-        csv.addRow().setFloat(c, 1f);
-        csv.addRow().setFloat(c, 2f);
-        csv.addRow().setFloat(c, 3f);
-        csv.addRow().setFloat(c, 1f);
-        csv.addRow().setFloat(c, 1f);
-        csv.addRow().setFloat(c, null);
+        csv.addRow().set(c, 1f);
+        csv.addRow().set(c, 2f);
+        csv.addRow().set(c, 3f);
+        csv.addRow().set(c, 1f);
+        csv.addRow().set(c, 1f);
+        csv.addRow().set(c, null);
         FrequencyDistribution<Float> fd = csv.buildFrequencyDistribution(c);
         assertEquals(3, fd.getKeys().size());
         Set<Float> distinct = csv.buildDistinctValues(c);
@@ -648,12 +648,12 @@ public class CSVTest {
     public void buildFrequencyDistribution_double() throws Exception {
         CSV csv = new CSV();
         DoubleColumn c = csv.addDoubleColumn("First");
-        csv.addRow().setDouble(c, 1d);
-        csv.addRow().setDouble(c, 2d);
-        csv.addRow().setDouble(c, 3d);
-        csv.addRow().setDouble(c, 1d);
-        csv.addRow().setDouble(c, 1d);
-        csv.addRow().setDouble(c, null);
+        csv.addRow().set(c, 1d);
+        csv.addRow().set(c, 2d);
+        csv.addRow().set(c, 3d);
+        csv.addRow().set(c, 1d);
+        csv.addRow().set(c, 1d);
+        csv.addRow().set(c, null);
         FrequencyDistribution<Double> fd = csv.buildFrequencyDistribution(c);
         assertEquals(3, fd.getKeys().size());
         Set<Double> distinct = csv.buildDistinctValues(c);
@@ -664,12 +664,12 @@ public class CSVTest {
     public void buildFrequencyDistribution_bigdecimal() throws Exception {
         CSV csv = new CSV();
         BigDecimalColumn c = csv.addBigDecimalColumn("First");
-        csv.addRow().setBigDecimal(c, BigDecimal.valueOf(1));
-        csv.addRow().setBigDecimal(c, BigDecimal.valueOf(2));
-        csv.addRow().setBigDecimal(c, BigDecimal.valueOf(3));
-        csv.addRow().setBigDecimal(c, BigDecimal.valueOf(1));
-        csv.addRow().setBigDecimal(c, BigDecimal.valueOf(1));
-        csv.addRow().setBigDecimal(c, null);
+        csv.addRow().set(c, BigDecimal.valueOf(1));
+        csv.addRow().set(c, BigDecimal.valueOf(2));
+        csv.addRow().set(c, BigDecimal.valueOf(3));
+        csv.addRow().set(c, BigDecimal.valueOf(1));
+        csv.addRow().set(c, BigDecimal.valueOf(1));
+        csv.addRow().set(c, null);
         FrequencyDistribution<BigDecimal> fd = csv.buildFrequencyDistribution(c);
         assertEquals(3, fd.getKeys().size());
         Set<BigDecimal> distinct = csv.buildDistinctValues(c);
@@ -680,12 +680,12 @@ public class CSVTest {
     public void buildFrequencyDistribution_url() throws Exception {
         CSV csv = new CSV();
         UrlColumn c = csv.addUrlColumn("First");
-        csv.addRow().setURL(c, new URL("http://localhost/a"));
-        csv.addRow().setURL(c, new URL("http://localhost/b"));
-        csv.addRow().setURL(c, new URL("http://localhost/c"));
-        csv.addRow().setURL(c, new URL("http://localhost/a"));
-        csv.addRow().setURL(c, new URL("http://localhost/a"));
-        csv.addRow().setURL(c, null);
+        csv.addRow().set(c, new URL("http://localhost/a"));
+        csv.addRow().set(c, new URL("http://localhost/b"));
+        csv.addRow().set(c, new URL("http://localhost/c"));
+        csv.addRow().set(c, new URL("http://localhost/a"));
+        csv.addRow().set(c, new URL("http://localhost/a"));
+        csv.addRow().set(c, null);
 //        FrequencyDistribution<URL> fd = csv.buildFrequencyDistribution(c);
 //        assertEquals(3, fd.getKeys().size());
         // Set<URL> distinct = csv.buildDistinctValues(c);
@@ -696,10 +696,10 @@ public class CSVTest {
     public void buildFrequencyDistribution_boolean() throws Exception {
         CSV csv = new CSV();
         BooleanColumn c = csv.addBooleanColumn("First");
-        csv.addRow().setBoolean(c, Boolean.TRUE);
-        csv.addRow().setBoolean(c, Boolean.TRUE);
-        csv.addRow().setBoolean(c, Boolean.FALSE);
-        csv.addRow().setBoolean(c, null);
+        csv.addRow().set(c, Boolean.TRUE);
+        csv.addRow().set(c, Boolean.TRUE);
+        csv.addRow().set(c, Boolean.FALSE);
+        csv.addRow().set(c, null);
         FrequencyDistribution<Boolean> fd = csv.buildFrequencyDistribution(c);
         assertEquals(2, fd.getKeys().size());
         Set<Boolean> distinct = csv.buildDistinctValues(c);
@@ -711,9 +711,9 @@ public class CSVTest {
         CSV csv = new CSV();
         DateColumn c = csv.addDateColumn("First");
         Date d1 = new Date();
-        csv.addRow().setDate(c, d1);
-        csv.addRow().setDate(c, null);
-        csv.addRow().setDate(c, null);
+        csv.addRow().set(c, d1);
+        csv.addRow().set(c, null);
+        csv.addRow().set(c, null);
         FrequencyDistribution<Date> fd = csv.buildFrequencyDistribution(c);
         assertEquals(1, fd.getKeys().size());
         assertEquals(2, fd.getNullCount());

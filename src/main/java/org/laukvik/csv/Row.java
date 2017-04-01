@@ -34,16 +34,28 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Represents a single row in the CSV.
+ * Represents a single row entry in the CSV.
  *
- * <h3>Examples</h3>
- * <pre>
+ * <h3>Setting values in a row</h3>
+ * <pre>{@code
  * CSV csv = new CSV();
  * StringColumn first = csv.addStringColumn("first");
+ * IntegerColumn salary = csv.addIntegerColumn("first");
  * Row = csv.addRow();
- * row.setString( first, "Bill" );
- * </pre>
+ * row.set( first, "Bill" ).set( salary, 250000 );
+ * }</pre>
  *
+ *
+ * <h3>Getting values in a row</h3>
+ * <pre>{@code
+ * CSV csv = new CSV();
+ * StringColumn first = csv.addStringColumn("first");
+ * IntegerColumn salary = csv.addIntegerColumn("first");
+ * Row = csv.addRow();
+ * for (Row r : csv.findRows()){
+ *     System.out.println( r.get(first) + "\t" + r.get(salary) );
+ * }
+ * }</pre>
  *
  */
 public final class Row implements Serializable {
@@ -63,11 +75,11 @@ public final class Row implements Serializable {
     /**
      * Sets the value for the column.
      *
-     * @param column the column to setDate
+     * @param column the column to set
      * @param value the value
      * @return the row
      */
-    public Row setUnparsed(final Column column, final String value) {
+    public Row setRaw(final Column column, final String value) {
         map.put(column, column.parse(value));
         return this;
     }
@@ -75,11 +87,11 @@ public final class Row implements Serializable {
     /**
      * Set the column with the value.
      *
-     * @param column the column to setDate
+     * @param column the column to set
      * @param value  the value
      * @return the row
      */
-    public Row setBytes(final ByteColumn column, final byte[] value) {
+    public Row set(final ByteColumn column, final byte[] value) {
         map.put(column, value);
         return this;
     }
@@ -87,11 +99,11 @@ public final class Row implements Serializable {
     /**
      * Set the column with the value.
      *
-     * @param column the column to setDate
+     * @param column the column to set
      * @param value  the value
      * @return the row
      */
-    public Row setBigDecimal(final BigDecimalColumn column, final BigDecimal value) {
+    public Row set(final BigDecimalColumn column, final BigDecimal value) {
         map.put(column, value);
         return this;
     }
@@ -99,11 +111,11 @@ public final class Row implements Serializable {
     /**
      * Sets the column with the value.
      *
-     * @param column the column to setDate
+     * @param column the column to set
      * @param value  the value
      * @return the row
      */
-    public Row setInteger(final IntegerColumn column, final Integer value) {
+    public Row set(final IntegerColumn column, final Integer value) {
         map.put(column, value);
         return this;
     }
@@ -111,11 +123,11 @@ public final class Row implements Serializable {
     /**
      * Sets the column with the value.
      *
-     * @param column the column to setDate
+     * @param column the column to set
      * @param value  the value
      * @return the row
      */
-    public Row setFloat(final FloatColumn column, final Float value) {
+    public Row set(final FloatColumn column, final Float value) {
         map.put(column, value);
         return this;
     }
@@ -123,11 +135,11 @@ public final class Row implements Serializable {
     /**
      * Sets the column with the value.
      *
-     * @param column the column to setDate
+     * @param column the column to set
      * @param value  the value
      * @return the row
      */
-    public Row setDouble(final DoubleColumn column, final Double value) {
+    public Row set(final DoubleColumn column, final Double value) {
         map.put(column, value);
         return this;
     }
@@ -135,11 +147,11 @@ public final class Row implements Serializable {
     /**
      * Sets the column with the value.
      *
-     * @param column the column to setDate
+     * @param column the column to set
      * @param value  the value
      * @return the row
      */
-    public Row setBoolean(final BooleanColumn column, final Boolean value) {
+    public Row set(final BooleanColumn column, final Boolean value) {
         map.put(column, value);
         return this;
     }
@@ -147,11 +159,11 @@ public final class Row implements Serializable {
     /**
      * Sets the column with the value.
      *
-     * @param column the column to setDate
+     * @param column the column to set
      * @param value  the value
      * @return the row
      */
-    public Row setString(final StringColumn column, final String value) {
+    public Row set(final StringColumn column, final String value) {
         map.put(column, value);
         return this;
     }
@@ -159,11 +171,11 @@ public final class Row implements Serializable {
     /**
      * Sets the column with the value.
      *
-     * @param column the column to setDate
+     * @param column the column to set
      * @param value  the value
      * @return the row
      */
-    public Row setURL(final UrlColumn column, final URL value) {
+    public Row set(final UrlColumn column, final URL value) {
         map.put(column, value);
         return this;
     }
@@ -171,11 +183,11 @@ public final class Row implements Serializable {
     /**
      * Updates the column with the value.
      *
-     * @param column the column to setDate
+     * @param column the column to set
      * @param value  the value
      * @return the row
      */
-    public Row setDate(final DateColumn column, final Date value) {
+    public Row set(final DateColumn column, final Date value) {
         map.put(column, value);
         return this;
     }
@@ -196,7 +208,7 @@ public final class Row implements Serializable {
      * @param column the column
      * @return the column as a String
      */
-    public String getAsString(final Column column) {
+    public String getRaw(final Column column) {
         Object value = map.get(column);
         if (value == null) {
             return "";
@@ -211,7 +223,7 @@ public final class Row implements Serializable {
      * @param stringColumn the column
      * @return the value
      */
-    public String getString(final StringColumn stringColumn) {
+    public String get(final StringColumn stringColumn) {
         return (String) map.get(stringColumn);
     }
 
@@ -221,7 +233,7 @@ public final class Row implements Serializable {
      * @param dateColumn the column
      * @return the value
      */
-    public Date getDate(final DateColumn dateColumn) {
+    public Date get(final DateColumn dateColumn) {
         return (Date) map.get(dateColumn);
     }
 
@@ -231,7 +243,7 @@ public final class Row implements Serializable {
      * @param floatColumn the column
      * @return the value
      */
-    public Float getFloat(final FloatColumn floatColumn) {
+    public Float get(final FloatColumn floatColumn) {
         return (Float) map.get(floatColumn);
     }
 
@@ -241,10 +253,9 @@ public final class Row implements Serializable {
      * @param bigDecimalColumn the column
      * @return the value
      */
-    public BigDecimal getBigDecimal(final BigDecimalColumn bigDecimalColumn) {
+    public BigDecimal get(final BigDecimalColumn bigDecimalColumn) {
         return (BigDecimal) map.get(bigDecimalColumn);
     }
-
 
     /**
      * Returns the value of the column.
@@ -252,7 +263,7 @@ public final class Row implements Serializable {
      * @param integerColumn the column
      * @return the value
      */
-    public Integer getInteger(final IntegerColumn integerColumn) {
+    public Integer get(final IntegerColumn integerColumn) {
         return (Integer) map.get(integerColumn);
     }
 
@@ -271,7 +282,7 @@ public final class Row implements Serializable {
      * @param column the column
      * @return the value
      */
-    public Object get(final Column column) {
+    public Object getObject(final Column column) {
         return map.get(column);
     }
 
@@ -281,7 +292,7 @@ public final class Row implements Serializable {
      * @param booleanColumn the column
      * @return the value
      */
-    public Boolean getBoolean(final BooleanColumn booleanColumn) {
+    public Boolean get(final BooleanColumn booleanColumn) {
         return (Boolean) map.get(booleanColumn);
     }
 
@@ -291,7 +302,7 @@ public final class Row implements Serializable {
      * @param byteColumn the column
      * @return the value
      */
-    public byte[] getBytes(final ByteColumn byteColumn) {
+    public byte[] get(final ByteColumn byteColumn) {
         return (byte[]) map.get(byteColumn);
     }
 
@@ -301,7 +312,7 @@ public final class Row implements Serializable {
      * @param doubleColumn the column
      * @return the value
      */
-    public Double getDouble(final DoubleColumn doubleColumn) {
+    public Double get(final DoubleColumn doubleColumn) {
         return (Double) map.get(doubleColumn);
     }
 
@@ -311,7 +322,7 @@ public final class Row implements Serializable {
      * @param urlColumn the column
      * @return the value
      */
-    public URL getURL(final UrlColumn urlColumn) {
+    public URL get(final UrlColumn urlColumn) {
         return (URL) map.get(urlColumn);
     }
 }
