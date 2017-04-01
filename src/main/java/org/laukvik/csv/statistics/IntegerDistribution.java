@@ -54,9 +54,9 @@ public final class IntegerDistribution extends RangedDistribution<IntegerRange, 
         if (index == 1) {
             multiplier = 1;
         } else if (index < 1) {
-            multiplier = (int) Math.pow(TEN, (index * -1));
+            multiplier = (int) Math.pow(TEN, index * -1);
         } else {
-            multiplier = (int) Math.pow(TEN, (index - 1));
+            multiplier = (int) Math.pow(TEN, index - 1);
         }
 
         for (int x = 0; x < COUNTS; x++) {

@@ -31,12 +31,14 @@ public final class BigDecimalDistribution extends RangedDistribution<BigDecimalR
 
         int index = findPlace(max);
 
+
+
         if (index == 1) {
-            multiplier = new BigDecimal(1f);
+            multiplier = BigDecimal.valueOf(1);
         } else if (index < 1) {
-            multiplier = new BigDecimal(1f).divide(ten.pow(index * -1));
+            multiplier = BigDecimal.valueOf(1f).divide(ten.pow(index * -1));
         } else {
-            multiplier = new BigDecimal(1f).pow(index);
+            multiplier = BigDecimal.valueOf(1f).pow(index);
         }
 
         for (int x = 0; x < COUNTS; x++) {

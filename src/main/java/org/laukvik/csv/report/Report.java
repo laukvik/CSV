@@ -7,6 +7,7 @@ import org.laukvik.csv.columns.IntegerColumn;
 import org.laukvik.csv.columns.StringColumn;
 import org.laukvik.csv.query.SortOrder;
 import org.laukvik.csv.query.ValueMatcher;
+
 import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -109,7 +110,7 @@ public final class Report {
             boolean matchesAll = true;
             for (ValueMatcher rm : rowMatcherList) {
                 Column c = rm.getColumn();
-                if (!rm.matches(r.get(c))){
+                if (!rm.matches(r.get(c))) {
                     matchesAll = false;
                 }
 //                if (!rm.matchesRow(r)) {

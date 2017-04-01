@@ -45,6 +45,7 @@ public abstract class AbstractDateMatcher implements ValueMatcher<Date> {
      *
      * @return the column
      */
+    @Override
     public final DateColumn getColumn() {
         return column;
     }

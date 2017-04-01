@@ -19,7 +19,6 @@ import org.junit.Test;
 import org.laukvik.csv.CSV;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -102,20 +101,6 @@ public class ColumnTest {
 
         cd = ColumnDefinition.parse("first");
         assertTrue(Column.parseColumnDefinition(cd) instanceof StringColumn);
-    }
-
-    @Test
-    public void isVisible() throws Exception {
-        Column c = Column.parseName("first");
-        c.setVisible(true);
-        assertTrue(c.isVisible());
-    }
-
-    @Test
-    public void setVisible() throws Exception {
-        Column c = Column.parseName("first");
-        c.setVisible(false);
-        assertFalse(c.isVisible());
     }
 
     @Test
@@ -337,7 +322,6 @@ public class ColumnTest {
     public void settersGetters() {
         Column c = Column.parseName("first");
         assertEquals("first", c.getName());
-        c.setVisible(true);
         c.setWidth(10);
         c.setAllowNulls(true);
         c.setPrimaryKey(true);
@@ -345,7 +329,6 @@ public class ColumnTest {
         c.setName("First");
         ForeignKey fk = new ForeignKey("emp","id");
         c.setForeignKey(fk);
-        assertTrue(c.isVisible());
         assertTrue(c.isAllowNulls());
         assertTrue(c.isPrimaryKey());
         assertEquals(10, c.getWidth());

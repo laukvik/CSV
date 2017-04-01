@@ -37,13 +37,13 @@ public final class ColumnDefinition {
         /* Extract extra information about the column*/
         cd.columnName = null;
         // Look for metadata in column headers
-        int firstIndex = compressedColumnDefinition.indexOf("(");
+        int firstIndex = compressedColumnDefinition.indexOf('(');
         if (firstIndex == -1) {
             // No extra information
             cd.columnName = compressedColumnDefinition;
         } else {
             // Found extra information
-            int lastIndex = compressedColumnDefinition.indexOf(")", firstIndex);
+            int lastIndex = compressedColumnDefinition.indexOf(')', firstIndex);
             cd.columnName = compressedColumnDefinition.substring(0, firstIndex);
             if (lastIndex != -1) {
                 // String with metadata
@@ -62,10 +62,10 @@ public final class ColumnDefinition {
                         if (arr.length > 1) {
                             // Has value
                             String value = arr[1];
-                            int extraIndex = value.indexOf("[");
+                            int extraIndex = value.indexOf('[');
                             if (extraIndex > -1) {
                                 // Extra value
-                                int extraLastIndex = value.lastIndexOf("]");
+                                int extraLastIndex = value.lastIndexOf(']');
                                 if (extraLastIndex > extraIndex) {
                                     String extraValue = value.substring(0, extraIndex);
                                     String extraNumber = value.substring(extraIndex + 1, extraLastIndex);

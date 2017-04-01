@@ -37,6 +37,7 @@ public final class BigDecimalColumn extends Column<BigDecimal> {
      * @param value the value
      * @return the String representation
      */
+    @Override
     public String asString(final BigDecimal value) {
         return value.toString();
     }
@@ -47,6 +48,7 @@ public final class BigDecimalColumn extends Column<BigDecimal> {
      * @param value the string
      * @return BigDecimal
      */
+    @Override
     public BigDecimal parse(final String value) {
         return new BigDecimal(value);
     }
@@ -58,6 +60,7 @@ public final class BigDecimalColumn extends Column<BigDecimal> {
      * @param another another column
      * @return the compare value
      */
+    @Override
     public int compare(final BigDecimal one, final BigDecimal another) {
         return compareWith(one, another);
     }

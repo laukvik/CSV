@@ -48,6 +48,7 @@ public final class Avg extends Aggregate {
      *
      * @return the value
      */
+    @Override
     public BigDecimal getValue() {
         if (count == 0) {
             return new BigDecimal(0);

@@ -38,7 +38,7 @@ public final class NotEmptyMatcher implements ValueMatcher<Object> {
 
     @Override
     public Column getColumn() {
-        return null;
+        return c;
     }
 
     @Override

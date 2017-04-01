@@ -71,7 +71,7 @@ public abstract class Column<T> implements Comparable, Serializable {
     /**
      * The name of the width attribute.
      */
-    static final String WIDTH = "width";
+    static final String COLUMN_WIDTH = "width";
     /**
      * The name of the allowNulls attribute.
      */
@@ -118,11 +118,7 @@ public abstract class Column<T> implements Comparable, Serializable {
      * The default value.
      */
     private String defaultValue;
-    /**
-     * Returns the visibility.
-     * TODO - Remove visibility - this is only interesting in JavaFX app
-     */
-    private boolean visible;
+
     /**
      * The maximum amount of characters.
      */
@@ -135,7 +131,6 @@ public abstract class Column<T> implements Comparable, Serializable {
      */
     Column(final String columnName) {
         this.name = columnName;
-        this.visible = true;
         this.primaryKey = false;
         this.allowNulls = false;
     }
@@ -271,24 +266,6 @@ public abstract class Column<T> implements Comparable, Serializable {
      */
     public final void setCSV(final CSV csv) {
         this.csv = csv;
-    }
-
-    /**
-     * Returns whether the column is visible.
-     *
-     * @return the column is visible
-     */
-    public final boolean isVisible() {
-        return visible;
-    }
-
-    /**
-     * Sets the visibility of the column.
-     *
-     * @param isVisible the visibility
-     */
-    public final void setVisible(final boolean isVisible) {
-        this.visible = isVisible;
     }
 
     /**
@@ -452,7 +429,8 @@ public abstract class Column<T> implements Comparable, Serializable {
         if (this instanceof StringColumn) {
             StringColumn sc = (StringColumn) this;
             if (sc.getSize() > 0) {
-                cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_STRING, sc.getSize() + ""));
+
+                cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_STRING,  Integer.toString(sc.getSize())));
             }
         } else if (this instanceof BigDecimalColumn) {
             cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_BIGDECIMAL));
@@ -481,13 +459,14 @@ public abstract class Column<T> implements Comparable, Serializable {
             cd.setAttribute(FOREIGN_KEY, new ColumnDefinition.Attribute(fk.getTable(), fk.getColumn()));
         }
         if (getWidth() > 0) {
-            cd.setAttribute(WIDTH, new ColumnDefinition.Attribute(getWidth() + ""));
+            cd.setAttribute(COLUMN_WIDTH, new ColumnDefinition.Attribute(Integer.toString(getWidth())));
         }
         if (isAllowNulls()) {
-            cd.setAttribute(ALLOW_NULLS, new ColumnDefinition.Attribute("true"));
+
+            cd.setAttribute(ALLOW_NULLS, new ColumnDefinition.Attribute(Boolean.toString(true)));
         }
         if (isPrimaryKey()) {
-            cd.setAttribute(PRIMARY_KEY, new ColumnDefinition.Attribute("true"));
+            cd.setAttribute(PRIMARY_KEY, new ColumnDefinition.Attribute(Boolean.toString(true)));
         }
         return cd;
     }

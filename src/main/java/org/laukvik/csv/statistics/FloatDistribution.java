@@ -26,13 +26,10 @@ public final class FloatDistribution extends RangedDistribution<FloatRange, Floa
     public void buildRange(final Float minimum, final Float maximum) {
         getRanges().clear();
         float max = Math.max(minimum, maximum);
-
-        String valMax = "" + max;
+        String valMax = Float.toString(max);
         int decimalsMax = valMax.length();
-
         Double doubleMultiplier = Math.pow(TEN, decimalsMax - 1);
         multiplier = doubleMultiplier.floatValue();
-
         for (int x = 0; x < COUNTS; x++) {
             float start = x * multiplier;
             float end = (start + multiplier) - 1;

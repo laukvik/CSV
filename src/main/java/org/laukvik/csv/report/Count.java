@@ -12,16 +12,16 @@ public final class Count extends Aggregate {
     /**
      * The amount of items.
      */
-    private int count;
+    private int amount;
 
     /**
-     * Sets the column to count.
+     * Sets the column to amount.
      *
      * @param column the column
      */
     public Count(final Column column) {
         super(column);
-        count = 0;
+        amount = 0;
     }
 
     /**
@@ -29,7 +29,7 @@ public final class Count extends Aggregate {
      * @param row the row
      */
     public void aggregate(final Row row) {
-        count++;
+        amount++;
     }
 
     /**
@@ -38,7 +38,7 @@ public final class Count extends Aggregate {
      * @return the amount
      */
     public Integer getValue() {
-        return count;
+        return amount;
     }
 
 }

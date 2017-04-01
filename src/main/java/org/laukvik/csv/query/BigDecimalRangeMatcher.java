@@ -50,17 +50,6 @@ public final class BigDecimalRangeMatcher implements ValueMatcher<BigDecimal> {
         return column;
     }
 
-//    /**
-//     * Returns true when the row matchesRow.
-//     *
-//     * @param row the row
-//     * @return true when the row matchesRow
-//     */
-//    public boolean matches(final Row row) {
-//        BigDecimal i = row.getBigDecimal(column);
-//        return matches(i);
-//    }
-
     /**
      * Returns true when the value matchesRow.
      *

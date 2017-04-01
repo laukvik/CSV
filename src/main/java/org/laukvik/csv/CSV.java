@@ -604,7 +604,6 @@ public final class CSV implements Serializable {
     public void clear() {
         columns.clear();
         rows.clear();
-//        query = null;
     }
 
     /**

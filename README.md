@@ -167,18 +167,3 @@ Builds a FrequencyDistribution for column with index 2;
 
 
 
-## TODOs
-
-Coverage
-JavaDocs
-Eksempler
-Rename repo
-importere flere data til eksisterende
-fixed width import
-Lese filer uten headere
-Importere ved å spesifisere kolonnetypene først
-Query
-Annotering
-
-Nexus søknad
-Deploy første versjon

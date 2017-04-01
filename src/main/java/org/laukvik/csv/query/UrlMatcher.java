@@ -57,7 +57,7 @@ public final class UrlMatcher implements ValueMatcher<URL> {
     }
 
     @Override
-    public boolean matches(URL v) {
+    public boolean matches(final URL v) {
         if (v == null) {
             return false;
         } else {

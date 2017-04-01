@@ -20,7 +20,6 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -334,7 +333,7 @@ public final class Query {
             }
         }
         if (!sorters.isEmpty()) {
-            Collections.sort(filteredRows, new RowSorter(sorters));
+            filteredRows.sort(new RowSorter(sorters));
         }
         return filteredRows;
     }
