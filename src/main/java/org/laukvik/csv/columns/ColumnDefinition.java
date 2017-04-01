@@ -170,7 +170,7 @@ public final class ColumnDefinition {
         if (v == null) {
             return false;
         }
-        return v.getValue().equalsIgnoreCase("true");
+        return "true".equalsIgnoreCase(v.getValue());
     }
 
     /**
@@ -222,14 +222,6 @@ public final class ColumnDefinition {
          */
         Attribute(final String value) {
             this.value = value;
-//            int firstIndex = value.indexOf("[");
-//            if (firstIndex > -1) {
-//                int lastIndex = value.lastIndexOf("]");
-//                if (lastIndex > firstIndex) {
-//                    this.optional = value.substring(firstIndex + 1, lastIndex);
-//                    this.value = value.substring(0, firstIndex);
-//                }
-//            }
         }
 
         /**

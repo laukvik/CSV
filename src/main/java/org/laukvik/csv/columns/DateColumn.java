@@ -141,12 +141,8 @@ public final class DateColumn extends Column<Date> {
      * @return true if the time is the same
      */
     public static boolean isEqualTime(final Date d1, final Date d2) {
-        if (d1 == null && d2 == null) {
+        if (d1 == null || d2 == null) {
             return true;
-        } else if (d1 == null) {
-            return false;
-        } else if (d2 == null) {
-            return false;
         }
         GregorianCalendar c1 = new GregorianCalendar();
         c1.setTime(d1);
@@ -450,6 +446,7 @@ public final class DateColumn extends Column<Date> {
      * @param value the value
      * @return the value as String
      */
+    @Override
     public String asString(final Date value) {
         return dateFormat.format(value);
     }
@@ -460,6 +457,7 @@ public final class DateColumn extends Column<Date> {
      * @param value the string
      * @return the date
      */
+    @Override
     public Date parse(final String value) {
         if (value == null || value.isEmpty()) {
             return null;
@@ -478,6 +476,7 @@ public final class DateColumn extends Column<Date> {
      * @param another another column
      * @return the comparisond
      */
+    @Override
     public int compare(final Date one, final Date another) {
         return compareWith(one, another);
     }

@@ -149,6 +149,7 @@ public final class IntegerColumn extends Column<Integer> {
      * @param value the value
      * @return the value as a String
      */
+    @Override
     public String asString(final Integer value) {
         if (value == null) {
             return "";
@@ -162,6 +163,7 @@ public final class IntegerColumn extends Column<Integer> {
      * @param value the string
      * @return the integer value
      */
+    @Override
     public Integer parse(final String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;
@@ -176,6 +178,7 @@ public final class IntegerColumn extends Column<Integer> {
      * @param another another column
      * @return the compare value
      */
+    @Override
     public int compare(final Integer one, final Integer another) {
         return compareWith(one, another);
     }

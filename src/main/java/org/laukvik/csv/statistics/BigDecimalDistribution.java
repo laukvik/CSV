@@ -25,6 +25,7 @@ public final class BigDecimalDistribution extends RangedDistribution<BigDecimalR
      * @param min the minimum value
      * @param max the maximum value
      */
+    @Override
     public void buildRange(final BigDecimal min, final BigDecimal max) {
         getRanges().clear();
         BigDecimal ten = new BigDecimal(TEN);
@@ -53,6 +54,7 @@ public final class BigDecimalDistribution extends RangedDistribution<BigDecimalR
      *
      * @return the size
      */
+    @Override
     public BigDecimal getRangeSize() {
         return multiplier;
     }

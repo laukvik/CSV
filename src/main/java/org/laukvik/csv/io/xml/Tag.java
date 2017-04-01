@@ -193,13 +193,11 @@ public final class Tag {
             return b.toString();
 
         } else {
-//            if (parent != null) {
             b.append("<").append(name);
             for (Attribute a : attributeList) {
                 b.append(" ").append(a.toHtml());
             }
             b.append(">");
-//            }
 
             if (text == null) {
                 for (Tag t : children) {
@@ -209,9 +207,7 @@ public final class Tag {
                 b.append(text);
             }
 
-//            if (parent != null) {
             b.append("</").append(name).append(">");
-//            }
             return b.toString();
         }
     }

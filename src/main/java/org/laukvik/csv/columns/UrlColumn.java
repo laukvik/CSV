@@ -57,7 +57,7 @@ public final class UrlColumn extends Column<URL> {
             return null;
         }
         String p = url.getPath();
-        String filename = p.substring(p.lastIndexOf("/") + 1);
+        String filename = p.substring(p.lastIndexOf('/') + 1);
         return filename.isEmpty() ? null : filename;
     }
 
@@ -66,7 +66,7 @@ public final class UrlColumn extends Column<URL> {
         if (filename == null) {
             return null;
         }
-        int index = filename.lastIndexOf(".");
+        int index = filename.lastIndexOf('.');
         if (index < 0) {
             return null;
         } else {
@@ -79,7 +79,7 @@ public final class UrlColumn extends Column<URL> {
         if (filename == null) {
             return null;
         }
-        int index = filename.lastIndexOf(".");
+        int index = filename.lastIndexOf('.');
         if (index < 0) {
             return filename;
         } else {
@@ -138,6 +138,7 @@ public final class UrlColumn extends Column<URL> {
      * @param value the value
      * @return the value as String
      */
+    @Override
     public String asString(final URL value) {
         if (value == null) {
             return "";
@@ -151,6 +152,7 @@ public final class UrlColumn extends Column<URL> {
      * @param value the string
      * @return null if empty or if URL could not be parsed
      */
+    @Override
     public URL parse(final String value) {
         try {
             return new URL(value);
@@ -166,6 +168,7 @@ public final class UrlColumn extends Column<URL> {
      * @param another another column
      * @return a comparison value
      */
+    @Override
     public int compare(final URL one, final URL another) {
         if (one == null || another == null) {
             if (one == null && another == null) {

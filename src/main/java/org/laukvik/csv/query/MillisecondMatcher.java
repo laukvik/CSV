@@ -69,6 +69,7 @@ public final class MillisecondMatcher implements ValueMatcher<Date> {
      * @param value the value
      * @return true when the row matchesRow
      */
+    @Override
     public boolean matches(final Date value) {
         return values.contains(DateColumn.getMilliseconds(value));
     }

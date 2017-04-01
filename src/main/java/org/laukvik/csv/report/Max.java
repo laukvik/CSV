@@ -25,6 +25,7 @@ public final class Max extends Aggregate {
      * Returns the aggregated value.
      * @return the maximum value found
      */
+    @Override
     public Integer getValue() {
         return max;
     }
@@ -34,6 +35,7 @@ public final class Max extends Aggregate {
      *
      * @param row the row.
      */
+    @Override
     public void aggregate(final Row row) {
         Integer value = row.getInteger((IntegerColumn) getColumn());
         if (max == null) {

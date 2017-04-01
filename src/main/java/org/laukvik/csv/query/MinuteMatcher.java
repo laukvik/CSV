@@ -69,6 +69,7 @@ public final class MinuteMatcher implements ValueMatcher<Date> {
      * @param value the value to test against
      * @return true when matchesRow
      */
+    @Override
     public boolean matches(final Date value) {
         return values.contains(DateColumn.getMinutes(value));
     }

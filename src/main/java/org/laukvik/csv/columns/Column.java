@@ -408,6 +408,7 @@ public abstract class Column<T> implements Comparable, Serializable {
      * @return -1 or 0 or 1
      * @see java.lang.Comparable
      */
+    @Override
     public final int compareTo(final Object o) {
         if (o == null) {
             return 1;

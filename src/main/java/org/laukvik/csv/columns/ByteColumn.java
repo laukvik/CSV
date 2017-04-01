@@ -38,6 +38,7 @@ public final class ByteColumn extends Column<byte[]> {
      * @param value the value
      * @return the value as a String
      */
+    @Override
     public String asString(final byte[] value) {
         return new String(Base64.getMimeEncoder().encode(value));
     }
@@ -48,6 +49,7 @@ public final class ByteColumn extends Column<byte[]> {
      * @param value the string
      * @return byte array
      */
+    @Override
     public byte[] parse(final String value) {
         return Base64.getMimeDecoder().decode(value);
     }
@@ -59,6 +61,7 @@ public final class ByteColumn extends Column<byte[]> {
      * @param another another column
      * @return the comparable value
      */
+    @Override
     public int compare(final byte[] one, final byte[] another) {
         if (one == null || another == null) {
             if (one == null && another == null) {

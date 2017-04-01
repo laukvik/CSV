@@ -85,6 +85,7 @@ public final class JsonWriter implements DatasetFileWriter {
      * @param csv  the CSV to write
      * @throws CsvWriterException when the file could not be written to
      */
+    @Override
     public void writeCSV(final File file, final CSV csv) throws CsvWriterException {
         try (FileOutputStream out = new FileOutputStream(file)) {
             writeCSV(csv, out);

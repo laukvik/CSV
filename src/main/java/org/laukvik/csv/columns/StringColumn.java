@@ -44,7 +44,7 @@ public final class StringColumn extends Column<String> {
         if (value == null) {
             return null;
         } else {
-            int index = value.lastIndexOf(".");
+            int index = value.lastIndexOf('.');
             if (index < 0) {
                 return null;
             } else {
@@ -63,7 +63,7 @@ public final class StringColumn extends Column<String> {
         if (value == null) {
             return null;
         } else {
-            int index = value.lastIndexOf(".");
+            int index = value.lastIndexOf('.');
             if (index < 0) {
                 return null;
             } else {
@@ -133,6 +133,7 @@ public final class StringColumn extends Column<String> {
      * @param value the value
      * @return the value
      */
+    @Override
     public String asString(final String value) {
         if (value == null) {
             return "";
@@ -146,6 +147,7 @@ public final class StringColumn extends Column<String> {
      * @param value the string
      * @return the value
      */
+    @Override
     public String parse(final String value) {
         if (value == null) {
             return "";
@@ -160,6 +162,7 @@ public final class StringColumn extends Column<String> {
      * @param another another column
      * @return the compare value
      */
+    @Override
     public int compare(final String one, final String another) {
         return compareWith(one, another);
     }

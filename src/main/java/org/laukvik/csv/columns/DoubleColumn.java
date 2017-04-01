@@ -35,6 +35,7 @@ public final class DoubleColumn extends Column<Double> {
      * @param value the value
      * @return the String
      */
+    @Override
     public String asString(final Double value) {
         if (value == null) {
             return "";
@@ -48,6 +49,7 @@ public final class DoubleColumn extends Column<Double> {
      * @param value the string
      * @return the double value
      */
+    @Override
     public Double parse(final String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;
@@ -62,6 +64,7 @@ public final class DoubleColumn extends Column<Double> {
      * @param another another column
      * @return the comparison
      */
+    @Override
     public int compare(final Double one, final Double another) {
         return compareWith(one, another);
     }

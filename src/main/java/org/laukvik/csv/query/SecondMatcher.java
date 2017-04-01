@@ -56,6 +56,7 @@ public final class SecondMatcher implements ValueMatcher<Date> {
         return column;
     }
 
+    @Override
     public boolean matches(final Date value) {
         return values.contains(DateColumn.getSeconds(value));
     }

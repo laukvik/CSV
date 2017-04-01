@@ -8,14 +8,13 @@ import java.math.BigDecimal;
 public final class IntegerDistribution extends RangedDistribution<IntegerRange, Integer> {
 
     /**
-     * The generated range size.
-     */
-    private int multiplier;
-
-    /**
      * The value of ten.
      */
     private static final double TEN = 10d;
+    /**
+     * The generated range size.
+     */
+    private int multiplier;
 
     /**
      * Creates an empty instance.
@@ -32,23 +31,6 @@ public final class IntegerDistribution extends RangedDistribution<IntegerRange, 
      */
     public void buildRange(final Integer minimum, final Integer maximum) {
         getRanges().clear();
-//        int min = Math.min(minimum, maximum);
-//        int max = Math.max(minimum, maximum);
-//
-//        IntegerDistribution rd = new IntegerDistribution();
-//        String valMin = "" + min;
-//        String valMax = "" + max;
-//        int decimalsMin = valMin.length();
-//        int decimalsMax = valMax.length();
-//
-//        Double doubleMultiplier = Math.pow(TEN, decimalsMax - 1);
-//        multiplier = doubleMultiplier.intValue();
-//
-//        for (int x= 0; x < COUNTS; x++){
-//            int start = x * multiplier;
-//            int end   = (start + multiplier) - 1;
-//            rd.addRange(new IntegerRange(start + " .. " + end, start, end));
-//        }
         int index = findPlace(new BigDecimal(maximum));
 
         if (index == 1) {
@@ -71,6 +53,7 @@ public final class IntegerDistribution extends RangedDistribution<IntegerRange, 
      *
      * @return the interval size for each range.
      */
+    @Override
     public Integer getRangeSize() {
         return multiplier;
     }

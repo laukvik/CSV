@@ -45,6 +45,7 @@ public final class HtmlWriter implements DatasetFileWriter {
      * @param file the file
      * @throws CsvWriterException when the file could not be written
      */
+    @Override
     public void writeCSV(final File file, final CSV csv) throws CsvWriterException {
         try (FileOutputStream out = new FileOutputStream(file)) {
             writeCSV(csv, out);

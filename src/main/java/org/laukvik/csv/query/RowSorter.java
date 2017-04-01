@@ -48,6 +48,7 @@ public final class RowSorter implements Comparator<Row> {
      * @param r2 the second row
      * @return a comparable value
      */
+    @Override
     public int compare(final Row r1, final Row r2) {
         for (SortOrder sortOrder : sortOrders) {
             Column c = sortOrder.getColumn();

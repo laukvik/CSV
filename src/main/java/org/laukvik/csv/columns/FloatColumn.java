@@ -35,6 +35,7 @@ public final class FloatColumn extends Column<Float> {
      * @param value the value
      * @return the value as a String
      */
+    @Override
     public String asString(final Float value) {
         if (value == null) {
             return "";
@@ -48,6 +49,7 @@ public final class FloatColumn extends Column<Float> {
      * @param value the string
      * @return the float value
      */
+    @Override
     public Float parse(final String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;
@@ -62,6 +64,7 @@ public final class FloatColumn extends Column<Float> {
      * @param another another column
      * @return the comparison
      */
+    @Override
     public int compare(final Float one, final Float another) {
         return compareWith(one, another);
     }

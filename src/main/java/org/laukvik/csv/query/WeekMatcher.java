@@ -48,6 +48,7 @@ public final class WeekMatcher implements ValueMatcher<Date> {
         return column;
     }
 
+    @Override
     public boolean matches(final Date value) {
         return values.contains(DateColumn.getWeekOfYear(value));
     }

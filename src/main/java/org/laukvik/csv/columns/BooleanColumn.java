@@ -48,6 +48,7 @@ public final class BooleanColumn extends Column<Boolean> {
      * @param value the string
      * @return the value
      */
+    @Override
     public Boolean parse(final String value) {
         if (value == null || value.isEmpty()) {
             return null;
@@ -62,6 +63,7 @@ public final class BooleanColumn extends Column<Boolean> {
      * @param another another column
      * @return the comparable value
      */
+    @Override
     public int compare(final Boolean one, final Boolean another) {
         return compareWith(one, another);
     }

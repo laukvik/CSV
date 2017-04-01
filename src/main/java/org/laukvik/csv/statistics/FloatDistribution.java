@@ -23,6 +23,7 @@ public final class FloatDistribution extends RangedDistribution<FloatRange, Floa
      * @param minimum the minimum value
      * @param maximum the maximum value
      */
+    @Override
     public void buildRange(final Float minimum, final Float maximum) {
         getRanges().clear();
         float max = Math.max(minimum, maximum);
@@ -42,6 +43,7 @@ public final class FloatDistribution extends RangedDistribution<FloatRange, Floa
      *
      * @return the interval size for each range.
      */
+    @Override
     public Float getRangeSize() {
         return multiplier;
     }

@@ -28,6 +28,7 @@ public final class Count extends Aggregate {
      * Aggregates the column in the row.
      * @param row the row
      */
+    @Override
     public void aggregate(final Row row) {
         amount++;
     }
@@ -37,6 +38,7 @@ public final class Count extends Aggregate {
      *
      * @return the amount
      */
+    @Override
     public Integer getValue() {
         return amount;
     }

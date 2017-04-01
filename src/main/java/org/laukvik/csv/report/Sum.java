@@ -36,6 +36,7 @@ public final class Sum extends Aggregate {
      *
      * @return the value
      */
+    @Override
     public BigDecimal getValue() {
         return sum;
     }

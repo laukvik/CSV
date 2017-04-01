@@ -4,13 +4,14 @@ import org.laukvik.csv.Row;
 import org.laukvik.csv.columns.Column;
 
 /**
- * Returns the value of the column.
+ * Returns the name of the column.
  *
  */
 public final class Name extends Aggregate {
 
-    private Object name;
-
+    /**
+     * @param column the column
+     */
     public Name(final Column column) {
         super(column);
     }

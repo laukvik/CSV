@@ -71,6 +71,7 @@ public final class CsvReader implements DatasetFileReader {
      * @param csv  the csv
      * @throws CsvReaderException when the file could not be read
      */
+    @Override
     public void readFile(final File file, final CSV csv) throws CsvReaderException {
         BOM bom = null;
         if (autoDetectCharset) {

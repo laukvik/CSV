@@ -6,14 +6,13 @@ package org.laukvik.csv.statistics;
 public final class DoubleDistribution extends RangedDistribution<DoubleRange, Double> {
 
     /**
-     * The generated range size.
-     */
-    private double doubleMultiplier;
-
-    /**
      * A tenth.
      */
     private static final double TENTH = 0.1d;
+    /**
+     * The generated range size.
+     */
+    private double doubleMultiplier;
 
     /**
      * Creates an empty instance.
@@ -28,11 +27,13 @@ public final class DoubleDistribution extends RangedDistribution<DoubleRange, Do
      * @param minimum the minimum value
      * @param maximum the maximum value
      */
+    @Override
     public void buildRange(final Double minimum, final Double maximum) {
         getRanges().clear();
         Double max = Math.max(minimum, maximum);
 
-        String valMax = "" + max.intValue();
+        String valMax = Double.toString(max);
+
         int decimalsMax = valMax.length();
 
         doubleMultiplier = Math.pow(TEN, decimalsMax - 1);
@@ -53,6 +54,7 @@ public final class DoubleDistribution extends RangedDistribution<DoubleRange, Do
      *
      * @return the interval size for each range.
      */
+    @Override
     public Double getRangeSize() {
         return doubleMultiplier;
     }
