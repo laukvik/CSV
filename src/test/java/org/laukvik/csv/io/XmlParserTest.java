@@ -4,10 +4,10 @@ import org.junit.Test;
 import org.laukvik.csv.io.xml.Attribute;
 import org.laukvik.csv.io.xml.Tag;
 import org.laukvik.csv.io.xml.XmlListener;
+import org.laukvik.csv.io.xml.XmlParseException;
 import org.laukvik.csv.io.xml.XmlParser;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,7 +22,7 @@ public class XmlParserTest {
     }
 
     @Test
-    public void parseHtml() throws IOException {
+    public void parseHtml() throws XmlParseException {
         XmlParser xml = new XmlParser();
         Tag html = xml.parseFile(getResource("lorem.html"));
         assertEquals("html", html.getName());
@@ -53,7 +53,7 @@ public class XmlParserTest {
     }
 
     @Test
-    public void parseFile() throws Exception {
+    public void parseFile() throws XmlParseException {
         XmlParser parser = new XmlParser();
         Xisten l = new Xisten();
         parser.addListener(l);

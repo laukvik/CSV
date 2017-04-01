@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Compares a StringColumn to have the specified value.
+ * Compares a StringColumn to have the specified amount of words.
  */
 public final class WordCountMatcher implements ValueMatcher<String> {
 
@@ -36,18 +36,24 @@ public final class WordCountMatcher implements ValueMatcher<String> {
     private final StringColumn column;
 
     /**
-     * The value of the column must be.
+     * Compares a StringColumn to have the specified amount of words.
      *
      * @param stringColumn the column
-     * @param value        the value
+     * @param value        the amount of words
      */
     public WordCountMatcher(final StringColumn stringColumn, final Integer... value) {
         this(stringColumn, Arrays.asList(value));
     }
 
-    public WordCountMatcher(final StringColumn stringColumn, final List<Integer> values) {
+    /**
+     * Compares a StringColumn to have the specified amount of words.
+     *
+     * @param stringColumn the column
+     * @param value        the amount of words
+     */
+    public WordCountMatcher(final StringColumn stringColumn, final List<Integer> value) {
         this.column = stringColumn;
-        this.values = values;
+        this.values = value;
     }
 
     @Override

@@ -16,6 +16,7 @@
 package org.laukvik.csv.query;
 
 import org.laukvik.csv.columns.Column;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public final class IsInMatcher<T> implements ValueMatcher<T> {
     }
 
     @Override
-    public boolean matches(T value) {
+    public boolean matches(final T value) {
         return values.contains(value);
     }
 }

@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Compares a StringColumn to have the specified value.
  */
-public final class PostfixMatcher implements ValueMatcher<String>{
+public final class PostfixMatcher implements ValueMatcher<String> {
 
     /**
      * The value to compare.
@@ -45,6 +45,12 @@ public final class PostfixMatcher implements ValueMatcher<String>{
         this(stringColumn, Arrays.asList(value));
     }
 
+    /**
+     * The value of the column must be.
+     *
+     * @param stringColumn the column
+     * @param value        the value
+     */
     public PostfixMatcher(final StringColumn stringColumn, final List<String> value) {
         this.column = stringColumn;
         this.values = value;

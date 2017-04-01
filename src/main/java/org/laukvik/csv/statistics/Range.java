@@ -3,7 +3,7 @@ package org.laukvik.csv.statistics;
 /**
  *
  *
- *
+ * @param <T> any number class
  */
 public abstract class Range<T extends Number> {
 

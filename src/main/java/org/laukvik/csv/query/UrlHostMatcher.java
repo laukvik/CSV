@@ -59,8 +59,8 @@ public final class UrlHostMatcher implements ValueMatcher<URL> {
     @Override
     public boolean matches(final URL v) {
         for (String s : values) {
-            if (v == null){
-                if (s == null){
+            if (v == null) {
+                if (s == null) {
                     return true;
                 }
             } else {

@@ -29,6 +29,7 @@ public final class IntegerDistribution extends RangedDistribution<IntegerRange, 
      * @param minimum the minimum value
      * @param maximum the maximum value
      */
+    @Override
     public void buildRange(final Integer minimum, final Integer maximum) {
         getRanges().clear();
         int index = findPlace(new BigDecimal(maximum));

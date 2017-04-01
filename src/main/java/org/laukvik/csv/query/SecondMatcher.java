@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Compares a StringColumn to have the specified value.
+ * Compares a DateColumn to have the specified second.
  */
 public final class SecondMatcher implements ValueMatcher<Date> {
 
@@ -37,18 +37,24 @@ public final class SecondMatcher implements ValueMatcher<Date> {
     private final DateColumn column;
 
     /**
-     * The value of the column must be.
+     * Compares a DateColumn to have the specified second.
      *
      * @param dateColumn the column
-     * @param value      the value
+     * @param value      the second
      */
     public SecondMatcher(final DateColumn dateColumn, final Integer... value) {
         this(dateColumn, Arrays.asList(value));
     }
 
-    public SecondMatcher(final DateColumn dateColumn, final List<Integer> values) {
+    /**
+     * Compares a DateColumn to have the specified second.
+     *
+     * @param dateColumn the column
+     * @param value      the second
+     */
+    public SecondMatcher(final DateColumn dateColumn, final List<Integer> value) {
         this.column = dateColumn;
-        this.values = values;
+        this.values = value;
     }
 
     @Override

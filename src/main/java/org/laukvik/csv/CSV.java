@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -154,14 +155,6 @@ public final class CSV implements Serializable {
      */
     private final List<Column> columns;
     /**
-     * The List of all ChangeListeners.
-     */
-    private final List<ChangeListener> changeListeners;
-    /**
-     * The List of all FileListeners.
-     */
-    private final List<FileListener> fileListeners;
-    /**
      * The list of Rows.
      */
     private final List<Row> rows;
@@ -201,8 +194,6 @@ public final class CSV implements Serializable {
     public CSV() {
         columns = new ArrayList<>();
         rows = new ArrayList<>();
-        changeListeners = new ArrayList<>();
-        fileListeners = new ArrayList<>();
         charset = Charset.defaultCharset();
         autoDetectCharset = true;
         autoDetectQuote = true;
@@ -344,7 +335,6 @@ public final class CSV implements Serializable {
     public Column addColumn(final Column column) {
         column.setCSV(this);
         columns.add(column);
-        fireColumnCreated(column);
         return column;
     }
 
@@ -359,7 +349,6 @@ public final class CSV implements Serializable {
         for (Row r : getRows()) {
             r.setNull(column);
         }
-        fireColumnRemoved(column);
     }
 
     /**
@@ -370,7 +359,6 @@ public final class CSV implements Serializable {
      */
     public void swapColumn(final int fromIndex, final int toIndex) {
         Collections.swap(columns, fromIndex, toIndex);
-        fireColumnMoved(fromIndex, toIndex);
     }
 
     /**
@@ -383,7 +371,6 @@ public final class CSV implements Serializable {
         Column c1 = getColumn(fromIndex);
         columns.remove(c1);
         columns.add(toIndex, c1);
-        fireColumnMoved(fromIndex, toIndex);
     }
 
     /**
@@ -421,7 +408,6 @@ public final class CSV implements Serializable {
     public void removeColumn(final int columnIndex) {
         Column c = columns.get(columnIndex);
         columns.remove(c);
-        fireColumnRemoved(c);
     }
 
     /**
@@ -479,7 +465,6 @@ public final class CSV implements Serializable {
             r.setString(c, c.getName());
             c.setName("Column" + (x + 1));
         }
-        fireRowCreated(0, r);
     }
 
     /**
@@ -553,7 +538,6 @@ public final class CSV implements Serializable {
     public Row addRow(final int rowIndex) {
         Row r = new Row();
         rows.add(rowIndex, r);
-        fireRowCreated(rowIndex, r);
         return r;
     }
 
@@ -565,7 +549,6 @@ public final class CSV implements Serializable {
      */
     private Row addRow(final Row row) {
         rows.add(row);
-        fireRowCreated(rows.size(), row);
         return row;
     }
 
@@ -576,7 +559,6 @@ public final class CSV implements Serializable {
      */
     public void removeRow(final int index) {
         Row row = rows.remove(index);
-        fireRowRemoved(index, row);
     }
 
     /**
@@ -587,7 +569,6 @@ public final class CSV implements Serializable {
      */
     public void removeRowsBetween(final int fromRowIndex, final int endRowIndex) {
         rows.subList(fromRowIndex, endRowIndex + 1).clear();
-        fireRowsRemoved(fromRowIndex, endRowIndex);
     }
 
     /**
@@ -596,7 +577,6 @@ public final class CSV implements Serializable {
     public void removeRows() {
         int count = rows.size();
         rows.clear();
-        fireRowsRemoved(0, count);
     }
 
     /**
@@ -615,7 +595,6 @@ public final class CSV implements Serializable {
      */
     public void moveRow(final int fromRowIndex, final int toRowIndex) {
         Collections.swap(rows, fromRowIndex, toRowIndex);
-        fireRowMoved(fromRowIndex, toRowIndex);
     }
 
     /**
@@ -626,7 +605,6 @@ public final class CSV implements Serializable {
      */
     public void swapRows(final int fromRowIndex, final int toRowIndex) {
         Collections.swap(rows, fromRowIndex, toRowIndex);
-        fireRowMoved(fromRowIndex, toRowIndex);
     }
 
     /**
@@ -771,9 +749,7 @@ public final class CSV implements Serializable {
     private void readDatasetFile(final File csvFile, final DatasetFileReader reader) throws CsvReaderException {
         clear();
         this.file = csvFile;
-        fireBeginRead();
         reader.readFile(csvFile, this);
-        fireFinishRead();
     }
 
     /**
@@ -795,9 +771,7 @@ public final class CSV implements Serializable {
      * @throws CsvWriterException when the file could not be written
      */
     private void write(final DatasetFileWriter writer, final File fileToWrite) throws CsvWriterException {
-        fireBeginWrite();
         writer.writeCSV(fileToWrite, this);
-        fireFinishWrite();
     }
 
     /**
@@ -943,7 +917,7 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<BigDecimal> buildDistinctValues(final BigDecimalColumn column) {
-        return rows.stream().map(r -> r.getBigDecimal(column)).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.getBigDecimal(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -953,7 +927,7 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<Boolean> buildDistinctValues(final BooleanColumn column) {
-        return rows.stream().map(r -> r.getBoolean(column)).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.getBoolean(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -963,7 +937,7 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<Date> buildDistinctValues(final DateColumn column) {
-        return rows.stream().map(r -> r.getDate(column)).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.getDate(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -973,7 +947,7 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<Double> buildDistinctValues(final DoubleColumn column) {
-        return rows.stream().map(r -> r.getDouble(column)).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.getDouble(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -983,7 +957,7 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<Float> buildDistinctValues(final FloatColumn column) {
-        return rows.stream().map(r -> r.getFloat(column)).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.getFloat(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -993,7 +967,7 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<Integer> buildDistinctValues(final IntegerColumn column) {
-        return rows.stream().map(r -> r.getInteger(column)).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.getInteger(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -1003,7 +977,7 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<String> buildDistinctValues(final StringColumn column) {
-        return rows.stream().map(r -> r.getString(column)).collect(Collectors.toCollection(TreeSet::new));
+        return rows.stream().map(r -> r.getString(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -1013,173 +987,7 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<URL> buildDistinctValues(final UrlColumn column) {
-        return rows.stream().map(r -> r.getURL(column)).collect(Collectors.toCollection(TreeSet::new));
-    }
-
-    /**
-     * Adds the ChangeListener.
-     *
-     * @param changeListener the ChangeListener to add
-     */
-    public void addChangeListener(final ChangeListener changeListener) {
-        changeListeners.add(changeListener);
-    }
-
-    /**
-     * Removes the ChangeListener.
-     *
-     * @param changeListener the ChangeListener to setNull
-     */
-    public void removeChangeListener(final ChangeListener changeListener) {
-        changeListeners.remove(changeListener);
-    }
-
-    /**
-     * Informs all ChangeListeners that the Row has been read.
-     *
-     * @param rowIndex the index of the row
-     * @param row      the row itself
-     */
-    private void fireRowCreated(final int rowIndex, final Row row) {
-        for (ChangeListener l : changeListeners) {
-            l.rowCreated(rowIndex, row);
-        }
-    }
-
-    /**
-     * Informs all ChangeListeners that the Row has been removed.
-     *
-     * @param rowIndex the index of the row
-     * @param row      the row itself
-     */
-    private void fireRowRemoved(final int rowIndex, final Row row) {
-        for (ChangeListener l : changeListeners) {
-            l.rowRemoved(rowIndex, row);
-        }
-    }
-
-    /**
-     * Informs all ChangeListeners that the Row has been moved.
-     *
-     * @param fromRowIndex the index of the row
-     * @param toRowIndex   the row itself
-     */
-    private void fireRowMoved(final int fromRowIndex, final int toRowIndex) {
-        for (ChangeListener l : changeListeners) {
-            l.rowMoved(fromRowIndex, toRowIndex);
-        }
-    }
-
-    /**
-     * Informs all ChangeListeners that the rows has been removed.
-     *
-     * @param fromRowIndex from index
-     * @param toRowIndex   to index
-     */
-    private void fireRowsRemoved(final int fromRowIndex, final int toRowIndex) {
-        for (ChangeListener l : changeListeners) {
-            l.rowsRemoved(fromRowIndex, toRowIndex);
-        }
-    }
-
-    /**
-     * Informs all ChangeListeners that the Column has been created.
-     *
-     * @param column the Column
-     */
-    void fireColumnCreated(final Column column) {
-        for (ChangeListener l : changeListeners) {
-            l.columnCreated(column);
-        }
-    }
-
-    /**
-     * Informs all ChangeListeners that the Column has been updated.
-     *
-     * @param column the Column
-     */
-    void fireColumnUpdated(final Column column) {
-        for (ChangeListener l : changeListeners) {
-            l.columnUpdated(column);
-        }
-    }
-
-    /**
-     * Informs all ChangeListeners that the Column has been removed.
-     *
-     * @param column the Column
-     */
-    void fireColumnRemoved(final Column column) {
-        for (ChangeListener l : changeListeners) {
-            l.columnRemoved(columns.indexOf(column));
-        }
-    }
-
-    /**
-     * Informs all ChangesListeners that the Column has been moved to a new
-     * index.
-     *
-     * @param fromIndex from index
-     * @param toIndex   to index
-     */
-    void fireColumnMoved(final int fromIndex, final int toIndex) {
-        for (ChangeListener l : changeListeners) {
-            l.columnMoved(fromIndex, toIndex);
-        }
-    }
-
-    /**
-     * Adds a FileListener.
-     *
-     * @param fileListener the ChangeListener to setNull
-     */
-    public void addFileListener(final FileListener fileListener) {
-        fileListeners.add(fileListener);
-    }
-
-    /**
-     * Removes a FileListener.
-     *
-     * @param fileListener the FileListener to setNull
-     */
-    public void removeFileListener(final FileListener fileListener) {
-        fileListeners.remove(fileListener);
-    }
-
-    /**
-     * Informs all FileListeners that the reading process has been started.
-     */
-    private void fireBeginRead() {
-        for (FileListener l : fileListeners) {
-            l.beginRead(file);
-        }
-    }
-
-    /**
-     * Informs all FileListeners that the reading process has been finished.
-     */
-    private void fireFinishRead() {
-        for (FileListener l : fileListeners) {
-            l.finishRead(file);
-        }
-    }
-
-    /**
-     * Informs all FileListeners that writing process has been started.
-     */
-    private void fireBeginWrite() {
-        for (FileListener l : fileListeners) {
-            l.beginWrite(file);
-        }
-    }
-
-    /**
-     * Informs all FileListeners that writing process has been finished.
-     */
-    private void fireFinishWrite() {
-        for (FileListener l : fileListeners) {
-            l.finishWrite(file);
-        }
+        return rows.stream().map(r -> r.getURL(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**

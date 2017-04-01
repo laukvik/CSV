@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.laukvik.csv.columns.BigDecimalColumn;
 import org.laukvik.csv.columns.BooleanColumn;
 import org.laukvik.csv.columns.ByteColumn;
-import org.laukvik.csv.columns.Column;
 import org.laukvik.csv.columns.DateColumn;
 import org.laukvik.csv.columns.DoubleColumn;
 import org.laukvik.csv.columns.FloatColumn;
@@ -38,8 +37,11 @@ import org.laukvik.csv.statistics.FrequencyDistribution;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -353,21 +355,6 @@ public class CSVTest {
     }
 
     @Test
-    public void buildFrequencyDistribution() throws Exception {
-        CSV csv = new CSV();
-        StringColumn first = csv.addStringColumn("First");
-        IntegerColumn id = csv.addIntegerColumn("id");
-        csv.addRow().setString(first, "Gates").setInteger(id, 2 );
-        csv.addRow().setString(first, "Jobs").setInteger(id, 3 );
-        csv.addRow().setString(first, "Gates");
-        csv.addRow().setInteger(id, 4 );
-        FrequencyDistribution<String> firstFQ = csv.buildFrequencyDistribution(first);
-        FrequencyDistribution<Integer> idFQ = csv.buildFrequencyDistribution(id);
-        assertEquals(2, firstFQ.getKeys().size()); // Gates x 2
-        assertEquals(3, idFQ.getKeys().size()); // 2 3 4
-    }
-
-    @Test
     public void readEscaped() {
         try {
 
@@ -600,74 +587,8 @@ public class CSVTest {
     }
 
     @Test
-    public void shouldFireFileEvent() throws Exception {
-        CSV csv = new CSV();
-        FileListen l = new FileListen();
-        csv.addFileListener(l);
-        csv.readFile(getResource("presidents.csv"));
-        assertEquals(1, l.beginRead);
-        assertEquals(1, l.finishRead);
-        assertEquals(0, l.beginWrite);
-        assertEquals(0, l.finishWrite);
-        csv.writeFile(File.createTempFile("presidents", ".csv"));
-        assertEquals(1, l.beginRead);
-        assertEquals(1, l.finishRead);
-        assertEquals(1, l.beginWrite);
-        assertEquals(1, l.finishWrite);
-    }
-
-    @Test
-    public void shouldRemoveFileListener() throws Exception {
-        CSV csv = new CSV();
-        FileListen l = new FileListen();
-        csv.addFileListener(l);
-        csv.removeFileListener(l);
-        csv.readFile(getResource("presidents.csv"));
-        assertEquals(0, l.beginRead);
-        assertEquals(0, l.finishRead);
-        assertEquals(0, l.beginWrite);
-        assertEquals(0, l.finishWrite);
-    }
-
-    @Test
-    public void addChangeListener(){
-        CSV csv = new CSV();
-        ChangeListen cl = new ChangeListen();
-        csv.addChangeListener(cl);
-        StringColumn first = (StringColumn) csv.addColumn("First");
-        assertEquals(1, cl.columnCreated);
-//        first.setName("first");
-//        assertEquals(1, cl.columnUpdated);
-        StringColumn last = (StringColumn) csv.addColumn("Last");
-        assertEquals(2, cl.columnCreated);
-        csv.removeColumn(first);
-        assertEquals(1, cl.columnRemoved);
-
-        csv.addRow();
-        assertEquals(1, cl.rowCreated);
-        csv.removeRow(0);
-        assertEquals(1, cl.rowRemoved);
-
-        csv.addRow();
-        csv.addRow();
-        csv.moveRow(0,1);
-        assertEquals(1, cl.rowMoved);
-        csv.removeRows();
-        assertEquals(1, cl.rowsRemoved);
-
-        csv.addColumn("Test");
-        csv.moveColumn(0,1);
-        assertEquals(1, cl.columnMoved);
-
-        csv.removeChangeListener(cl);
-        csv.addColumn("email");
-        assertEquals(3, cl.columnCreated);
-    }
-
-    @Test
     public void swapColumn() throws Exception {
         CSV csv = new CSV();
-        FileListen l = new FileListen();
         StringColumn first = csv.addStringColumn("first");
         StringColumn last = csv.addStringColumn("last");
         assertEquals(0, csv.indexOf(first));
@@ -675,6 +596,129 @@ public class CSVTest {
         csv.swapColumn(0, 1);
         assertEquals(0, csv.indexOf(last));
         assertEquals(1, csv.indexOf(first));
+    }
+
+    @Test
+    public void buildFrequencyDistribution_string() throws Exception {
+        CSV csv = new CSV();
+        StringColumn c = csv.addStringColumn("First");
+        csv.addRow().setString(c, "a");
+        csv.addRow().setString(c, "b");
+        csv.addRow().setString(c, "c");
+        csv.addRow().setString(c, "a");
+        csv.addRow().setString(c, "a");
+        csv.addRow().setString(c, null);
+        FrequencyDistribution<String> fd = csv.buildFrequencyDistribution(c);
+        assertEquals(3, fd.getKeys().size());
+    }
+
+    @Test
+    public void buildFrequencyDistribution_int() throws Exception {
+        CSV csv = new CSV();
+        IntegerColumn c = csv.addIntegerColumn("First");
+        csv.addRow().setInteger(c, 1);
+        csv.addRow().setInteger(c, 2);
+        csv.addRow().setInteger(c, 3);
+        csv.addRow().setInteger(c, 1);
+        csv.addRow().setInteger(c, 1);
+        csv.addRow().setInteger(c, null);
+        FrequencyDistribution<Integer> fd = csv.buildFrequencyDistribution(c);
+        assertEquals(3, fd.getKeys().size());
+        Set<Integer> distinct = csv.buildDistinctValues(c);
+        assertEquals(3, distinct.size());
+    }
+
+    @Test
+    public void buildFrequencyDistribution_float() throws Exception {
+        CSV csv = new CSV();
+        FloatColumn c = csv.addFloatColumn("First");
+        csv.addRow().setFloat(c, 1f);
+        csv.addRow().setFloat(c, 2f);
+        csv.addRow().setFloat(c, 3f);
+        csv.addRow().setFloat(c, 1f);
+        csv.addRow().setFloat(c, 1f);
+        csv.addRow().setFloat(c, null);
+        FrequencyDistribution<Float> fd = csv.buildFrequencyDistribution(c);
+        assertEquals(3, fd.getKeys().size());
+        Set<Float> distinct = csv.buildDistinctValues(c);
+        assertEquals(3, distinct.size());
+    }
+
+    @Test
+    public void buildFrequencyDistribution_double() throws Exception {
+        CSV csv = new CSV();
+        DoubleColumn c = csv.addDoubleColumn("First");
+        csv.addRow().setDouble(c, 1d);
+        csv.addRow().setDouble(c, 2d);
+        csv.addRow().setDouble(c, 3d);
+        csv.addRow().setDouble(c, 1d);
+        csv.addRow().setDouble(c, 1d);
+        csv.addRow().setDouble(c, null);
+        FrequencyDistribution<Double> fd = csv.buildFrequencyDistribution(c);
+        assertEquals(3, fd.getKeys().size());
+        Set<Double> distinct = csv.buildDistinctValues(c);
+        assertEquals(3, distinct.size());
+    }
+
+    @Test
+    public void buildFrequencyDistribution_bigdecimal() throws Exception {
+        CSV csv = new CSV();
+        BigDecimalColumn c = csv.addBigDecimalColumn("First");
+        csv.addRow().setBigDecimal(c, BigDecimal.valueOf(1));
+        csv.addRow().setBigDecimal(c, BigDecimal.valueOf(2));
+        csv.addRow().setBigDecimal(c, BigDecimal.valueOf(3));
+        csv.addRow().setBigDecimal(c, BigDecimal.valueOf(1));
+        csv.addRow().setBigDecimal(c, BigDecimal.valueOf(1));
+        csv.addRow().setBigDecimal(c, null);
+        FrequencyDistribution<BigDecimal> fd = csv.buildFrequencyDistribution(c);
+        assertEquals(3, fd.getKeys().size());
+        Set<BigDecimal> distinct = csv.buildDistinctValues(c);
+        assertEquals(3, distinct.size());
+    }
+
+    @Test
+    public void buildFrequencyDistribution_url() throws Exception {
+        CSV csv = new CSV();
+        UrlColumn c = csv.addUrlColumn("First");
+        csv.addRow().setURL(c, new URL("http://localhost/a"));
+        csv.addRow().setURL(c, new URL("http://localhost/b"));
+        csv.addRow().setURL(c, new URL("http://localhost/c"));
+        csv.addRow().setURL(c, new URL("http://localhost/a"));
+        csv.addRow().setURL(c, new URL("http://localhost/a"));
+        csv.addRow().setURL(c, null);
+//        FrequencyDistribution<URL> fd = csv.buildFrequencyDistribution(c);
+//        assertEquals(3, fd.getKeys().size());
+        Set<URL> distinct = csv.buildDistinctValues(c);
+        assertEquals(3, distinct.size());
+    }
+
+    @Test
+    public void buildFrequencyDistribution_boolean() throws Exception {
+        CSV csv = new CSV();
+        BooleanColumn c = csv.addBooleanColumn("First");
+        csv.addRow().setBoolean(c, Boolean.TRUE);
+        csv.addRow().setBoolean(c, Boolean.TRUE);
+        csv.addRow().setBoolean(c, Boolean.FALSE);
+        csv.addRow().setBoolean(c, null);
+        FrequencyDistribution<Boolean> fd = csv.buildFrequencyDistribution(c);
+        assertEquals(2, fd.getKeys().size());
+        Set<Boolean> distinct = csv.buildDistinctValues(c);
+        assertEquals(2, distinct.size());
+    }
+
+    @Test
+    public void buildFrequencyDistribution_date() throws Exception {
+        CSV csv = new CSV();
+        DateColumn c = csv.addDateColumn("First");
+        Date d1 = new Date();
+        csv.addRow().setDate(c, d1);
+        csv.addRow().setDate(c, null);
+        csv.addRow().setDate(c, null);
+        FrequencyDistribution<Date> fd = csv.buildFrequencyDistribution(c);
+        assertEquals(1, fd.getKeys().size());
+        assertEquals(2, fd.getNullCount());
+        Set<Date> distinct = csv.buildDistinctValues(c);
+        assertEquals(2, distinct.size());
     }
 
     static class Employee {
@@ -686,93 +730,6 @@ public class CSVTest {
             this.name = name;
             this.age = age;
             this.isWoman = isWoman;
-        }
-    }
-
-    // ------ Events -----
-    class ChangeListen implements ChangeListener{
-
-        public int columnCreated;
-        public int columnUpdated;
-        public int columnRemoved;
-        public int columnMoved;
-        public int rowRemoved;
-        public int rowCreated;
-        public int rowMoved;
-        public int rowsRemoved;
-        public int cellUpdated;
-
-        @Override
-        public void columnCreated(Column column) {
-            columnCreated++;
-        }
-
-        @Override
-        public void columnUpdated(Column column) {
-            columnUpdated++;
-        }
-
-        @Override
-        public void columnRemoved(int columnIndex) {
-            columnRemoved++;
-        }
-
-        @Override
-        public void columnMoved(int fromRowIndex, int toRowIndex) {
-            columnMoved++;
-        }
-
-        @Override
-        public void rowRemoved(int rowIndex, Row row) {
-            rowRemoved++;
-        }
-
-        @Override
-        public void rowCreated(int rowIndex, Row row) {
-            rowCreated++;
-        }
-
-        @Override
-        public void rowMoved(int fromRowIndex, int toRowIndex) {
-            rowMoved++;
-        }
-
-        @Override
-        public void rowsRemoved(int fromRowIndex, int toRowIndex) {
-            rowsRemoved++;
-        }
-
-        @Override
-        public void cellUpdated(int columnIndex, int rowIndex) {
-            cellUpdated++;
-        }
-    }
-
-    class FileListen implements FileListener {
-
-        int beginRead = 0;
-        int finishRead = 0;
-        int beginWrite = 0;
-        int finishWrite = 0;
-
-        @Override
-        public void beginRead(File file) {
-            beginRead++;
-        }
-
-        @Override
-        public void finishRead(File file) {
-            finishRead++;
-        }
-
-        @Override
-        public void beginWrite(File file) {
-            beginWrite++;
-        }
-
-        @Override
-        public void finishWrite(File file) {
-            finishWrite++;
         }
     }
 

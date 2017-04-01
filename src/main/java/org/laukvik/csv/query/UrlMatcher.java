@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Compares a StringColumn to have the specified value.
+ * Compares a UrlColumn to have the specified value.
  */
 public final class UrlMatcher implements ValueMatcher<URL> {
 
@@ -37,7 +37,7 @@ public final class UrlMatcher implements ValueMatcher<URL> {
     private final UrlColumn column;
 
     /**
-     * The value of the column must be.
+     * Compares a UrlColumn to have the specified value.
      *
      * @param urlColumn the column
      * @param value     the value
@@ -46,9 +46,15 @@ public final class UrlMatcher implements ValueMatcher<URL> {
         this(urlColumn, Arrays.asList(value));
     }
 
-    public UrlMatcher(final UrlColumn urlColumn, final List<URL> values) {
+    /**
+     * Compares a UrlColumn to have the specified value.
+     *
+     * @param urlColumn the column
+     * @param value     the value
+     */
+    public UrlMatcher(final UrlColumn urlColumn, final List<URL> value) {
         this.column = urlColumn;
-        this.values = values;
+        this.values = value;
     }
 
     @Override

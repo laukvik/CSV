@@ -198,7 +198,7 @@ public final class Row implements Serializable {
      */
     public String getAsString(final Column column) {
         Object value = map.get(column);
-        if (value == null){
+        if (value == null) {
             return "";
         } else {
             return value.toString();

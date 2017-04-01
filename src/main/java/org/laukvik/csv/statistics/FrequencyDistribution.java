@@ -99,4 +99,12 @@ public final class FrequencyDistribution<T> {
         }
     }
 
+    /**
+     * Returns the amount of nulls found.
+     *
+     * @return the amount
+     */
+    public int getNullCount() {
+        return nulls;
+    }
 }

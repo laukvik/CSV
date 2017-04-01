@@ -44,7 +44,7 @@ public final class BigDecimalDistribution extends RangedDistribution<BigDecimalR
 
         for (int x = 0; x < COUNTS; x++) {
             BigDecimal start = new BigDecimal(x).multiply(multiplier);
-            BigDecimal end = new BigDecimal((x + 1)).multiply(multiplier);
+            BigDecimal end = new BigDecimal(x + 1).multiply(multiplier);
             addRange(new BigDecimalRange(start + " .. " + end, start, end));
         }
     }

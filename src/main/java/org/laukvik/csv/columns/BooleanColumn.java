@@ -35,6 +35,7 @@ public final class BooleanColumn extends Column<Boolean> {
      * @param value the value
      * @return value as a String
      */
+    @Override
     public String asString(final Boolean value) {
         if (value == null) {
             return "";

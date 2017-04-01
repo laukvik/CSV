@@ -81,12 +81,7 @@ public final class ColumnDefinition {
                                 cd.setAttribute(key, new ColumnDefinition.Attribute(value));
                             }
 
-                        } else {
-                            // Hasnt got value
-//                            cd.setAttribute(key,  new ColumnDefinition.Attribute(""));
                         }
-                    } else {
-//                        cd.setAttribute(keyValue, ColumnDefinition.Attribute(""));
                     }
                 }
             }

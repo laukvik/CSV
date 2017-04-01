@@ -368,36 +368,39 @@ public class XmlParser {
      * @return the Tag
      * @throws IOException when the file can't read
      */
-    public final Tag parseFile(final File file) throws IOException {
-        FileReader reader = new FileReader(file);
-        final Tag root = new Tag("document");
-        current = root;
-        mode = EMPTY;
-        textBuilder = new StringBuilder();
-        tagBuilder = new StringBuilder();
-        attrBuilder = new StringBuilder();
-        valueBuilder = new StringBuilder();
-        while (reader.ready()) {
+    public final Tag parseFile(final File file) throws XmlParseException {
+        try (FileReader reader = new FileReader(file)) {
+            final Tag root = new Tag("document");
+            current = root;
+            mode = EMPTY;
+            textBuilder = new StringBuilder();
+            tagBuilder = new StringBuilder();
+            attrBuilder = new StringBuilder();
+            valueBuilder = new StringBuilder();
+            while (reader.ready()) {
 
-            char c = (char) reader.read();
-            if (c == START_SYMBOL) {
-                parseStartSymbol();
-            } else if (c == CLOSE_SYMBOL) {  // <tag attr="value"> <tag>
-                // Tag close
-                parseCloseSymbol();
-            } else if (c == EQUAL_SYMBOL) {
-                // Equals
-                parseEqualSymbol();
-            } else if (c == QUOTE_SYMBOL) {
-                parseQuoteSymbol();
-            } else if (c == SPACE_SYMBOL || c == TAB_SYMBOL || c == NEWLINE_SYMBOL || c == RETURN_SYMBOL) {
-                // Whitespace  <tag attr="value">
-                parseWhitespace(c);
-            } else {
-                parseEverything(c);
+                char c = (char) reader.read();
+                if (c == START_SYMBOL) {
+                    parseStartSymbol();
+                } else if (c == CLOSE_SYMBOL) {  // <tag attr="value"> <tag>
+                    // Tag close
+                    parseCloseSymbol();
+                } else if (c == EQUAL_SYMBOL) {
+                    // Equals
+                    parseEqualSymbol();
+                } else if (c == QUOTE_SYMBOL) {
+                    parseQuoteSymbol();
+                } else if (c == SPACE_SYMBOL || c == TAB_SYMBOL || c == NEWLINE_SYMBOL || c == RETURN_SYMBOL) {
+                    // Whitespace  <tag attr="value">
+                    parseWhitespace(c);
+                } else {
+                    parseEverything(c);
+                }
             }
+            return root.getChildren().get(0);
+        } catch (IOException e) {
+            throw new XmlParseException(file, e);
         }
-        return root.getChildren().get(0);
     }
 
 }
