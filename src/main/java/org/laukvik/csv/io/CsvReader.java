@@ -14,7 +14,6 @@ import java.util.List;
 
 /**
  * Reads a data set in the CSV format.
- *
  */
 public final class CsvReader implements DatasetFileReader {
 
@@ -22,10 +21,6 @@ public final class CsvReader implements DatasetFileReader {
      * Automatically detect charset through BOM.
      */
     private boolean autoDetectCharset;
-    /**
-     * The bufferedReader.
-     */
-    private InputStreamReader reader;
     /**
      * The quote character to use.
      */
@@ -77,51 +72,46 @@ public final class CsvReader implements DatasetFileReader {
      * @throws CsvReaderException when the file could not be read
      */
     public void readFile(final File file, final CSV csv) throws CsvReaderException {
-        this.lineCounter = 0;
-        try {
-            if (autoDetectCharset) {
-                BOM bom = BOM.findBom(file);
-                if (bom == null) {
-                    reader = new InputStreamReader(new FileInputStream(file));
-                    csv.setCharset(BOM.UTF8.getCharset());
-                } else {
-                    reader = new InputStreamReader(new FileInputStream(file), bom.getCharset());
-                    reader.skip(bom.getBytes().length);
-                    csv.setCharset(bom.getCharset());
-                }
+        BOM bom = null;
+        if (autoDetectCharset) {
+            bom = BOM.findBom(file);
+            if (bom == null) {
+                csv.setCharset(BOM.UTF8.getCharset());
             } else {
-                reader = new InputStreamReader(new FileInputStream(file), this.charset);
-                csv.setCharset(this.charset);
+                csv.setCharset(bom.getCharset());
+            }
+        } else {
+            csv.setCharset(this.charset);
+        }
+        this.lineCounter = 0;
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), csv.getCharset())) {
+            if (autoDetectCharset && bom != null) {
+                reader.skip(bom.getBytes().length);
             }
             csv.setSeparator(columnSeparatorChar);
             csv.setQuoteChar(this.quoteChar);
-            List<String> columns = parseRow(csv);
+            List<String> columns = parseRow(csv, reader);
             for (String rawColumnName : columns) {
                 csv.addColumn(Column.parseName(rawColumnName));
             }
             while (reader.ready()) {
-                readRow(csv);
+                readRow(csv, reader);
             }
         } catch (IOException e) {
             throw new CsvReaderException(file, e);
-        } finally {
-            try {
-                reader.close();
-            } catch (IOException e) {
-                throw new CsvReaderException(file, e);
-            }
         }
     }
 
     /**
      * Reads the next row.
      *
-     * @param csv the csv
+     * @param csv    the csv
+     * @param reader the reader
      * @throws IOException when the row could not be read
      */
-    private void readRow(final CSV csv) throws IOException {
+    private void readRow(final CSV csv, final InputStreamReader reader) throws IOException {
         Row row = csv.addRow();
-        List<String> values = parseRow(csv);
+        List<String> values = parseRow(csv, reader);
         for (int x = 0; x < values.size(); x++) {
             String value = values.get(x);
             Column c = csv.getColumn(x);
@@ -132,11 +122,12 @@ public final class CsvReader implements DatasetFileReader {
     /**
      * Parses one row of CSV data.
      *
-     * @param csv the csv
+     * @param csv    the csv
+     * @param reader the reader
      * @return a list of strings
      * @throws IOException when the row could not be read
      */
-    private List<String> parseRow(final CSV csv) throws IOException {
+    private List<String> parseRow(final CSV csv, final InputStreamReader reader) throws IOException {
         List<String> values = new ArrayList<>();
 
         boolean isNextLine = false;

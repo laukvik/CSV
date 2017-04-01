@@ -17,6 +17,7 @@ package org.laukvik.csv.columns;
 
 import org.laukvik.csv.CSV;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
 /**
@@ -24,7 +25,7 @@ import java.text.SimpleDateFormat;
  *
  * @param <T> the data type of Column
  */
-public abstract class Column<T> implements Comparable {
+public abstract class Column<T> implements Comparable, Serializable {
 
     /**
      * Identifies the type attribute.

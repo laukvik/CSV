@@ -170,7 +170,7 @@ public class CSVTest {
         csv.addRow().setString(president, "Barak");
         csv.addRow().setString(president, "Hillary");
         csv.addRow().setString(president, "Clinton");
-        Set<String> values = csv.buildDistinctValues(0);
+        Set<String> values = csv.buildDistinctValues(president);
         Assert.assertEquals(3, values.size());
 
     }
@@ -356,12 +356,15 @@ public class CSVTest {
     public void buildFrequencyDistribution() throws Exception {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
+        IntegerColumn id = csv.addIntegerColumn("id");
+        csv.addRow().setString(first, "Gates").setInteger(id, 2 );
+        csv.addRow().setString(first, "Jobs").setInteger(id, 3 );
         csv.addRow().setString(first, "Gates");
-        csv.addRow().setString(first, "Jobs");
-        FrequencyDistribution fd1 = csv.buildFrequencyDistribution(first);
-        FrequencyDistribution fd2 = csv.buildFrequencyDistribution(0);
-        assertNotNull(fd1);
-        assertNotNull(fd2);
+        csv.addRow().setInteger(id, 4 );
+        FrequencyDistribution<String> firstFQ = csv.buildFrequencyDistribution(first);
+        FrequencyDistribution<Integer> idFQ = csv.buildFrequencyDistribution(id);
+        assertEquals(2, firstFQ.getKeys().size()); // Gates x 2
+        assertEquals(3, idFQ.getKeys().size()); // 2 3 4
     }
 
     @Test

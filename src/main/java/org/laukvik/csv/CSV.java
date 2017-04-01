@@ -40,12 +40,16 @@ import org.laukvik.csv.statistics.FrequencyDistribution;
 
 import java.io.File;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -837,14 +841,15 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Builds a FrequencyDistribution table for the specified column index.
+     * Builds a FrequencyDistribution table for the specified column.
      *
-     * @param columnIndex the column index
+     * @param column the column
      * @return a FrequencyDistribution table
      */
-    public FrequencyDistribution buildFrequencyDistribution(final int columnIndex) {
-        Column c = getColumn(columnIndex);
-        return buildFrequencyDistribution(c);
+    public FrequencyDistribution<String> buildFrequencyDistribution(final StringColumn column) {
+        FrequencyDistribution<String> cv = new FrequencyDistribution<>(column);
+        rows.stream().forEach(r -> cv.addValue(r.getString(column)));
+        return cv;
     }
 
     /**
@@ -853,38 +858,162 @@ public final class CSV implements Serializable {
      * @param column the column
      * @return a FrequencyDistribution table
      */
-    public FrequencyDistribution buildFrequencyDistribution(final Column column) {
-        FrequencyDistribution cv = new FrequencyDistribution(column);
-        for (Row r : rows) {
-            cv.addValue(r.getAsString(column));
-        }
+    public FrequencyDistribution<BigDecimal> buildFrequencyDistribution(final BigDecimalColumn column) {
+        FrequencyDistribution<BigDecimal> cv = new FrequencyDistribution<>(column);
+        rows.stream().forEach(r -> cv.addValue(r.getBigDecimal(column)));
         return cv;
     }
 
     /**
-     * Builds a set of unique values for the specified columnIndex.
-     *
-     * @param columnIndex the column index
-     * @return a set of distinct values
-     */
-    public Set<String> buildDistinctValues(final int columnIndex) {
-        Column c = getColumn(columnIndex);
-        return buildDistinctValues(c);
-    }
-
-
-    /**
-     * Builds a set of unique values for the specified column.
+     * Builds a FrequencyDistribution table for the specified column.
      *
      * @param column the column
-     * @return a set of distinct values
+     * @return a FrequencyDistribution table
      */
-    public Set<String> buildDistinctValues(final Column column) {
-        Set<String> values = new TreeSet<>();
-        for (Row r : rows) {
-            values.add(r.getAsString(column));
-        }
-        return values;
+    public FrequencyDistribution<Boolean> buildFrequencyDistribution(final BooleanColumn column) {
+        FrequencyDistribution<Boolean> cv = new FrequencyDistribution<>(column);
+        rows.stream().forEach(r -> cv.addValue(r.getBoolean(column)));
+        return cv;
+    }
+
+    /**
+     * Builds a FrequencyDistribution table for the specified column.
+     *
+     * @param column the column
+     * @return a FrequencyDistribution table
+     */
+    public FrequencyDistribution<Date> buildFrequencyDistribution(final DateColumn column) {
+        FrequencyDistribution<Date> cv = new FrequencyDistribution<>(column);
+        rows.stream().forEach(r -> cv.addValue(r.getDate(column)));
+        return cv;
+    }
+
+    /**
+     * Builds a FrequencyDistribution table for the specified column.
+     *
+     * @param column the column
+     * @return a FrequencyDistribution table
+     */
+    public FrequencyDistribution<Double> buildFrequencyDistribution(final DoubleColumn column) {
+        FrequencyDistribution<Double> cv = new FrequencyDistribution<>(column);
+        rows.stream().forEach(r -> cv.addValue(r.getDouble(column)));
+        return cv;
+    }
+
+    /**
+     * Builds a FrequencyDistribution table for the specified column.
+     *
+     * @param column the column
+     * @return a FrequencyDistribution table
+     */
+    public FrequencyDistribution<Float> buildFrequencyDistribution(final FloatColumn column) {
+        FrequencyDistribution<Float> cv = new FrequencyDistribution<>(column);
+        rows.stream().forEach(r -> cv.addValue(r.getFloat(column)));
+        return cv;
+    }
+
+    /**
+     * Builds a FrequencyDistribution table for the specified column.
+     *
+     * @param column the column
+     * @return a FrequencyDistribution table
+     */
+    public FrequencyDistribution<Integer> buildFrequencyDistribution(final IntegerColumn column) {
+        FrequencyDistribution<Integer> cv = new FrequencyDistribution<>(column);
+        rows.stream().forEach(r -> cv.addValue(r.getInteger(column)));
+        return cv;
+    }
+
+    /**
+     * Builds a FrequencyDistribution table for the specified column.
+     *
+     * @param column the column
+     * @return a FrequencyDistribution table
+     */
+    public FrequencyDistribution<URL> buildFrequencyDistribution(final UrlColumn column) {
+        FrequencyDistribution<URL> cv = new FrequencyDistribution<>(column);
+        rows.stream().forEach(r -> cv.addValue(r.getURL(column)));
+        return cv;
+    }
+
+    /**
+     * Builds a set of distinct values.
+     *
+     * @param column the column
+     * @return the distinct values
+     */
+    public Set<BigDecimal> buildDistinctValues(final BigDecimalColumn column) {
+        return rows.stream().map(r -> r.getBigDecimal(column)).collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    /**
+     * Builds a set of distinct values.
+     *
+     * @param column the column
+     * @return the distinct values
+     */
+    public Set<Boolean> buildDistinctValues(final BooleanColumn column) {
+        return rows.stream().map(r -> r.getBoolean(column)).collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    /**
+     * Builds a set of distinct values.
+     *
+     * @param column the column
+     * @return the distinct values
+     */
+    public Set<Date> buildDistinctValues(final DateColumn column) {
+        return rows.stream().map(r -> r.getDate(column)).collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    /**
+     * Builds a set of distinct values.
+     *
+     * @param column the column
+     * @return the distinct values
+     */
+    public Set<Double> buildDistinctValues(final DoubleColumn column) {
+        return rows.stream().map(r -> r.getDouble(column)).collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    /**
+     * Builds a set of distinct values.
+     *
+     * @param column the column
+     * @return the distinct values
+     */
+    public Set<Float> buildDistinctValues(final FloatColumn column) {
+        return rows.stream().map(r -> r.getFloat(column)).collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    /**
+     * Builds a set of distinct values.
+     *
+     * @param column the column
+     * @return the distinct values
+     */
+    public Set<Integer> buildDistinctValues(final IntegerColumn column) {
+        return rows.stream().map(r -> r.getInteger(column)).collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    /**
+     * Builds a set of distinct values.
+     *
+     * @param column the column
+     * @return the distinct values
+     */
+    public Set<String> buildDistinctValues(final StringColumn column) {
+        return rows.stream().map(r -> r.getString(column)).collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    /**
+     * Builds a set of distinct values.
+     *
+     * @param column the column
+     * @return the distinct values
+     */
+    public Set<URL> buildDistinctValues(final UrlColumn column) {
+        return rows.stream().map(r -> r.getURL(column)).collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**

@@ -3,7 +3,6 @@ package org.laukvik.csv.io;
 import org.laukvik.csv.CSV;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * An interface for reading an entire dataset.

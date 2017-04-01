@@ -8,8 +8,6 @@ LaukvikCSV
 An easy to use API for reading, writing, querying and exporting data.
 
 
-
-
 ## Reading files
 
 The easiest way to read a CSV file is to call the default constructor. This method will try to auto detect separator character and encoding.
@@ -31,33 +29,19 @@ To read files using a semi colon as TAB character
     CSV csv = new CSV();
     csv.readFile( new File("presidents.csv"), CSV.TAB );
 
-
-
-## Reading file with very large data sets
-
-    try (CsvReader r = new CsvReader( new File("presidents"), Charset.forName(charset)) )) {
-        while (r.hasNext()) {
-            Row row = r.next();
-        }
-    }
-    catch (IOException e) {
-        e.printStacktrace();
-    }
-
-
-## Reading POJO
-
-    List<Employee> employees = new ArrayList<>();
-    employees.add( new Employee("Bob",25,false) );
-    employees.add( new Employee("Jane",24,true) );
-    employees.add( new Employee("Yay",32,false) );
-    CSV csv = new CSV();
-    csv.readJava(employees);
-
-
 ## Writing files
 
-    csv.write( new File("presidents.csv") );
+    csv.writeFile( file, CSV.PIPE );
+
+## Querying files
+
+    csv.find().column( first
+
+## Working with rows and columns
+
+
+
+
 
 
 
@@ -139,7 +123,7 @@ Inserting row at a specific index
 
     CSV csv = new CSV();
     StringColumn president = csv.addStringColumn("President");
-    csv.addRow(0).update(president, "Barak Obama");
+    csv.addRow(0).setString(president, "Barak Obama");
 
 
 
@@ -152,8 +136,9 @@ Iterating all rows
         Row row = csv.getRow(y);
     }
 
-
-
+Iterate using stream
+    
+    // Insert example
 
 
 
@@ -182,3 +167,18 @@ Builds a FrequencyDistribution for column with index 2;
 
 
 
+## TODOs
+
+Coverage
+JavaDocs
+Eksempler
+Rename repo
+importere flere data til eksisterende
+fixed width import
+Lese filer uten headere
+Importere ved å spesifisere kolonnetypene først
+Query
+Annotering
+
+Nexus søknad
+Deploy første versjon

@@ -13,7 +13,7 @@ public class FrequencyDistributionTest {
     @Test
     public void getColumn() throws Exception {
         StringColumn c = new StringColumn("email");
-        FrequencyDistribution fd = new FrequencyDistribution(c);
+        FrequencyDistribution<String> fd = new FrequencyDistribution(c);
         assertEquals(c, fd.getColumn());
     }
 
@@ -50,7 +50,7 @@ public class FrequencyDistributionTest {
         fd.addValue(null);
         fd.addValue("");
         assertEquals((Integer) 2, fd.getCount("James"));
-        assertEquals((Integer) 2, fd.getCount(""));
+        assertEquals((Integer) 1, fd.getCount(""));
     }
 
 }

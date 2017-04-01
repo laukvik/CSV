@@ -15,10 +15,12 @@
  */
 package org.laukvik.csv.columns;
 
+import java.io.Serializable;
+
 /**
  * Represents a link to another column.
  */
-public final class ForeignKey {
+public final class ForeignKey implements Serializable {
 
     /**
      * The target table.
