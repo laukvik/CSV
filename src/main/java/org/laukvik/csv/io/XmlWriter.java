@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 /**
- * Writes the data set in the XML format.
+ * Writes the data setUnparsed in the XML format.
  *
  * @see <a href="https://en.wikipedia.org/wiki/XML">XML (wikipedia)</a>
  */

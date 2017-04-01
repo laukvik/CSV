@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Writes the data set in the CSV format.
+ * Writes the data setUnparsed in the CSV format.
  *
  * @see <a href="https://tools.ietf.org/html/rfc4180">Common Format and MIME Type for Comma-Separated
  * Values (CSV) Files</a>
@@ -128,10 +128,7 @@ public final class CsvWriter implements DatasetFileWriter {
                 writer.write(CSV.COMMA);
             }
             String column = values.get(x);
-            if (column == null) {
-                writer.write(CSV.QUOTE_DOUBLE);
-                writer.write(CSV.QUOTE_DOUBLE);
-            } else if (isDigitsOnly(column)) {
+            if (isDigitsOnly(column)) {
                 // Digits only
                 writer.write(column);
             } else {

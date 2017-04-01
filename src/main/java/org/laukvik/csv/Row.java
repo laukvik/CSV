@@ -67,7 +67,7 @@ public final class Row implements Serializable {
      * @param value the value
      * @return the row
      */
-    public Row set(final Column column, final String value) {
+    public Row setUnparsed(final Column column, final String value) {
         map.put(column, column.parse(value));
         return this;
     }

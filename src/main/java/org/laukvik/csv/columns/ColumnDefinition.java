@@ -187,7 +187,7 @@ public final class ColumnDefinition {
     }
 
     /**
-     * Returns a set of all attribute names.
+     * Returns a setUnparsed of all attribute names.
      *
      * @return the names
      */

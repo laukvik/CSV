@@ -1,6 +1,6 @@
 /**
  *
- * Reporting and charts building based on aggregated data.
+ * <p>Reporting and statistics building based on aggregated data.</p>
  *
  */
 package org.laukvik.csv.report;

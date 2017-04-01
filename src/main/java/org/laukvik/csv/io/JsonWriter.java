@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Writes the data set in the JSON format.
+ * Writes the data setUnparsed in the JSON format.
  *
  * @see <a href="https://en.wikipedia.org/wiki/JSON">JSON (wikipedia)</a>
  */

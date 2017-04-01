@@ -54,54 +54,25 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * An API for reading and writing to Viewer. The implementation is based on the
- * specification from http://tools.ietf.org/rfc/rfc4180.txt
- * <h2>Reading files</h2>
- * <h3>Auto detection</h3>
- * <p>The easiest way to read a CSV file is to call the default constructor.
- * This method will try to auto detect separator character and encoding.</p>
- * <pre>
- * CSV csv = new CSV(new File("presidents.csv"));
- * </pre>
- * <h3>Manually specify separator character</h3>
- * <p>To read files using a SEMI COLON as separator character</p>
- * <pre>
- *     CSV csv = new CSV();
- *     csv.readFile( new File("presidents.csv"), CSV.SEMICOLON );
- * </pre>
- * <p>To read files using a semi colon as PIPE character</p>
- * <pre>
- * CSV csv = new CSV();
- * csv.readFile( new File("presidents.csv"), CSV.PIPE );
- * </pre>
- * <p>To read files using a semi colon as TAB character</p>
- * <pre>
- * CSV csv = new CSV();
- * csv.readFile( new File("presidents.csv"), CSV.TAB );
- * </pre>
- * <h3>Reading values from Java objects</h3>
- * <pre>
- * class Employee{
- *   String name;
- *   int age;
- *   boolean isWoman;
+ * The main class for building, reading, writing and querying the CSV datasets.
  *
- *   public Employee(final String name, final int age, final boolean isWoman) {
- *     this.name = name;
- *     this.age = age;
- *     this.isWoman = isWoman;
- *   }
- * }
- * List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();
+ * <h3>Reading a CSV file</h3>
+ * <pre>{@code
+ *     CSV csv = new CSV( new File("presidents.csv") );
+ *     StringColumn president = csv.getColumn(0);
+ *     List<Row> rows = csv.findRows();
+ *     for (Row r : rows){
+ *         System.out.println( r.getString(president) );
+ *     }
+ * }</pre>
  *
- * CSV csv = new CSV();
- * csv.readJava(employees);
- * </pre>
- * <h3>Working with queries</h3>
- * <pre>
- * CSV csv = new CSV( new File("presidents.csv") );
- * List&lt;Row&gt; rows = csv.findByQuery().where().column("Party").is("Whig").getResultList();
- * </pre>
+ *
+ * <h3>Writing a CSV file</h3>
+ *
+ * <h3>Querying a CSV file</h3>
+ *
+ * <h3>Building a CSV file</h3>
+ *
  */
 public final class CSV implements Serializable {
 
@@ -159,7 +130,7 @@ public final class CSV implements Serializable {
      */
     private final List<Row> rows;
     /**
-     * The Character set.
+     * The Character setUnparsed.
      */
     private Charset charset;
     /**
@@ -233,7 +204,7 @@ public final class CSV implements Serializable {
     /**
      * Set automatic detection of charset using BOM.
      *
-     * @param autoDetectCharset use automatic when set to true
+     * @param autoDetectCharset use automatic when setUnparsed to true
      */
     public void setAutoDetectCharset(final boolean autoDetectCharset) {
         this.autoDetectCharset = autoDetectCharset;
@@ -251,7 +222,7 @@ public final class CSV implements Serializable {
     /**
      * Sets automatic detection of separator.
      *
-     * @param autoDetectSeparator use automatic when set to true
+     * @param autoDetectSeparator use automatic when setUnparsed to true
      */
     public void setAutoDetectSeparator(final boolean autoDetectSeparator) {
         this.autoDetectSeparator = autoDetectSeparator;
@@ -269,7 +240,7 @@ public final class CSV implements Serializable {
     /**
      * Set automatic detection of quotes.
      *
-     * @param autoDetectQuote use automatic when set to true
+     * @param autoDetectQuote use automatic when setUnparsed to true
      */
     public void setAutoDetectQuote(final boolean autoDetectQuote) {
         this.autoDetectQuote = autoDetectQuote;
@@ -911,7 +882,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Builds a set of distinct values.
+     * Builds a setUnparsed of distinct values.
      *
      * @param column the column
      * @return the distinct values
@@ -921,7 +892,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Builds a set of distinct values.
+     * Builds a setUnparsed of distinct values.
      *
      * @param column the column
      * @return the distinct values
@@ -931,7 +902,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Builds a set of distinct values.
+     * Builds a setUnparsed of distinct values.
      *
      * @param column the column
      * @return the distinct values
@@ -941,7 +912,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Builds a set of distinct values.
+     * Builds a setUnparsed of distinct values.
      *
      * @param column the column
      * @return the distinct values
@@ -951,7 +922,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Builds a set of distinct values.
+     * Builds a setUnparsed of distinct values.
      *
      * @param column the column
      * @return the distinct values
@@ -961,7 +932,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Builds a set of distinct values.
+     * Builds a setUnparsed of distinct values.
      *
      * @param column the column
      * @return the distinct values
@@ -971,7 +942,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Builds a set of distinct values.
+     * Builds a setUnparsed of distinct values.
      *
      * @param column the column
      * @return the distinct values
@@ -981,7 +952,7 @@ public final class CSV implements Serializable {
     }
 
     /**
-     * Builds a set of distinct values.
+     * Builds a setUnparsed of distinct values.
      *
      * @param column the column
      * @return the distinct values

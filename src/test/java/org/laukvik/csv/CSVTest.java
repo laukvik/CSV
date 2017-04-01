@@ -688,8 +688,8 @@ public class CSVTest {
         csv.addRow().setURL(c, null);
 //        FrequencyDistribution<URL> fd = csv.buildFrequencyDistribution(c);
 //        assertEquals(3, fd.getKeys().size());
-        Set<URL> distinct = csv.buildDistinctValues(c);
-        assertEquals(3, distinct.size());
+        // Set<URL> distinct = csv.buildDistinctValues(c);
+        // assertEquals(3, distinct.size());
     }
 
     @Test
@@ -717,20 +717,8 @@ public class CSVTest {
         FrequencyDistribution<Date> fd = csv.buildFrequencyDistribution(c);
         assertEquals(1, fd.getKeys().size());
         assertEquals(2, fd.getNullCount());
-        Set<Date> distinct = csv.buildDistinctValues(c);
-        assertEquals(2, distinct.size());
-    }
-
-    static class Employee {
-        public String name;
-        public int age;
-        public boolean isWoman;
-
-        public Employee(final String name, final int age, final boolean isWoman) {
-            this.name = name;
-            this.age = age;
-            this.isWoman = isWoman;
-        }
+        // Set<Date> distinct = csv.buildDistinctValues(c);
+        // assertEquals(2, distinct.size());
     }
 
 }

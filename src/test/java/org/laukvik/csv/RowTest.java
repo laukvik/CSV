@@ -82,7 +82,7 @@ public class RowTest {
         assertEquals("Bob", r.getString(sc));
         assertEquals(url, r.getURL(uc));
 
-        r.set(bc, "true");
+        r.setUnparsed(bc, "true");
         assertEquals(Boolean.TRUE, r.getBoolean(bc));
 
         assertEquals("http://www.google.com", r.getAsString(uc));

@@ -51,9 +51,9 @@ public final class FreqDistribution<T> {
     }
 
     /**
-     * Returns the set of keys.
+     * Returns the setUnparsed of keys.
      *
-     * @return the set of keys
+     * @return the setUnparsed of keys
      */
     public Set<T> getKeys() {
         return map.keySet();

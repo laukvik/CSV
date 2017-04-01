@@ -366,7 +366,7 @@ public class XmlParser {
      *
      * @param file the file
      * @return the Tag
-     * @throws IOException when the file can't read
+     * @throws XmlParseException when the file can't read
      */
     public final Tag parseFile(final File file) throws XmlParseException {
         try (FileReader reader = new FileReader(file)) {

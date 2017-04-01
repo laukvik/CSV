@@ -41,8 +41,8 @@ public class CsvWriterTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
         StringColumn last = csv.addStringColumn("Last");
-        csv.addRow().set(first, "Bill").set(last, "Gates");
-        csv.addRow().set(first, "Steve").set(last, "Jobs");
+        csv.addRow().setUnparsed(first, "Bill").setUnparsed(last, "Gates");
+        csv.addRow().setUnparsed(first, "Steve").setUnparsed(last, "Jobs");
         CsvWriter w = new CsvWriter();
         w.writeCSV(f, csv);
 

@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 /**
- * Writes the data set in the HTML format.
+ * Writes the data setUnparsed in the HTML format.
  *
  * @see <a href="https://en.wikipedia.org/wiki/HTML">HTML (wikipedia)</a>
  */

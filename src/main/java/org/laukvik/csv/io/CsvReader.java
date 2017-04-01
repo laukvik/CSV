@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Reads a data set in the CSV format.
+ * Reads a data setUnparsed in the CSV format.
  */
 public final class CsvReader implements DatasetFileReader {
 
@@ -116,7 +116,7 @@ public final class CsvReader implements DatasetFileReader {
         for (int x = 0; x < values.size(); x++) {
             String value = values.get(x);
             Column c = csv.getColumn(x);
-            row.set(c, value);
+            row.setUnparsed(c, value);
         }
     }
 
