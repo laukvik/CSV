@@ -27,70 +27,106 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * The query contains the criteria to be used when filtering the data set.
- * <p>
- * Column
- * DONE - is empty
- * DONE - not Empty
- * <p>
- * String
- * DONE - firstletter
- * DONE - is in
- * DONE - length
- * DONE - word count
- * <p>
- * Boolean
- * DONE - is/in
- * <p>
- * Integer
- * DONE - is
- * DONE - between
- * DONE - greater than
- * DONE - less than
- * <p>
- * BigDecimal
- * DONE - is
- * TODO - between
- * TODO - greater than
- * TODO - less than
- * <p>
- * Float
- * DONE - in
- * TODO - between
- * TODO - greater than
- * TODO - less than
- * <p>
- * Double
- * DONE - is
- * TODO - between
- * TODO - greater than
- * TODO - less than
- * <p>
- * Date
- * TODO - date between
- * DONE - greater than (isAfter)
- * DONE - date is (contains)
- * DONE - date less (isBefore)
- * DONE - date of month
- * DONE - hour
- * DONE - millisecond
- * DONE - minute
- * DONE - month
- * DONE - second
- * DONE - weekday
- * DONE - week isWeek
- * DONE - year (isYear)
- * <p>
- * URL
- * DONE - is
- * DONE - anchor
- * DONE - file
- * DONE - file postfix
- * DONE - file prefix
- * DONE - host
- * DONE - port
- * DONE - protocol
- * DONE - query
+ * Query is a type safe query to applying filters to the rows.
+ *
+ * <h3>Using query</h3>
+ * <pre>{@code
+ *
+ *     Query query = new Query();
+ *     query.isBetween(presidency, 1, 10);
+ *     List<Row> rows = csv.findRowsByQuery( query );
+ * }</pre>
+ *
+ *
+ * <h3>Generic</h3>
+ * <pre>{@code
+ *     query.isEmpty( column );
+ *     query.isNotEmpty( column );
+ * }</pre>
+ *
+ *
+ * <h3>String</h3>
+ * <pre>{@code
+ *     query.is( column, "Bob" );
+ *     query.is( column, "Bob", "John" );
+ *     query.isLength( column, 2 );
+ *     query.isFirstletter( column, "" );
+ *     query.isWordCount( column, 2 );
+ * }</pre>
+ *
+ * <h3>Date</h3>
+ * <pre>{@code
+ *     query.is( column, today );
+ *     query.isBetween( column, fromDate, toDate );
+ *     query.isAfter( column, today );
+ *     query.isBefore( column, today );
+ *     query.isYear( leftOffice, 1809 );
+ *     query.isMonth( leftOffice, 1 );
+ *     query.isDayOfMonth( leftOffice, 1 );
+ *     query.isHour( leftOffice, 5 );
+ *     query.isMinute( leftOffice, 5 );
+ *     query.isSecond( leftOffice, 5 );
+ *     query.isMillisecond( leftOffice, 5 );
+ *     query.isWeekday( leftOffice, 5 );
+ * }</pre>
+ *
+ * <h3>URL</h3>
+ * <pre>{@code
+ *     query.is( wikipedia, new URL("http://wikipedia.org") );
+ *     query.isAnchor( wikipedia, "anchor" );
+ *     query.isFile( wikipedia, "test.jpg" );
+ *     query.isPrefix( wikipedia, "test.jpg" );
+ *     query.isPostfix( wikipedia, "test.jpg" );
+ *     query.isHost( wikipedia, "test.jpg" );
+ *     query.isPort( wikipedia, "test.jpg" );
+ *     query.isProtocol( wikipedia, "test.jpg" );
+ *     query.isQuery( wikipedia, "test.jpg" );
+ * }</pre>
+ *
+ * <h3>Integer</h3>
+ * <pre>{@code
+ *     query.is( column, 12 );
+ *     query.isBetween( column, 10, 20 );
+ *     query.isGreaterThan( column, 20 );
+ *     query.isLessThan( column, 10 );
+ * }</pre>
+ *
+ * <h3>Double</h3>
+ * <pre>{@code
+ *     query.is( column, 12 );
+ *     query.isBetween( column, 10, 20 );
+ *     query.isGreaterThan( column, 20 );
+ *     query.isLessThan( column, 10 );
+ * }</pre>
+ *
+ *
+ * <h3>Float</h3>
+ * <pre>{@code
+ *     query.is( column, 12 );
+ *     query.isBetween( column, 10, 20 );
+ *     query.isGreaterThan( column, 20 );
+ *     query.isLessThan( column, 10 );
+ * }</pre>
+ *
+ * <h3>BigDecimal</h3>
+ * <pre>{@code
+ *     query.is( column, 12 );
+ *     query.isBetween( column, 10, 20 );
+ *     query.isGreaterThan( column, 20 );
+ *     query.isLessThan( column, 10 );
+ * }</pre>
+ *
+ * <h3>Boolean</h3>
+ * <pre>{@code
+ *     query.is( column, Boolean.TRUE );
+ * }</pre>
+ *
+ * <h3>Sorting</h3>
+ * <pre>{@code
+ *     query.descending( president );
+ *     query.ascending( leftOffice );
+ * }</pre>
+ *
  */
 public final class Query {
 
@@ -131,7 +167,7 @@ public final class Query {
      * @param column the column
      * @return the same query instance
      */
-    public Query notEmpty(final org.laukvik.csv.columns.Column column) {
+    public Query isNotEmpty(final org.laukvik.csv.columns.Column column) {
         addMatcher(new NotEmptyMatcher(column));
         return this;
     }
@@ -448,6 +484,10 @@ public final class Query {
         return this;
     }
 
+    public Query isQuery(final org.laukvik.csv.columns.UrlColumn column, final String... query) {
+        addMatcher(new UrlQueryMatcher(column, query));
+        return this;
+    }
 
     // ************* BOOLEAN ************************************************************************************
 

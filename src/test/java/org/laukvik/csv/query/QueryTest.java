@@ -27,6 +27,8 @@ import org.laukvik.csv.columns.UrlColumn;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,7 +36,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 
 public class QueryTest {
@@ -75,13 +76,28 @@ public class QueryTest {
         }
     }
 
+    // --- Common --------------------------------------------------------------
     @Test
-    public void readMetaData() {
-        assertNotNull(presidency);
+    public void isEmpty() throws ParseException {
+        Query q = new Query();
+        q.isEmpty(leftOffice);
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(1, rows.size());
     }
 
     @Test
-    public void isInt() {
+    public void isNotEmpty() throws ParseException {
+        Query q = new Query();
+        q.isNotEmpty(leftOffice);
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(43, rows.size());
+    }
+
+    // --- Integer --------------------------------------------------------------
+
+
+    @Test
+    public void intIs() {
         Query q = new Query();
         q.is(presidency,10);
         List<Row> rows = csv.findRowsByQuery(q);
@@ -89,7 +105,7 @@ public class QueryTest {
     }
 
     @Test
-    public void isIntBetween() {
+    public void intBetween() {
         Query q = new Query();
         q.isBetween(presidency,10, 19);
         List<Row> rows = csv.findRowsByQuery(q);
@@ -112,13 +128,123 @@ public class QueryTest {
         assertEquals(40, rows.size());
     }
 
+
+    // --- Float --------------------------------------------------------------
+
+    // --- Double --------------------------------------------------------------
+
+    // --- BigDecimal -----------------------------------------------------------
+
+
+    // --- String --------------------------------------------------------------
     @Test
-    public void isIn() {
+    public void stringIs() throws ParseException {
         Query q = new Query();
-        q.is(presidency, 1, 3, 5);
+        q.is(homeState, "Virginia");
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(5, rows.size());
+    }
+
+    @Test
+    public void stringFirstletter() throws ParseException {
+        Query q = new Query();
+        q.isFirstletter(homeState, "V");
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(5, rows.size());
+    }
+
+    @Test
+    public void stringWordCount() throws ParseException {
+        Query q = new Query();
+        q.isWordCount(homeState, 2);
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(9, rows.size());
+    }
+
+    @Test
+    public void stringLength() throws ParseException {
+        Query q = new Query();
+        q.isLength(homeState, 10);
         List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(3, rows.size());
     }
+
+    // --- URL --------------------------------------------------------------
+
+    @Test
+    public void isURL() throws ParseException, MalformedURLException {
+        Query q = new Query();
+        q.is(wikipedia, new URL("http://nothing"));
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(0, rows.size());
+    }
+
+    @Test
+    public void isAnchor() throws ParseException, MalformedURLException {
+        Query q = new Query();
+        q.isAnchor(wikipedia, "test");
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(0, rows.size());
+    }
+
+    @Test
+    public void isFile() throws ParseException, MalformedURLException {
+        Query q = new Query();
+        q.isFile(wikipedia, "George_Washington");
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(1, rows.size());
+    }
+
+    @Test
+    public void isUrlPrefix() throws ParseException, MalformedURLException {
+        Query q = new Query();
+        q.isPrefix(wikipedia, "George_Washington");
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(1, rows.size());
+    }
+
+    @Test
+    public void isUrlPostfix() throws ParseException, MalformedURLException {
+        Query q = new Query();
+        q.isPostfix(wikipedia, "jpg");
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(0, rows.size());
+    }
+
+    @Test
+    public void isHost() throws ParseException, MalformedURLException {
+        Query q = new Query();
+        q.isHost(wikipedia, "en.wikipedia.org");
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(42, rows.size());
+    }
+
+    @Test
+    public void isPort() throws ParseException, MalformedURLException {
+        Query q = new Query();
+        q.isPort(wikipedia, 80);
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(0, rows.size());
+    }
+
+    @Test
+    public void isProtocol() throws ParseException, MalformedURLException {
+        Query q = new Query();
+        q.isProtocol(wikipedia, "http");
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(41, rows.size());
+    }
+
+    @Test
+    public void isQuery() throws ParseException, MalformedURLException {
+        Query q = new Query();
+        q.isQuery(wikipedia, "q=abc");
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(0, rows.size());
+    }
+
+
+    // --- Date --------------------------------------------------------------
 
     @Test
     public void isDate() throws ParseException {
@@ -130,7 +256,7 @@ public class QueryTest {
     }
 
     @Test
-    public void greaterThan() throws ParseException {
+    public void dateGreater() throws ParseException {
         Date date = new GregorianCalendar(2000, 1, 1).getTime();
         Query q = new Query();
         q.isAfter(tookOffice, date);
@@ -139,7 +265,7 @@ public class QueryTest {
     }
 
     @Test
-    public void isDateLess() throws ParseException {
+    public void dateLess() throws ParseException {
         Date date = tookOffice.parse("1/1/1800");
         Query q = new Query();
         q.isBefore(tookOffice, date);
@@ -147,31 +273,20 @@ public class QueryTest {
         assertEquals(2, rows.size());
     }
 
-
-
-
     @Test
-    public void sortDate() throws ParseException {
+    public void isWeekday() throws ParseException {
         Query q = new Query();
-        q.descending(tookOffice);
-        List<Row> rows = csv.findRowsByQuery(q);
-        assertEquals("Barack Obama", rows.get(0).getString(president));
-    }
-
-    @Test
-    public void stringIs() throws ParseException {
-        Query q = new Query();
-        q.is(homeState, "Virginia");
+        q.isWeekday(leftOffice, 2);
         List<Row> rows = csv.findRowsByQuery(q);
         assertEquals(5, rows.size());
     }
 
     @Test
-    public void isEmpty() throws ParseException {
+    public void isWeek() throws ParseException {
         Query q = new Query();
-        q.isEmpty(leftOffice);
+        q.isWeek(leftOffice, 3);
         List<Row> rows = csv.findRowsByQuery(q);
-        assertEquals(1, rows.size());
+        assertEquals(5, rows.size());
     }
 
     @Test
@@ -183,11 +298,62 @@ public class QueryTest {
     }
 
     @Test
+    public void isMonth() throws ParseException {
+        Query q = new Query();
+        q.isMonth(leftOffice, 3);
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(3, rows.size());
+    }
+
+    @Test
+    public void isDayOfMonth() throws ParseException {
+        Query q = new Query();
+        q.isDayOfMonth(leftOffice, 3);
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(0, rows.size());
+    }
+
+    @Test
+    public void isHour() throws ParseException {
+        Query q = new Query();
+        q.isHour(leftOffice, -2);
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(0, rows.size());
+    }
+
+    @Test
+    public void isMinute() throws ParseException {
+        Query q = new Query();
+        q.isMinute(leftOffice, -3);
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(0, rows.size());
+    }
+
+    @Test
+    public void isSecond() throws ParseException {
+        Query q = new Query();
+        q.isSecond(leftOffice, -5);
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(0, rows.size());
+    }
+
+    @Test
+    public void isMillis() throws ParseException {
+        Query q = new Query();
+        q.isMillisecond(leftOffice, -1);
+        List<Row> rows = csv.findRowsByQuery(q);
+        assertEquals(0, rows.size());
+    }
+
+    // --- Sorting --------------------------------------------------------------
+
+
+    @Test
     public void ascending() throws IOException {
         Query q = new Query();
         q.ascending(leftOffice);
         List<Row> rows = csv.findRowsByQuery(q);
-        assertEquals( (Integer)44, rows.get(0).getInteger(presidency));
+        assertEquals((Integer) 44, rows.get(0).getInteger(presidency));
     }
 
     @Test
@@ -198,30 +364,6 @@ public class QueryTest {
         assertEquals("Zachary Taylor", rows.get(0).getString(president));
     }
 
-
-    @Test
-    public void isBetween() throws IOException {
-        Query q = new Query();
-        q.isBetween(presidency, 1, 10);
-        assertEquals(10, q.getRows(csv).size());
-    }
-
-    @Test
-    public void greaterThan_date() throws IOException {
-        Query q = new Query();
-        q.isAfter(leftOffice, leftOffice.parse("01/01/2005")); // dd/MM/yyyy
-        assertEquals(1, q.getRows(csv).size());
-    }
-
-    @Test
-    public void getMatchers() throws IOException {
-        Query q = new Query();
-        IntegerLessThanMatcher m = new IntegerLessThanMatcher(presidency, 5);
-        q.addMatcher(m);
-        assertEquals(1, q.getMatchers().size());
-        q.removeMatcher(m);
-        assertEquals(0, q.getMatchers().size());
-    }
 
     @Test
     public void getSorters() throws IOException {
