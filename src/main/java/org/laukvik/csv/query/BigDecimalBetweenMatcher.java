@@ -45,7 +45,9 @@ public final class BigDecimalBetweenMatcher implements ValueMatcher<BigDecimal> 
      * @param minimum       the minimum value
      * @param maximum       the maximum value
      */
-    public BigDecimalBetweenMatcher(final BigDecimalColumn integerColumn, final BigDecimal minimum, final BigDecimal maximum) {
+    public BigDecimalBetweenMatcher(final BigDecimalColumn integerColumn,
+                                    final BigDecimal minimum,
+                                    final BigDecimal maximum) {
         super();
         this.column = integerColumn;
         this.min = minimum;

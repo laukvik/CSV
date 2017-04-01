@@ -42,6 +42,12 @@ public final class DateIsInMatcher extends AbstractDateMatcher {
         this(column, Arrays.asList(values));
     }
 
+    /**
+     * Compares a DateColumn to an list of Dates.
+     *
+     * @param column the dateColumn
+     * @param values the dates
+     */
     public DateIsInMatcher(final DateColumn column, final List<Date> values) {
         super(column, null);
         this.values = values;

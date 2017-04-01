@@ -15,7 +15,7 @@ public class IntegerIsMatcherTest {
     @Test
     public void getColumn() {
         IntegerColumn c = new IntegerColumn("value");
-        IntegerIsMatcher m = new IntegerIsMatcher(c, 2);
+        IntegerIsInMatcher m = new IntegerIsInMatcher(c, 2);
         assertEquals(c, m.getColumn());
     }
 
@@ -24,7 +24,7 @@ public class IntegerIsMatcherTest {
     public void matches() throws Exception {
         CSV csv = new CSV();
         IntegerColumn created = csv.addIntegerColumn("created");
-        IntegerIsMatcher m = new IntegerIsMatcher(created, 3);
+        IntegerIsInMatcher m = new IntegerIsInMatcher(created, 3);
         assertTrue( m.matches(3) );
         assertFalse( m.matches(4) );
         assertFalse( m.matches(5) );

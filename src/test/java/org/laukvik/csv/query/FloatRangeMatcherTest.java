@@ -30,7 +30,7 @@ public class FloatRangeMatcherTest {
         assertFalse(m.matches(20f));
         assertTrue(m.matches(30f));
         assertTrue(m.matches(40f));
-        assertTrue(m.matches(null));
+        assertFalse(m.matches(null));
     }
 
 }

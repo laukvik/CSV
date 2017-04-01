@@ -40,7 +40,7 @@ public final class FrequencyDistribution<T> {
     private final Map<T, Integer> map;
 
     /**
-     * The amount of nulls
+     * The amount of nulls.
      */
     private int nulls;
 
@@ -89,7 +89,7 @@ public final class FrequencyDistribution<T> {
      * @param value the value to add
      */
     public void addValue(final T value) {
-        if (value == null){
+        if (value == null) {
             this.nulls++;
         } else if (map.containsKey(value)) {
             Integer count = map.get(value) + 1;

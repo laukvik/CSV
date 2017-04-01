@@ -222,9 +222,10 @@ public final class CSV implements Serializable {
 
     /**
      * Returns stream of rows.
+     *
      * @return stream
      */
-    public Stream<Row> stream(){
+    public Stream<Row> stream() {
         return rows.stream();
     }
 

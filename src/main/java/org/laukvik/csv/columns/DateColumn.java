@@ -141,8 +141,11 @@ public final class DateColumn extends Column<Date> {
      * @return true if the time is the same
      */
     public static boolean isEqualTime(final Date d1, final Date d2) {
-        if (d1 == null || d2 == null) {
+        if (d1 == null && d2 == null) {
             return true;
+        }
+        if (d1 == null || d2 == null) {
+            return false;
         }
         GregorianCalendar c1 = new GregorianCalendar();
         c1.setTime(d1);
