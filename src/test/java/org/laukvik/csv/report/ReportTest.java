@@ -63,7 +63,7 @@ public class ReportTest {
         r.addColumn(new Sum(presidency));
 //        r.addColumn(new Avg(presidency));
 
-        CSV c = r.buildReport(csv);
+        //CSV c = r.buildReport(csv);
 
 //        for (int x=0; x<c.getColumnCount(); x++){
 //            System.out.print( c.getColumn(x).getName() + "\t");
@@ -129,7 +129,7 @@ public class ReportTest {
         Node root = r.buildNode(csv);
 
 
-        CSV csv2 = r.buildCSV(root);
+        //CSV csv2 = r.buildCSV(root);
     }
 
 

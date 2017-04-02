@@ -181,7 +181,6 @@ public class CSVTest {
     public void addRowAt() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
-        StringColumn president = csv.addStringColumn("President");
         Row r = csv.addRow(10);
         assertEquals(r, csv.getRow(10));
     }
