@@ -39,7 +39,7 @@ public final class IntegerRange extends Range<Integer> {
         if (value == null) {
             return false;
         }
-        return value >= from && value <= to;
+        return value >= from && value < to;
     }
 
 }

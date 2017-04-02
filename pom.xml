@@ -3,12 +3,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.laukvik</groupId>
-    <artifactId>laukvik-csv</artifactId>
-    <version>0.9.1</version>
+    <artifactId>csv</artifactId>
+    <version>0.9.2</version>
     <packaging>jar</packaging>
 
     <name>CSV</name>
-    <description>A Java API for reading, writing, filtering and exporting data sets.</description>
+    <description>LaukvikCSV is a powerful API for reading, writing and querying tabular data stored in the CSV format.
+        In contrast to other API it lets you specify data types for each column using meta data. It automatically
+        detects delimiters so you don't have to worry about delimiters being comma, tab, pipe, semicolon etc.
+        Run powerful queries to filter your data easily with a fluid query language thats type safe. Export your
+        tabular data to CSV, JSON, XML and HTML.
+    </description>
 
     <developers>
         <developer>
@@ -102,8 +107,8 @@
                     <instrumentation>
                         <excludes>
                             <exclude>org/laukvik/csv/**/*Exception.class</exclude>
-                            <ignore>org/laukvik/csv/statistics/*.*</ignore>
-                            <ignore>org/laukvik/csv/report/*.*</ignore>
+                            <!--                            <ignore>org/laukvik/csv/statistics/*.*</ignore>
+                                                        <ignore>org/laukvik/csv/report/*.*</ignore>-->
                             <ignore>org/laukvik/csv/io/xml/*.*</ignore>
                             <ignore>*Listener.*</ignore>
                         </excludes>

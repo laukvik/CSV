@@ -19,6 +19,7 @@ import org.laukvik.csv.columns.BigDecimalColumn;
 import org.laukvik.csv.columns.BooleanColumn;
 import org.laukvik.csv.columns.ByteColumn;
 import org.laukvik.csv.columns.Column;
+import org.laukvik.csv.columns.ColumnAlreadyExistException;
 import org.laukvik.csv.columns.DateColumn;
 import org.laukvik.csv.columns.DoubleColumn;
 import org.laukvik.csv.columns.FloatColumn;
@@ -336,6 +337,9 @@ public final class CSV implements Serializable {
      */
     public Column addColumn(final Column column) {
         column.setCSV(this);
+        if (getColumn(column.getName()) != null) {
+            throw new ColumnAlreadyExistException(column);
+        }
         columns.add(column);
         return column;
     }
@@ -607,16 +611,6 @@ public final class CSV implements Serializable {
      */
     public void swapRows(final int fromRowIndex, final int toRowIndex) {
         Collections.swap(rows, fromRowIndex, toRowIndex);
-    }
-
-    /**
-     * Adds a new text column with the specified name.
-     *
-     * @param name the name of the column
-     * @return the newly create column
-     */
-    public Column addColumn(final String name) {
-        return addStringColumn(name);
     }
 
     /**

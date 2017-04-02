@@ -5,9 +5,6 @@ import org.laukvik.csv.columns.StringColumn;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author Morten Laukvik
- */
 public class FrequencyDistributionTest {
 
     @Test

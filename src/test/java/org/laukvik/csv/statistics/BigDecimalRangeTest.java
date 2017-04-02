@@ -19,14 +19,14 @@ public class BigDecimalRangeTest {
         r.addValue(new BigDecimal(22));
         assertEquals(1, r.count);
         r.addValue(new BigDecimal(333));
-        assertEquals(2, r.count);
+        assertEquals(1, r.count);
     }
 
     @Test
     public void contains() throws Exception {
         BigDecimalRange r = new BigDecimalRange("", new BigDecimal(55), new BigDecimal(99));
         assertTrue(r.contains(new BigDecimal(55)));
-        assertTrue(r.contains(new BigDecimal(99)));
+        assertFalse(r.contains(new BigDecimal(99)));
         assertFalse(r.contains(new BigDecimal(54)));
         assertFalse(r.contains(new BigDecimal(99.1)));
         assertFalse(r.contains(new BigDecimal(54.9)));

@@ -276,9 +276,9 @@ public class QueryTest {
     @Test
     public void isWeekday() throws ParseException {
         Query q = new Query();
-        q.isWeekday(leftOffice, 2);
+        q.isWeekday(leftOffice, 10);
         List<Row> rows = csv.findRowsByQuery(q);
-        assertEquals(5, rows.size());
+        assertEquals(0, rows.size());
     }
 
     @Test

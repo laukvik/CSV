@@ -71,16 +71,16 @@ public class CsvReaderTest {
         CSV csv = new CSV();
         CsvReader reader = new CsvReader( Charset.forName("utf-8"), null, null );
         reader.readFile( getResource("metadata.csv"), csv );
-        assertEquals("Row count", 44, csv.getRowCount());
-        assertEquals("Column count", 12, csv.getColumnCount());
+        assertEquals("Row addValue", 44, csv.getRowCount());
+        assertEquals("Column addValue", 12, csv.getColumnCount());
     }
 
     private void readFile(String filename, int requiredColumns, int requiredRows, String charset) throws CsvReaderException {
         CSV csv = new CSV();
         CsvReader reader = new CsvReader( Charset.forName(charset), null, null );
         reader.readFile( getResource(filename), csv );
-        assertEquals("Row count", requiredRows, csv.getRowCount());
-        assertEquals("Column count", requiredColumns, csv.getColumnCount());
+        assertEquals("Row addValue", requiredRows, csv.getRowCount());
+        assertEquals("Column addValue", requiredColumns, csv.getColumnCount());
     }
 
     @Test
@@ -103,8 +103,8 @@ public class CsvReaderTest {
         CSV csv = new CSV();
         CsvReader reader = new CsvReader( Charset.forName("utf-8"), null, CSV.QUOTE_SINGLE);
         reader.readFile( getResource("quote_single.csv"), csv );
-        assertEquals("Row count", 2, csv.getRowCount());
-        assertEquals("Column count", 3, csv.getColumnCount());
+        assertEquals("Row addValue", 2, csv.getRowCount());
+        assertEquals("Column addValue", 3, csv.getColumnCount());
     }
 
     @Test
@@ -112,8 +112,8 @@ public class CsvReaderTest {
         CSV csv = new CSV();
         CsvReader reader = new CsvReader( Charset.forName("utf-8"), null, CSV.QUOTE_DOUBLE);
         reader.readFile( getResource("quote_double.csv"), csv );
-        assertEquals("Row count", 2, csv.getRowCount());
-        assertEquals("Column count", 3, csv.getColumnCount());
+        assertEquals("Row addValue", 2, csv.getRowCount());
+        assertEquals("Column addValue", 3, csv.getColumnCount());
     }
 
     @Test

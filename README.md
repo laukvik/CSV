@@ -18,20 +18,36 @@ StringColumn president = csv.getColumn("president");
 IntegerColumn presidency = csv.getColumn(5);
 List<Row> rows = csv.findRows();
 for (Row r : rows){
-    System.out.println( r.getObject(president) );
-    System.out.println( r.getObject(presidency) );
+    System.out.println( r.get(president) );
+    System.out.println( r.get(presidency) );
 }
 ```
 
 ## Writing files
+
+Creates a new CSV with two presidents and saves it to addresses.csv
+
 ```java
 CSV csv = new CSV();
-StringColumn first = csv.getColumn("first");
-StringColumn last = csv.getColumn("last");
-csv.writeFile( new File("addresses.csv") ); // Write to CSV format
+StringColumn first = csv.getStringColumn("first");
+StringColumn last = csv.getStringColumn("last");
+csv.addRow().set( first, "Barack" ).set( last, "Obama" );
+csv.addRow().set( first, "Donald" ).set( last, "Trump" );
+csv.writeFile( new File("addresses.csv") ); 
+```
+
+The output of the file addresses.csv will be:
+
+```
+first,last
+"Barack","Obama"
+"Donald","Trump"
 ```
 
 ## Exporting files
+
+Using the previous example will write to different formats
+
 ```java
 csv.writeHtml( new File("addresses.html") ); // Write to HTML format
 csv.writeJSON( new File("addresses.json") ); // Write to JSON format
@@ -39,26 +55,21 @@ csv.writeXML( new File("addresses.xnk") ); // Write to XML format
 ```
 
 ## Querying a CSV file
+
+Example: Displaying all presidents with presidency between 1 and 10
+
 ```java
 CSV csv = new CSV( new File("presidents.csv") );
-StringColumn president = csv.getColumn("president");
-IntegerColumn presidency = csv.getColumn(5);
+StringColumn president = csv.getStringColumn("president");
+IntegerColumn presidency = (IntegerColumn) csv.getColumn(5);
 Query query = new Query();
 query.isBetween(presidency, 1, 10);
 List<Row> rows = csv.findRowsByQuery( query );
 for (Row r : rows){
-    System.out.println( r.getObject(president) );
-    System.out.println( r.getObject(presidency) );
+    System.out.println( r.get(president) + ": " + r.get(presidency) );
 }
 ```
 
-## Building a CSV file
-```java
-CSV csv = new CSV();
-StringColumn first = csv.getColumn("first");
-StringColumn last = csv.getColumn("last");
-csv.addRow().set( first, "John" ).set( last, "Doe" );  
-```
 
 ## Working with columns
 
@@ -84,8 +95,8 @@ csv.removeColumn(0);
 Adding a new row with data
 ```java
 CSV csv = new CSV();
-StringColumn president = csv.addColumn("President");
-StringColumn party = csv.addColumn("Party");
+StringColumn president = csv.addStringColumn("President");
+StringColumn party = csv.addStringColumn("Party");
 
 csv.addRow()
     .set(president, "Barack Obama")
@@ -157,16 +168,107 @@ Query query = new Query()
 List<Row> rows = csv.findByQuery(query);
 ```
 
-## FrequencyDistribution
+A more complicated example that uses different filters
 
-Builds a FrequencyDistribution for an integer column
 ```java
-FrequencyDistribution<Integer> fd = csv.buildFrequencyDistribution( presidency );
+// Build an empty CSV with a few columns
+CSV csv = new CSV();
+StringColumn president = csv.addStringColumn("President");
+StringColumn party = csv.addStringColumn("Party");
+IntegerColumn presidency = csv.addIntegerColumn("Presidency");
+UrlColumn web = csv.addUrlColumn("web");
+DateColumn tookOffice = csv.addDateColumn("Took office", "dd/MM/yyyy");
+
+// Add test values
+csv.addRow()
+        .set( president, "Donald Trump")
+        .set( presidency, 45)
+        .set( party, null)
+        .set( tookOffice, tookOffice.parse("20/01/2017") )
+        .set( web, new URL("https://en.wikipedia.org/wiki/Donald_Trump"));
+csv.addRow()
+        .set( president, "Barack Obama")
+        .set( presidency, 44)
+        .set( party, "Democratic")
+        .set( tookOffice, tookOffice.parse("20/01/2009") )
+        .set( web, new URL("http://en.wikipedia.org/wiki/Barack_Obama"));
+csv.addRow()
+        .set( president, "George W. Bush")
+        .set( presidency, 43)
+        .set( party, "Republican")
+        .set( tookOffice, tookOffice.parse("20/01/2001") )
+        .set( web, new URL("http://en.wikipedia.org/wiki/George_W._Bush"));
+csv.addRow()
+        .set( president, "Bill Clinton")
+        .set( presidency, 42)
+        .set( party, "Democratic")
+        .set( tookOffice, tookOffice.parse("20/01/1993") )
+        .set( web, new URL("http://en.wikipedia.org/wiki/Bill_Clinton"));
+csv.addRow()
+        .set( president, "George H. W. Bush")
+        .set( presidency, 41)
+        .set( party, "Republican")
+        .set( tookOffice, tookOffice.parse("20/01/1989") )
+        .set( web, new URL("http://en.wikipedia.org/wiki/George_H._W._Bush"));
+csv.addRow()
+        .set( president, "Ronald Reagan")
+        .set( presidency, 40)
+        .set( party, "Republican")
+        .set( tookOffice, tookOffice.parse("20/01/1981") )
+        .set( web, new URL("http://en.wikipedia.org/wiki/Ronald_Reagan"));
+
+// Build the query
+Query query = new Query()
+        .isBetween( presidency, 41, 45 )
+        .isDayOfMonth( tookOffice, 20)
+        .isWordCount( president, 2, 3, 4)
+        .isAfter( tookOffice, tookOffice.parse("01/01/1999") )
+        .isYear( tookOffice, 2009, 2017 )
+        .isEmpty(party)
+        .isNotEmpty(web)
+        .ascending( presidency );
+List<Row> rows = csv.findRowsByQuery(query);
+
+// Display the results
+for (Row r : rows){
+    System.out.println( r.get(presidency) + ": " + r.get(president) );
+}
+```
+
+## Frequency Distribution
+
+Builds a frequency distribution for the president column
+```java
+CSV csv = new CSV();
+StringColumn president = csv.addStringColumn("president");
+csv.addRow().set(president, "Barack Obama");
+csv.addRow().set(president, "Barack Obama");
+csv.addRow().set(president, "Donald Trump");
+csv.addRow(); // Add row with no president
+csv.addRow().set(president, null); // Add row with president is null
+FrequencyDistribution<String> freq = csv.buildFrequencyDistribution(president);
+for (String key : freq.getKeys()){
+     System.out.println(key + ": " + freq.getCount(key));
+}
+System.out.println("Nulls: " + freq.getNullCount());
+```
+The example about will output
+```
+Barack Obama: 2
+Donald Trump: 1
+Nulls: 2
 ```
 
 ## Distinct Values
+
+Reusing the previous example will create a set of distinct values like this
+
 ```java
-Set<String> values = csv.buildDistinctValues( name );
+Set<String> values = csv.buildDistinctValues( president );
 ```
 
-
+The example about will output
+```
+Barack Obama
+Donald Trump
+```

@@ -39,7 +39,7 @@ public final class DoubleRange extends Range<Double> {
         if (value == null) {
             return false;
         }
-        return value >= from && value <= to;
+        return value >= from && value < to;
     }
 
 }

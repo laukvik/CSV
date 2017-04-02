@@ -42,7 +42,7 @@ public final class BigDecimalRange extends Range<BigDecimal> {
         if (value == null) {
             return false;
         }
-        return value.compareTo(from) >= 0 && value.compareTo(to) <= 0;
+        return value.compareTo(from) >= 0 && value.compareTo(to) < 0;
     }
 
 }

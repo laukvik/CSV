@@ -39,7 +39,7 @@ public final class FloatRange extends Range<Float> {
         if (value == null) {
             return false;
         }
-        return value >= from && value <= to;
+        return value >= from && value < to;
     }
 
 }

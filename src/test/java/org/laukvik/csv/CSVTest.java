@@ -491,7 +491,7 @@ public class CSVTest {
     @Test
     public void writeXml() throws IOException, CsvWriterException {
         CSV csv = new CSV();
-        csv.addColumn("first");
+        csv.addStringColumn("first");
         File file = File.createTempFile("csvxmltest", "xml");
         csv.writeXML(file);
     }

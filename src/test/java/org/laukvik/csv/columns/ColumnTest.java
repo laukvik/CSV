@@ -29,14 +29,14 @@ public class ColumnTest {
     @Test
     public void getCSV() throws Exception {
         CSV csv = new CSV();
-        Column c = csv.addColumn("email");
+        Column c = csv.addStringColumn("email");
         assertEquals(csv, c.getCSV());
     }
 
     @Test
     public void setCSV() throws Exception {
         CSV csv = new CSV();
-        Column c = csv.addColumn("email");
+        Column c = csv.addStringColumn("email");
         c.setCSV(null);
         assertNull(c.getCSV());
     }

@@ -7,20 +7,29 @@ import static org.junit.Assert.assertEquals;
 public class DoubleDistributionTest {
 
     @Test
-    public void addValue(){
-
-    }
-
-    @Test
     public void buildRange() throws Exception {
-        DoubleDistribution d = new DoubleDistribution();
-        d.buildRange(0.2, 0.5);
+        DoubleRange r1 = new DoubleRange("Q1", 0d, 25d);
+        DoubleRange r2 = new DoubleRange("Q2", 25d, 50d);
+        DoubleRange r3 = new DoubleRange("Q3", 50d, 75d);
+        DoubleRange r4 = new DoubleRange("Q4", 75d, 100d);
 
-        assertEquals(10, d.getRanges().size());
+        DoubleDistribution dist = new DoubleDistribution();
+        dist.addRange(r1);
+        dist.addRange(r2);
+        dist.addRange(r3);
+        dist.addRange(r4);
 
-        assertEquals(0d, d.getRanges().get(0).from, 0);
-        assertEquals(0.1d, d.getRanges().get(1).from, 0);
-        assertEquals(0.2d, d.getRanges().get(2).from, 0);
+        dist.addValue(0d);
+        dist.addValue(24d);
+        dist.addValue(25d);
+        dist.addValue(44d);
+        dist.addValue(55d);
+        dist.addValue(110d);
+
+        assertEquals(2, r1.getCount());
+        assertEquals(2, r2.getCount());
+        assertEquals(1, r3.getCount());
+        assertEquals(0, r4.getCount());
     }
 
 }

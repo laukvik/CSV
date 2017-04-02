@@ -154,7 +154,7 @@ public final class Node {
     }
 
     /**
-     * Calculate a the count of all values.
+     * Calculate a the addValue of all values.
      *
      * @param v the value
      * @param column the column
@@ -202,9 +202,9 @@ public final class Node {
     }
 
     /**
-     * Returns the count.
+     * Returns the addValue.
      *
-     * @return the count
+     * @return the addValue
      */
     public int getCount() {
         return count;

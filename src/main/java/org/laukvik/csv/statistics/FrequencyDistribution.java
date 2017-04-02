@@ -24,7 +24,7 @@ import java.util.TreeMap;
 
 /**
  * Frequency distribution is a table that shows the frequency of values found in a
- * column. Each entry contains the value and the count of occurrences of that value.
+ * column. Each entry contains the value and the addValue of occurrences of that value.
  *
  * @param <T> the type
  */
@@ -107,4 +107,5 @@ public final class FrequencyDistribution<T> {
     public int getNullCount() {
         return nulls;
     }
+
 }

@@ -4,6 +4,7 @@
  * <h3>Building columns</h3>
  * <p>The following example shows how to construct all possible column types.</p>
  * <pre>{@code
+ * CSV csv = new CSV();
  * StringColumn first = csv.addStringColumn("name");
  * IntegerColumn salary = csv.addIntegerColumn("first");
  * BooleanColumn isWoman = csv.addBooleanColumn("isWoman");

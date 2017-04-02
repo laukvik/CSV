@@ -54,8 +54,8 @@ public class JsonWriterTest {
         File file = File.createTempFile("EmptyRows", ".json");
 
         CSV csv = new CSV();
-        csv.addColumn("First");
-        csv.addColumn("Last");
+        csv.addStringColumn("First");
+        csv.addStringColumn("Last");
 
         JsonWriter writer = new JsonWriter();
         writer.writeCSV(csv, new FileOutputStream(file));

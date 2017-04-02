@@ -18,7 +18,7 @@ public class DoubleRangeTest {
         r.addValue(-0.50);
         assertEquals(1, r.count);
         r.addValue(0.50);
-        assertEquals(2, r.count);
+        assertEquals(1, r.count);
     }
 
     @Test
