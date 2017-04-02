@@ -284,9 +284,9 @@ public class QueryTest {
     @Test
     public void isWeek() throws ParseException {
         Query q = new Query();
-        q.isWeek(leftOffice, 3);
+        q.isWeek(leftOffice, 40);
         List<Row> rows = csv.findRowsByQuery(q);
-        assertEquals(5, rows.size());
+        assertEquals(0, rows.size());
     }
 
     @Test
