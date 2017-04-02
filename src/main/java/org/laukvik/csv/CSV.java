@@ -564,7 +564,7 @@ public final class CSV implements Serializable {
      * @param index the index to setNull
      */
     public void removeRow(final int index) {
-        Row row = rows.remove(index);
+        rows.remove(index);
     }
 
     /**
@@ -581,7 +581,6 @@ public final class CSV implements Serializable {
      * Removes all rows.
      */
     public void removeRows() {
-        int count = rows.size();
         rows.clear();
     }
 

@@ -158,7 +158,7 @@ public abstract class Column<T> implements Comparable, Serializable {
     public static Column parseColumnDefinition(final ColumnDefinition columnDefinition) {
         ColumnDefinition.Attribute attrType = columnDefinition.get(TYPE);
         String columnName = columnDefinition.getColumnName();
-        Column c = null;
+        Column c;
 
         if (attrType == null) {
             c = new StringColumn(columnName);

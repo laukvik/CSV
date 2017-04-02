@@ -107,8 +107,8 @@
                     <instrumentation>
                         <excludes>
                             <exclude>org/laukvik/csv/**/*Exception.class</exclude>
-                            <!--                            <ignore>org/laukvik/csv/statistics/*.*</ignore>
-                                                        <ignore>org/laukvik/csv/report/*.*</ignore>-->
+                            <ignore>org/laukvik/csv/statistics/*.*</ignore>
+                            <ignore>org/laukvik/csv/report/*.*</ignore>
                             <ignore>org/laukvik/csv/io/xml/*.*</ignore>
                             <ignore>*Listener.*</ignore>
                         </excludes>
