@@ -7,6 +7,15 @@ LaukvikCSV
 
 LaukvikCSV is a powerful API for reading, writing and querying tabular data stored in the CSV format. In contrast to other API it lets you specify data types for each column using meta data. It automatically detects delimiters so you don't have to worry about delimiters being comma, tab, pipe, semicolon etc. Run powerful queries to filter your data easily with a fluid query language thats type safe. Export your tabular data to CSV, JSON, XML and HTML.
 
+## Installing
+
+```xml
+<dependency>
+    <groupId>no.laukvik</groupId>
+    <artifactId>csv</artifactId>
+    <version>0.9.2</version>
+</dependency>
+```
 
 ## Reading a CSV file
 
