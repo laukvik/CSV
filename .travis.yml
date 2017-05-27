@@ -4,3 +4,10 @@ jdk:
 script: "mvn install"
 sudo: required
 install: true
+
+deploy:
+  provider: releases
+  api_key:
+  skip_cleanup: true
+  on:
+    tags: true
