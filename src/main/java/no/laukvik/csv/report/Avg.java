@@ -1,12 +1,13 @@
 package no.laukvik.csv.report;
 
 import no.laukvik.csv.Row;
-import no.laukvik.csv.columns.IntegerColumn;
+import no.laukvik.csv.columns.Column;
 
 import java.math.BigDecimal;
 
 /**
  * Calculates the average of all values.
+ *
  */
 public final class Avg extends Aggregate {
 
@@ -21,9 +22,11 @@ public final class Avg extends Aggregate {
     private long count;
 
     /**
+     * The IntegerColumn to aggregate
+     *
      * @param column the column
      */
-    public Avg(final IntegerColumn column) {
+    public Avg(final Column column) {
         super(column);
         sum = new BigDecimal(0);
     }
@@ -35,9 +38,17 @@ public final class Avg extends Aggregate {
      */
     @Override
     public void aggregate(final Row row) {
-        Integer value = row.get((IntegerColumn) getColumn());
+        Object value = row.getObject(getColumn());
         if (value != null) {
-            sum = sum.add(new BigDecimal(value));
+            if (value instanceof Integer) {
+                sum = sum.add(new BigDecimal((Integer) value));
+            } else if (value instanceof Double) {
+                sum = sum.add(new BigDecimal((Double) value));
+            } else if (value instanceof Float) {
+                sum = sum.add(new BigDecimal((Float) value));
+            } else if (value instanceof BigDecimal) {
+                sum = sum.add((BigDecimal) value);
+            }
         }
         count++;
     }
@@ -53,6 +64,20 @@ public final class Avg extends Aggregate {
             return new BigDecimal(0);
         }
         return sum.divideToIntegralValue(new BigDecimal(count));
+    }
+
+    /**
+     * Returns the amount of rows counted.
+     *
+     * @return the amount of rows
+     */
+    public long getCount() {
+        return count;
+    }
+
+    @Override
+    public String toString() {
+        return "Avg(" + getColumn().getName() + ")";
     }
 
 }

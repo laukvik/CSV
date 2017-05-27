@@ -66,4 +66,6 @@ public abstract class Aggregate {
     public void setAggregateColumn(final Column aggregateColumn) {
         this.aggregateColumn = aggregateColumn;
     }
+
+
 }

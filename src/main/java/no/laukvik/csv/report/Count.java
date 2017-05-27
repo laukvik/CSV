@@ -4,7 +4,7 @@ import no.laukvik.csv.Row;
 import no.laukvik.csv.columns.Column;
 
 /**
- * Finds the amount of aggregated rows.
+ * Calculates the number of values.
  */
 public final class Count extends Aggregate {
 
@@ -41,6 +41,11 @@ public final class Count extends Aggregate {
     @Override
     public Integer getValue() {
         return amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Count(" + getColumn().getName() + ")";
     }
 
 }
