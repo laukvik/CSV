@@ -38,18 +38,18 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/laukvik/LaukvikCSV</url>
+        <url>https://github.com/laukvik/CSV</url>
         <tag>master</tag>
     </scm>
 
     <issueManagement>
-        <url>https://github.com/laukvik/LaukvikCSV/issues</url>
+        <url>https://github.com/laukvik/CSV/issues</url>
         <system>GitHub</system>
     </issueManagement>
 
     <ciManagement>
         <system>Travis</system>
-        <url>https://travis-ci.org/laukvik/LaukvikCSV</url>
+        <url>https://travis-ci.org/laukvik/CSV</url>
     </ciManagement>
 
     <distributionManagement>
