@@ -30,6 +30,7 @@ public class BigDecimalRangeTest {
         assertFalse(r.contains(new BigDecimal(54)));
         assertFalse(r.contains(new BigDecimal(99.1)));
         assertFalse(r.contains(new BigDecimal(54.9)));
+        assertFalse(r.contains(null));
     }
 
 }
