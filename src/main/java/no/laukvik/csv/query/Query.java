@@ -36,22 +36,17 @@ import java.util.regex.Pattern;
 
 /**
  * Query is a type safe query to applying filters to the rows.
- * <p>
  * <h3>Using query</h3>
  * <pre>{@code
  *     Query query = new Query();
  *     query.isBetween(presidency, 1, 10);
  *     List<Row> rows = csv.findRowsByQuery( query );
  * }</pre>
- * <p>
- * <p>
  * <h3>Generic</h3>
  * <pre>{@code
  *     query.isEmpty( column );
  *     query.isNotEmpty( column );
  * }</pre>
- * <p>
- * <p>
  * <h3>String</h3>
  * <pre>{@code
  *     query.is( column, "Bob" );
@@ -60,7 +55,6 @@ import java.util.regex.Pattern;
  *     query.isFirstletter( column, "" );
  *     query.isWordCount( column, 2 );
  * }</pre>
- * <p>
  * <h3>Date</h3>
  * <pre>{@code
  *     query.is( column, today );
@@ -76,7 +70,6 @@ import java.util.regex.Pattern;
  *     query.isMillisecond( leftOffice, 5 );
  *     query.isWeekday( leftOffice, 5 );
  * }</pre>
- * <p>
  * <h3>URL</h3>
  * <pre>{@code
  *     query.is( wikipedia, new URL("http://wikipedia.org") );
@@ -89,7 +82,6 @@ import java.util.regex.Pattern;
  *     query.isProtocol( wikipedia, "test.jpg" );
  *     query.isQuery( wikipedia, "test.jpg" );
  * }</pre>
- * <p>
  * <h3>Integer</h3>
  * <pre>{@code
  *     query.is( column, 12 );
@@ -97,7 +89,6 @@ import java.util.regex.Pattern;
  *     query.isGreaterThan( column, 20 );
  *     query.isLessThan( column, 10 );
  * }</pre>
- * <p>
  * <h3>Double</h3>
  * <pre>{@code
  *     query.is( column, 12 );
@@ -105,8 +96,6 @@ import java.util.regex.Pattern;
  *     query.isGreaterThan( column, 20 );
  *     query.isLessThan( column, 10 );
  * }</pre>
- * <p>
- * <p>
  * <h3>Float</h3>
  * <pre>{@code
  *     query.is( column, 12 );
@@ -114,7 +103,6 @@ import java.util.regex.Pattern;
  *     query.isGreaterThan( column, 20 );
  *     query.isLessThan( column, 10 );
  * }</pre>
- * <p>
  * <h3>BigDecimal</h3>
  * <pre>{@code
  *     query.is( column, 12 );
@@ -122,12 +110,10 @@ import java.util.regex.Pattern;
  *     query.isGreaterThan( column, 20 );
  *     query.isLessThan( column, 10 );
  * }</pre>
- * <p>
  * <h3>Boolean</h3>
  * <pre>{@code
  *     query.is( column, Boolean.TRUE );
  * }</pre>
- * <p>
  * <h3>Sorting</h3>
  * <pre>{@code
  *     query.descending( president );

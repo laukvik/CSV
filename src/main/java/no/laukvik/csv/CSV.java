@@ -56,7 +56,6 @@ import java.util.stream.Stream;
 
 /**
  * The main class for building, reading, writing and querying the CSV datasets.
- * <p>
  * <h3>Reading a CSV file</h3>
  * <pre>{@code
  *     CSV csv = new CSV( new File("presidents.csv") );
@@ -68,8 +67,6 @@ import java.util.stream.Stream;
  *         System.out.println( r.getObject(presidency) );
  *     }
  * }</pre>
- * <p>
- * <p>
  * <h3>Writing a CSV file</h3>
  * <pre>{@code
  *     CSV csv = new CSV();
@@ -80,7 +77,6 @@ import java.util.stream.Stream;
  *     csv.writeJSON( new File("addresses.json") ); // Write to JSON format
  *     csv.writeXML( new File("addresses.xnk") ); // Write to XML format
  * }</pre>
- * <p>
  * <h3>Querying a CSV file</h3>
  * <p>The following example illustrates a simple query. To see more advanced examples please see the
  * documentation for the Query class.</p>
@@ -96,7 +92,6 @@ import java.util.stream.Stream;
  *         System.out.println( r.getObject(presidency) );
  *     }
  * }</pre>
- * <p>
  * <h3>Building a CSV file</h3>
  * <pre>{@code
  *     CSV csv = new CSV();

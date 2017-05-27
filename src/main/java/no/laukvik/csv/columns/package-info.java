@@ -1,6 +1,6 @@
 /**
  * Contains classes that supported column types to be used inCSV.
- * <p>
+ *
  * <h3>Building columns</h3>
  * <p>The following example shows how to construct all possible column types.</p>
  * <pre>{@code
@@ -14,7 +14,7 @@
  * UrlColumn web = csv.addUrlColumn("web");
  * BigDecimalColumn scientific = csv.addBigDecimalColumn("scientific");
  * }</pre>
- * <p>
+ *
  * <h3>Setting the column values</h3>
  * <p>The follow example shows how to set the values in a row.</p>
  * <pre>{@code

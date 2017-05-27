@@ -1,7 +1,6 @@
 /**
  * The statistics package contains classes for calculating frequency distribution and divide numbers
  * into labelled range of numbers.
- * <p>
  * <h3>Frequency distribution</h3>
  * <p>Example: </p>
  * <pre>{@code
@@ -15,14 +14,11 @@
  *    System.out.println(key + ": " + distribution.getCount(key));
  * }
  * }</pre>
- * <p>
  * <p>The output of the example above:</p>
  * <pre>{@code
  * Barack Obama: 2
  * Donald Trump: 1
  * }</pre>
- * <p>
- * <p>
  * <h3>Ranged distribution</h3>
  * <p>Example: Using four ranges of integers and accumulate values</p>
  * <pre>{@code
@@ -46,7 +42,6 @@
  * System.out.println(r.getLabel() + ": " + r.getCount());
  * }
  * }</pre>
- * <p>
  * <p>The output of the example above:</p>
  * <pre>{@code
  * Q1: 2

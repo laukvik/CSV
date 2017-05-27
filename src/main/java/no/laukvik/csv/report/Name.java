@@ -24,4 +24,8 @@ public final class Name extends Aggregate {
         return getColumn().getName();
     }
 
+    @Override
+    public String toString() {
+        return "Name(" + getColumn().getName() + ")";
+    }
 }
