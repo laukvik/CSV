@@ -1,6 +1,5 @@
 /**
  * <p>Contains classes for working with queries.</p>
- * <p>
  * <h3>Using a query</h3>
  * <p>The following example illustrates how to perform a simple query.</p>
  * <pre>{@code

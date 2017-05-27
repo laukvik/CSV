@@ -35,7 +35,6 @@ import java.util.TreeMap;
 
 /**
  * Represents a single row entry in the CSV.
- * <p>
  * <h3>Setting values in a row</h3>
  * <pre>{@code
  * CSV csv = new CSV();
@@ -44,8 +43,6 @@ import java.util.TreeMap;
  * Row = csv.addRow();
  * row.set( first, "Bill" ).set( salary, 250000 );
  * }</pre>
- * <p>
- * <p>
  * <h3>Getting values in a row</h3>
  * <pre>{@code
  * CSV csv = new CSV();
