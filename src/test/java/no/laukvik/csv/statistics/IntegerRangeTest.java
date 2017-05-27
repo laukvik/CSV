@@ -29,6 +29,7 @@ public class IntegerRangeTest {
         assertTrue(r.contains(4));
         assertFalse(r.contains(6));
         assertFalse(r.contains(-6));
+        assertFalse(r.contains(null));
     }
 
 }

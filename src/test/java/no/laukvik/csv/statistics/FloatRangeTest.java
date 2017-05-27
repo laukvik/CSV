@@ -29,6 +29,7 @@ public class FloatRangeTest {
         assertFalse(r.contains(1.2f));
         assertFalse(r.contains(1.21f));
         assertFalse(r.contains(-0.21f));
+        assertFalse(r.contains(null));
     }
 
 }

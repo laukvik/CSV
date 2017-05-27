@@ -18,6 +18,7 @@ package no.laukvik.csv;
 import no.laukvik.csv.columns.BigDecimalColumn;
 import no.laukvik.csv.columns.BooleanColumn;
 import no.laukvik.csv.columns.ByteColumn;
+import no.laukvik.csv.columns.ColumnAlreadyExistException;
 import no.laukvik.csv.columns.DateColumn;
 import no.laukvik.csv.columns.DoubleColumn;
 import no.laukvik.csv.columns.FloatColumn;
@@ -38,7 +39,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
@@ -128,6 +128,13 @@ public class CSVTest {
         assertNotNull(ic);
         assertNotNull(sc);
         assertNotNull(uc);
+    }
+
+    @Test(expected = ColumnAlreadyExistException.class)
+    public void addColumn() {
+        CSV csv = new CSV();
+        csv.addColumn(new IntegerColumn("Tall"));
+        csv.addColumn(new IntegerColumn("Tall"));
     }
 
     @Test
@@ -669,21 +676,21 @@ public class CSVTest {
         assertEquals(3, distinct.size());
     }
 
-    @Test
-    public void buildFrequencyDistribution_url() throws Exception {
-        CSV csv = new CSV();
-        UrlColumn c = csv.addUrlColumn("First");
-        csv.addRow().set(c, new URL("http://localhost/a"));
-        csv.addRow().set(c, new URL("http://localhost/b"));
-        csv.addRow().set(c, new URL("http://localhost/c"));
-        csv.addRow().set(c, new URL("http://localhost/a"));
-        csv.addRow().set(c, new URL("http://localhost/a"));
-        csv.addRow().set(c, null);
+//    @Test
+//    public void buildFrequencyDistribution_url() throws Exception {
+//        CSV csv = new CSV();
+//        UrlColumn c = csv.addUrlColumn("First");
+//        csv.addRow().set(c, new URI("http://localhost/a"));
+//        csv.addRow().set(c, new URI("http://localhost/b"));
+//        csv.addRow().set(c, new URI("http://localhost/c"));
+//        csv.addRow().set(c, new URI("http://localhost/a"));
+//        csv.addRow().set(c, new URI("http://localhost/a"));
+//        csv.addRow().set(c, null);
 //        FrequencyDistribution<URL> fd = csv.buildFrequencyDistribution(c);
 //        assertEquals(3, fd.getKeys().size());
-        // Set<URL> distinct = csv.buildDistinctValues(c);
-        // assertEquals(3, distinct.size());
-    }
+//        Set<URL> distinct = csv.buildDistinctValues(c);
+//        assertEquals(3, distinct.size());
+//    }
 
     @Test
     public void buildFrequencyDistribution_boolean() throws Exception {

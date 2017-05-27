@@ -33,6 +33,10 @@ public class FloatDistributionTest {
         assertEquals(2, r2.getCount());
         assertEquals(1, r3.getCount());
         assertEquals(0, r4.getCount());
+
+        assertEquals(0, dist.getNullCount());
+        dist.addValue(null);
+        assertEquals(1, dist.getNullCount());
     }
 
 }

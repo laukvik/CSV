@@ -26,6 +26,7 @@ public class DoubleRangeTest {
         DoubleRange r = new DoubleRange("test", -0.3, 0.53);
         assertFalse(r.contains(0.531));
         assertFalse(r.contains(-0.31));
+        assertFalse(r.contains(null));
     }
 
 }

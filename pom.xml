@@ -145,15 +145,12 @@
                     <instrumentation>
                         <excludes>
                             <exclude>no/laukvik/csv/**/*Exception.class</exclude>
-                            <ignore>no/laukvik/csv/statistics/*.*</ignore>
-                            <ignore>no/laukvik/csv/report/*.*</ignore>
-                            <ignore>no/laukvik/csv/io/xml/*.*</ignore>
                         </excludes>
                     </instrumentation>
                     <check>
                         <branchRate>70</branchRate>
                         <lineRate>70</lineRate>
-                        <haltOnFailure>true</haltOnFailure>
+                        <haltOnFailure>false</haltOnFailure>
                         <totalBranchRate>80</totalBranchRate>
                         <totalLineRate>80</totalLineRate>
                         <packageLineRate>70</packageLineRate>

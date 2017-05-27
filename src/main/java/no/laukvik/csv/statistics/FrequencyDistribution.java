@@ -79,7 +79,7 @@ public final class FrequencyDistribution<T> {
      * @param key the key
      * @return the frequency
      */
-    public Integer getCount(final String key) {
+    public Integer getCount(final T key) {
         return map.get(key);
     }
 

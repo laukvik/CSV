@@ -2,28 +2,25 @@ package no.laukvik.csv.statistics;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
+import static org.junit.Assert.assertEquals;
+
 public class BigDecimalDistributionTest {
 
     @Test
-    public void buildRange() throws Exception {
+    public void addRange() {
         BigDecimalDistribution d = new BigDecimalDistribution();
-//        d.buildRange(new BigDecimal("0.01"), new BigDecimal("0.032"));
-//        assertEquals(10, d.getRanges().size());
-//        assertEquals(new BigDecimal("0.01"), d.getRangeSize());
-//
-//        assertEquals(new BigDecimal("0.00"), d.getRanges().get(0).from);
-//        assertEquals(new BigDecimal("0.01"), d.getRanges().get(0).to);
-//
-//        assertEquals(new BigDecimal("0.01"), d.getRanges().get(1).from);
-//        assertEquals(new BigDecimal("0.02"), d.getRanges().get(1).to);
-//
-//        assertEquals(new BigDecimal("0.02"), d.getRanges().get(2).from);
-//        assertEquals(new BigDecimal("0.03"), d.getRanges().get(2).to);
-//
-//        d.buildRange(new BigDecimal("0.1"), new BigDecimal("0.5"));
-//        assertEquals(new BigDecimal("0.1"), d.getRangeSize());
-//        d.buildRange(new BigDecimal("1"), new BigDecimal("9"));
-//        assertEquals(new BigDecimal("1"), d.getRangeSize());
+        d.addRange(new BigDecimalRange("Small", new BigDecimal("0.1"), new BigDecimal("0.5")));
+        d.addRange(new BigDecimalRange("Large", new BigDecimal("0.5"), new BigDecimal("1.0")));
+        assertEquals(2, d.getRanges().size());
+        assertEquals(0, d.getNullCount());
+        d.addValue(null);
+        assertEquals(1, d.getNullCount());
+        d.addValue(new BigDecimal("0.2"));
+        d.addValue(new BigDecimal("0.6"));
+        assertEquals(1, d.getRanges().get(0).getCount());
+        assertEquals(1, d.getRanges().get(1).getCount());
     }
 
 }
