@@ -34,7 +34,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.junit.Assert;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -46,6 +53,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -58,6 +66,21 @@ public class CSVTest {
     public static File getResource(String filename) {
         ClassLoader classLoader = CSVTest.class.getClassLoader();
         return new File(classLoader.getResource(filename).getFile());
+    }
+
+    public static boolean xsd_valid(File file) {
+        File schemaFile = new File("src/main/resources/csv.xsd"); // etc.
+        Source xmlFile = new StreamSource(file);
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        try {
+            Schema schema = schemaFactory.newSchema(schemaFile);
+            Validator validator = schema.newValidator();
+            validator.validate(xmlFile);
+            return true;
+        } catch (SAXException | IOException e) {
+            System.err.println(e.getMessage());
+        }
+        return false;
     }
 
     @Test
@@ -86,6 +109,8 @@ public class CSVTest {
         assertEquals(false, csv.isAutoDetectSeparator());
     }
 
+    // ------ Columns ------
+
     @Test
     public void settersGetters() {
         CSV csv = new CSV();
@@ -104,8 +129,6 @@ public class CSVTest {
         assertEquals((Character) CSV.PIPE, csv.getSeparatorChar());
         assertEquals((Character) CSV.QUOTE_SINGLE, csv.getQuoteChar());
     }
-
-    // ------ Columns ------
 
     @Test
     public void addColumnByType() {
@@ -159,6 +182,8 @@ public class CSVTest {
         assertEquals(cols - 2, csv.getColumnCount());
     }
 
+    // ------ Rows ------
+
     @Test
     public void fireColumnMoved() throws CsvReaderException {
         CSV csv = new CSV();
@@ -168,8 +193,6 @@ public class CSVTest {
         assertEquals(first, csv.getColumn(1));
         assertEquals(last, csv.getColumn(0));
     }
-
-    // ------ Rows ------
 
     @Test
     public void buildDistinctValues() throws CsvReaderException {
@@ -239,14 +262,14 @@ public class CSVTest {
         assertEquals(-1, csv.indexOf("DontExist"));
     }
 
+    // ------ div ------
+
     @Test
     public void stream() throws CsvReaderException {
         CSV csv = new CSV();
         csv.readFile(getResource("presidents.csv"));
         assertEquals(44, csv.stream().count());
     }
-
-    // ------ div ------
 
     @Test
     public void clear() throws CsvReaderException {
@@ -256,6 +279,9 @@ public class CSVTest {
         assertEquals(0, csv.getRowCount());
     }
 
+
+    // ------ Reading ------
+
     @Test
     public void removeRows() throws CsvReaderException {
         CSV csv = new CSV();
@@ -264,15 +290,11 @@ public class CSVTest {
         assertEquals(0, csv.getRowCount());
     }
 
-
-    // ------ Reading ------
-
     @Test
     public void getRow() throws CsvReaderException {
         CSV csv = new CSV(getResource("presidents.csv"));
         assertNull(csv.getRow(5000));
     }
-
 
     @Test
     public void readUsingConstructor() throws CsvReaderException {
@@ -491,9 +513,24 @@ public class CSVTest {
     @Test
     public void writeXml() throws IOException, CsvWriterException {
         CSV csv = new CSV();
-        csv.addStringColumn("first");
+        StringColumn first = csv.addStringColumn("first");
+        csv.addRow().set(first, "Bill");
+
         File file = File.createTempFile("csvxmltest", "xml");
         csv.writeXML(file);
+        assertTrue(xsd_valid(file));
+    }
+
+    @Test
+    public void xml_valid() {
+        File xmlFile = new File("src/test/resources/csv-valid.xml");
+        assertTrue(xsd_valid(xmlFile));
+    }
+
+    @Test
+    public void xml_invalid() {
+        File xmlFile = new File("src/test/resources/csv-invalid.xml");
+        assertFalse(xsd_valid(xmlFile));
     }
 
     @Test
