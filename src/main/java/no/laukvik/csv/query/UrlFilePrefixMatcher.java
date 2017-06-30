@@ -63,7 +63,7 @@ public final class UrlFilePrefixMatcher implements ValueMatcher<URL> {
     }
 
     @Override
-    public boolean matches(URL value) {
+    public boolean matches(final URL value) {
         return values.contains(UrlColumn.getPrefix(value));
     }
 }

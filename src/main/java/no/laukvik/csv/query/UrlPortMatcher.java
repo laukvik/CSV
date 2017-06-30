@@ -46,6 +46,12 @@ public final class UrlPortMatcher implements ValueMatcher<URL> {
         this(urlColumn, Arrays.asList(value));
     }
 
+    /**
+     * The values of the column must be.
+     *
+     * @param urlColumn the column
+     * @param values    the values
+     */
     public UrlPortMatcher(final UrlColumn urlColumn, final List<Integer> values) {
         this.column = urlColumn;
         this.values = values;

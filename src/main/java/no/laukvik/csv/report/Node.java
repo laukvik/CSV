@@ -225,22 +225,44 @@ public final class Node {
         this.aggregateList.add(aggregate);
     }
 
+    /**
+     * Returns the aggregates.
+     *
+     * @return the aggregates.
+     */
     public List<Aggregate> getAggregates() {
         return aggregateList;
     }
 
+    /**
+     * Returns the minimum value.
+     *
+     * @return the minimum value
+     */
     public BigDecimal getMin() {
         return min;
     }
 
+    /**
+     * Returns the maximum value.
+     * @return the maximum value
+     */
     public BigDecimal getMax() {
         return max;
     }
 
+    /**
+     * Returns the sum of values.
+     * @return the sum
+     */
     public BigDecimal getSum() {
         return sum;
     }
 
+    /**
+     * Returns the average value.
+     * @return the average value
+     */
     public BigDecimal getAverage() {
         if (sum == null || sum.intValue() == 0) {
             return new BigDecimal(0);

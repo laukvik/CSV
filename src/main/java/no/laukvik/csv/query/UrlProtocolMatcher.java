@@ -46,6 +46,12 @@ public final class UrlProtocolMatcher implements ValueMatcher<URL> {
         this(urlColumn, Arrays.asList(value));
     }
 
+    /**
+     * The values of the column must be.
+     *
+     * @param urlColumn the column
+     * @param values    the values
+     */
     public UrlProtocolMatcher(final UrlColumn urlColumn, final List<String> values) {
         this.column = urlColumn;
         this.values = values;

@@ -11,14 +11,14 @@ public class DoubleRangeTest {
     public void addValue() throws Exception {
         DoubleRange r = new DoubleRange("test", -0.5, 0.5);
         r.addValue(0.51);
-        assertEquals(0, r.count);
+        assertEquals(0, r.getCount());
         r.addValue(-0.51);
-        assertEquals(0, r.count);
+        assertEquals(0, r.getCount());
 
         r.addValue(-0.50);
-        assertEquals(1, r.count);
+        assertEquals(1, r.getCount());
         r.addValue(0.50);
-        assertEquals(1, r.count);
+        assertEquals(1, r.getCount());
     }
 
     @Test

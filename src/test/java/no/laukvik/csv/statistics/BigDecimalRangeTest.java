@@ -15,11 +15,11 @@ public class BigDecimalRangeTest {
         BigDecimalRange r = new BigDecimalRange("", new BigDecimal(22), new BigDecimal(333));
         r.addValue(new BigDecimal(21));
         r.addValue(new BigDecimal(334));
-        assertEquals(0, r.count);
+        assertEquals(0, r.getCount());
         r.addValue(new BigDecimal(22));
-        assertEquals(1, r.count);
+        assertEquals(1, r.getCount());
         r.addValue(new BigDecimal(333));
-        assertEquals(1, r.count);
+        assertEquals(1, r.getCount());
     }
 
     @Test

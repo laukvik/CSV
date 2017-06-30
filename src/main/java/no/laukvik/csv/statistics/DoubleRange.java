@@ -24,7 +24,7 @@ public final class DoubleRange extends Range<Double> {
     @Override
     public void addValue(final Double value) {
         if (contains(value)) {
-            count++;
+            setCount(getCount() + 1);
         }
     }
 
@@ -39,7 +39,7 @@ public final class DoubleRange extends Range<Double> {
         if (value == null) {
             return false;
         }
-        return value >= from && value < to;
+        return value >= getFrom() && value < getTo();
     }
 
 }

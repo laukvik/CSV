@@ -24,7 +24,7 @@ public final class IntegerRange extends Range<Integer> {
     @Override
     public void addValue(final Integer value) {
         if (contains(value)) {
-            count++;
+            setCount(getCount() + 1);
         }
     }
 
@@ -39,7 +39,7 @@ public final class IntegerRange extends Range<Integer> {
         if (value == null) {
             return false;
         }
-        return value >= from && value < to;
+        return value >= getFrom() && value < getTo();
     }
 
 }

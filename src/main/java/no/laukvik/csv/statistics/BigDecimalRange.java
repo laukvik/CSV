@@ -26,7 +26,7 @@ public final class BigDecimalRange extends Range<BigDecimal> {
     @Override
     public void addValue(final BigDecimal value) {
         if (contains(value)) {
-            count++;
+            setCount(getCount() + 1);
         }
     }
 
@@ -41,7 +41,7 @@ public final class BigDecimalRange extends Range<BigDecimal> {
         if (value == null) {
             return false;
         }
-        return value.compareTo(from) >= 0 && value.compareTo(to) < 0;
+        return value.compareTo(getFrom()) >= 0 && value.compareTo(getTo()) < 0;
     }
 
 }

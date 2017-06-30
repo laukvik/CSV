@@ -12,14 +12,14 @@ public class IntegerRangeTest {
     public void addValue() throws Exception {
         IntegerRange r = new IntegerRange("Test", -5, 5);
         r.addValue(6);
-        assertEquals(0, r.count);
+        assertEquals(0, r.getCount());
         r.addValue(-6);
-        assertEquals(0, r.count);
+        assertEquals(0, r.getCount());
 
         r.addValue(4);
-        assertEquals(1, r.count);
+        assertEquals(1, r.getCount());
         r.addValue(-5);
-        assertEquals(2, r.count);
+        assertEquals(2, r.getCount());
     }
 
     @Test

@@ -61,6 +61,12 @@ public final class UrlColumn extends Column<URL> {
         return filename.isEmpty() ? null : filename;
     }
 
+    /**
+     * Returns the postfix of the URL.
+     *
+     * @param url the URL
+     * @return the postfix
+     */
     public static String getPostfix(final URL url) {
         String filename = getFilename(url);
         if (filename == null) {
@@ -74,6 +80,11 @@ public final class UrlColumn extends Column<URL> {
         }
     }
 
+    /**
+     * Returns the prefix of the URL.
+     * @param url the URL
+     * @return the prefix
+     */
     public static String getPrefix(final URL url) {
         String filename = getFilename(url);
         if (filename == null) {

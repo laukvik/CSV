@@ -12,14 +12,14 @@ public class FloatRangeTest {
     public void addValue() throws Exception {
         FloatRange r = new FloatRange("test", -0.5f, 1.5f);
         r.addValue(-0.51f);
-        assertEquals(0, r.count);
+        assertEquals(0, r.getCount());
         r.addValue(1.51f);
-        assertEquals(0, r.count);
+        assertEquals(0, r.getCount());
 
         r.addValue(-0.5f);
-        assertEquals(1, r.count);
+        assertEquals(1, r.getCount());
         r.addValue(1.5f);
-        assertEquals(1, r.count);
+        assertEquals(1, r.getCount());
     }
 
     @Test

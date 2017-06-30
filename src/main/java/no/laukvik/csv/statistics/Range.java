@@ -10,22 +10,22 @@ public abstract class Range<T extends Number> {
     /**
      * The label.
      */
-    final String label;
+    private final String label;
     /**
      * The minimum value.
      */
-    final T from;
+    private final T from;
     /**
      * The maximum value.
      */
-    final T to;
+    private final T to;
     /**
      * The amount of entries.
      */
-    int count;
+    private int count;
 
     /**
-     * Creates a new labelled range
+     * Creates a new labelled range.
      *
      * @param label the label
      * @param from  the minimum value
@@ -43,7 +43,7 @@ public abstract class Range<T extends Number> {
      *
      * @param value the value
      */
-    public abstract void addValue(final T value);
+    public abstract void addValue(T value);
 
     /**
      * Checks whether the value is in this range.
@@ -51,7 +51,7 @@ public abstract class Range<T extends Number> {
      * @param value the value
      * @return true when in this range
      */
-    public abstract boolean contains(final T value);
+    public abstract boolean contains(T value);
 
     /**
      * Returns the amount of values.
@@ -63,11 +63,38 @@ public abstract class Range<T extends Number> {
     }
 
     /**
+     * Sets the count.
+     *
+     * @param count the count
+     */
+    public void setCount(final int count) {
+        this.count = count;
+    }
+
+    /**
      * Returns the label.
      *
      * @return the label
      */
     public String getLabel() {
         return label;
+    }
+
+    /**
+     * Returns the from value.
+     *
+     * @return the from value
+     */
+    public T getFrom() {
+        return from;
+    }
+
+    /**
+     * Returns the to value.
+     *
+     * @return the to value
+     */
+    public T getTo() {
+        return to;
     }
 }

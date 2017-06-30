@@ -45,6 +45,12 @@ public final class PrefixMatcher implements ValueMatcher<String> {
         this(stringColumn, Arrays.asList(value));
     }
 
+    /**
+     * The values of the column must be.
+     *
+     * @param stringColumn the column
+     * @param values       the value
+     */
     public PrefixMatcher(final StringColumn stringColumn, final List<String> values) {
         this.column = stringColumn;
         this.values = values;

@@ -22,7 +22,7 @@ public final class Avg extends Aggregate {
     private long count;
 
     /**
-     * The IntegerColumn to aggregate
+     * The IntegerColumn to aggregate.
      *
      * @param column the column
      */

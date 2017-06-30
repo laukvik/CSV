@@ -24,7 +24,7 @@ public final class FloatRange extends Range<Float> {
     @Override
     public void addValue(final Float value) {
         if (contains(value)) {
-            count++;
+            setCount(getCount() + 1);
         }
     }
 
@@ -39,7 +39,7 @@ public final class FloatRange extends Range<Float> {
         if (value == null) {
             return false;
         }
-        return value >= from && value < to;
+        return value >= getFrom() && value < getTo();
     }
 
 }
