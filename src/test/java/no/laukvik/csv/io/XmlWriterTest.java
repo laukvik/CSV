@@ -17,9 +17,7 @@ package no.laukvik.csv.io;
 
 import no.laukvik.csv.CSV;
 import no.laukvik.csv.columns.StringColumn;
-import org.junit.Assert;
 import org.junit.Test;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -52,38 +50,6 @@ public class XmlWriterTest {
         DocumentBuilder builder = factory.newDocumentBuilder();
 
         builder.parse(file);
-    }
-
-    @Test
-    public void shouldWriteWithCustomElementNames() throws IOException, SAXException, ParserConfigurationException {
-        File file = File.createTempFile("EmptyRows", ".xml");
-
-        CSV csv = new CSV();
-        StringColumn first = csv.addStringColumn("First");
-
-        csv.addRow().set(first, "Bob");
-        csv.addRow().set(first, "Dylan");
-
-        XmlWriter writer = new XmlWriter("people", "person");
-        writer.writeCSV(csv, new FileOutputStream(file));
-
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-
-        Document document = builder.parse(file);
-
-        Assert.assertEquals("people", document.getDocumentElement().getNodeName());
-        Assert.assertEquals(2, document.getDocumentElement().getElementsByTagName("person").getLength());
-    }
-
-    @Test(expected = IOException.class)
-    public void write() throws CsvWriterException, IOException {
-        CSV csv = new CSV();
-        StringColumn c = csv.addStringColumn("first");
-        csv.addRow().set(c, "Bill");
-
-        XmlWriter writer = new XmlWriter("people", "person");
-        writer.writeCSV(csv, new FileOutputStream(new File("")));
     }
 
 }

@@ -79,30 +79,37 @@ public final class XmlWriter implements DatasetFileWriter {
     /**
      * The name of the root element to write.
      */
-    private final String rootElementName;
+    private static final String ROOT_ELEMENT_NAME = "csv";
+
+    /**
+     * The name of the rows element to write.
+     */
+    private static final String ROWS_ELEMENT_NAME = "rows";
+
     /**
      * The name of the row element to write.
      */
-    private final String rowElementName;
+    private static final String ROW_ELEMENT_NAME = "row";
 
     /**
-     * Writes the CSV to the outputStream using the specified rootElementName and rowElementName.
-     *
-     * @param rootName the name of the root element in XML
-     * @param rowName  the name of the element representing a row
+     * The name of the columns element to write.
      */
-    public XmlWriter(final String rootName, final String rowName) {
-        this.rootElementName = rootName;
-        this.rowElementName = rowName;
-    }
+    private static final String COLUMNS_ELEMENT_NAME = "columns";
 
     /**
-     * Writes the CSV to the outputStream using the default values for rootElementName and rowElementName.
+     * The name of the column element to write.
      */
-    public XmlWriter() {
-        this("rows", "row");
-    }
+    private static final String COLUMN_ELEMENT_NAME = "column";
 
+    /**
+     * The name of the attribute for a column name.
+     */
+    private static final String ATTR_NAME = "name";
+
+    /**
+     * The name of the attribute for a column type.
+     */
+    private static final String ATTR_TYPE = "type";
 
     /**
      * Writes the CSV to the file.
@@ -129,20 +136,70 @@ public final class XmlWriter implements DatasetFileWriter {
      */
     public void writeCSV(final CSV csv, final OutputStream out) throws IOException {
         Charset charset = csv.getCharset();
-        out.write(("<?xml version=\"1.0\" encoding=\"" + charset.name() + "\"?>").getBytes());
+        out.write(("<?xml version=\"1.0\" encoding=\"" + charset.name() + "\" standalone=\"yes\"?>").getBytes());
         out.write(CR);
         out.write(LINEFEED);
         // Root
         out.write(OPEN);
-        out.write(this.rootElementName.getBytes());
+        out.write(ROOT_ELEMENT_NAME.getBytes());
         out.write(CLOSE);
+
+        // Columns
+        out.write(LINEFEED);
+        out.write(TAB);
+        out.write(OPEN);
+        out.write(COLUMNS_ELEMENT_NAME.getBytes());
+        out.write(CLOSE);
+        out.write(LINEFEED);
+
+        for (int x = 0; x < csv.getColumnCount(); x++) {
+            out.write(TAB);
+            out.write(TAB);
+            out.write(OPEN);
+            out.write(COLUMN_ELEMENT_NAME.getBytes());
+
+            out.write(SPACE);
+
+            out.write(ATTR_NAME.getBytes());
+            out.write(EQUAL);
+            out.write(QUOTATION_MARK);
+            out.write(csv.getColumn(x).getName().getBytes());
+            out.write(QUOTATION_MARK);
+
+            out.write(SPACE);
+
+            out.write(ATTR_TYPE.getBytes());
+            out.write(EQUAL);
+            out.write(QUOTATION_MARK);
+            out.write(csv.getColumn(x).getClass().getSimpleName().getBytes());
+            out.write(QUOTATION_MARK);
+
+            out.write(SLASH);
+
+            out.write(CLOSE);
+            out.write(LINEFEED);
+        }
+
+        out.write(TAB);
+        out.write(OPEN);
+        out.write(SLASH);
+        out.write(COLUMNS_ELEMENT_NAME.getBytes());
+        out.write(CLOSE);
+
+        out.write(LINEFEED);
+        out.write(TAB);
+        out.write(OPEN);
+        out.write(ROWS_ELEMENT_NAME.getBytes());
+        out.write(CLOSE);
+
         // Iterate rows
         for (int y = 0; y < csv.getRowCount(); y++) {
             out.write(CR);
             out.write(LINEFEED);
             out.write(TAB);
+            out.write(TAB);
             out.write(OPEN);
-            out.write(this.rowElementName.getBytes());
+            out.write(ROW_ELEMENT_NAME.getBytes());
             Row r = csv.getRow(y);
             for (int x = 0; x < csv.getColumnCount(); x++) {
                 Column col = csv.getColumn(x);
@@ -174,10 +231,18 @@ public final class XmlWriter implements DatasetFileWriter {
             out.write(CR);
             out.write(LINEFEED);
         }
+
+        out.write(TAB);
+        out.write(OPEN);
+        out.write(SLASH);
+        out.write(ROWS_ELEMENT_NAME.getBytes());
+        out.write(CLOSE);
+        out.write(LINEFEED);
+
         // Close root element
         out.write(OPEN);
         out.write(SLASH);
-        out.write(this.rootElementName.getBytes());
+        out.write(ROOT_ELEMENT_NAME.getBytes());
         out.write(CLOSE);
         out.flush();
         out.close();

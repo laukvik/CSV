@@ -234,6 +234,8 @@
                     <include>**/*.csv</include>
                     <include>**/*.properties</include>
                     <include>**/*.html</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.xsd</include>
                     <include>*.html</include>
                 </includes>
             </resource>
