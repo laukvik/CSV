@@ -60,15 +60,14 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-
 public class CSVTest {
 
-    public static File getResource(String filename) {
+    private static File getResource(String filename) {
         ClassLoader classLoader = CSVTest.class.getClassLoader();
         return new File(classLoader.getResource(filename).getFile());
     }
 
-    public static boolean xsd_valid(File file) {
+    private static boolean xsd_valid(File file) {
         File schemaFile = new File("src/main/resources/csv.xsd"); // etc.
         Source xmlFile = new StreamSource(file);
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -304,13 +303,6 @@ public class CSVTest {
     }
 
     @Test
-    public void iterator() throws CsvReaderException {
-        CSV csv = new CSV();
-        for (Row r : csv.findRows()) {
-        }
-    }
-
-    @Test
     public void createNew() {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("First");
@@ -515,7 +507,6 @@ public class CSVTest {
         CSV csv = new CSV();
         StringColumn first = csv.addStringColumn("first");
         csv.addRow().set(first, "Bill");
-
         File file = File.createTempFile("csvxmltest", "xml");
         csv.writeXML(file);
         assertTrue(xsd_valid(file));

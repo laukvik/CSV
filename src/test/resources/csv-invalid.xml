@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rows>
+<csv>
     <row president="Donald Trump">
         <b>Not allowed</b>
     </row>
     <row order="2"/>
-</rows>
+</csv>

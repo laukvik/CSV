@@ -906,7 +906,10 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<BigDecimal> buildDistinctValues(final BigDecimalColumn column) {
-        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows
+                .stream().map(r -> r.get(column))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -916,7 +919,10 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<Boolean> buildDistinctValues(final BooleanColumn column) {
-        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows
+                .stream().map(r -> r.get(column))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -926,7 +932,10 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<Date> buildDistinctValues(final DateColumn column) {
-        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows
+                .stream().map(r -> r.get(column))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -936,7 +945,10 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<Double> buildDistinctValues(final DoubleColumn column) {
-        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows
+                .stream().map(r -> r.get(column))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -946,7 +958,10 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<Float> buildDistinctValues(final FloatColumn column) {
-        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows
+                .stream().map(r -> r.get(column))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -956,7 +971,10 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<Integer> buildDistinctValues(final IntegerColumn column) {
-        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows
+                .stream().map(r -> r.get(column))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -966,7 +984,10 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<String> buildDistinctValues(final StringColumn column) {
-        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows
+                .stream().map(r -> r.get(column))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**
@@ -976,7 +997,10 @@ public final class CSV implements Serializable {
      * @return the distinct values
      */
     public Set<URL> buildDistinctValues(final UrlColumn column) {
-        return rows.stream().map(r -> r.get(column)).filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+        return rows
+                .stream().map(r -> r.get(column))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**

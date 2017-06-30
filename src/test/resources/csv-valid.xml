@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<rows>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<csv>
     <columns>
-
+        <column name="first" type="StringColumn"/>
     </columns>
-    <row president="Donald Trump"/>
-</rows>
+    <rows>
+        <row first="Bill"/>
+    </rows>
+</csv>
