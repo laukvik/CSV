@@ -143,10 +143,10 @@ public final class Query {
     // ************* COLUMN ************************************************************************************
 
     /**
-     * The value in the column must be empty.
+     * Matches empty values.
      *
      * @param column the column
-     * @return the same query instance
+     * @return the query
      */
     public Query isEmpty(final Column column) {
         addMatcher(new EmptyMatcher(column));
@@ -154,10 +154,10 @@ public final class Query {
     }
 
     /**
-     * The value in the column must be non null.
+     * Matches non empty values.
      *
      * @param column the column
-     * @return the same query instance
+     * @return the query
      */
     public Query isNotEmpty(final Column column) {
         addMatcher(new NotEmptyMatcher(column));
@@ -167,21 +167,50 @@ public final class Query {
 
     // ************* BIGDECIMAL ************************************************************************************
 
-    public Query is(final BigDecimalColumn column, final BigDecimal... list) {
-        addMatcher(new BigDecimalMatcher(column, list));
+    /**
+     * Matches values equal to.
+     *
+     * @param column the column
+     * @param value  the value
+     * @return the query
+     */
+    public Query is(final BigDecimalColumn column, final BigDecimal... value) {
+        addMatcher(new BigDecimalMatcher(column, value));
         return this;
     }
 
+    /**
+     * Matches a value between a minimum and maximum value.
+     *
+     * @param column the column
+     * @param min the minimum value
+     * @param max the maximum value
+     * @return the query
+     */
     public Query isBetween(final BigDecimalColumn column, final BigDecimal min, final BigDecimal max) {
         addMatcher(new BigDecimalBetweenMatcher(column, min, max));
         return this;
     }
 
+    /**
+     * Matches values less than.
+     *
+     * @param column the column
+     * @param value the value
+     * @return the query
+     */
     public Query isLessThan(final BigDecimalColumn column, final BigDecimal value) {
         addMatcher(new BigDecimalLessThanMatcher(column, value));
         return this;
     }
 
+    /**
+     * Matches values greater than.
+     *
+     * @param column the column
+     * @param value the value
+     * @return the query
+     */
     public Query isGreaterThan(final BigDecimalColumn column, final BigDecimal value) {
         addMatcher(new BigDecimalGreaterThanMatcher(column, value));
         return this;
@@ -190,22 +219,49 @@ public final class Query {
 
     // ************* DOUBLE ************************************************************************************
 
-    public Query is(final DoubleColumn column, final Double... list) {
-        addMatcher(new DoubleMatcher(column, list));
+    /**
+     * Matches values equal to.
+     *
+     * @param column the column
+     * @param value  the value
+     * @return the query
+     */
+    public Query is(final DoubleColumn column, final Double... value) {
+        addMatcher(new DoubleMatcher(column, value));
         return this;
     }
 
 
+    /**
+     * Matches a value between a minimum and maximum value.
+     *
+     * @param column the column
+     * @param min the minimum value
+     * @param max the maximum value
+     * @return the query
+     */
     public Query isBetween(final DoubleColumn column, final Double min, final Double max) {
         addMatcher(new DoubleBetweenMatcher(column, min, max));
         return this;
     }
 
+    /**
+     * Matches values less than.
+     * @param column the column
+     * @param value the value
+     * @return the query
+     */
     public Query isLessThan(final DoubleColumn column, final Double value) {
         addMatcher(new DoubleLessThanMatcher(column, value));
         return this;
     }
 
+    /**
+     * Matches values greater than.
+     * @param column the column
+     * @param value the value
+     * @return the query
+     */
     public Query isGreaterThan(final DoubleColumn column, final Double value) {
         addMatcher(new DoubleGreaterThanMatcher(column, value));
         return this;
@@ -215,32 +271,60 @@ public final class Query {
     // ************* STRING ************************************************************************************
 
     /**
-     * The value in the column must be in the list.
+     * Matches values equal to.
      *
      * @param column the column
-     * @param list   the list of values
-     * @return the same query instance
+     * @param value the value
+     * @return the query
      */
-    public Query is(final StringColumn column, final String... list) {
-        addMatcher(new StringInMatcher(column, list));
+    public Query is(final StringColumn column, final String... value) {
+        addMatcher(new StringInMatcher(column, value));
         return this;
     }
 
-    public Query isFirstletter(final StringColumn column, final String... list) {
-        addMatcher(new FirstLetterMatcher(column, list));
+    /**
+     * Matches the first letter.
+     *
+     * @param column the column
+     * @param value  the value
+     * @return the query
+     */
+    public Query isFirstletter(final StringColumn column, final String... value) {
+        addMatcher(new FirstLetterMatcher(column, value));
         return this;
     }
 
-    public Query isLength(final StringColumn column, final Integer... list) {
-        addMatcher(new StringLengthMatcher(column, list));
+    /**
+     * Matches the String length.
+     *
+     * @param column the column
+     * @param value  the value
+     * @return the query
+     */
+    public Query isLength(final StringColumn column, final Integer... value) {
+        addMatcher(new StringLengthMatcher(column, value));
         return this;
     }
 
-    public Query isWordCount(final StringColumn column, final Integer... list) {
-        addMatcher(new WordCountMatcher(column, list));
+    /**
+     * Matches the number of words.
+     *
+     * @param column the column
+     * @param value  the value
+     * @return the query
+     */
+    public Query isWordCount(final StringColumn column, final Integer... value) {
+        addMatcher(new WordCountMatcher(column, value));
         return this;
     }
 
+    /**
+     * Matches using a regular expression pattern.
+     *
+     * @param column the column
+     * @param pattern the regular expression pattern
+     * @return the query
+     */
     public Query isRegEx(final StringColumn column, final String pattern) {
         addMatcher(new RegExMatcher(column, Pattern.compile(pattern)));
         return this;
@@ -250,27 +334,47 @@ public final class Query {
     // ************* FLOAT ************************************************************************************
 
     /**
-     * The value in the column must be in the list.
+     * Matches values equal to.
      *
      * @param column the column
-     * @param floats the list of Float
-     * @return the same query instance
+     * @param value the value
+     * @return the query
      */
-    public Query is(final FloatColumn column, final Float... floats) {
-        addMatcher(new FloatMatcher(column, floats));
+    public Query is(final FloatColumn column, final Float... value) {
+        addMatcher(new FloatMatcher(column, value));
         return this;
     }
 
+    /**
+     * Matches a value between a minimum and maximum value.
+     *
+     * @param column the column
+     * @param min the minimum value
+     * @param max the maximum value
+     * @return the query
+     */
     public Query isBetween(final FloatColumn column, final Float min, final Float max) {
         addMatcher(new FloatBetweenMatcher(column, min, max));
         return this;
     }
 
+    /**
+     * Matches values less than.
+     * @param column the column
+     * @param value the value
+     * @return the query
+     */
     public Query isLessThan(final FloatColumn column, final Float value) {
         addMatcher(new FloatLessThanMatcher(column, value));
         return this;
     }
 
+    /**
+     * Matches values greater than.
+     * @param column the column
+     * @param value the value
+     * @return the query
+     */
     public Query isGreaterThan(final FloatColumn column, final Float value) {
         addMatcher(new FloatGreaterThanMatcher(column, value));
         return this;
@@ -281,24 +385,24 @@ public final class Query {
 
 
     /**
-     * The value in the column must be in the list.
+     * Matches values equal to.
      *
      * @param column the column
-     * @param list   the list of integers
-     * @return the same query instance
+     * @param value   the list of integers
+     * @return the query
      */
-    public Query is(final IntegerColumn column, final Integer... list) {
-        addMatcher(new IntegerIsInMatcher(column, list));
+    public Query is(final IntegerColumn column, final Integer... value) {
+        addMatcher(new IntegerIsInMatcher(column, value));
         return this;
     }
 
     /**
-     * The value in the column must be same or more than minimum and less than or same as maximum.
+     * Matches a value between a minimum and maximum value.
      *
      * @param column the column
-     * @param min    the minimum value
-     * @param max    the maximum value
-     * @return the same query instance
+     * @param min the minimum value
+     * @param max the maximum value
+     * @return the query
      */
     public Query isBetween(final IntegerColumn column, final int min, final int max) {
         addMatcher(new IntegerBetweenMatcher(column, min, max));
@@ -306,11 +410,11 @@ public final class Query {
     }
 
     /**
-     * The value in the column must be less thn the value.
+     * Matches values less than.
      *
      * @param column the column
      * @param value  the value
-     * @return the same query instance
+     * @return the query
      */
     public Query isLessThan(final IntegerColumn column, final int value) {
         addMatcher(new IntegerLessThanMatcher(column, value));
@@ -318,11 +422,11 @@ public final class Query {
     }
 
     /**
-     * The value in the column must be greater than the value.
+     * Matches values greater than.
      *
      * @param column the column
      * @param value  the value
-     * @return the same query instance
+     * @return the query
      */
     public Query isGreaterThan(final IntegerColumn column, final int value) {
         addMatcher(new IntegerGreaterThanMatcher(column, value));
@@ -333,28 +437,36 @@ public final class Query {
     // ************* DATE ************************************************************************************
 
     /**
-     * The value in the column must match either of the dates.
+     * Matches values equal to.
      *
      * @param column the column
      * @param dates  the dates
-     * @return the same query instance
+     * @return the query
      */
     public Query is(final DateColumn column, final Date... dates) {
         addMatcher(new DateIsInMatcher(column, dates));
         return this;
     }
 
+    /**
+     * Matches a value between a minimum and maximum value.
+     *
+     * @param column the column
+     * @param min the minimum value
+     * @param max the maximum value
+     * @return the query
+     */
     public Query isBetween(final DateColumn column, final Date min, final Date max) {
         addMatcher(new DateBetweenMatcher(column, min, max));
         return this;
     }
 
     /**
-     * The value in the column must be isBefore the date.
+     * Matches dates before.
      *
      * @param column the column
      * @param date   the date
-     * @return the same query instance
+     * @return the query
      */
     public Query isBefore(final DateColumn column, final Date date) {
         addMatcher(new DateLessThanMatcher(column, date));
@@ -362,11 +474,11 @@ public final class Query {
     }
 
     /**
-     * The value in the column must be isAfter the date.
+     * Matches dates after.
      *
      * @param column the column
      * @param date   the date
-     * @return the same query instance
+     * @return the query
      */
     public Query isAfter(final DateColumn column, final Date date) {
         addMatcher(new DateGreaterThanMatcher(column, date));
@@ -375,59 +487,108 @@ public final class Query {
 
 
     /**
-     * The year in the column must be the same as year.
+     * Matches the year.
      *
      * @param column the column
      * @param year   the year
-     * @return the same query instance
+     * @return the query
      */
     public Query isYear(final DateColumn column, final Integer... year) {
         addMatcher(new YearMatcher(column, year));
         return this;
     }
 
+    /**
+     * Matches the month.
+     *
+     * @param column the column
+     * @param months the month
+     * @return the query
+     */
     public Query isMonth(final DateColumn column, final Integer... months) {
         addMatcher(new MonthMatcher(column, months));
         return this;
     }
 
     /**
-     * One of the weeks must match the value.
+     * Matches the week number.
      *
      * @param column the column
      * @param weeks  the weeks
-     * @return the same query instance
+     * @return the query
      */
     public Query isWeek(final DateColumn column, final Integer... weeks) {
         addMatcher(new WeekMatcher(column, weeks));
         return this;
     }
 
+    /**
+     * Matches the day of month.
+     *
+     * @param column the column
+     * @param days the day of month
+     * @return the query
+     */
     public Query isDayOfMonth(final DateColumn column, final Integer... days) {
         addMatcher(new DateOfMonthMatcher(column, days));
         return this;
     }
 
+    /**
+     * Matches the weekday.
+     *
+     * @param column the column
+     * @param weekdays the weekdays
+     * @return the query
+     */
     public Query isWeekday(final DateColumn column, final Integer... weekdays) {
         addMatcher(new WeekdayMatcher(column, weekdays));
         return this;
     }
 
+    /**
+     * Matches the hour.
+     *
+     * @param column the column
+     * @param hours the hours
+     * @return the query
+     */
     public Query isHour(final DateColumn column, final Integer... hours) {
         addMatcher(new HourMatcher(column, hours));
         return this;
     }
 
+    /**
+     * Matches the minute.
+     *
+     * @param column the column
+     * @param minutes the minutes
+     * @return the query
+     */
     public Query isMinute(final DateColumn column, final Integer... minutes) {
         addMatcher(new MinuteMatcher(column, minutes));
         return this;
     }
 
+    /**
+     * Matches the seconds.
+     *
+     * @param column the column
+     * @param seconds the seconds
+     * @return the query
+     */
     public Query isSecond(final DateColumn column, final Integer... seconds) {
         addMatcher(new SecondMatcher(column, seconds));
         return this;
     }
 
+    /**
+     * Matches the millisecond.
+     *
+     * @param column the column
+     * @param millis the milliseconds
+     * @return the query
+     */
     public Query isMillisecond(final DateColumn column, final Integer... millis) {
         addMatcher(new MillisecondMatcher(column, millis));
         return this;
@@ -436,46 +597,106 @@ public final class Query {
 
     // ************* URL ************************************************************************************
 
+    /**
+     * Matches values equal to.
+     *
+     * @param column the column
+     * @param urls the URLs
+     * @return the query
+     */
     public Query is(final UrlColumn column, final URL... urls) {
         addMatcher(new UrlMatcher(column, urls));
         return this;
     }
 
+    /**
+     * Matches the anchor of a URL.
+     * @param column the column
+     * @param anchors the anchors
+     * @return the query
+     */
     public Query isAnchor(final UrlColumn column, final String... anchors) {
         addMatcher(new UrlAnchorMatcher(column, anchors));
         return this;
     }
 
+    /**
+     * Matches the file part of a URL.
+     * @param column the column
+     * @param files the files
+     * @return the query
+     */
     public Query isFile(final UrlColumn column, final String... files) {
         addMatcher(new UrlFileMatcher(column, files));
         return this;
     }
 
+    /**
+     * Matches the prefix of a URL.
+     *
+     * @param column the column
+     * @param prefixes the prefixes
+     * @return the query
+     */
     public Query isPrefix(final UrlColumn column, final String... prefixes) {
         addMatcher(new UrlFilePrefixMatcher(column, prefixes));
         return this;
     }
 
+    /**
+     * Matches the postfix of a URL.
+     *
+     * @param column the column
+     * @param postfixes the postfixes
+     * @return the query
+     */
     public Query isPostfix(final UrlColumn column, final String... postfixes) {
         addMatcher(new UrlFilePrefixMatcher(column, postfixes));
         return this;
     }
 
+    /**
+     * Matches the host part of a URL.
+     *
+     * @param column the column
+     * @param hostnames the hostnames
+     * @return the query
+     */
     public Query isHost(final UrlColumn column, final String... hostnames) {
         addMatcher(new UrlHostMatcher(column, hostnames));
         return this;
     }
 
+    /**
+     * Matches the port part of a URL.
+     * @param column the column
+     * @param port the ports
+     * @return the query
+     */
     public Query isPort(final UrlColumn column, final Integer... port) {
         addMatcher(new UrlPortMatcher(column, port));
         return this;
     }
 
+    /**
+     * Matches the protocol part of a URL.
+     *
+     * @param column the column
+     * @param protocol the protocols
+     * @return the query
+     */
     public Query isProtocol(final UrlColumn column, final String... protocol) {
         addMatcher(new UrlProtocolMatcher(column, protocol));
         return this;
     }
 
+    /**
+     * Matches the query part of a URL.
+     *
+     * @param column the column
+     * @param query the queries
+     * @return the query
+     */
     public Query isQuery(final UrlColumn column, final String... query) {
         addMatcher(new UrlQueryMatcher(column, query));
         return this;
@@ -483,6 +704,13 @@ public final class Query {
 
     // ************* BOOLEAN ************************************************************************************
 
+    /**
+     * Matches values equal to.
+     *
+     * @param column the column
+     * @param booleans the booleans
+     * @return the query
+     */
     public Query is(final BooleanColumn column, final Boolean... booleans) {
         addMatcher(new BooleanMatcher(column, booleans));
         return this;
