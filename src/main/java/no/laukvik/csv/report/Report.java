@@ -179,11 +179,8 @@ public final class Report {
             deque.add(n.getValue());
         }
         if (!n.isRoot()) {
-            Column c = null;
             if (csv.indexOf(n.getColumn()) < 0) {
-                c = csv.addColumn(n.getColumn());
-            } else {
-                c = n.getColumn();
+                csv.addColumn(n.getColumn());
             }
             if (n.isEmpty()) {
                 Row r = csv.addRow();
@@ -229,7 +226,6 @@ public final class Report {
                             r.set(ic, bd.intValue());
                         }
                     } else if (a instanceof Name) {
-                        Name name = (Name) a;
                         r.set((StringColumn) a.getAggregateColumn(), (String) n.getValue());
 
                     }

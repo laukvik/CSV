@@ -107,7 +107,6 @@ public final class Node {
      */
     public void doSUM(final Object v, final Column column) {
         if (column instanceof IntegerColumn && v instanceof Integer) {
-            IntegerColumn ic = (IntegerColumn) column;
             Integer i = (Integer) v;
             if (sum == null) {
                 sum = new BigDecimal(i);
@@ -125,7 +124,6 @@ public final class Node {
      */
     public void doMin(final Object v, final Column column) {
         if (column instanceof IntegerColumn && v instanceof Integer) {
-            IntegerColumn ic = (IntegerColumn) column;
             Integer i = (Integer) v;
             if (min == null) {
                 min = new BigDecimal(i);
@@ -146,7 +144,6 @@ public final class Node {
      */
     public void doMax(final Object v, final Column column) {
         if (column instanceof IntegerColumn && v instanceof Integer) {
-            IntegerColumn ic = (IntegerColumn) column;
             Integer i = (Integer) v;
             if (max == null) {
                 max = new BigDecimal(i);

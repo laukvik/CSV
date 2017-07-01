@@ -6,14 +6,14 @@ import no.laukvik.csv.columns.IntegerColumn;
 import java.math.BigDecimal;
 
 /**
- * Calculates the sum of all values.
+ * Calculates the sumValue of all values.
  */
 public final class Sum extends Aggregate {
 
     /**
-     * Container for the sum.
+     * Container for the sumValue.
      */
-    private BigDecimal sum;
+    private BigDecimal sumValue;
 
     /**
      * Creates a new SUM for the column.
@@ -22,55 +22,49 @@ public final class Sum extends Aggregate {
      */
     public Sum(final IntegerColumn column) {
         super(column);
-        sum = new BigDecimal(0);
+        sumValue = new BigDecimal(0);
     }
 
     @Override
     public void aggregate(final Row row) {
-
         Object value = row.getObject(getColumn());
-        if (value != null) {
+        if (value instanceof Integer) {
+            Integer i = (Integer) value;
 
-            if (value instanceof Integer) {
-                Integer i = (Integer) value;
+            if (sumValue == null) {
+                sumValue = new BigDecimal(i);
+            } else {
+                sumValue = sumValue.add(new BigDecimal(i));
+            }
 
-                if (sum == null) {
-                    sum = new BigDecimal(i);
-                } else {
-                    sum = sum.add(new BigDecimal(i));
-                }
+        } else if (value instanceof Double) {
+            Double i = (Double) value;
 
-            } else if (value instanceof Double) {
-                Double i = (Double) value;
+            if (sumValue == null) {
+                sumValue = new BigDecimal(i);
+            } else {
+                sumValue = sumValue.add(new BigDecimal(i));
+            }
 
-                if (sum == null) {
-                    sum = new BigDecimal(i);
-                } else {
-                    sum = sum.add(new BigDecimal(i));
-                }
+        } else if (value instanceof Float) {
+            Float i = (Float) value;
 
-            } else if (value instanceof Float) {
-                Float i = (Float) value;
+            if (sumValue == null) {
+                sumValue = new BigDecimal(i);
+            } else {
+                sumValue = sumValue.add(new BigDecimal(i));
+            }
 
-                if (sum == null) {
-                    sum = new BigDecimal(i);
-                } else {
-                    sum = sum.add(new BigDecimal(i));
-                }
+        } else if (value instanceof BigDecimal) {
+            BigDecimal i = (BigDecimal) value;
 
-            } else if (value instanceof BigDecimal) {
-                BigDecimal i = (BigDecimal) value;
-
-                if (sum == null) {
-                    sum = i;
-                } else {
-                    sum = sum.add(i);
-                }
-
+            if (sumValue == null) {
+                sumValue = i;
+            } else {
+                sumValue = sumValue.add(i);
             }
 
         }
-
     }
 
     /**
@@ -80,7 +74,7 @@ public final class Sum extends Aggregate {
      */
     @Override
     public BigDecimal getValue() {
-        return sum;
+        return sumValue;
     }
 
     @Override

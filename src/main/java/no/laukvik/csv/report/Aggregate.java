@@ -22,7 +22,7 @@ public abstract class Aggregate {
      *
      * @param column the column
      */
-    public Aggregate(final Column column) {
+    Aggregate(final Column column) {
         this.c = column;
     }
 
@@ -31,7 +31,7 @@ public abstract class Aggregate {
      *
      * @return the column
      */
-    public Column getColumn() {
+    public final Column getColumn() {
         return c;
     }
 
@@ -54,7 +54,7 @@ public abstract class Aggregate {
      *
      * @return the column
      */
-    public Column getAggregateColumn() {
+    public final Column getAggregateColumn() {
         return aggregateColumn;
     }
 
@@ -63,7 +63,7 @@ public abstract class Aggregate {
      *
      * @param aggregateColumn the column
      */
-    public void setAggregateColumn(final Column aggregateColumn) {
+    public final void setAggregateColumn(final Column aggregateColumn) {
         this.aggregateColumn = aggregateColumn;
     }
 

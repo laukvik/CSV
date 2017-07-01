@@ -137,7 +137,6 @@ public final class CsvReader implements DatasetFileReader {
         StringBuilder currentValue = new StringBuilder();
 
         boolean isWithinQuote = false;
-        int quoteCount = 0;
 
         /* Read until */
         while (reader.ready() && !isNextLine) {
@@ -148,8 +147,6 @@ public final class CsvReader implements DatasetFileReader {
 
             char currentChar = (char) intChar;
 
-            boolean foundBom = false;
-
             // Determines whether or not to add char
             boolean addChar = false;
 
@@ -157,15 +154,14 @@ public final class CsvReader implements DatasetFileReader {
             boolean addValue = false;
 
             // Look for separator characters in first line
-            if (lineCounter == 0 && autoDetectColumnSeparator) {
-                if (currentChar == CSV.TAB
-                        || currentChar == CSV.SEMICOLON
-                        || currentChar == CSV.PIPE
-                        || currentChar == CSV.COMMA) {
+            if (lineCounter == 0 && autoDetectColumnSeparator
+                    && (currentChar == CSV.TAB
+                    || currentChar == CSV.SEMICOLON
+                    || currentChar == CSV.PIPE
+                    || currentChar == CSV.COMMA)) {
                     columnSeparatorChar = currentChar;
                     autoDetectColumnSeparator = false;
                     csv.setSeparator(columnSeparatorChar);
-                }
             }
 
             // Check char
@@ -188,13 +184,11 @@ public final class CsvReader implements DatasetFileReader {
                 while (reader.ready()) {
                     currentChar = (char) reader.read();
                     if (currentChar == this.quoteChar) {
-                        quoteCount++;
                         break;
                     } else {
                         currentValue.append(currentChar);
                     }
                 }
-                quoteCount--;
             } else if (columnSeparatorChar != null && currentChar == columnSeparatorChar) {
                 addChar = false;
                 addValue = true;
@@ -213,11 +207,9 @@ public final class CsvReader implements DatasetFileReader {
                 addValue = true;
             }
             if (addValue) {
-                if (!reader.ready()) {
-                    if (isWithinQuote) {
+                if (!reader.ready() && isWithinQuote) {
                         currentValue.deleteCharAt(currentValue.length() - 1);
                         isWithinQuote = false;
-                    }
                 }
                 values.add(currentValue.toString());
                 currentValue = new StringBuilder();

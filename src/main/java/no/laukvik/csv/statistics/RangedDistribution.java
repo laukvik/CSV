@@ -12,21 +12,6 @@ import java.util.List;
 public abstract class RangedDistribution<T extends Range, V extends Number> {
 
     /**
-     * Constant for the number 10.
-     */
-    private static final int TEN = 10;
-
-    /**
-     *
-     */
-    private static final int COUNTS = 10;
-
-    /**
-     * The ascii number for SPACE character.
-     */
-    private static final int SPACE = 48;
-
-    /**
      * The list of ranges.
      */
     private final List<T> ranges;

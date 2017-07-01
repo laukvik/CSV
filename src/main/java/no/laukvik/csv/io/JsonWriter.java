@@ -60,10 +60,6 @@ public final class JsonWriter implements DatasetFileWriter {
      */
     private static final char LINEFEED = '\n';
     /**
-     * Character for tab.
-     */
-    private static final char TAB = '\t';
-    /**
      * Character for comma.
      */
     private static final char COMMA = ',';
