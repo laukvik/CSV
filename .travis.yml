@@ -11,3 +11,11 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+
+addons:
+  sonarcloud:
+    organization: "laukvik-github"
+    token:
+      secure: "WLUpWD9LGFBL/PP9lk8DMpwuerOTgb1CZTDpe94vo4pRu6OcQ+6s8UNhuTCkr9ZZ++zDdddspZmdKufLBnB624MCPQEP2IOXWqtKy6IYvv1UWarqgRaBPe0w2B068XkEDSXDMTQP3QY8hU8mVx48Bj1f3r7TGO4799HiGZ3iZdTuUY5TCd02lCY0E7wGSEk7dQY/PmbyzfxNmeboO4vZmbgKNccrcNSLrT6gLhH/rV9ihO/D/rsn8StJimqU3cbl98pbQMFFCnH1fQ0M+1SjG8kN4K6J8xz5oCqVgiPK8y1484601MlH6NKWC1euoR1RFUHWSGD53Um7w1EwX0lC8W5NputqeVcI4PeEvLwi3SFoJDhk+nkwAjIfQKw0jDeOlP/WhBL+JV4MhzHGcBjMfh8uHCMlBU/ClUAqF/WdlgxOUo4gpNicKDF0so8Zkx7liQC3GqOPgoUzBzViDEwaBleYXVquhHQ1s+iLd2W7TzpjEbU0/XfmpLJ/ak9eENV5atfmyZiYTMhKr1XPjwUkkTSUIpn9AmU1OmUZMv4dfi4zaZOU47RoYVbXY6RF6GvyRAHICPCFZ08xROIq8eFhxIG5UReCLYgjPv0IfhRHckrGFjpcVbVdKufeTn2pSyyYoXN5tcj1Pe5iwzMU0IxTEM0bNSeG2fKdYjlQawslR0A="
+    branches :
+    - master
