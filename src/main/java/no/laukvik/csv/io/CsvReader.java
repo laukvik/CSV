@@ -42,6 +42,8 @@ public final class CsvReader implements DatasetFileReader {
      * The charset being instructed to use.
      */
     private Charset charset;
+    private int skipRows;
+    private boolean appendMode;
 
     /**
      * Reads CSV from the specified reader using the separator and quote characters.
@@ -53,6 +55,7 @@ public final class CsvReader implements DatasetFileReader {
     public CsvReader(final Charset charset, final Character separator, final Character quote) {
         this.autoDetectCharset = charset == null;
         this.autoDetectColumnSeparator = separator == null;
+        this.skipRows = 0;
         if (separator != null) {
             this.columnSeparatorChar = separator;
         }
@@ -74,26 +77,37 @@ public final class CsvReader implements DatasetFileReader {
     @Override
     public void readFile(final File file, final CSV csv) throws CsvReaderException {
         BOM bom = null;
-        if (autoDetectCharset) {
-            bom = BOM.findBom(file);
-            if (bom == null) {
-                csv.setCharset(BOM.UTF8.getCharset());
+        if (!appendMode){
+            if (autoDetectCharset) {
+                bom = BOM.findBom(file);
+                if (bom == null) {
+                    csv.setCharset(BOM.UTF8.getCharset());
+                } else {
+                    csv.setCharset(bom.getCharset());
+                }
             } else {
-                csv.setCharset(bom.getCharset());
+                csv.setCharset(this.charset);
             }
-        } else {
-            csv.setCharset(this.charset);
         }
+
         this.lineCounter = 0;
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), csv.getCharset())) {
-            if (autoDetectCharset && bom != null) {
-                reader.skip(bom.getBytes().length);
-            }
-            csv.setSeparator(columnSeparatorChar);
-            csv.setQuoteChar(this.quoteChar);
-            List<String> columns = parseRow(csv, reader);
-            for (String rawColumnName : columns) {
-                csv.addColumn(Column.parseName(rawColumnName));
+            if (skipRows > 0) {
+                int rowsSkippedCount = 0;
+                while (reader.ready() && rowsSkippedCount < skipRows) {
+                    skipRow(csv, reader);
+                    rowsSkippedCount++;
+                }
+            } else {
+                if (autoDetectCharset && bom != null) {
+                    reader.skip(bom.getBytes().length);
+                }
+                csv.setSeparator(columnSeparatorChar);
+                csv.setQuoteChar(this.quoteChar);
+                List<String> columns = parseRow(csv, reader);
+                for (String rawColumnName : columns) {
+                    csv.addColumn(Column.parseName(rawColumnName));
+                }
             }
             while (reader.ready()) {
                 readRow(csv, reader);
@@ -118,6 +132,10 @@ public final class CsvReader implements DatasetFileReader {
             Column c = csv.getColumn(x);
             row.setRaw(c, value);
         }
+    }
+
+    private void skipRow(final CSV csv, final InputStreamReader reader) throws IOException{
+        parseRow(csv, reader);
     }
 
     /**
@@ -219,4 +237,11 @@ public final class CsvReader implements DatasetFileReader {
         return values;
     }
 
+    public void setAppendMode(boolean appendMode) {
+        this.appendMode = appendMode;
+    }
+
+    public void setSkipRows(int skipRows) {
+        this.skipRows = skipRows;
+    }
 }

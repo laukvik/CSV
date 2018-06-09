@@ -753,6 +753,30 @@ public final class CSV implements Serializable {
     }
 
     /**
+     * Reads the csvFile and appends the rows after the last row.
+     *
+     * @param csvFile
+     * @throws CsvReaderException
+     */
+    public void appendFile(final File csvFile) throws CsvReaderException {
+        this.appendFile(csvFile, 1);
+    }
+
+    /**
+     * Reads the csvFile from the specified rowIndex and appends the rows after the last row.
+     *
+     * @param csvFile
+     * @param rowIndex
+     * @throws CsvReaderException
+     */
+    public void appendFile(final File csvFile, final int rowIndex) throws CsvReaderException {
+        CsvReader reader = new CsvReader(charset, separatorChar, quoteChar);
+        reader.setAppendMode(true);
+        reader.setSkipRows(rowIndex);
+        reader.readFile(csvFile, this);
+    }
+
+    /**
      * Writes the contents to a file using the specified Writer.
      *
      * @param writer      the Writer
