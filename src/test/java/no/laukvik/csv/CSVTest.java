@@ -15,16 +15,7 @@
  */
 package no.laukvik.csv;
 
-import no.laukvik.csv.columns.BigDecimalColumn;
-import no.laukvik.csv.columns.BooleanColumn;
-import no.laukvik.csv.columns.ByteColumn;
-import no.laukvik.csv.columns.ColumnAlreadyExistException;
-import no.laukvik.csv.columns.DateColumn;
-import no.laukvik.csv.columns.DoubleColumn;
-import no.laukvik.csv.columns.FloatColumn;
-import no.laukvik.csv.columns.IntegerColumn;
-import no.laukvik.csv.columns.StringColumn;
-import no.laukvik.csv.columns.UrlColumn;
+import no.laukvik.csv.columns.*;
 import no.laukvik.csv.io.CsvReaderException;
 import no.laukvik.csv.io.CsvWriterException;
 import no.laukvik.csv.query.StringInMatcher;
@@ -65,6 +56,24 @@ public class CSVTest {
     private static File getResource(String filename) {
         ClassLoader classLoader = CSVTest.class.getClassLoader();
         return new File(classLoader.getResource(filename).getFile());
+    }
+
+    @Test
+    public void appendFile() throws CsvReaderException {
+        CSV csv = new CSV();
+        IntegerColumn presidency = csv.addIntegerColumn("Presidency");
+        StringColumn president = csv.addStringColumn("President");
+        StringColumn wikipediaEntry = csv.addStringColumn("Wikipedia Entry");
+        DateColumn tookOffice = csv.addDateColumn("Took office");
+        DateColumn leftOffice = csv.addDateColumn("Left office");
+        StringColumn party = csv.addStringColumn("Party");
+        StringColumn portrait = csv.addStringColumn("Portrait");
+        StringColumn thumbnail = csv.addStringColumn("Thumbnail");
+        StringColumn homeState = csv.addStringColumn("Home State");
+        csv.appendFile(getResource("presidents.csv"), 1);
+        csv.appendFile(getResource("presidents.csv"));
+        long count = csv.stream().count();
+        assertEquals(88, count);
     }
 
     private static boolean xsd_valid(File file) {

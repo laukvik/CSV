@@ -32,6 +32,15 @@ for (Row r : rows){
 }
 ```
 
+## Combining multiple CSV files
+
+Use the appendFile method to combine multiple files.
+
+```java
+CSV csv = new CSV(new File("presidents.csv"));
+csv.appendFile(getResource("another.csv"));
+```
+
 ## Writing files
 
 Creates a new CSV with two presidents and saves it to addresses.csv

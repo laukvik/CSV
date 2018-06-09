@@ -29,6 +29,7 @@ public class DateColumnTest {
 
     private Date getTomorrow() {
         Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.HOUR_OF_DAY, 5);
         Date today = cal.getTime();
         cal.add(Calendar.DATE, 1);
         return cal.getTime();
@@ -36,6 +37,7 @@ public class DateColumnTest {
 
     private Date getMonthPlus() {
         Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.HOUR_OF_DAY, 5);
         Date today = cal.getTime();
         cal.add(Calendar.DATE, 1);
         cal.add(Calendar.MONTH, 1);
@@ -44,6 +46,7 @@ public class DateColumnTest {
 
     private Date getYearPlus() {
         Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.HOUR_OF_DAY, 5);
         Date today = cal.getTime();
         cal.add(Calendar.DATE, 1);
         cal.add(Calendar.YEAR, 1);
@@ -52,6 +55,7 @@ public class DateColumnTest {
 
     private Date getDatePlus() {
         Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.HOUR_OF_DAY, 5);
         Date today = cal.getTime();
         cal.add(Calendar.DATE, 1);
         cal.add(Calendar.DAY_OF_MONTH, 1);
@@ -60,6 +64,7 @@ public class DateColumnTest {
 
     private Date getHourPlus() {
         Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.HOUR_OF_DAY, 5);
         Date today = cal.getTime();
         cal.add(Calendar.DATE, 1);
         cal.add(Calendar.HOUR_OF_DAY, 1);
@@ -68,6 +73,7 @@ public class DateColumnTest {
 
     private Date getMinutePlus() {
         Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.HOUR_OF_DAY, 5);
         Date today = cal.getTime();
         cal.add(Calendar.DATE, 1);
         cal.add(Calendar.MINUTE, 1);
@@ -76,6 +82,7 @@ public class DateColumnTest {
 
     private Date getSecondsPlus() {
         Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.HOUR_OF_DAY, 5);
         Date today = cal.getTime();
         cal.add(Calendar.DATE, 1);
         cal.add(Calendar.SECOND, 1);
