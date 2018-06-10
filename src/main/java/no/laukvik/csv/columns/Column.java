@@ -48,6 +48,18 @@ public abstract class Column<T> implements Comparable, Serializable {
      */
     static final String TYPE_DATE = "date";
     /**
+     * Identifies LocalDateColumn.
+     */
+    static final String TYPE_LOCALDATE = "localdate";
+    /**
+     * Identifies LocalDateColumn.
+     */
+    static final String TYPE_LOCALTIME = "localtime";
+    /**
+     * Identifies LocalDateColumn.
+     */
+    static final String TYPE_LOCALDATETIME = "localdatetime";
+    /**
      * Identifies DoubleColumn.
      */
     static final String TYPE_DOUBLE = "double";
@@ -184,6 +196,15 @@ public abstract class Column<T> implements Comparable, Serializable {
 
             } else if (typeName.equalsIgnoreCase(TYPE_BYTE)) {
                 c = new ByteColumn(columnName);
+
+            } else if (typeName.equalsIgnoreCase(TYPE_LOCALDATE)) {
+                c = new LocalDateColumn(columnName);
+
+            } else if (typeName.equalsIgnoreCase(TYPE_LOCALTIME)) {
+                c = new LocalTimeColumn(columnName);
+
+            } else if (typeName.equalsIgnoreCase(TYPE_LOCALDATETIME)) {
+                c = new LocalDateTimeColumn(columnName);
 
             } else if (typeName.equalsIgnoreCase(TYPE_DATE)) {
                 ColumnDefinition.Attribute attr = columnDefinition.get(FORMAT);
@@ -430,7 +451,6 @@ public abstract class Column<T> implements Comparable, Serializable {
         if (this instanceof StringColumn) {
             StringColumn sc = (StringColumn) this;
             if (sc.getSize() > 0) {
-
                 cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_STRING, Integer.toString(sc.getSize())));
             }
         } else if (this instanceof BigDecimalColumn) {
@@ -443,6 +463,12 @@ public abstract class Column<T> implements Comparable, Serializable {
             cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_DATE));
             DateColumn dc = (DateColumn) this;
             cd.setAttribute(FORMAT, new ColumnDefinition.Attribute(dc.getFormat()));
+        } else if (this instanceof LocalDateColumn) {
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_LOCALDATE));
+        } else if (this instanceof LocalDateTimeColumn) {
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_LOCALDATETIME));
+        } else if (this instanceof LocalTimeColumn) {
+            cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_LOCALTIME));
         } else if (this instanceof DoubleColumn) {
             cd.setAttribute(TYPE, new ColumnDefinition.Attribute(TYPE_DOUBLE));
         } else if (this instanceof FloatColumn) {

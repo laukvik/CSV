@@ -43,13 +43,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class CSVTest {
 
@@ -150,6 +144,9 @@ public class CSVTest {
         IntegerColumn ic = csv.addIntegerColumn("integer");
         StringColumn sc = csv.addStringColumn("string");
         UrlColumn uc = csv.addUrlColumn("url");
+        LocalDateColumn ldc = csv.addLocalDateColumn("localdatecolumn");
+        LocalTimeColumn ltc = csv.addLocalTimeColumn("localtimecolumn");
+        LocalDateTimeColumn ldtc = csv.addLocalDateTimeColumn("localdatetimecolumn");
         assertNotNull(bdc);
         assertNotNull(bc);
         assertNotNull(byteC);
@@ -159,6 +156,9 @@ public class CSVTest {
         assertNotNull(ic);
         assertNotNull(sc);
         assertNotNull(uc);
+        assertNotNull(ldc);
+        assertNotNull(ltc);
+        assertNotNull(ldtc);
     }
 
     @Test(expected = ColumnAlreadyExistException.class)
