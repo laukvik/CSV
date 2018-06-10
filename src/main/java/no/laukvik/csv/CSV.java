@@ -792,6 +792,42 @@ public final class CSV implements Serializable {
     }
 
     /**
+     * Adds a new LocalDateColumn.
+     *
+     * @param columnName the name
+     * @return the LocalDateColumn being created
+     */
+    public LocalDateColumn addLocalDateColumn(final String columnName) {
+        LocalDateColumn c = new LocalDateColumn(columnName);
+        addColumn(c);
+        return c;
+    }
+
+    /**
+     * Adds a new LocalTimeColumn.
+     *
+     * @param columnName the name
+     * @return the LocalTimeColumn being created
+     */
+    public LocalTimeColumn addLocalTimeColumn(final String columnName) {
+        LocalTimeColumn c = new LocalTimeColumn(columnName);
+        addColumn(c);
+        return c;
+    }
+
+    /**
+     * Adds a new LocalDateTimeColumn.
+     *
+     * @param columnName the name
+     * @return the LocalTimeColumn being created
+     */
+    public LocalDateTimeColumn addLocalDateTimeColumn(final String columnName) {
+        LocalDateTimeColumn c = new LocalDateTimeColumn(columnName);
+        addColumn(c);
+        return c;
+    }
+
+    /**
      * Adds a new DoubleColumn.
      *
      * @param columnName the name
