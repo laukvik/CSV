@@ -13,7 +13,7 @@ LaukvikCSV is a powerful API for reading, writing and querying tabular data stor
 <dependency>
     <groupId>no.laukvik</groupId>
     <artifactId>csv</artifactId>
-    <version>0.9.3</version>
+    <version>0.9.4</version>
 </dependency>
 ```
 
