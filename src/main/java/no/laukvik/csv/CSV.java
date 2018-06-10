@@ -15,26 +15,8 @@
  */
 package no.laukvik.csv;
 
-import no.laukvik.csv.columns.BigDecimalColumn;
-import no.laukvik.csv.columns.BooleanColumn;
-import no.laukvik.csv.columns.ByteColumn;
-import no.laukvik.csv.columns.Column;
-import no.laukvik.csv.columns.ColumnAlreadyExistException;
-import no.laukvik.csv.columns.DateColumn;
-import no.laukvik.csv.columns.DoubleColumn;
-import no.laukvik.csv.columns.FloatColumn;
-import no.laukvik.csv.columns.IntegerColumn;
-import no.laukvik.csv.columns.StringColumn;
-import no.laukvik.csv.columns.UrlColumn;
-import no.laukvik.csv.io.CsvReader;
-import no.laukvik.csv.io.CsvReaderException;
-import no.laukvik.csv.io.CsvWriter;
-import no.laukvik.csv.io.CsvWriterException;
-import no.laukvik.csv.io.DatasetFileReader;
-import no.laukvik.csv.io.DatasetFileWriter;
-import no.laukvik.csv.io.HtmlWriter;
-import no.laukvik.csv.io.JsonWriter;
-import no.laukvik.csv.io.XmlWriter;
+import no.laukvik.csv.columns.*;
+import no.laukvik.csv.io.*;
 import no.laukvik.csv.query.Query;
 import no.laukvik.csv.query.ValueMatcher;
 import no.laukvik.csv.statistics.FrequencyDistribution;
@@ -44,13 +26,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -294,6 +270,118 @@ public final class CSV implements Serializable {
      */
     public Column getColumn(final int columnIndex) {
         return columns.get(columnIndex);
+    }
+
+    /**
+     * Returns the StringColumn with the specified name.
+     *
+     * @param name the name of the column
+     * @return the StringColumn
+     */
+    public StringColumn getStringColumn(final String name) {
+        Column c = getColumn(name);
+        if (c instanceof StringColumn) {
+            return (StringColumn) c;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the DateColumn with the specified name.
+     *
+     * @param name the name of the column
+     * @return the DateColumn
+     */
+    public DateColumn getDateColumn(final String name) {
+        Column c = getColumn(name);
+        if (c instanceof DateColumn) {
+            return (DateColumn) c;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the DoubleColumn with the specified name.
+     *
+     * @param name the name of the column
+     * @return the DoubleColumn
+     */
+    public DoubleColumn getDoubleColumn(final String name) {
+        Column c = getColumn(name);
+        if (c instanceof DoubleColumn) {
+            return (DoubleColumn) c;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the FloatColumn with the specified name.
+     *
+     * @param name the name of the column
+     * @return the FloatColumn
+     */
+    public FloatColumn getFloatColumn(final String name) {
+        Column c = getColumn(name);
+        if (c instanceof FloatColumn) {
+            return (FloatColumn) c;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the IntegerColumn with the specified name.
+     *
+     * @param name the name of the column
+     * @return the IntegerColumn
+     */
+    public IntegerColumn getIntegerColumn(final String name) {
+        Column c = getColumn(name);
+        if (c instanceof IntegerColumn) {
+            return (IntegerColumn) c;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the UrlColumn with the specified name.
+     *
+     * @param name the name of the column
+     * @return the UrlColumn
+     */
+    public UrlColumn getUrlColumn(final String name) {
+        Column c = getColumn(name);
+        if (c instanceof UrlColumn) {
+            return (UrlColumn) c;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the BigDecimalColumn with the specified name.
+     *
+     * @param name the name of the column
+     * @return the BigDecimalColumn
+     */
+    public BigDecimalColumn getBigDecimalColumn(final String name) {
+        Column c = getColumn(name);
+        if (c instanceof BigDecimalColumn) {
+            return (BigDecimalColumn) c;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the ByteColumn with the specified name.
+     *
+     * @param name the name of the column
+     * @return the ByteColumn
+     */
+    public ByteColumn getByteColumn(final String name) {
+        Column c = getColumn(name);
+        if (c instanceof ByteColumn) {
+            return (ByteColumn) c;
+        }
+        return null;
     }
 
     /**
