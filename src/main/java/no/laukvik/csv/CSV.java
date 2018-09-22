@@ -263,6 +263,15 @@ public final class CSV implements Serializable {
     }
 
     /**
+     * Returns all columns
+     *
+     * @return the columns
+     */
+    public List<Column> getColumns() {
+        return columns;
+    }
+
+    /**
      * Returns the column with the specified name.
      *
      * @param columnIndex the column index
@@ -876,28 +885,34 @@ public final class CSV implements Serializable {
         readDatasetFile(csvFile, reader);
     }
 
+    public Stream<Row> readFileStream(final File csvFile) throws CsvReaderException {
+        CsvReader reader = new CsvReader(charset, separatorChar, quoteChar);
+        return null;
+    }
+
+
     /**
      * Reads the csvFile and appends the rows after the last row.
      *
-     * @param csvFile
-     * @throws CsvReaderException
+     * @param file the file to open
+     * @throws CsvReaderException when the csv file is corrupt or could not be read
      */
-    public void appendFile(final File csvFile) throws CsvReaderException {
-        this.appendFile(csvFile, 1);
+    public void appendFile(final File file) throws CsvReaderException {
+        this.appendFile(file, 1);
     }
 
     /**
      * Reads the csvFile from the specified rowIndex and appends the rows after the last row.
      *
-     * @param csvFile
-     * @param rowIndex
-     * @throws CsvReaderException
+     * @param file the file to open
+     * @param rowIndex start reading from this row
+     * @throws CsvReaderException when the csv file is corrupt or could not be read
      */
-    public void appendFile(final File csvFile, final int rowIndex) throws CsvReaderException {
+    public void appendFile(final File file, final int rowIndex) throws CsvReaderException {
         CsvReader reader = new CsvReader(charset, separatorChar, quoteChar);
         reader.setAppendMode(true);
         reader.setSkipRows(rowIndex);
-        reader.readFile(csvFile, this);
+        reader.readFile(file, this);
     }
 
     /**
