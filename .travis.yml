@@ -1,6 +1,6 @@
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk10
 script: "mvn install"
 sudo: required
 install: true
