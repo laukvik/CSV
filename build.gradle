@@ -20,7 +20,7 @@ dependencies {
 }
 
 group = 'no.laukvik'
-version = '0.9.5'
+version = '0.9.6'
 description = 'CSV'
 java.sourceCompatibility = JavaVersion.VERSION_1_10
 
