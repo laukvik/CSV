@@ -15,8 +15,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'com.googlecode.json-simple:json-simple:1.1'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'com.googlecode.json-simple:json-simple:1.1.1'
 }
 
 group = 'no.laukvik'
@@ -29,18 +29,13 @@ java {
 }
 
 publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
-    }
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/laukvik/CSV"
+            name = "OSSRH"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
             }
         }
     }
