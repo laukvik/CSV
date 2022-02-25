@@ -48,7 +48,7 @@ publishing {
         }
     }
     publications {
-        create<MavenPublication>("mavenJava") {
+        csv(MavenPublication) {
             pom {
                 name.set("csv")
                 description.set("LaukvikCSV is a powerful API for reading, writing and querying tabular data")
