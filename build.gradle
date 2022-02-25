@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.0.0'
     testImplementation 'com.googlecode.json-simple:json-simple:1.1.1'
 }
 
