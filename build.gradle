@@ -34,6 +34,16 @@ publishing {
             from(components.java)
         }
     }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/laukvik/CSV"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }
 
 tasks.withType(JavaCompile) {
